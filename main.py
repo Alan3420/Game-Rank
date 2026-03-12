@@ -1,1 +1,0 @@
-print("Primeros pasos del proyecto")
