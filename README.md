@@ -1,9 +1,20 @@
-## Inicializacion del proyecto
 
-Descripción del proyecto:
+# Fase 1 (Estructuracion del proyecto)
 
-Es una pagina web que contiene informacion importante sobre videojuegos ordenados de forma visualmente atractiva,
-con diferentes funcionalidades como lo sería que la lista se actualice segun los likes que resiva por parte de los usuarios,
-dichos usuarios tendran una forma de autenticarse dentro de la aplicacion web teniendo funciones como efectivamete darle likes
-a los juegos que les guste, pueden tanto valorar como comentar un juego habiendo una seccion para estos comentarios, a mayores se 
-puede crear una funcionalidad donde el usuario puede tener juegos favoritos.
+* Extensiones extras en visual utilizadas:
+    1. Mysql (Database Client)
+    2. Docker
+    3. Live Server 
+
+* Comandos para inicializar el proyecto
+    >Para arrancar el backend debes hacerlo desde la carpeta **/backend** y ejecutar el siguiente comando:
+
+    1. python -m app.main
+
+* Comandos que se utilizan siempre en docker
+
+    1. `docker stop gamerank-db    # parar la base de datos`
+    2. `docker start gamerank-db   # volver a arrancarla`
+    3. `docker logs gamerank-db    # ver si hay errores`
+
+    >Cada vez que inicies el proyecto ejecuta en la terminal `docker start gamerank-db`
