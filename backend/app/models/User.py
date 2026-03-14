@@ -6,19 +6,13 @@ from datetime import datetime
 class User(db.Model):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id_user = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
-    date_of_registration = Column(Date, nullable=False, default=datetime.now())
+    date_of_registration = Column(Date, nullable=False, default=datetime.now)
     role = Column(String(20), nullable=False)
 
-    comentarios = relationship('Comment', back_populates="usuarios")
-
-    def __init__(self, id, name, last_name, email, role, date_of_registration=datetime.now()):
-        self.id = id
-        self.name = name
-        self.last_name = last_name
-        self.email = email
-        self.role = role
-        self.date_of_registration = date_of_registration
+    comments_rl = relationship('Comment',back_populates="users_rl")
+    video_games_rl = relationship("Video_game", secondary="rates", back_populates="users_rl")
+    rates_rl = relationship("Rate", back_populates="users_rl")
