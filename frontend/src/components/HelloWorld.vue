@@ -5,7 +5,7 @@ import heroImg from '../assets/hero.png'
 import vueLogo from '../assets/vue.svg'
 
 const count = ref(0)
-</script>
+</script> 
 
 <template>
   <section id="center">
@@ -15,7 +15,7 @@ const count = ref(0)
       <img :src="viteLogo" class="vite" alt="Vite logo" />
     </div>
     <div>
-      <h1>Get started</h1>
+      <h1>Esto es una prueba Con Vite</h1>
       <p>Edit <code>src/App.vue</code> and save to test <code>HMR</code></p>
     </div>
     <button class="counter" @click="count++">Count is {{ count }}</button>
@@ -49,11 +49,11 @@ const count = ref(0)
       <svg class="icon" role="presentation" aria-hidden="true">
         <use href="/icons.svg#social-icon"></use>
       </svg>
-      <h2>Connect with us</h2>
-      <p>Join the Vite community</p>
+      <h2>Connect with the Game-Rank community</h2>
+      <p>Repositorio GitHub de Game-Rank</p>
       <ul>
         <li>
-          <a href="https://github.com/vitejs/vite" target="_blank">
+          <a href="https://github.com/Alan3420/Proyecto-Game-Rank.git" target="_blank">
             <svg class="button-icon" role="presentation" aria-hidden="true">
               <use href="/icons.svg#github-icon"></use>
             </svg>
