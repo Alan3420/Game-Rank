@@ -1,6 +1,6 @@
 from datetime import date
 
-def seed(app, db, User, Comment, Video_game, Rate):
+def seed(app, db, User, Comment, Video_game, Rate, Favorite):
     with app.app_context():
 
         users = [
@@ -33,6 +33,16 @@ def seed(app, db, User, Comment, Video_game, Rate):
             Video_game(id_game=7, name="Disco Elysium",             date_release=date(2019, 10, 15), platforms="PC, PS4, PS5, Xbox One",              development_company="ZA/UM",              id_comment=7),
         ]
 
+        favorites = [
+            Favorite(user_id=1, id_game=1, date_added=date(2025, 1, 12)),
+            Favorite(user_id=1, id_game=3, date_added=date(2025, 2, 9)),
+            Favorite(user_id=2, id_game=2, date_added=date(2025, 1, 23)),
+            Favorite(user_id=2, id_game=4, date_added=date(2025, 2, 21)),
+            Favorite(user_id=3, id_game=3),
+            Favorite(user_id=3, id_game=6, date_added=date(2025, 3, 28)),
+            Favorite(user_id=4, id_game=4),
+        ]
+
         rates = [
             Rate(id_user=1, id_game=1, date_rate=date(2025, 1, 11), rating=10, status="completado"),
             Rate(id_user=1, id_game=3, date_rate=date(2025, 2, 8),  rating=9,  status="completado"),
@@ -55,6 +65,8 @@ def seed(app, db, User, Comment, Video_game, Rate):
         db.session.add_all(comments)
         db.session.commit()
         db.session.add_all(video_games)
+        db.session.commit()
+        db.session.add_all(favorites)
         db.session.commit()
         db.session.add_all(rates)
         db.session.commit()

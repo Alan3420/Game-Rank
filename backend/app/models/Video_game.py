@@ -17,3 +17,4 @@ class Video_game(db.Model):
     rates_rl = relationship("Rate", back_populates="video_games_rl")
     users_rl = relationship("User", secondary="rates", back_populates="video_games_rl")
     comments_rl =relationship("Comment", foreign_keys="[Video_game.id_comment]",back_populates="video_game_rl")
+    favorites_rl = relationship("Favorite", foreign_keys="[Favorite.id_game]",back_populates="video_games_rl")
