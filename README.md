@@ -1,7 +1,22 @@
 
 # Fase 1 (Estructuracion del proyecto)
 
-* Extensiones extras en visual utilizadas:
+*   Organización del proyecto
+
+        PROYECTO GAME-RANK/
+        ├── backend/
+        │   └── app/
+        │       ├── database/
+        │       ├── models/
+        │       ├── routes/
+        │       └── services/
+        └── frontend/
+            ├── public/
+            └── src/
+                ├── assets/
+                └── components/
+
+* Extensiones extras en vsCode utilizadas:
     1. Mysql (Database Client)
     2. Docker
     3. Live Server 
@@ -18,3 +33,4 @@
     3. `docker logs gamerank-db    # ver si hay errores`
 
     >Cada vez que inicies el proyecto ejecuta en la terminal `docker start gamerank-db`
+
