@@ -5,6 +5,7 @@ from app.models.User import User
 from app.models.Comment import Comment
 from app.models.Video_game import Video_game
 from app.models.Rate import Rate
+from app.models.Favorite import Favorite
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:root@localhost:3306/game_rank"
@@ -28,7 +29,7 @@ def db_drop():
 @app.cli.command("db-seed")
 def db_seed():
     with app.app_context():
-        seed(app, db, User, Comment, Video_game, Rate)
+        seed(app, db, User, Comment, Video_game, Rate, Favorite)
         print("Los datos de prueba han sido implementados")
 
 @app.cli.command("db-reset")
@@ -37,7 +38,7 @@ def db_reset():
         db.drop_all()
         db.create_all()
         print("🔄 Base de datos reiniciada con éxito")
-    seed(app, db, User, Comment, Video_game, Rate)
+    seed(app, db, User, Comment, Video_game, Rate, Favorite)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', 8080)

@@ -16,3 +16,4 @@ class User(db.Model):
     comments_rl = relationship('Comment',back_populates="users_rl")
     video_games_rl = relationship("Video_game", secondary="rates", back_populates="users_rl")
     rates_rl = relationship("Rate", back_populates="users_rl")
+    favorites_rl = relationship("Favorite", back_populates="users_rl")
