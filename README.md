@@ -28,9 +28,9 @@
 
 * Comandos que se utilizan siempre en docker
 
-    1. `docker stop gamerank-db    # parar la base de datos`
-    2. `docker start gamerank-db   # volver a arrancarla`
-    3. `docker logs gamerank-db    # ver si hay errores`
+    1. `docker stop mi-mysql    # parar la base de datos`
+    2. `docker start mi-mysql    # volver a arrancarla`
+    3. `docker logs mi-mysql    # ver si hay errores`
 
-    >Cada vez que inicies el proyecto ejecuta en la terminal `docker start gamerank-db`
+    >Cada vez que inicies el proyecto ejecuta en la terminal `docker start mi-mysql `
 
