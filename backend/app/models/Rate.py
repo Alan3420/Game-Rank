@@ -7,7 +7,7 @@ class Rate(db.Model):
     __tablename__ ="rates"
 
     id_user = Column(Integer,ForeignKey("users.id_user"), primary_key=True)
-    id_game= Column(Integer,ForeignKey("videoGame.id_game"), primary_key=True)
+    id_game_api= Column(Integer,ForeignKey("videoGame.id_game_api"), primary_key=True)
     date_rate= Column(Date, nullable=False, default=datetime.today)
     rating = Column(Integer, nullable=False)
     status = Column(String(20), nullable=True)

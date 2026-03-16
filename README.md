@@ -7,6 +7,7 @@
         ├── backend/
         │   └── app/
         │       ├── database/
+        │       ├── repositories/
         │       ├── models/
         │       ├── routes/
         │       └── services/
