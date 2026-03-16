@@ -2,6 +2,7 @@ from app.database.db import db
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -10,10 +11,24 @@ class User(db.Model):
     name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
+    password = Column(String(255), nullable=False, unique=True)
     date_of_registration = Column(Date, nullable=False, default=datetime.now)
-    role = Column(String(20), nullable=False)
+    role = Column(String(20), default='user')
 
     comments_rl = relationship('Comment',back_populates="users_rl")
     video_games_rl = relationship("Video_game", secondary="rates", back_populates="users_rl")
     rates_rl = relationship("Rate", back_populates="users_rl")
     favorites_rl = relationship("Favorite", back_populates="users_rl")
+
+    def __init__(self, name, last_name, email, password, role='user'):
+        self.name = name
+        self.last_name = last_name
+        self.email = email
+        self.password = generate_password_hash(password)
+        self.role = role
+    
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+    
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
