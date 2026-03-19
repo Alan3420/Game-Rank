@@ -27,11 +27,16 @@
 
     1. python -m app.main
 
-* Comandos que se utilizan siempre en docker
+### Comandos que se utilizan siempre en docker
+* Comando para crear y conectarse a la base de datos en docker:
+    
+        docker run -d --name game_rank_db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=game_rank -p 3306:3306 mysql:8.0
 
-    1. `docker stop mi-mysql    # parar la base de datos`
-    2. `docker start mi-mysql    # volver a arrancarla`
-    3. `docker logs mi-mysql    # ver si hay errores`
+* Comando para arrancar Vue
+    1. npm run dev
 
-    >Cada vez que inicies el proyecto ejecuta en la terminal `docker start mi-mysql `
+    2. Si suceden problemas a la hora de arrancar el proyecto: 
+        1. npm cache clean --force
+        2. npm install
+        3. npm run dev
 
