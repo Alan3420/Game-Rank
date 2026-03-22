@@ -32,3 +32,14 @@ class User(db.Model):
     
     def set_password(self, password):
         self.password = generate_password_hash(password)
+
+    
+    def to_dict(self):
+        return {
+            "id_user": self.id_user,
+            "name": self.name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "date_of_registration": self.date_of_registration,
+            "role": self.role
+        }

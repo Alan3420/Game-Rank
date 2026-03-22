@@ -6,14 +6,20 @@ from app.models.Comment import Comment
 from app.models.Video_game import Video_game
 from app.models.Rate import Rate
 from app.models.Favorite import Favorite
+from app.routes.welcome_route import welcome_bp
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:root@localhost:3306/game_rank"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ECHO"] = True
 
+# Registro de Blueprints
+app.register_blueprint(welcome_bp, url_prefix="/user")
+
+
 db.init_app(app)
 
+# Comandos personalizados para la gestión de la base de datos
 @app.cli.command("db-create")
 def db_create():
     with app.app_context():
@@ -40,5 +46,7 @@ def db_reset():
         print("🔄 Base de datos reiniciada con éxito")
     seed(app, db, User, Comment, Video_game, Rate, Favorite)
 
+
+# Punto de entrada de la aplicación
 if __name__ == '__main__':
-    app.run('0.0.0.0', 8080)
+    app.run('0.0.0.0', 5000, debug=True)
