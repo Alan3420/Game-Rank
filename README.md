@@ -1,7 +1,5 @@
 
-# Fase 1 (Estructuracion del proyecto)
-
-*   Organización del proyecto
+# Organización del proyecto
 
         PROYECTO GAME-RANK/
         ├── backend/
@@ -13,9 +11,19 @@
         │       └── services/
         └── frontend/
             ├── public/
-            └── src/
-                ├── assets/
-                └── components/
+            ├── src/
+            │    ├── assets/
+            │    ├── components/
+            │    ├── router/
+            │    ├── services/
+            │    ├── view/
+            │    ├── App.vue
+            │    ├── main.js
+            │    └── styles.css
+            ├── index.html
+            └── package.json
+
+                
 
 * Extensiones extras en vsCode utilizadas:
     1. Mysql (Database Client)
@@ -39,4 +47,11 @@
         1. npm cache clean --force
         2. npm install
         3. npm run dev
+
+### Como arrancar el proyecto
+* Depues de haber instalado las dependencias tanto de back `pip install -r requirements.txt` y front `npm install` y todo salio correctamente:
+
+    1. Inicializar primero el back creando la BD e insertando datos inmediatamente (estando en la carpeta /backend): `flask --app app.main db-reset`
+
+    2. Inicializar por ultimo el front que se conecta al back (estando en la carpeta /frontend): `npm run dev`
 
