@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="login">
+    <form @submit.prevent="handleLogin">
         <label for="email">Correo Electrónico:</label>
         <input id="email" v-model="email" type="email" required>
 
@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { login } from "../services/user_service";
+
 export default {
     data(){
         return {
@@ -19,21 +21,14 @@ export default {
         }
     },
     methods:{
-        login(){
-            console.log("Email:", this.email);
-
-            fetch("http://localhost:5000/user/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: this.email,
-                    password: this.password
-                })
-            })
-        }
+        async handleLogin() {
+            try {
+                const response = await login(this.email, this.password)
+                console.log("Respuesta:", response)
+            } catch (error) {
+                console.log("Error:", error)
+            }
+}
     }
 }
-    
 </script>

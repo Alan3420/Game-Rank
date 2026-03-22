@@ -7,8 +7,12 @@ from app.models.Video_game import Video_game
 from app.models.Rate import Rate
 from app.models.Favorite import Favorite
 from app.routes.welcome_route import welcome_bp
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:root@localhost:3306/game_rank"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ECHO"] = True
