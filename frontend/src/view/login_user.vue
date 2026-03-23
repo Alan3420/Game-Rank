@@ -1,8 +1,4 @@
 <template>
-    <head>
-        <title>Login - Game Rank</title>
-    </head>
-
     <div class="container-login">
         <div class="welcome-section">
             <h1>Bienvenido de vuelta</h1>
@@ -15,14 +11,14 @@
         <fieldset>
             <legend>Iniciar Sesión</legend>
             <form @submit.prevent="handleLogin">
-            <label for="email">Correo Electrónico:</label>
-            <input id="email" v-model="email" type="email" required>
+                <label for="email">Correo Electrónico:</label>
+                <input id="email" v-model="email" type="email" required>
 
-            <label for="password">Contraseña:</label>
-            <input id="password" v-model="password" type="password" required>
+                <label for="password">Contraseña:</label>
+                <input id="password" v-model="password" type="password" required>
 
-            <button type="submit">Iniciar Sesión</button>
-        </form>
+                <button type="submit" v-on:click=>Iniciar Sesión</button>
+            </form>
         </fieldset>
     </div>
 </template>
@@ -42,6 +38,7 @@ export default {
             try {
                 const response = await login(this.email, this.password)
                 console.log("Respuesta:", response)
+                this.$router.push('/content');
             } catch (error) {
                 console.log("Error:", error)
             }

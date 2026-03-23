@@ -1,6 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import Login from "../view/login_user.vue";
 import Home from "../view/home.vue";
+import ContentOverview from "../view/content_overview.vue";
 
 const routes = [
     {
@@ -14,6 +15,16 @@ const routes = [
         component: Login,
         meta:{title:"Game Rank - Login"}
 
+    },
+    {
+        path: "/register",
+        component: Login,
+        meta:{title:"Game Rank - Register"}
+    },
+    {
+        path: "/content",
+        component: ContentOverview,
+        meta:{title:"Game Rank - Content Overview"}
     }
 ];
 
