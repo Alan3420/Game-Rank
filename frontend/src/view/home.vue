@@ -1,7 +1,4 @@
 <template>
-    <head>
-        <title>Game Rank - Home</title>
-    </head>
     <div class="home-content">
         <h1>Bienvenido a Game Rank</h1>
         <p>Tu plataforma de reseñas de videojuegos</p>
