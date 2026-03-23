@@ -14,7 +14,7 @@ def get_user_by_email(email) -> User:
     return User.query.filter_by(email=email).first()
 
 def create_user(username, last_name, email, password) -> User:
-    new_user = User(username=username, last_name=last_name, email=email, password=password)
+    new_user = User(name=username, last_name=last_name, email=email, password=password)
     db.session.add(new_user)
     db.session.commit()
     return new_user

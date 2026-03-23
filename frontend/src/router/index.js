@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
 import Login from "../view/login_user.vue";
+import Register from "../view/register_user.vue"
 import Home from "../view/home.vue";
 import ContentOverview from "../view/content_overview.vue";
 
@@ -18,7 +19,7 @@ const routes = [
     },
     {
         path: "/register",
-        component: Login,
+        component: Register,
         meta:{title:"Game Rank - Register"}
     },
     {
@@ -43,6 +44,5 @@ router.beforeEach((to) => {
         return "/login"
     }
 })
-
 
 export default router;

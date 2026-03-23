@@ -30,7 +30,7 @@ def register():
     last_name_user = register_data.get("last_name")
     email_user = register_data.get("email")
     password_user = register_data.get("password")
-    user = user_service.user_registration(name=name_user, last_name=last_name_user, email=email_user, password=password_user)
+    user = user_service.user_registration(name=name_user, last_name=last_name_user, email=email_user, passwd=password_user)
 
     if user:
 
