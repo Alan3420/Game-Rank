@@ -12,10 +12,10 @@ def user_authentication(email, passwd) -> User |None:
     return None
 
 
-def user_registration(name, last_name, email, passwd, role) -> User:
+def user_registration(name, last_name, email, passwd) -> User:
 
     if user_authentication(email, passwd) == None:
-        new_user = user_repo.create_user(username=name, last_name=last_name, email=email, password=passwd, role=role)
+        new_user = user_repo.create_user(username=name, last_name=last_name, email=email, password=passwd)
 
         return new_user
 

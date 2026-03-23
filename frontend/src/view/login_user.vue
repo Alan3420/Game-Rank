@@ -12,6 +12,7 @@
                 <input type="password" id="passwd" v-model="password" placeholder="password">
 
                 <button type="submit">Login</button>
+                <a href="/register">¿no tienes cuenta? Registrate</a>
             </form>
         </fieldset>
     </body>
@@ -54,31 +55,56 @@ body {
 }
 
 fieldset {
-    border-radius: 10px;
-    background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  background: white;
 }
 
 form {
-    display: flex;
-    flex-direction: column;
-    padding: 2rem;
-
+  display: flex;
+  flex-direction: column;
 }
 
-form input {
-    margin: 3px;
-    padding: 0.8rem 4rem;
-    padding-left: 2px;
-    border-radius: 5px;
-    background-color: antiquewhite;
-    border: none;
-
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
-form button {
-    padding: 0.8rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
+input {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #6366f1;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+button:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
+}
+
+a {
+  margin-top: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: #6366f1;
+  transition: 0.2s;
+}
+
+a:hover {
+  transform: scale(1.05);
 }
 </style>
