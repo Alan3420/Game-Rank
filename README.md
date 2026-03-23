@@ -51,7 +51,7 @@
 ### Como arrancar el proyecto
 * Depues de haber instalado las dependencias tanto de back `pip install -r requirements.txt` y front `npm install` y todo salio correctamente:
 
-    1. Inicializar primero el back creando la BD e insertando datos inmediatamente (estando en la carpeta /backend): `flask --app app.main db-reset`
+    1. Inicializar primero el back creando la BD e insertando datos inmediatamente (estando en la carpeta /backend): `flask --app app.main db-reset` luego `python -m app.main`
 
     2. Inicializar por ultimo el front que se conecta al back (estando en la carpeta /frontend): `npm run dev`
 
