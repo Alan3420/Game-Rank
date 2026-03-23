@@ -9,14 +9,19 @@ from app.models.Favorite import Favorite
 from app.routes.welcome_route import welcome_bp
 from app.routes.content_overview_route import content_overview_bp
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 
 
 app = Flask(__name__)
 CORS(app)
 
+# Configuración proyecto
 app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:root@localhost:3306/game_rank"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ECHO"] = True
+app.config['SECRET_KEY'] = 'game-rank-secret-key'
+
+jwt = JWTManager(app)
 
 # Registro de Blueprints
 app.register_blueprint(welcome_bp, url_prefix="/user")

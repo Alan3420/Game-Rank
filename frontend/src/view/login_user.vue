@@ -18,6 +18,7 @@
                 <input id="password" v-model="password" type="password" required>
 
                 <button type="submit" v-on:click=>Iniciar Sesión</button>
+                <a href="/register">Crear una cuenta</a>
             </form>
         </fieldset>
     </div>
@@ -37,7 +38,8 @@ export default {
         async handleLogin() {
             try {
                 const response = await login(this.email, this.password)
-                console.log("Respuesta:", response)
+                localStorage.setItem("token", response.token)
+                localStorage.setItem("user", JSON.stringify(response.user))
                 this.$router.push('/content');
             } catch (error) {
                 console.log("Error:", error)
@@ -105,6 +107,20 @@ form button {
 form button:hover {
   background-color: #4f46e5;
   transform: translateY(-2px);
+}
+form a{
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    transition: transform 0.2s;
+}
+
+form a:hover{
+    color: #6366f1;
+    transform: scale(1.1);
 }
 
 a i {

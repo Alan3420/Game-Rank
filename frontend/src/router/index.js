@@ -35,6 +35,13 @@ const router = createRouter({
 
 router.beforeEach((to) => {
     document.title = to.meta.title || 'GameRank'
+
+    const rutasPublicas = ['/login', '/register',"/"]
+    const token = localStorage.getItem("token")
+
+    if(!token && !rutasPublicas.includes(to.path)){
+        return "/login"
+    }
 })
 
 
