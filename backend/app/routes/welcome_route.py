@@ -1,5 +1,6 @@
 from app.services import user_service
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import create_access_token
 
 welcome_bp = Blueprint('welcome_route', __name__)
 
@@ -14,8 +15,10 @@ def login():
     user = user_service.user_authentication(email, passwd)
 
     if user:
-        session["user"] = user.to_dict()  # Almacena la información del usuario en la sesión
-        return jsonify({"message": "Login successful", "user": user.to_dict()}), 200
+        token_user = create_access_token(identity= str(user.id_user))
+        return jsonify({"message": "Login successful",
+                        "user": user.to_dict(),
+                        "token": token_user}), 200
     else:
         return jsonify({"message": "Invalid email or password"}), 401
 
@@ -31,7 +34,8 @@ def register():
 
     if user:
 
-        return jsonify({"message": "Registration successful", "user": user.to_dict()}), 201
+        return jsonify({"message": "Registration successful", 
+                        "user": user.to_dict()}), 201
     else:
         return jsonify({"message": "Email already exists"}), 400
     
