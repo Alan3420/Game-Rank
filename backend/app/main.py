@@ -7,6 +7,7 @@ from app.models.Video_game import Video_game
 from app.models.Rate import Rate
 from app.models.Favorite import Favorite
 from app.routes.welcome_route import welcome_bp
+from app.routes.content_overview_route import content_overview_bp
 from flask_cors import CORS
 
 
@@ -19,6 +20,7 @@ app.config["SQLALCHEMY_ECHO"] = True
 
 # Registro de Blueprints
 app.register_blueprint(welcome_bp, url_prefix="/user")
+app.register_blueprint(content_overview_bp, url_prefix="/content")
 
 
 db.init_app(app)
