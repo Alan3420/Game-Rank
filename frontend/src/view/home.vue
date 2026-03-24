@@ -10,7 +10,12 @@
 export default {
     methods: {
         goToLogin() {
+          const token = localStorage.getItem("token")
+          if(token){
+            this.$router.push('/content');
+          }else{
             this.$router.push('/login');
+          }
         }
     }
 }
