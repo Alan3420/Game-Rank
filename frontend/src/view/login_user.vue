@@ -35,7 +35,7 @@ export default {
                 const response = await login(this.email, this.password)
                 localStorage.setItem("token", response.token)
                 localStorage.setItem("user", JSON.stringify(response.user))
-                this.$router.push('/content');
+                this.$router.push('/content/overview');
             } catch (error) {
                 console.log("Error:", error)
             }

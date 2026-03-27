@@ -1,6 +1,6 @@
 from app.services import user_service
-from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token
+from flask import Blueprint, request, jsonify, session
+from flask_jwt_extended import create_access_token, get_jwt_identity
 
 welcome_bp = Blueprint('welcome_route', __name__)
 
@@ -38,4 +38,8 @@ def register():
                         "user": user.to_dict()}), 201
     else:
         return jsonify({"message": "Email already exists"}), 400
-    
+
+
+@welcome_bp.route("/logout")
+def logout():
+    token = get_csrf_token()

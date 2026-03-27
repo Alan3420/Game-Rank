@@ -23,7 +23,7 @@ const routes = [
         meta:{title:"Game Rank - Register"}
     },
     {
-        path: "/content",
+        path: "/content/overview",
         component: ContentOverview,
         meta:{title:"Game Rank - Content Overview"}
     }

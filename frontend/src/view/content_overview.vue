@@ -2,6 +2,7 @@
    <body>
      <div class="content-overview">
         <h1>Contenido Principal</h1>
+        <p id="content"></p>
         <button @click="logout">Cerrar Sesion</button>
     </div>
    </body>
@@ -18,7 +19,8 @@ export default {
     },
     async mounted() {
         try {
-            this.contentOverview = await getContentOverview;
+            this.contentOverview = await getContentOverview();
+            document.getElementById("content").textContent= this.contentOverview
         } catch (error) {
             console.error('Error fetching content overview:', error);
         }
@@ -26,7 +28,8 @@ export default {
 
     methods: {
         logout(){
-            
+            localStorage.clear();
+            this.$router.push("/login")
         }
     }
 }
