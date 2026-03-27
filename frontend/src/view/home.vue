@@ -12,7 +12,7 @@ export default {
         goToLogin() {
           const token = localStorage.getItem("token")
           if(token){
-            this.$router.push('/content');
+            this.$router.push('/content/overview');
           }else{
             this.$router.push('/login');
           }
