@@ -1,9 +1,8 @@
 from app.services import user_service
-from flask import Blueprint, request, jsonify, session
-from flask_jwt_extended import create_access_token, get_jwt_identity
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import create_access_token
 
 welcome_bp = Blueprint('welcome_route', __name__)
-
 @welcome_bp.route("/login", methods=["POST"])
 def login():
     data_log = request.get_json()
