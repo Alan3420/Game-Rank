@@ -11,8 +11,16 @@ def get_all_video_games() -> list[Video_game]:
     
     return Video_game.query.all()
 
-def get_game_by_id(game_id):
+def get_game_by_id(game_id) -> dict:
     response = requests.get(f"{BASE_URL}/games/{game_id}", params={"key": RAWG_API_KEY})
+    return response.json()
+
+def get_game_by_name(game_name) -> dict:
+    response = requests.get(f"{BASE_URL}/games", params={"key": RAWG_API_KEY, "search": game_name})
+
+    if response.status_code != 200:
+        raise Exception("Error al obtener el juego por nombre")
+    
     return response.json()
 
 def create_video_game(id_game_api, name, date_release, platforms, development_company, id_comment) -> Video_game:
