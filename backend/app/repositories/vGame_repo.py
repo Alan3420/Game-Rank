@@ -1,14 +1,19 @@
 from app.models.Video_game import Video_game
 from app.database.db import db
+import requests
+import os
+
+RAWG_API_KEY = os.getenv('RAWG_API_KEY')
+BASE_URL = "https://api.rawg.io/api"
 
 
 def get_all_video_games() -> list[Video_game]:
     
     return Video_game.query.all()
 
-def get_video_game_by_id(game_id) -> Video_game:
-    
-    return Video_game.query.get(game_id)
+def get_game_by_id(game_id):
+    response = requests.get(f"{BASE_URL}/games/{game_id}", params={"key": RAWG_API_KEY})
+    return response.json()
 
 def create_video_game(id_game_api, name, date_release, platforms, development_company, id_comment) -> Video_game:
     
@@ -20,7 +25,7 @@ def create_video_game(id_game_api, name, date_release, platforms, development_co
 
 def update_video_game(game_id, name=None, date_release=None, platforms=None, development_company=None, id_comment=None) -> Video_game:
     
-    video_game = get_video_game_by_id(game_id)
+    video_game = get_game_by_id(game_id)
     if video_game:
         if name:
             video_game.name = name
@@ -43,7 +48,7 @@ def update_video_game(game_id, name=None, date_release=None, platforms=None, dev
 
 def delete_video_game(game_id) -> bool:
     
-    video_game = get_video_game_by_id(game_id)
+    video_game = get_game_by_id(game_id)
     if video_game:
         db.session.delete(video_game)
         db.session.commit()

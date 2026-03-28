@@ -20,6 +20,12 @@ header {
   box-shadow: 0 1px 3px rgba(0,0,0,0.05)
 
 }
+@media (max-width: 600px){
+    .nav-links{
+        flex-direction: column;
+        align-items: center;
+    }
+}
 
 .nav-links{
   display: flex;
