@@ -1,4 +1,4 @@
-from app.repositories.vGame_repo import get_game_by_id, get_all_video_games, create_video_game
+from app.repositories.vGame_repo import get_game_by_id, get_all_video_games, get_game_by_name, create_video_game
 
 def get_video_game_details(game_id):
     game_details = get_game_by_id(game_id=game_id)
@@ -24,16 +24,22 @@ def get_video_game_details(game_id):
 
     return game_format(game_details)
 
+def get_video_game_by_name_details(game_name):
+    game_details = get_game_by_name(game_name=game_name)
+    if not game_details["results"]:
+        raise Exception("No se encontró ningún juego con ese nombre")   
+    return game_format(game_details["results"][0])
+
 def game_format(data):
     return {
-        "id": data["id"],
-        "name": data["name"],
-        "release_date": data["released"],
-        "description": data["description"],
-        "imge_url": data["background_image"],
-        "rating": data["rating"],
-        "platforms": [platform["platform"]["name"] for platform in data["platforms"]],
-        "developers": [developer["name"] for developer in data["developers"]],
+        "id": data.get("id"),
+        "name": data.get("name"),
+        "release_date": data.get("released"),
+        "description": data.get("description"),
+        "imge_url": data.get("background_image"),
+        "rating": data.get("rating"),
+        "platforms": [p.get("platform", {}).get("name") for p in data.get("platforms", [])],
+        "developers": [d.get("name") for d in data.get("developers", [])],
     }
         
         

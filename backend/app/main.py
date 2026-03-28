@@ -18,7 +18,7 @@ load_dotenv()
 
 
 app = Flask(__name__)
-CORS(app)
+
 
 # Configuración proyecto
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URI")
@@ -34,6 +34,7 @@ app.register_blueprint(content_overview_bp, url_prefix="/content")
 
 
 db.init_app(app)
+CORS(app)
 
 # Comandos personalizados para la gestión de la base de datos
 @app.cli.command("db-create")
