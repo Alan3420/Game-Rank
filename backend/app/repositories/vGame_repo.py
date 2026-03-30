@@ -19,7 +19,7 @@ def get_game_by_name(game_name) -> dict:
     response = requests.get(f"{BASE_URL}/games", params={"key": RAWG_API_KEY, "search": game_name})
 
     if response.status_code != 200:
-        raise Exception("Error al obtener el juego por nombre")
+        raise Exception("Error al obtener el/los juego/s por nombre")
     
     return response.json()
 
