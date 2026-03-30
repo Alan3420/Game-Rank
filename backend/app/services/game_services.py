@@ -28,19 +28,35 @@ def get_video_game_by_name_details(game_name):
     game_details = get_game_by_name(game_name=game_name)
     if not game_details["results"]:
         raise Exception("No se encontró ningún juego con ese nombre")   
-    return game_format(game_details["results"][0])
+    return game_format(game_details["results"])
 
 def game_format(data):
-    return {
-        "id": data.get("id"),
-        "name": data.get("name"),
-        "release_date": data.get("released"),
-        "description": data.get("description"),
-        "imge_url": data.get("background_image"),
-        "rating": data.get("rating"),
-        "platforms": [p.get("platform", {}).get("name") for p in data.get("platforms", [])],
-        "developers": [d.get("name") for d in data.get("developers", [])],
-    }
+    if type(data) != list:
+        return {
+            "id": data.get("id"),
+            "name": data.get("name"),
+            "release_date": data.get("released"),
+            "description": data.get("description"),
+            "imge_url": data.get("background_image"),
+            "rating": data.get("rating"),
+             "platforms":    [p.get("platform", {}).get("name") for p in (data.get("platforms") or [])],
+            "developers":   [d.get("name") for d in (data.get("developers") or [])],
+        }
+    else:
+        return [
+            {
+                "id": game.get("id"),
+                "name": game.get("name"),
+                "release_date": game.get("released"),
+                "description": game.get("description"),
+                "imge_url": game.get("background_image"),
+                "rating": game.get("rating"),
+                "platforms":    [p.get("platform", {}).get("name") for p in (game.get("platforms") or [])],
+                "developers":   [d.get("name") for d in (game.get("developers") or [])],
+            }
+            for game in data
+        ]
+        
         
         
         

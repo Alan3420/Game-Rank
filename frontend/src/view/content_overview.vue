@@ -23,16 +23,18 @@
             </div>
 
             <!-- Card del juego -->
-            <div class="game-card" v-if="game">
-                <img :src="game.imge_url" :alt="game.name">
-                <div class="game-info">
-                    <h2>{{ game.name }}</h2>
-                    <p><strong>ID:</strong> {{ game.id }}</p>
-                    <p><strong>Fecha de lanzamiento:</strong> {{ game.release_date }}</p>
-                    <p><strong>Rating:</strong> {{ game.rating }}</p>
-                    <ul>
-                        <li><strong>Desarrolladores:</strong> {{ game.developers.join(', ') }}</li>
-                    </ul>
+            <div class="card_content">
+                <div v-for="game in games" :key="game.id" class="game-card">
+                    <img :src="game.imge_url" :alt="game.name">
+                    <div class="game-info">
+                        <h2>{{ game.name }}</h2>
+                        <p><strong>ID:</strong> {{ game.id }}</p>
+                        <p><strong>Fecha de lanzamiento:</strong> {{ game.release_date }}</p>
+                        <p><strong>Rating:</strong> {{ game.rating }}</p>
+                        <ul>
+                            <li><strong>Desarrolladores:</strong> {{ game.developers.join(', ') }}</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,7 +48,7 @@ export default {
     data() {
         return {
             contentOverview: null,
-            game: null,
+            games: [],
             game_id: null,
             game_name: null
         }
@@ -57,7 +59,7 @@ export default {
         async getContent() {
             try {
                 const response = await getContentOverview(this.game_id, null);
-                this.game = response;
+                this.games = Array.isArray(response) ? response : [response];
                 console.log(response);
 
 
@@ -70,7 +72,7 @@ export default {
         async getContentByName() {
             try {
                 const response = await getContentOverview(null, this.game_name);
-                this.game = response;
+                this.games = Array.isArray(response) ? response : [response]; // Asegura que siempre sea un array
                 console.log(response);
 
 
@@ -110,34 +112,50 @@ label {
     gap: 1rem;
     align-items: center;
 }
+
 .conten_view {
     display: flex;
     flex-direction: row;
     gap: 1rem;
 }
-
+.card_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
 .game-card {
     display: flex;
     gap: 1rem;
-    margin-top: 2rem;
     border: 1px solid black;
     border-radius: 10px;
     padding: 1rem;
-    max-width: 700px;
+    width: 700px;       /* ← ancho fijo */
+    height: 160px;      /* ← alto fijo */
+    overflow: hidden;   /* ← oculta contenido que se desborde */
 }
 
 .game-card img {
     width: 200px;
-    height: 150px;
+    height: 100%;       /* ← ocupa todo el alto de la card */
     object-fit: cover;
     border-radius: 8px;
+    flex-shrink: 0;     /* ← evita que la imagen se encoja */
 }
 
 .game-info {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    overflow: hidden;   /* ← el texto no desborda */
 }
+
+.game-info p, .game-info li {
+    white-space: nowrap;      /* ← no rompe línea */
+    overflow: hidden;         /* ← oculta el exceso */
+    text-overflow: ellipsis;  /* ← muestra "..." si el texto es muy largo */
+}
+
 
 #game_id {
     padding: 1rem;

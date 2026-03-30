@@ -5,7 +5,7 @@
                 <li><a href="/"><img src="" alt="logo_game_rank"></a></li>
                 <li><a href="/">Inicio</a></li>
                 <li><a href="#">Reseñas</a></li>
-                <li><a href="/content">Juegos</a></li>
+                <li><a href="/content/overview">Juegos</a></li>
                 <li><a href="#">Contacto</a></li>
             </ul>
         </nav>
