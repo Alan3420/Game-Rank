@@ -31,6 +31,7 @@
                         <p><strong>ID:</strong> {{ game.id }}</p>
                         <p><strong>Fecha de lanzamiento:</strong> {{ game.release_date }}</p>
                         <p><strong>Rating:</strong> {{ game.rating }}</p>
+                        <p v-html="game.description"></p>
                         <ul>
                             <li><strong>Desarrolladores:</strong> {{ game.developers.join(', ') }}</li>
                         </ul>
@@ -131,8 +132,7 @@ label {
     border-radius: 10px;
     padding: 1rem;
     width: 700px;       /* ← ancho fijo */
-    height: 160px;      /* ← alto fijo */
-    overflow: hidden;   /* ← oculta contenido que se desborde */
+    height: 260px;      /* ← alto fijo */
 }
 
 .game-card img {
@@ -140,21 +140,16 @@ label {
     height: 100%;       /* ← ocupa todo el alto de la card */
     object-fit: cover;
     border-radius: 8px;
-    flex-shrink: 0;     /* ← evita que la imagen se encoja */
 }
 
 .game-info {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    overflow: hidden;   /* ← el texto no desborda */
+    overflow-y: auto;      /* ← agrega scroll si el contenido es demasiado largo */
+    
 }
 
-.game-info p, .game-info li {
-    white-space: nowrap;      /* ← no rompe línea */
-    overflow: hidden;         /* ← oculta el exceso */
-    text-overflow: ellipsis;  /* ← muestra "..." si el texto es muy largo */
-}
 
 
 #game_id {
