@@ -23,7 +23,7 @@ app = Flask(__name__)
 # Configuración proyecto
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URI")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config["SQLALCHEMY_ECHO"] = True
+app.config["SQLALCHEMY_ECHO"] = False
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 jwt = JWTManager(app)
