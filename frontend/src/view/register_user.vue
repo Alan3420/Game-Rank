@@ -17,7 +17,15 @@
         <label for="password">Contraseña:</label>
         <input id="password" v-model="password" type="password" required>
 
-        <button type="submit">Crear cuenta</button>
+        <button type="submit" :disabled="loading">
+          <span v-if="!loading">Crear cuenta</span>
+          <span v-else class="dots-loader">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+        <p class="informacion"></p>
 
         <a href="/login" @click.prevent="$router.push('/login')">
           Volver al login
@@ -37,19 +45,36 @@ export default {
       name: "",
       last_name: "",
       email: "",
-      password: ""
+      password: "",
+      loading: false
     };
   },
   methods: {
     async handleRegister() {
 
       try {
+        this.loading = true;
         const response = await register(this.name, this.last_name, this.email, this.password);
         console.log("Usuario creado:", response);
+        await new Promise(resolve => setTimeout(resolve, 2000))
 
         this.$router.push('/login');
       } catch (error) {
-        console.log("Error:", error);
+        if (error.response && error.response.status === 400) {
+          await new Promise(resolve => setTimeout(resolve, 2000))
+          let classInfo = document.querySelector(".informacion")
+          classInfo.id = "info";
+
+          let info = document.getElementById("info")
+          info.textContent = error.response.data.message
+        }
+         else {
+          console.log("Error:", error.message);
+        }
+      }
+      finally {
+        this.loading = false;
+
       }
     }
   }
