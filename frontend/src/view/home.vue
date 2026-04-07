@@ -1,60 +1,146 @@
 <template>
-    <div class="home-content">
-        <h1>Bienvenido a Game Rank</h1>
-        <p>Tu plataforma de reseñas de videojuegos</p>
-        <button @click="goToLogin">Iniciar Sesión</button>
+  <section class="hero">
+    <div class="container-hero">
+      <h1>Descubre el juego perfecto para ti</h1>
+      <p>Explora nuestra base de datos de videojuegos y encuentra el que mejor se adapte a tus preferencias</p>
+      <div class="content-view">
+        <button class="btn_principal" @click="goToLogin">Explorar juegos</button>
+        <button class="btn_secundario">Como funciona</button>
+      </div>
     </div>
+  </section>
+
+  <section class="registro_user section_container">
+    <div class="container-hero">
+      <h2>¿Todavía no tienes cuenta?</h2>
+      <p>Únete a nuestra comunidad de jugadores y descubre nuevos juegos</p>
+      <button class="btn_registro" @click="goToRegister">Crear cuenta</button>
+
+    </div>
+  </section>
 </template>
 
 <script>
 export default {
-    methods: {
-        goToLogin() {
-          const token = localStorage.getItem("token")
-          if(token){
-            this.$router.push('/content/overview');
-          }else{
-            this.$router.push('/login');
-          }
-        }
+  methods: {
+    goToLogin() {
+      const token = localStorage.getItem("token")
+      if (token) {
+        this.$router.push('/content/overview');
+      } else {
+        this.$router.push('/login');
+      }
+    },
+    goToRegister(){
+      this.$router.push("/register");
     }
+  }
 }
 </script>
 
 <style scoped>
-    
-.home-content{
+.hero {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 30vh;
+  background-color: #ffffff;
 
-  min-height: 100vh;
+  width: 95%;
+  margin: 0 auto;
+  margin-top: 40px;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
-.home-content h1{
-  color: #111827;
+.container-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.5;
+}
 
+.container-hero p {
+  color: #555555;
+  margin-bottom: 20px;
 }
-.home-content p{
-  margin-top: 0.5rem;
-  color: #6b7280;
+
+.content-view {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 20px;
 }
-.home-content button{
-  margin-top: 3rem;
-  background-color: #6366f1;
-  color: #ffffff;
-  padding: 1rem 8rem;
-  font-size: 1.1rem;
+.btn_principal, .btn_secundario{
   border: none;
-  border-radius: 10px;
+  padding: 10px 35px;
+  border-radius: 15px;
   cursor: pointer;
-  transition: background-color 0.25s ease, transform 0.2s ease;
-  
 }
 
-.home-content button:hover {
+.btn_principal {
+  background-color: #6366f1;
+  color: white;
+}
+
+.btn_principal:hover {
   background-color: #4f46e5;
-  transform: translateY(-2px);
+}
+
+.btn_secundario {
+  background-color: #d8d8d8;
+  color: #333;
+
+}
+
+.btn_secundario:hover {
+  background-color: #adaeaf;
+}
+
+
+@media (max-width: 600px) {
+  .hero {
+    height: auto;
+    padding: 20px;
+  }
+
+
+  .content-view {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.section_container{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 30vh;
+  background-color: #ffffff;
+
+  width: 95%;
+  margin: 0 auto;
+  margin-top: 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+.btn_registro {
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  padding: 10px 35px;
+  border-radius: 15px;
+  cursor: pointer;
+
+}
+.btn_registro:hover {
+  background-color: #4f46e5;
 }
 </style>

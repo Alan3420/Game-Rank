@@ -5,7 +5,8 @@
   font-family: sans-serif;
 }
 #logo {
-  height: 25px;
+  height: 40px;
+  width: 190px;
 }
 .user_container {
   display: flex;
@@ -15,7 +16,7 @@
 
 
 
-body {
+#app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -28,7 +29,7 @@ main {
 header {
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05)
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 
 }
 @media (max-width: 600px){
