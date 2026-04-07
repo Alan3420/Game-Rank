@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_migrate import Migrate
 from app.database.db import db
 from app.database.seed import seed
 from app.models.User import User
@@ -36,18 +37,21 @@ app.register_blueprint(content_overview_bp, url_prefix="/content")
 db.init_app(app)
 CORS(app)
 
-# Comandos personalizados para la gestión de la base de datos
-@app.cli.command("db-create")
-def db_create():
-    with app.app_context():
-        db.create_all()
-        print("Base de datos creada con éxito")
+#Migraciones
+migraciones = Migrate(app, db)
 
-@app.cli.command("db-drop")
-def db_drop():
-    with app.app_context():
-        db.drop_all()
-        print("Base de datos eliminada con éxito")
+# # Comandos personalizados para la gestión de la base de datos
+# @app.cli.command("db-create")
+# def db_create():
+#     with app.app_context():
+#         db.create_all()
+#         print("Base de datos creada con éxito")
+
+# @app.cli.command("db-drop")
+# def db_drop():
+#     with app.app_context():
+#         db.drop_all()
+#         print("Base de datos eliminada con éxito")
 
 @app.cli.command("db-seed")
 def db_seed():
@@ -55,13 +59,13 @@ def db_seed():
         seed(app, db, User, Comment, Video_game, Rate, Favorite)
         print("Los datos de prueba han sido implementados")
 
-@app.cli.command("db-reset")
-def db_reset():
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-        print("🔄 Base de datos reiniciada con éxito")
-    seed(app, db, User, Comment, Video_game, Rate, Favorite)
+# @app.cli.command("db-reset")
+# def db_reset():
+#     with app.app_context():
+#         db.drop_all()
+#         db.create_all()
+#         print("Base de datos reiniciada con éxito")
+#     seed(app, db, User, Comment, Video_game, Rate, Favorite)
 
 
 # Punto de entrada de la aplicación

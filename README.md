@@ -30,10 +30,14 @@
     2. Docker
     3. Live Server 
 
-* Comandos para inicializar el proyecto
-    >Para arrancar el backend debes hacerlo desde la carpeta **/backend** y ejecutar el siguiente comando:
+* Comandos para instalar dependencias:
+    1. Para el back: `pip install -r requirements.txt`
+    2. Para el front: `npm install`
 
-    1. python -m app.main
+* Comandos para hacer migraciones:
+    1. Inicializar el sistema de migraciones: `flask --app app.main db init`
+    2. Crear una nueva migración: `flask --app app.main db migrate -m "Mensaje de la migración"`
+    3. Aplicar las migraciones a la base de datos: `flask --app app.main db upgrade`
 
 ### Comandos que se utilizan siempre en docker
 * Comando para crear y conectarse a la base de datos en docker:
