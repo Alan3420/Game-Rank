@@ -43,8 +43,10 @@ def game_format(data):
             "developers":   [d.get("name") for d in (data.get("developers") or [])],
         }
     else:
-        return [
-            {
+        lista_game_dict = []
+
+        for game in data:
+            game_dict = {
                 "id": game.get("id"),
                 "name": game.get("name"),
                 "release_date": game.get("released"),
@@ -54,8 +56,14 @@ def game_format(data):
                 "platforms":    [p.get("platform", {}).get("name") for p in (game.get("platforms") or [])],
                 "developers":   [d.get("name") for d in (game.get("developers") or [])],
             }
-            for game in data
-        ]
+            lista_game_dict.append(game_dict)
+
+        return lista_game_dict
+            
+                
+            
+            
+    
         
         
         
