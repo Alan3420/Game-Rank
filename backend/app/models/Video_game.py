@@ -8,7 +8,7 @@ class Video_game(db.Model):
 
     id_game_api = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
-    date_release = Column(Date, nullable=False)
+    date_release = Column(Date, nullable=True)
     platforms = Column(String(200), nullable=True)
     development_company =Column(String(100), nullable=False)
     id_comment = Column(Integer, ForeignKey("comments.id_comment"), nullable=True)
