@@ -73,7 +73,7 @@ export default {
         async getContentByName() {
             try {
                 const response = await getContentOverview(null, this.game_name);
-                this.games = Array.isArray(response) ? response : [response]; // Asegura que siempre sea un array
+                this.games = Array.isArray(response) ? response : [response];
                 console.log(response);
 
 
@@ -131,13 +131,13 @@ label {
     border: 1px solid black;
     border-radius: 10px;
     padding: 1rem;
-    width: 700px;       /* ← ancho fijo */
-    height: 260px;      /* ← alto fijo */
+    width: 700px;       
+    height: 260px;      
 }
 
 .game-card img {
     width: 200px;
-    height: 100%;       /* ← ocupa todo el alto de la card */
+    height: 100%;       
     object-fit: cover;
     border-radius: 8px;
 }
@@ -146,7 +146,7 @@ label {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    overflow-y: auto;      /* ← agrega scroll si el contenido es demasiado largo */
+    overflow-y: auto;      
     
 }
 
