@@ -30,10 +30,20 @@
                         <h2>{{ game.name }}</h2>
                         <p><strong>ID:</strong> {{ game.id }}</p>
                         <p><strong>Fecha de lanzamiento:</strong> {{ game.release_date }}</p>
+                        <strong>Plataformas:</strong> 
+                        <ul v-for="platform in game.platforms"> 
+                            <li >
+                                {{ platform.name }}
+                            </li>
+                        </ul>
                         <p><strong>Rating:</strong> {{ game.rating }}</p>
-                        <p v-html="game.description"></p>
-                        <ul>
-                            <li><strong>Desarrolladores:</strong> {{ game.developers.join(', ') }}</li>
+                        <strong>Descripción:</strong><p v-html="game.description"></p>
+                        <strong>Desarrolladores:</strong>
+                        <ul v-for="developer in game.developers">
+                            
+                            <li>
+                                {{ developer.name }}
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -149,8 +159,6 @@ label {
     overflow-y: auto;      
     
 }
-
-
 
 #game_id {
     padding: 1rem;

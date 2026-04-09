@@ -1,17 +1,15 @@
 from app.repositories.vGame_repo import get_game_by_id, get_all_video_games, get_game_by_name, create_video_game
+from app.services.adapter import game_format
 
-def get_video_game_details(game_id):
+def get_video_game_details(game_id) -> dict:
     game_details = get_game_by_id(game_id=game_id)
     all_games = get_all_video_games()
 
-    print(game_details)
     game_exists = False
 
     for game in all_games:
         if game.id_game_api ==game_details["id"]:
-            print(game.id_game_api)
             game_exists = True
-
             break
 
     if not game_exists:
@@ -24,41 +22,18 @@ def get_video_game_details(game_id):
 
     return game_format(game_details)
 
-def get_video_game_by_name_details(game_name):
-    game_details = get_game_by_name(game_name=game_name)
-    if not game_details["results"]:
+def get_video_game_by_name_details(game_name) -> dict | list[dict]:
+    name_game_details = get_game_by_name(game_name=game_name)
+
+    id_game_details = name_game_details["results"][0]["id"]
+
+    game_details = get_game_by_id(game_id=id_game_details)
+
+    if not name_game_details["results"]:
         raise Exception("No se encontró ningún juego con ese nombre")   
-    return game_format(game_details["results"])
+    return game_format(game_details)
 
-def game_format(data):
-    if type(data) != list:
-        return {
-            "id": data.get("id"),
-            "name": data.get("name"),
-            "release_date": data.get("released"),
-            "description": data.get("description"),
-            "imge_url": data.get("background_image"),
-            "rating": data.get("rating"),
-             "platforms":    [p.get("platform", {}).get("name") for p in (data.get("platforms") or [])],
-            "developers":   [d.get("name") for d in (data.get("developers") or [])],
-        }
-    else:
-        lista_game_dict = []
 
-        for game in data:
-            game_dict = {
-                "id": game.get("id"),
-                "name": game.get("name"),
-                "release_date": game.get("released"),
-                "description": game.get("description"),
-                "imge_url": game.get("background_image"),
-                "rating": game.get("rating"),
-                "platforms":    [p.get("platform", {}).get("name") for p in (game.get("platforms") or [])],
-                "developers":   [d.get("name") for d in (game.get("developers") or [])],
-            }
-            lista_game_dict.append(game_dict)
-
-        return lista_game_dict
             
                 
             
