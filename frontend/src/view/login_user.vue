@@ -48,6 +48,7 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 2000))
 
         console.log("Inicio de Sesion correcto");
+        alert(response.message)
 
         localStorage.setItem("token", response.token)
         localStorage.setItem("user", JSON.stringify(response.user))
