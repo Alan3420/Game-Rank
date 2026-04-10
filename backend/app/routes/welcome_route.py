@@ -16,7 +16,7 @@ def login():
 
     if user:
         token_user = create_access_token(identity= str(user.id_user))
-        return jsonify({"message": "Login successful",
+        return jsonify({"message": "Login exitoso",
                         "user": user.to_dict(),
                         "token": token_user}), 200
     else:
@@ -44,4 +44,4 @@ def register():
 
 @welcome_bp.route("/logout")
 def logout():
-    return jsonify({"message": "Logout successful"}), 200
+    return jsonify({"message": "A finalizado la sesion"}), 200
