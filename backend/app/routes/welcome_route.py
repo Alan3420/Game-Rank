@@ -33,12 +33,12 @@ def register():
         password_user = register_data.get("password")
         user = user_service.user_registration(name=name_user, last_name=last_name_user, email=email_user, passwd=password_user)
 
-        if user:
+        if type(user) != str:
 
             return jsonify({"message": "Usuario registrado exitosamente", 
                             "user": user.to_dict()}), 201
-    except IntegrityError:
-        return jsonify({"message": "El correo electrónico ya está registrado"}), 400
+        else:
+            return jsonify({"message": user}), 409
     except Exception as e:
         return jsonify({"message": "Error al registrar el usuario", "error": str(e)}), 500
 
