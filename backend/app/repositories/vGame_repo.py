@@ -8,19 +8,24 @@ BASE_URL = "https://api.rawg.io/api"
 
 
 def get_all_video_games() -> list[Video_game]:
-    
-    return Video_game.query.all()
+    response = requests.get(f"{BASE_URL}/games", params={"key": RAWG_API_KEY})
+    return response.json()
 
-def get_game_by_id(game_id) -> dict:
+def get_game_by_id_api(game_id) -> dict:
     response = requests.get(f"{BASE_URL}/games/{game_id}", params={"key": RAWG_API_KEY})
     return response.json()
 
+def get_game_by_id_bd(game_id) -> Video_game | None:
+    video_game = Video_game.query.filter_by(id_game_api=game_id).first()
+
+    if not video_game:
+        return None
+    
+    return video_game
+
 def get_game_by_name(game_name) -> dict:
     response = requests.get(f"{BASE_URL}/games", params={"key": RAWG_API_KEY, "search": game_name})
-
-    if response.status_code != 200:
-        raise Exception("Error al obtener el/los juego/s por nombre")
-    
+        
     return response.json()
 
 def create_video_game(id_game_api, name, date_release, platforms, development_company, id_comment) -> Video_game:
