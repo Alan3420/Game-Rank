@@ -38,7 +38,7 @@ def create_video_game(id_game_api, name, date_release, platforms, development_co
 
 def update_video_game(game_id, name=None, date_release=None, platforms=None, development_company=None, id_comment=None) -> Video_game:
     
-    video_game = get_game_by_id(game_id)
+    video_game = get_game_by_id_bd(game_id)
     if video_game:
         if name:
             video_game.name = name
@@ -61,7 +61,7 @@ def update_video_game(game_id, name=None, date_release=None, platforms=None, dev
 
 def delete_video_game(game_id) -> bool:
     
-    video_game = get_game_by_id(game_id)
+    video_game = get_game_by_id_bd(game_id)
     if video_game:
         db.session.delete(video_game)
         db.session.commit()
