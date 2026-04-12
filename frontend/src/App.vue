@@ -16,6 +16,15 @@
   </main>
 
   <footer>
-        <p>&copy; 2026 Game Rank. Todos los derechos reservados.</p>
+
+        <div class="footer-info">
+            <p>&copy; 2026 Game Rank | Game data powered by <a href="https://rawg.io" target="_blank">RAWG</a></p>
+        </div>
+
+        <div class="footer-links">
+            <a href="">Terminos</a>
+            <a href="">Privacidad</a>
+            <a href="https://github.com/Alan3420">Contacto</a>
+        </div>
     </footer>
 </template>
