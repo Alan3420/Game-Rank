@@ -47,11 +47,11 @@ migraciones = Migrate(app, db)
 #         db.create_all()
 #         print("Base de datos creada con éxito")
 
-# @app.cli.command("db-drop")
-# def db_drop():
-#     with app.app_context():
-#         db.drop_all()
-#         print("Base de datos eliminada con éxito")
+@app.cli.command("db-drop")
+def db_drop():
+    with app.app_context():
+        db.drop_all()
+        print("Base de datos eliminada con éxito")
 
 @app.cli.command("db-seed")
 def db_seed():
