@@ -44,9 +44,32 @@ def developer_format(data) -> dict | list[dict]:
         
         return lista_developer_dict
     
-
+def game_format_resume(data) -> dict:
+    if type(data) != list:
+        return {
+        
+            "id": data.get("id"),
+            "name": data.get("name"),
+            "release_date": data.get("released"),
+            "imge_url": data.get("background_image"),
+            "rating": data.get("rating"),
+        }
+    else:
+        lista_game_dict = []
+        
+        for game in data:
+            game_dict = {
+                "id": game.get("id"),
+                "name": game.get("name"),
+                "release_date": game.get("released"),
+                "imge_url": game.get("background_image"),
+                "rating": game.get("rating"),
+            }
+            lista_game_dict.append(game_dict)
+        
+        return lista_game_dict
     
-def game_format(data) -> dict | list[dict]:
+def game_format_details(data) -> dict | list[dict]:
     
     if type(data) != list:
         print(data)
