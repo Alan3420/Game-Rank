@@ -29,6 +29,18 @@
             </div>
 
             <button class="logout" @click="logout">Cerrar Sesion</button>
+
+            <div class="pagination">
+                <Button icon="pi pi-angle-left" class="p-button-rounded p-button-outlined pagination-btn"
+                    @click="prevPage" :disabled="page === 1" />
+
+                <span class="page-indicator">
+                    Página {{ page }}
+                </span>
+
+                <Button icon="pi pi-angle-right" class="p-button-rounded p-button-outlined pagination-btn"
+                    @click="nextPage" />
+            </div>
         </div>
     </body>
 </template>
@@ -46,25 +58,28 @@ export default {
             contentOverview: null,
             games: [],
             game_id: null,
-            game_name: null
+            game_name: null,
+            page: 1,
+            per_page: 10
         }
+    },
+    mounted() {
+        this.getContent(1)
     },
 
 
     methods: {
-        async getContent() {
+        async getContent(page = 1) {
             try {
-                const response = await getContentOverview(this.game_id, null);
-                this.games = Array.isArray(response) ? response : [response];
-                console.log(response);
-
-
-
-
+                const response = await getContentOverview(page, null);
+                this.games = response;
+                this.page = page;
             } catch (error) {
-                console.error('Error:', error);
+                console.error(error);
             }
         },
+
+
         async getContentByName() {
             try {
                 const response = await getContentOverview(null, this.game_name);
@@ -76,6 +91,20 @@ export default {
                 console.error('Error:', error);
             }
         },
+
+        async nextPage() {
+            this.page++
+            await this.getContent(this.page)
+        },
+
+        async prevPage() {
+            if (this.page > 1) {
+                this.page--
+                await this.getContent(this.page)
+            }
+        },
+
+
         logout() {
             localStorage.clear();
             this.$router.push("/login")
@@ -122,7 +151,7 @@ label {
     margin: 0 auto 2rem;
     border-radius: 999px;
     overflow: hidden;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
     background: white;
 }
 
@@ -229,5 +258,37 @@ label {
     box-shadow: inset 0 0 3px 1px black;
     background-color: grey;
 
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Botones */
+.pagination-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Hover estilo moderno */
+.pagination-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* Texto de página */
+.page-indicator {
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 </style>

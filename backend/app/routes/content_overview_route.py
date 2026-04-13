@@ -10,8 +10,12 @@ def overview():
     try:
         page = request.args.get('page', default=1, type=int)
         per_page = request.args.get('per_page', default=10, type=int)
+        name = request.args.get('name', default=None, type=str)
 
         games = get_video_games_pagination(page=page, per_page=per_page)
+
+        if name:
+            games = [g for g in games if name.lower() in g["name"].lower()]
 
         return jsonify(games), 200
     except Exception as e:
