@@ -2,24 +2,16 @@
 
     <body>
         <div class="content-overview">
-            <div class="content-input">
+            <div class="header">
                 <h1>Contenido Principal</h1>
 
                 <div class="conten_view">
-                    <div class="content-input">
-                        <label for="game_id">Id del Juego</label>
-                        <input type="number" id="game_id" name="game_id" v-model="game_id">
-                        <button class="btn btn-primary" @click="getContent">Obtener Por ID</button>
-                    </div>
-
-                    <div class="content-input">
+                    <div class="buscar-contenido">
                         <label for="game_name">Nombre del Juego</label>
                         <input type="text" id="game_name" name="game_name" v-model="game_name">
-                        <button class="btn-primary" @click="getContentByName">Buscar por Nombre</button>
+                        <button class="btn-primary" @click="getContentByName">Buscar</button>
                     </div>
                 </div>
-
-                <button @click="logout">Cerrar Sesion</button>
             </div>
 
             <!-- Card del juego -->
@@ -28,26 +20,14 @@
                     <img :src="game.imge_url" :alt="game.name">
                     <div class="game-info">
                         <h2>{{ game.name }}</h2>
-                        <p><strong>ID:</strong> {{ game.id }}</p>
                         <p><strong>Fecha de lanzamiento:</strong> {{ game.release_date }}</p>
-                        <strong>Plataformas:</strong> 
-                        <ul v-for="platform in game.platforms"> 
-                            <li >
-                                {{ platform.name }}
-                            </li>
-                        </ul>
                         <p><strong>Rating:</strong> {{ game.rating }}</p>
-                        <strong>Descripción:</strong><p v-html="game.description"></p>
-                        <strong>Desarrolladores:</strong>
-                        <ul v-for="developer in game.developers">
-                            
-                            <li>
-                                {{ developer.name }}
-                            </li>
-                        </ul>
+            
                     </div>
                 </div>
             </div>
+
+            <button @click="logout">Cerrar Sesion</button>
         </div>
     </body>
 </template>
@@ -108,7 +88,6 @@ label {
 }
 
 .content-overview {
-    display: flex;
     justify-content: center;
     align-items: flex-start;
     gap: 2rem;
@@ -116,22 +95,29 @@ label {
     background-color: #f0f0f0;
     min-height: 100vh;
 }
-
-.content-input {
+.header {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    align-items: center;
 }
 
-.conten_view {
+.buscar-contenido{
     display: flex;
     flex-direction: row;
+    gap: 1rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}
+.conten_view {
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
 }
 .card_content {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
 }
@@ -171,13 +157,15 @@ label {
 }
 
 #game_name {
+    flex: 1;
+    
     margin-top: 1rem;
     padding: 1rem;
     border-radius: 10px;
     border: 1px solid black;
     color: black;
     background-color: white;
-    margin-bottom: 2rem;
+    margin: 0;
 }
 
 .btn-primary {
