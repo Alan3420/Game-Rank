@@ -18,26 +18,28 @@
             <!-- Card del juego -->
             <div class="card_content">
                 <div v-for="game in games" :key="game.id" class="game-card">
-                <div class="game-bg" :style="{ backgroundImage: `url(${game.imge_url})` }">
-                    <div class="overlay">
-                        <div class="game-content">
-                            <h2 class="game-title">{{ game.name }}</h2>
+                    <div class="game-bg" :style="{ backgroundImage: `url(${game.imge_url})` }">
+                        <div class="overlay">
+                            <div class="game-content">
+                                <h2 class="game-title">
+                                    <span>{{ game.name }} &nbsp;&nbsp;&nbsp; {{ game.name }} &nbsp;&nbsp;&nbsp;</span>
+                                </h2>
 
-                            <div class="game-meta">
-                                <span class="meta-item">
-                                    <i class="pi pi-star"></i>
-                                    {{ game.rating }}
-                                </span>
+                                <div class="game-meta">
+                                    <span class="meta-item">
+                                        <i class="pi pi-star"></i>
+                                        {{ game.rating }}
+                                    </span>
 
-                                <span class="meta-item">
-                                    <i class="pi pi-calendar"></i>
-                                    {{ game.release_date }}
-                                </span>
+                                    <span class="meta-item">
+                                        <i class="pi pi-calendar"></i>
+                                        {{ game.release_date }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
 
             <button class="logout" @click="logout">Cerrar Sesion</button>
@@ -64,21 +66,24 @@ export default {
             page: 1,
             per_page: 10,
             loading: false,
-            hasNext: true
+            hasNext: true,
+            maxGames: 200
         }
     },
     mounted() {
-        this.getContent(); // carga inicial
-        window.addEventListener("scroll", this.handleScroll);
+        this.getContent();
+        this.debouncedScroll = this.debounce(this.handleScroll, 500)
+        window.addEventListener("scroll", this.debouncedScroll);
+        
     },
     beforeUnmount() {
-        window.removeEventListener("scroll", this.handleScroll);
+        window.removeEventListener("scroll", this.debouncedScroll);
     },
 
 
     methods: {
         async getContent() {
-            if (this.loading || !this.hasNext) return;
+            if (this.loading || !this.hasNext || this.games.length >= this.maxGames) return;
 
             this.loading = true;
 
@@ -117,11 +122,18 @@ export default {
             const fullHeight = document.documentElement.scrollHeight;
 
 
-            if (scrollTop + windowHeight >= fullHeight - 100) {
+            if (scrollTop + windowHeight >= fullHeight - 1000) {
                 this.getContent();
             }
         },
 
+        debounce(fn, delay) {
+            let timer = null
+            return function (...args) {
+                clearTimeout(timer)
+                timer = setTimeout(() => fn.apply(this, args), delay)
+            }
+        },
 
         logout() {
             localStorage.clear();
@@ -140,8 +152,9 @@ label {
 }
 
 .content-overview {
-    max-width: 1400px;
-    margin: 0 auto;
+    width: 100%;        /* ← ocupa todo el ancho */
+    max-width: 100%;    /* ← sin límite */
+    margin: 0;
     padding: 2rem;
     min-height: 100vh;
     background-color: #f5f5f5;
@@ -210,7 +223,7 @@ label {
 /* GRID */
 .card_content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));  /* ← de 200 a 250 */
     gap: 1.5rem;
     width: 100%;
 }
@@ -218,7 +231,7 @@ label {
 /* CARD */
 .game-card {
     width: 100%;
-    height: 300px;
+    height: 500px;
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
@@ -247,21 +260,17 @@ label {
     display: flex;
     align-items: flex-end;
     padding: 1rem;
-    background: linear-gradient(
-        to top,
-        rgba(0, 0, 0, 0.80) 20%,
-        rgba(0, 0, 0, 0.2) 60%,
-        rgba(0, 0, 0, 0.0) 100%
-    );
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.80) 20%,
+            rgba(0, 0, 0, 0.2) 60%,
+            rgba(0, 0, 0, 0.0) 100%);
     transition: background 0.3s ease;
 }
 
 .game-card:hover .overlay {
-    background: linear-gradient(
-        to top,
-        rgba(0, 0, 0, 0.92) 30%,
-        rgba(0, 0, 0, 0.35) 70%
-    );
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.92) 30%,
+            rgba(0, 0, 0, 0.35) 70%);
 }
 
 /* CONTENIDO */
@@ -302,10 +311,43 @@ label {
     transform: scale(1.15);
 }
 
+.game-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.game-title span {
+    display: inline-block;
+}
+
+.game-card:hover .game-title span {
+    animation: marquee 4s linear infinite;
+}
+
 /* ANIMACIÓN */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 .game-card {
@@ -341,15 +383,26 @@ label {
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-    .game-card { height: 240px; }
-    .game-title { font-size: 0.9rem; }
-    .game-meta { font-size: 0.8rem; }
+    .game-card {
+        height: 240px;
+    }
+
+    .game-title {
+        font-size: 0.9rem;
+    }
+
+    .game-meta {
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 480px) {
     .card_content {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     }
-    .game-card { height: 200px; }
+
+    .game-card {
+        height: 200px;
+    }
 }
 </style>
