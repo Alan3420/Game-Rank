@@ -62,7 +62,10 @@ export default {
           classInfo.id = "info";
           
           let info = document.getElementById("info")
+
           info.textContent = error.response.data.message
+          console.log(error.response.data.message);
+          
         }
         else{
           console.log("Error:", error.message);

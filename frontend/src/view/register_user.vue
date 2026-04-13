@@ -60,13 +60,18 @@ export default {
 
         this.$router.push('/login');
       } catch (error) {
-        if (error.response && error.response.status === 400) {
+        if (error.response && error.response.status === 409) {
           await new Promise(resolve => setTimeout(resolve, 2000))
           let classInfo = document.querySelector(".informacion")
           classInfo.id = "info";
 
+          
           let info = document.getElementById("info")
+
           info.textContent = error.response.data.message
+          console.log(error.response.data.message);
+          
+          
         }
          else {
           console.log("Error:", error.message);

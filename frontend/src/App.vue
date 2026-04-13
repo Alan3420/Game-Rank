@@ -24,7 +24,7 @@
         <div class="footer-links">
             <a href="">Terminos</a>
             <a href="">Privacidad</a>
-            <a href="https://github.com/Alan3420">Contacto</a>
+            <a href="https://github.com/Alan3420" target="_blank">Contacto</a>
         </div>
     </footer>
 </template>
