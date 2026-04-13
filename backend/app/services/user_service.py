@@ -30,6 +30,17 @@ def user_registration(name, last_name, email, passwd) -> User | str:
         print("Error en el registro del usuario:", str(e))
         raise Exception("Error en el registro del usuario")
 
+def get_list_users() -> list[User]:
+
+    try:
+        list_users = user_repo.get_all_users()
+
+        return list_users
+    
+    except Exception as e:
+        print("Error al obtener la lista de usuarios:", str(e))
+        raise Exception("Error al obtener la lista de usuarios")
+
 def user_update(user_id, name, last_name, email, passwd) -> User | str:
 
     try:

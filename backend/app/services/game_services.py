@@ -32,7 +32,7 @@ def get_video_game_details(game_id) -> dict:
     except Exception as e:
         raise Exception(f"Error al obtener los detalles del juego: {str(e)}")
 
-def get_video_game_by_name_details(game_name) -> dict | list[dict]:
+def get_video_game_by_name_details(game_name) -> dict | None:
     name_game_details = get_game_by_name(game_name=game_name)
 
     id_game_details = name_game_details["results"][0]["id"]
@@ -40,7 +40,7 @@ def get_video_game_by_name_details(game_name) -> dict | list[dict]:
     game_details = get_game_by_id_api(game_id=id_game_details)
 
     if not name_game_details["results"]:
-        raise Exception("No se encontró ningún juego con ese nombre")   
+        return None
     return game_format(game_details)
 
 
