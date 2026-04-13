@@ -59,7 +59,6 @@ def get_video_games_pagination(page: int, per_page: int):
 
         return game_format_resume(paginated_games)
 
-        return formatted_games
     except Exception as e:
         raise Exception(f"Error al obtener los juegos con paginación: {str(e)}")
 
