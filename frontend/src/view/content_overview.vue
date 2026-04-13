@@ -18,28 +18,32 @@
             <!-- Card del juego -->
             <div class="card_content">
                 <div v-for="game in games" :key="game.id" class="game-card">
-                    <img :src="game.imge_url" :alt="game.name">
-                    <div class="game-info">
-                        <h2>{{ game.name }}</h2>
-                        <p><strong>Fecha de lanzamiento:</strong> {{ game.release_date }}</p>
-                        <p><strong>Rating:</strong> {{ game.rating }}</p>
+                <div class="game-bg" :style="{ backgroundImage: `url(${game.imge_url})` }">
+                    <div class="overlay">
+                        <div class="game-content">
+                            <h2 class="game-title">{{ game.name }}</h2>
 
+                            <div class="game-meta">
+                                <span class="meta-item">
+                                    <i class="pi pi-star"></i>
+                                    {{ game.rating }}
+                                </span>
+
+                                <span class="meta-item">
+                                    <i class="pi pi-calendar"></i>
+                                    {{ game.release_date }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
             </div>
 
             <button class="logout" @click="logout">Cerrar Sesion</button>
 
-            <div class="pagination">
-                <Button icon="pi pi-angle-left" class="p-button-rounded p-button-outlined pagination-btn"
-                    @click="prevPage" :disabled="page === 1" />
-
-                <span class="page-indicator">
-                    Página {{ page }}
-                </span>
-
-                <Button icon="pi pi-angle-right" class="p-button-rounded p-button-outlined pagination-btn"
-                    @click="nextPage" />
+            <div v-if="loading" class="loader">
+                <span>Cargando más juegos...</span>
             </div>
         </div>
     </body>
@@ -55,27 +59,42 @@ export default {
     },
     data() {
         return {
-            contentOverview: null,
             games: [],
-            game_id: null,
             game_name: null,
             page: 1,
-            per_page: 10
+            per_page: 10,
+            loading: false,
+            hasNext: true
         }
     },
     mounted() {
-        this.getContent(1)
+        this.getContent(); // carga inicial
+        window.addEventListener("scroll", this.handleScroll);
+    },
+    beforeUnmount() {
+        window.removeEventListener("scroll", this.handleScroll);
     },
 
 
     methods: {
-        async getContent(page = 1) {
+        async getContent() {
+            if (this.loading || !this.hasNext) return;
+
+            this.loading = true;
+
             try {
-                const response = await getContentOverview(page, null);
-                this.games = response;
-                this.page = page;
+                const response = await getContentOverview(this.page, this.game_name);
+
+                this.games = [...this.games, ...response.games];
+
+                this.hasNext = !!response.next;
+
+                this.page++;
+
             } catch (error) {
                 console.error(error);
+            } finally {
+                this.loading = false;
             }
         },
 
@@ -92,15 +111,14 @@ export default {
             }
         },
 
-        async nextPage() {
-            this.page++
-            await this.getContent(this.page)
-        },
+        handleScroll() {
+            const scrollTop = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const fullHeight = document.documentElement.scrollHeight;
 
-        async prevPage() {
-            if (this.page > 1) {
-                this.page--
-                await this.getContent(this.page)
+
+            if (scrollTop + windowHeight >= fullHeight - 100) {
+                this.getContent();
             }
         },
 
@@ -116,179 +134,222 @@ export default {
 
 <style scoped>
 label {
-    font-size: 1.5rem;
+    font-size: 1rem;
     margin-top: 0.5rem;
-    color: black;
+    color: #444;
 }
 
 .content-overview {
-    justify-content: center;
-    align-items: flex-start;
-    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
     padding: 2rem;
-    background-color: #f0f0f0;
     min-height: 100vh;
+    background-color: #f5f5f5;
 }
 
 .header {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.buscar-contenido {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    width: 100%;
-    align-items: center;
+.header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 0.03em;
 }
 
 .google-search {
     display: flex;
     width: 100%;
-    max-width: 650px;
-    margin: 0 auto 2rem;
+    max-width: 600px;
     border-radius: 999px;
     overflow: hidden;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     background: white;
+    border: 1px solid #e0e0e0;
+    transition: box-shadow 0.2s ease;
+}
+
+.google-search:focus-within {
+    box-shadow: 0 4px 20px rgba(124, 111, 255, 0.2);
+    border-color: #7c6fff;
 }
 
 .google-input {
     flex: 1;
     border: none;
-    padding: 1rem 1.2rem;
+    padding: 0.85rem 1.2rem;
+    font-size: 1rem;
+    color: #1a1a1a;
+    background: transparent;
+    outline: none;
+}
+
+.google-input::placeholder {
+    color: #aaa;
 }
 
 .google-btn {
     border: none;
-    border-radius: 0;
-    margin-right: 15px;
+    border-radius: 0 999px 999px 0;
+    background: #7c6fff;
+    color: white;
+    padding: 0 1.4rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
 }
 
-.conten_view {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.google-btn:hover {
+    background: #5a4de0;
 }
 
+/* GRID */
 .card_content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* CARD */
+.game-card {
+    width: 100%;
+    height: 300px;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.game-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 28px rgba(124, 111, 255, 0.25);
+}
+
+/* IMAGEN FONDO */
+.game-bg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* OVERLAY */
+.overlay {
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    align-items: flex-end;
+    padding: 1rem;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.80) 20%,
+        rgba(0, 0, 0, 0.2) 60%,
+        rgba(0, 0, 0, 0.0) 100%
+    );
+    transition: background 0.3s ease;
+}
+
+.game-card:hover .overlay {
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.92) 30%,
+        rgba(0, 0, 0, 0.35) 70%
+    );
+}
+
+/* CONTENIDO */
+.game-content {
+    color: #fff;
+    width: 100%;
+}
+
+.game-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.game-meta {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.meta-item i {
+    font-size: 0.85rem;
+    transition: transform 0.2s ease;
+}
+
+.game-card:hover .meta-item i {
+    transform: scale(1.15);
+}
+
+/* ANIMACIÓN */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .game-card {
-    display: flex;
-    gap: 1rem;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 1rem;
-    width: 700px;
-    height: 260px;
+    animation: fadeIn 0.4s ease;
 }
 
-.game-card img {
-    width: 200px;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
+/* LOADER */
+.loader {
+    width: 100%;
+    text-align: center;
+    padding: 2rem;
+    font-size: 1rem;
+    color: #888;
 }
 
-.game-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    overflow-y: auto;
-
-}
-
-#game_id {
-    padding: 1rem;
-    border-radius: 10px;
-    border: 1px solid black;
-    color: black;
-    background-color: white;
-    margin-bottom: 2rem;
-    margin-top: 1rem;
-}
-
-#game_name {
-    flex: 1;
-
-    margin-top: 1rem;
-    padding: 1rem;
-    border-radius: 10px;
-    border: 1px solid black;
-    color: black;
-    background-color: white;
-    margin: 0;
-}
-
-.btn-primary {
-    padding: 1rem 3rem;
-    border-radius: 10px;
-    border: 1px solid white;
-    color: white;
-    background-color: black;
-    cursor: pointer;
-}
-
-@media (max-width: 600px) {
-    .content-overview {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
+/* LOGOUT */
 .logout {
-    padding: 1rem 3rem;
+    margin-top: 2rem;
+    padding: 0.75rem 2rem;
     border-radius: 10px;
-    border: 1px solid white;
-    color: white;
-    background-color: black;
+    border: 1px solid #ddd;
+    color: #444;
+    background-color: white;
     cursor: pointer;
-
+    transition: background 0.2s ease, border-color 0.2s ease;
+    font-size: 0.95rem;
 }
 
 .logout:hover {
-    box-shadow: inset 0 0 3px 1px black;
-    background-color: grey;
-
+    background-color: #f0f0f0;
+    border-color: #bbb;
 }
 
-.pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 2rem;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .game-card { height: 240px; }
+    .game-title { font-size: 0.9rem; }
+    .game-meta { font-size: 0.8rem; }
 }
 
-/* Botones */
-.pagination-btn {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    transition: all 0.2s ease-in-out;
-}
-
-/* Hover estilo moderno */
-.pagination-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-}
-
-/* Texto de página */
-.page-indicator {
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+@media (max-width: 480px) {
+    .card_content {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    .game-card { height: 200px; }
 }
 </style>
