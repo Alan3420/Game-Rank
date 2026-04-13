@@ -1,4 +1,4 @@
-from app.repositories.vGame_repo import create_video_game, get_game_by_id_api, get_game_by_id_bd, get_game_by_name
+from app.repositories.vGame_repo import create_video_game, get_all_video_games, get_game_by_id_api, get_game_by_id_bd, get_game_by_name
 from app.services.adapter import game_format
 
 def get_video_game_details(game_id) -> dict:
@@ -42,6 +42,27 @@ def get_video_game_by_name_details(game_name) -> dict | None:
     if not name_game_details["results"]:
         return None
     return game_format(game_details)
+
+def get_video_games_pagination(page: int, per_page: int):
+
+    try:
+        games = get_all_video_games()
+
+        start = (page - 1) * per_page
+        end = start + per_page
+
+        paginated_games = games["results"][start:end]
+
+        formatted_games = []
+
+        for game in paginated_games:
+            game_details = get_game_by_id_api(game_id=game["id"])
+            formatted_game = game_format(game_details)
+            formatted_games.append(formatted_game)
+
+        return formatted_games
+    except Exception as e:
+        raise Exception(f"Error al obtener los juegos con paginación: {str(e)}")
 
 
             
