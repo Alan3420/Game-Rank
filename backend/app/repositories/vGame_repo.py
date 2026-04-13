@@ -7,8 +7,15 @@ RAWG_API_KEY = os.getenv('RAWG_API_KEY')
 BASE_URL = "https://api.rawg.io/api"
 
 
-def get_all_video_games() -> list[Video_game]:
-    response = requests.get(f"{BASE_URL}/games", params={"key": RAWG_API_KEY})
+def get_all_video_games(page=1, per_page=10):
+    response = requests.get(
+        f"{BASE_URL}/games",
+        params={
+            "key": RAWG_API_KEY,
+            "page": page,
+            "page_size": per_page
+        }
+    )
     return response.json()
 
 def get_game_by_id_api(game_id) -> dict:

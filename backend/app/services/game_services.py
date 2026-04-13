@@ -50,17 +50,16 @@ def get_video_game_by_name_details(game_name) -> dict | None:
 def get_video_games_pagination(page: int, per_page: int):
 
     try:
-        games = get_all_video_games()
+        games = get_all_video_games(page=page, per_page=per_page)
 
-        start = (page - 1) * per_page
-        end = start + per_page
-
-        paginated_games = games["results"][start:end]
-
-        return game_format_resume(paginated_games)
+        return {
+            "games": game_format_resume(games.get("results", [])),
+            "next": games.get("next"),
+            "previous": games.get("previous")
+        }
 
     except Exception as e:
-        raise Exception(f"Error al obtener los juegos con paginación: {str(e)}")
+        raise Exception(f"Error: {str(e)}")
 
 
             
