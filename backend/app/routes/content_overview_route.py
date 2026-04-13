@@ -1,30 +1,27 @@
 from flask import Blueprint, jsonify, request
-from app.services.game_services import get_video_game_details, get_video_game_by_name_details
+from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination
 
 
 
 content_overview_bp = Blueprint('content_overview_route', __name__)
 
 @content_overview_bp.route('/overview')  
-def get_content():
-
+def overview():
     try:
-        get_game_id = request.args.get('game_id') 
-        game_name = request.args.get('game_name')
+        page = request.args.get('page', default=1, type=int)
+        per_page = request.args.get('per_page', default=10, type=int)
 
-        if not get_game_id and not game_name:
-            return jsonify({"error": "Debes enviar 'game_id' o 'game_name'"}), 400
+        games = get_video_games_pagination(page=page, per_page=per_page)
 
-        if game_name and game_name.strip() == "":
-            return jsonify({"error": "El nombre del juego no puede estar vacío"}), 400
-
-        if get_game_id:
-            game = get_video_game_details(get_game_id)
-        else:
-            game = get_video_game_by_name_details(game_name)
-
-        return jsonify(game), 200
-
+        return jsonify(games), 200
     except Exception as e:
-        print("ERROR:", e)
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"message": "Error al obtener los juegos", "error": str(e)}), 500
+    
+
+@content_overview_bp.route('/overview/<int:game_id>')
+def overview_by_id(game_id):
+    try:
+        game_details = get_video_game_details(game_id=game_id)
+        return jsonify(game_details), 200
+    except Exception as e:
+        return jsonify({"message": "Error al obtener los detalles del juego", "error": str(e)}), 500
