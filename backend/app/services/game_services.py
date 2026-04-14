@@ -62,18 +62,21 @@ def get_video_games_pagination(page: int, per_page: int):
     
 
 def save_games(games:list, app):
-    print("🔥 THREAD INICIADO")    
     with app.app_context():
         try:
             listaJuegos = game_format_details(games)
 
             if type(listaJuegos) == list:
 
-                for game in listaJuegos:
+                for game_resum in listaJuegos:
+                    
+                    game_api = get_game_by_id_api(game_id=game_resum["id"])
+                    id_bd = get_game_by_id_bd(game_api["id"])
+                    
 
-                    id_bd = get_game_by_id_bd(game["id"])
                     
                     if not id_bd:
+                        game = game_format_details(game_api)
                         create_video_game(id_game_api=game["id"],
                                         name=game["name"],
                                         date_release=game["release_date"],
@@ -82,7 +85,7 @@ def save_games(games:list, app):
                                         )
 
         except Exception as e:
-            print(f"Error al guardar el juego {game['id']}: {str(e)}")
+            print(f"Error al guardar el juego {game_api['id']}: {str(e)}")
             
 
 
