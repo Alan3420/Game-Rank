@@ -11,7 +11,6 @@ class Video_game(db.Model):
     date_release = Column(Date, nullable=True)
     platforms = Column(String(200), nullable=True)
     development_company =Column(String(100), nullable=False)
-    id_comment = Column(Integer, ForeignKey("comments.id_comment"), nullable=True)
     
 
     rates_rl = relationship("Rate", back_populates="video_games_rl")

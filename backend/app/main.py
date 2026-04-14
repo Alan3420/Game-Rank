@@ -23,6 +23,14 @@ app = Flask(__name__)
 
 # Configuración proyecto
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URI")
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "connect_args": {
+        "ssl": {
+            "ca": os.path.join(os.path.dirname(__file__), 'ca.pem') 
+            # O usa una ruta absoluta: "/ruta/completa/a/tu/ca.pem"
+        }
+    }
+}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ECHO"] = False
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
@@ -41,11 +49,11 @@ CORS(app)
 migraciones = Migrate(app, db)
 
 # # Comandos personalizados para la gestión de la base de datos
-# @app.cli.command("db-create")
-# def db_create():
-#     with app.app_context():
-#         db.create_all()
-#         print("Base de datos creada con éxito")
+@app.cli.command("db-create")
+def db_create():
+    with app.app_context():
+        db.create_all()
+        print("Base de datos creada con éxito")
 
 @app.cli.command("db-drop")
 def db_drop():
