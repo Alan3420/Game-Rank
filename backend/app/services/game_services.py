@@ -76,16 +76,10 @@ def save_games(games:list, app):
 
                     
                     if not id_bd:
-                        game = game_format_details(game_api)
-                        create_video_game(id_game_api=game["id"],
-                                        name=game["name"],
-                                        date_release=game["release_date"],
-                                        platforms=game["name"],
-                                        development_company=game["name"]
-                                        )
+                        get_video_game_details(game_id=game_api["id"])
 
         except Exception as e:
-            print(f"Error al guardar el juego {game_api['id']}: {str(e)}")
+            print(f"Error al guardar el juego {game_api['name']}: {str(e)}")
             
 
 
