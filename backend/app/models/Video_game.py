@@ -7,10 +7,10 @@ class Video_game(db.Model):
     __tablename__="videoGame"
 
     id_game_api = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(255), nullable=False)
     date_release = Column(Date, nullable=True)
     platforms = Column(String(200), nullable=True)
-    development_company =Column(String(100), nullable=False)
+    development_company =Column(String(255), nullable=False)
     
 
     rates_rl = relationship("Rate", back_populates="video_games_rl", overlaps="video_games_rl")
