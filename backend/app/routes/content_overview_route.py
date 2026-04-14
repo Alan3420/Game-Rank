@@ -1,11 +1,12 @@
-from flask import Blueprint, jsonify, request
-from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination
-
+from flask import Blueprint, jsonify, request, current_app
+import threading
+from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games
 
 
 content_overview_bp = Blueprint('content_overview_route', __name__)
 
-@content_overview_bp.route('/overview')  
+
+@content_overview_bp.route('/overview')
 def overview():
     try:
         page = request.args.get('page', default=1, type=int)
@@ -13,6 +14,13 @@ def overview():
         name = request.args.get('name', default=None, type=str)
 
         games = get_video_games_pagination(page=page, per_page=per_page)
+
+        # Esta libreria va guardando en segundo plano lo que va lanzando la API sin interrupir el proceso, asi la la BD se va alimentando.
+        thread = threading.Thread(
+            target=save_games,
+            args=(games["games"], current_app._get_current_object())
+        )
+        thread.start()
 
         if name:
             games = [g for g in games if name.lower() in g["name"].lower()]

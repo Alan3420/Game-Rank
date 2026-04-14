@@ -72,7 +72,7 @@ def game_format_resume(data) -> dict:
 def game_format_details(data) -> dict | list[dict]:
     
     if type(data) != list:
-        print(data)
+        print("Lo que se recibio no es una lista")
         return {
             "id": data.get("id"),
             "name": data.get("name"),
