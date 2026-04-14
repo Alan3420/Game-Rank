@@ -4,9 +4,15 @@
             <ul class="nav-links">
                 <li><a href="/"><img id="logo" src="/src/assets/game_rank_logo.png" alt="logo_game_rank"></a></li>
                 <div class="user_container">
-                    <li><a href="/login">Iniciar Sesión</a></li>
-                    <li><a href="/register">Registrarse</a></li>
-                </div>
+                        <template v-if="userName">
+                            <li><span class="user-name">👤 {{ userName }}</span></li>
+                            <li><a href="#" @click="logout">Cerrar Sesión</a></li>
+                        </template>
+                        <template v-else>
+                            <li><a href="/login">Iniciar Sesión</a></li>
+                            <li><a href="/register">Registrarse</a></li>
+                        </template>
+                    </div>
             </ul>
         </nav>
     </header>
@@ -28,3 +34,20 @@
         </div>
     </footer>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            userName: localStorage.getItem('user')
+        }
+    },
+    methods: {
+        logout() {
+            localStorage.clear()
+            this.userName = null
+            this.$router.push('/login')
+        }
+    }
+}
+</script>
