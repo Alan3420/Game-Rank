@@ -28,6 +28,7 @@
 
 <script>
 import { login } from "../services/user_service";
+import { estadoAutenticacion } from '../store/autenticacion';
 
 export default {
   data() {
@@ -48,10 +49,11 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 2000))
 
         console.log("Inicio de Sesion correcto");
+
+        estadoAutenticacion.iniciarSesion(response.user, response.token);
         
-        localStorage.setItem("token", response.token)
-        localStorage.setItem("user", JSON.stringify(response.user))
         this.$router.push('/content/overview');
+
 
       } catch (error) {
         if(error.response && error.response.status === 401){

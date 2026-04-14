@@ -1,59 +1,57 @@
 <template>
 
-    <body>
-        <div class="content-overview">
-            <div class="header">
-                <h1>Contenido Principal</h1>
 
-                <div class="conten_view">
-                    <div class="buscar-contenido">
-                        <div class="google-search">
-                            <InputText class="google-input" v-model="game_name" placeholder="Nombre del juego..." />
-                            <Button icon="pi pi-search" class="google-btn" @click="getContentCard" />
-                        </div>
+    <div class="content-overview">
+        <div class="header">
+            <h1>Contenido Principal</h1>
+
+            <div class="conten_view">
+                <div class="buscar_contenido">
+                    <div class="google-search">
+                        <InputText class="google-input" v-model="game_name" placeholder="Nombre del juego..." />
+                        <Button icon="pi pi-search" class="google-btn" @click="getContentCard" />
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Card del juego -->
-            <div class="card_content">
-                <div v-for="game in games" :key="game.id" class="game-card">
-                    <div class="game-bg" :style="{ backgroundImage: `url(${game.imge_url})` }">
-                        <div class="overlay">
-                            <div class="game-content">
-                                <h2 class="game-title">
-                                    <span>{{ game.name }} &nbsp;&nbsp;&nbsp; {{ game.name }} &nbsp;&nbsp;&nbsp;</span>
-                                </h2>
+        <!-- Card del juego -->
+        <div class="card_content">
+            <div v-for="game in games" :key="game.id" class="game-card">
+                <div class="game-bg" :style="{ backgroundImage: `url(${game.imge_url})` }">
+                    <div class="overlay">
+                        <div class="game-content">
+                            <h2 class="game-title">
+                                <span>{{ game.name }} &nbsp;&nbsp;&nbsp; {{ game.name }} &nbsp;&nbsp;&nbsp;</span>
+                            </h2>
 
-                                <div class="game-meta">
-                                    <span class="meta-item">
-                                        <i class="pi pi-star"></i>
-                                        {{ game.rating }}
-                                    </span>
+                            <div class="game-meta">
+                                <span class="meta-item">
+                                    <i class="pi pi-star"></i>
+                                    {{ game.rating }}
+                                </span>
 
-                                    <span class="meta-item">
-                                        <i class="pi pi-calendar"></i>
-                                        {{ game.release_date }}
-                                    </span>
-                                </div>
+                                <span class="meta-item">
+                                    <i class="pi pi-calendar"></i>
+                                    {{ game.release_date }}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <button class="logout" @click="logout">Cerrar Sesion</button>
-
-            <div v-if="loading" class="loader">
-                <span>Cargando más juegos...</span>
-            </div>
         </div>
-    </body>
+
+        <div v-if="loading" class="loader">
+            <span>Cargando más juegos...</span>
+        </div>
+    </div>
+
 </template>
 
 <script>
 import { getContentOverview } from "../services/resume_cards";
-import {getContentByName} from "../services/buscar"
+import { getContentByName } from "../services/buscar"
 import InputText from "primevue/inputtext"
 import Button from "primevue/button"
 export default {
@@ -136,11 +134,6 @@ export default {
                 clearTimeout(timer)
                 timer = setTimeout(() => fn.apply(this, args), delay)
             }
-        },
-
-        logout() {
-            localStorage.clear();
-            this.$router.push("/login")
         }
     }
 }
@@ -367,24 +360,6 @@ label {
     padding: 2rem;
     font-size: 1rem;
     color: #888;
-}
-
-/* LOGOUT */
-.logout {
-    margin-top: 2rem;
-    padding: 0.75rem 2rem;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    color: #444;
-    background-color: white;
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease;
-    font-size: 0.95rem;
-}
-
-.logout:hover {
-    background-color: #f0f0f0;
-    border-color: #bbb;
 }
 
 /* RESPONSIVE */
