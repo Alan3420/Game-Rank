@@ -20,6 +20,19 @@ def overview():
         return jsonify(games), 200
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos", "error": str(e)}), 500
+
+@content_overview_bp.route('/search')
+def search_by_name():
+    try:
+        name = request.args.get('name', default=None, type=str)
+
+        if not name:
+            return jsonify({"message": "Nombre requerido"}), 400
+
+        games = get_video_game_by_name_details(game_name=name)
+        return jsonify(games), 200
+    except Exception as e:
+        return jsonify({"message": "Error al buscar el juego", "error": str(e)}), 500
     
 
 @content_overview_bp.route('/overview/<int:game_id>')
