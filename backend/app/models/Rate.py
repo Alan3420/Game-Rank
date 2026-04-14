@@ -12,6 +12,6 @@ class Rate(db.Model):
     rating = Column(Integer, nullable=False)
     status = Column(String(20), nullable=True)
 
-    video_games_rl = relationship("Video_game", back_populates="rates_rl")
-    users_rl =relationship("User", back_populates="rates_rl")
+    video_games_rl = relationship("Video_game", back_populates="rates_rl", overlaps="users_rl,video_games_rl")
+    users_rl =relationship("User", back_populates="rates_rl", overlaps="users_rl,video_games_rl,rates_rl")
 

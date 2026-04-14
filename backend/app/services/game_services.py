@@ -24,8 +24,7 @@ def get_video_game_details(game_id) -> dict:
                             name=game_details["name"], 
                             date_release=game_details["released"], 
                             platforms=listaPlataformas, 
-                            development_company=listaDevs_Company,
-                            id_comment=None)
+                            development_company=listaDevs_Company)
 
 
         return game_format_details(game_details)
@@ -78,9 +77,9 @@ def save_games(games:list, app):
                         create_video_game(id_game_api=game["id"],
                                         name=game["name"],
                                         date_release=game["release_date"],
-                                        platforms=game["platforms"],
-                                        development_company=game["developers"],
-                                        id_comment=None)
+                                        platforms=game["name"],
+                                        development_company=game["name"]
+                                        )
 
         except Exception as e:
             print(f"Error al guardar el juego {game['id']}: {str(e)}")

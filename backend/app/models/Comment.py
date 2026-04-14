@@ -12,6 +12,5 @@ class Comment(db.Model):
     description = Column(String(255), nullable=False)
     date_of_comment = Column(Date, nullable=False, default=date.today)
 
-    users_rl = relationship('User',back_populates="comments_rl")
-
-
+    users_rl = relationship('User',back_populates="comments_rl", overlaps="rates_rl")
+    video_game_rl = relationship("Video_game", back_populates="comments_rl")
