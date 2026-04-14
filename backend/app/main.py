@@ -27,7 +27,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "connect_args": {
         "ssl": {
             "ca": os.path.join(os.path.dirname(__file__), 'ca.pem') 
-            # O usa una ruta absoluta: "/ruta/completa/a/tu/ca.pem"
+            
         }
     }
 }

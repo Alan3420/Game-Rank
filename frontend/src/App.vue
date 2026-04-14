@@ -1,27 +1,40 @@
 <template>
-   <header>
-        <nav>
+    <header class="main-header">
+        <nav class="nav-container">
+            <div class="logo-container">
+                <router-link to="/">
+                    <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank Logo">
+                </router-link>
+            </div>
+
             <ul class="nav-links">
-                <li><a href="/"><img id="logo" src="/src/assets/game_rank_logo.png" alt="logo_game_rank"></a></li>
-                <div class="user_container">
-                        <template v-if="userName">
-                            <li><span class="user-name">👤 {{ userName }}</span></li>
-                            <li><a href="#" @click="logout">Cerrar Sesión</a></li>
-                        </template>
-                        <template v-else>
-                            <li><a href="/login">Iniciar Sesión</a></li>
-                            <li><a href="/register">Registrarse</a></li>
-                        </template>
-                    </div>
+                <li class="user_container">
+                    <template v-if="estadoAutenticacion.usuario">
+                        <div class="user-info">
+                            <i class="pi pi-user"></i>
+                            <span>{{ estadoAutenticacion.usuario.name }}</span>
+                        </div>
+
+                        <a href="#" @click.prevent="manejarCierreSesion" class="logout-link">
+                            <i class="pi pi-sign-out"></i>
+                            Cerrar sesión
+                        </a>
+                    </template>
+
+                    <template v-else>
+                        <router-link to="/login">Iniciar Sesión</router-link>
+                        <router-link to="/register">Registrarse</router-link>
+                    </template>
+                </li>
             </ul>
         </nav>
     </header>
 
-  <main>
-    <RouterView />
-  </main>
+    <main>
+        <RouterView />
+    </main>
 
-  <footer>
+    <footer>
 
         <div class="footer-info">
             <p>&copy; 2026 Game Rank | Game data powered by <a href="https://rawg.io" target="_blank">RAWG</a></p>
@@ -35,19 +48,41 @@
     </footer>
 </template>
 
-<script>
-export default {
-    data() {
-        return {
-            userName: localStorage.getItem('user')
-        }
-    },
-    methods: {
-        logout() {
-            localStorage.clear()
-            this.userName = null
-            this.$router.push('/login')
-        }
-    }
-}
+<script setup>
+import { estadoAutenticacion } from './store/autenticacion';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const manejarCierreSesion = () => {
+    estadoAutenticacion.cerrarSesion();
+    router.push("/login");
+};
 </script>
+
+<style scoped>
+/* Estilos base del Header */
+.main-header {
+    background-color: #ffffff;
+    /* Fondo blanco */
+    border-bottom: 1px solid #eaeaea;
+    padding: 0 20px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.nav-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+
+
+
+
+</style>
