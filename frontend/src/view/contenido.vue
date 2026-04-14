@@ -9,7 +9,7 @@
                     <div class="buscar-contenido">
                         <div class="google-search">
                             <InputText class="google-input" v-model="game_name" placeholder="Nombre del juego..." />
-                            <Button icon="pi pi-search" class="google-btn" @click="getContentByName" />
+                            <Button icon="pi pi-search" class="google-btn" @click="getContentCard" />
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,8 @@
 </template>
 
 <script>
-import { getContentOverview } from "../services/content_service";
+import { getContentOverview } from "../services/resume_cards";
+import {getContentByName} from "../services/buscar"
 import InputText from "primevue/inputtext"
 import Button from "primevue/button"
 export default {
@@ -74,7 +75,7 @@ export default {
         this.getContent();
         this.debouncedScroll = this.debounce(this.handleScroll, 500)
         window.addEventListener("scroll", this.debouncedScroll);
-        
+
     },
     beforeUnmount() {
         window.removeEventListener("scroll", this.debouncedScroll);
@@ -104,15 +105,17 @@ export default {
         },
 
 
-        async getContentByName() {
+        async getContentCard() {
             try {
-                const response = await getContentOverview(null, this.game_name);
-                this.games = Array.isArray(response) ? response : [response];
-                console.log(response);
-
-
+                if (!this.game_name || this.game_name.trim() === '') {
+                    alert("Escribe un nombre de juego")
+                    return
+                }
+                const response = await getContentByName(this.game_name)
+                alert(`Resultados: ${JSON.stringify(response)}`)
+                console.log(response)
             } catch (error) {
-                console.error('Error:', error);
+                console.error("ERRORS:", error)
             }
         },
 
@@ -152,8 +155,10 @@ label {
 }
 
 .content-overview {
-    width: 100%;        /* ← ocupa todo el ancho */
-    max-width: 100%;    /* ← sin límite */
+    width: 100%;
+    /* ← ocupa todo el ancho */
+    max-width: 100%;
+    /* ← sin límite */
     margin: 0;
     padding: 2rem;
     min-height: 100vh;
@@ -223,7 +228,8 @@ label {
 /* GRID */
 .card_content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));  /* ← de 200 a 250 */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    /* ← de 200 a 250 */
     gap: 1.5rem;
     width: 100%;
 }
