@@ -1,5 +1,5 @@
 from app.database.db import db
-from sqlalchemy import Column, Integer, String, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.orm import relationship
 
 
@@ -13,7 +13,7 @@ class Video_game(db.Model):
     development_company =Column(String(100), nullable=False)
     
 
-    rates_rl = relationship("Rate", back_populates="video_games_rl")
-    users_rl = relationship("User", secondary="rates", back_populates="video_games_rl")
-    comments_rl =relationship("Comment", foreign_keys="[Video_game.id_comment]",back_populates="video_game_rl")
+    rates_rl = relationship("Rate", back_populates="video_games_rl", overlaps="video_games_rl")
+    users_rl = relationship("User", secondary="rates", back_populates="video_games_rl", overlaps="rates_rl,video_games_rl")
+    comments_rl =relationship("Comment",back_populates="video_game_rl")
     favorites_rl = relationship("Favorite", foreign_keys="[Favorite.id_game_api]",back_populates="video_games_rl")

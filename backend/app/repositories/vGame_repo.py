@@ -35,15 +35,15 @@ def get_game_by_name(game_name) -> dict:
         
     return response.json()
 
-def create_video_game(id_game_api, name, date_release, platforms, development_company, id_comment) -> Video_game:
+def create_video_game(id_game_api, name, date_release, platforms, development_company) -> Video_game:
     
-    new_video_game = Video_game(id_game_api=id_game_api, name=name, date_release=date_release, platforms=platforms, development_company=development_company, id_comment=id_comment)
+    new_video_game = Video_game(id_game_api=id_game_api, name=name, date_release=date_release, platforms=platforms, development_company=development_company)
     db.session.add(new_video_game)
     db.session.commit()
 
     return new_video_game
 
-def update_video_game(game_id, name=None, date_release=None, platforms=None, development_company=None, id_comment=None) -> Video_game:
+def update_video_game(game_id, name=None, date_release=None, platforms=None, development_company=None) -> Video_game:
     
     video_game = get_game_by_id_bd(game_id)
     if video_game:
@@ -58,9 +58,6 @@ def update_video_game(game_id, name=None, date_release=None, platforms=None, dev
 
         if development_company:
             video_game.development_company = development_company
-
-        if id_comment:
-            video_game.id_comment = id_comment
 
         db.session.commit()
 
