@@ -232,6 +232,7 @@ export default {
     background: white;
     border-radius: 28px;
     padding: 2rem;
+    margin-top: 10px;
     box-shadow: 0 24px 56px rgba(20, 21, 63, 0.08);
 }
 
