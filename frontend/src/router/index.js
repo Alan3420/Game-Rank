@@ -3,6 +3,7 @@ import Login from "../view/login_user.vue";
 import Register from "../view/register_user.vue"
 import Home from "../view/home.vue";
 import ContentOverview from "../view/contenido.vue";
+import GameDetail from "../view/GameDetail.vue";
 
 const routes = [
     {
@@ -26,6 +27,11 @@ const routes = [
         path: "/content/overview",
         component: ContentOverview,
         meta:{title:"Game Rank - Content Overview"}
+    },
+    {
+        path: "/game/:id",
+        component: GameDetail,
+        meta:{title:"Game Rank - Game Detail"}
     }
 ];
 
