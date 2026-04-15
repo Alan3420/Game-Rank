@@ -21,7 +21,8 @@
             <section class="detail-body">
                 <div class="detail-card detail-description-card">
                     <h2>Descripción</h2>
-                    <div class="detail-description" v-html="game.description || '<em>Descripción no disponible.</em>'"></div>
+                    <div class="detail-description" v-html="game.description || '<em>Descripción no disponible.</em>'">
+                    </div>
                 </div>
 
                 <aside class="detail-aside">
@@ -29,7 +30,8 @@
                         <h3>Plataformas</h3>
                         <div class="tag-list">
                             <span v-if="!game.platforms?.length" class="tag empty">Sin información</span>
-                            <span v-for="platform in game.platforms" :key="platform.id" class="tag">{{ platform.name }}</span>
+                            <span v-for="platform in game.platforms" :key="platform.id" class="tag">{{ platform.name
+                                }}</span>
                         </div>
                     </div>
 
@@ -47,7 +49,7 @@
             </section>
 
             <div class="detail-actions">
-                <Button label="Volver al listado" icon="pi pi-arrow-left" class="back-btn" @click="goBack" />
+                <Button icon="pi pi-arrow-left" class="back-btn" @click="goBack" />
             </div>
         </div>
 
@@ -178,7 +180,6 @@ export default {
 .detail-banner-overlay {
     width: 100%;
     padding: 2.5rem;
-    background: linear-gradient(180deg, rgba(19, 18, 51, 0.001) 0%, rgba(19, 18, 51, 0.88) 100%);
 }
 
 .detail-banner-content {
@@ -300,10 +301,21 @@ export default {
 
 .back-btn {
     border-radius: 999px;
-    background: #7c6fff;
+    background: #dcd8d8;
     border: none;
-    color: #fff;
+    color: #000000;
     padding: 0.95rem 1.4rem;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: #0c0c0c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.back-btn .pi {
+    margin-right: 0.5rem;
 }
 
 @media (max-width: 960px) {
