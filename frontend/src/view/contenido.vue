@@ -17,29 +17,36 @@
 
         <!-- Card del juego -->
         <div class="card_content">
-            <div v-for="game in games" :key="game.id" class="game-card">
-                <div class="game-bg" :style="{ backgroundImage: `url(${game.imge_url})` }">
-                    <div class="overlay">
-                        <div class="game-content">
-                            <h2 class="game-title">
-                                <span>{{ game.name }} &nbsp;&nbsp;&nbsp; {{ game.name }} &nbsp;&nbsp;&nbsp;</span>
-                            </h2>
+            <div v-for="game in games" :key="game.id" class="game-card" @click="goToDetail(game.id)">
+                <div class="card-image">
+                    <img :src="game.imge_url" :alt="game.name" class="game-image" />
+                    <div class="image-overlay"></div>
+                    <div class="rating-badge">
+                        <i class="pi pi-star-fill"></i>
+                        <span>{{ game.rating }}</span>
+                    </div>
+                </div>
 
-                            <div class="game-meta">
-                                <span class="meta-item">
-                                    <i class="pi pi-star"></i>
-                                    {{ game.rating }}
-                                </span>
+                <div class="card-content">
+                    <h3 class="game-title">{{ game.name }}</h3>
 
-                                <span class="meta-item">
-                                    <i class="pi pi-calendar"></i>
-                                    {{ game.release_date }}
-                                </span>
-                            </div>
+                    <div class="game-info">
+                        <div class="info-item">
+                            <i class="pi pi-calendar"></i>
+                            <span>{{ game.release_date }}</span>
                         </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <span class="view-detail">Ver detalles</span>
+                        <i class="pi pi-arrow-right"></i>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div v-if="showLoadMoreButton" class="load-more-container">
+            <Button label="Cargar más juegos" @click="loadMore" :loading="loading" class="load-more-btn" />
         </div>
 
         <div v-if="loading" class="loader">
@@ -66,7 +73,9 @@ export default {
             per_page: 10,
             loading: false,
             hasNext: true,
-            maxGames: 200
+            maxGames: 200,
+            showLoadMoreButton: false,
+            apiCallCount: 0
         }
     },
     mounted() {
@@ -94,6 +103,12 @@ export default {
                 this.hasNext = !!response.next;
 
                 this.page++;
+                this.apiCallCount++;
+
+                if (this.apiCallCount >= 2) {
+                    this.showLoadMoreButton = true;
+                    window.removeEventListener("scroll", this.debouncedScroll);
+                }
 
             } catch (error) {
                 console.error(error);
@@ -123,9 +138,17 @@ export default {
             const fullHeight = document.documentElement.scrollHeight;
 
 
-            if (scrollTop + windowHeight >= fullHeight - 1000) {
+            if (this.apiCallCount < 2 && scrollTop + windowHeight >= fullHeight - 1000) {
                 this.getContent();
             }
+        },
+
+        loadMore() {
+            this.getContent();
+        },
+
+        goToDetail(gameId) {
+            this.$router.push(`/game/${gameId}`);
         },
 
         debounce(fn, delay) {
@@ -221,116 +244,154 @@ label {
 /* GRID */
 .card_content {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    /* ← de 200 a 250 */
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
     width: 100%;
+    padding: 0 1rem;
 }
 
 /* CARD */
 .game-card {
-    width: 100%;
-    height: 500px;
+    background: white;
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
     position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .game-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 10px 28px rgba(124, 111, 255, 0.25);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(124, 111, 255, 0.15);
+    border-color: #7c6fff;
 }
 
-/* IMAGEN FONDO */
-.game-bg {
+/* IMAGEN */
+.card-image {
+    position: relative;
     width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
+    height: 200px;
+    overflow: hidden;
 }
 
-/* OVERLAY */
-.overlay {
+.game-image {
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover .game-image {
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.game-card:hover .image-overlay {
+    opacity: 1;
+}
+
+.rating-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 193, 7, 0.95);
+    color: #333;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
     display: flex;
-    align-items: flex-end;
-    padding: 1rem;
-    background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.80) 20%,
-            rgba(0, 0, 0, 0.2) 60%,
-            rgba(0, 0, 0, 0.0) 100%);
-    transition: background 0.3s ease;
+    align-items: center;
+    gap: 0.25rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.game-card:hover .overlay {
-    background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.92) 30%,
-            rgba(0, 0, 0, 0.35) 70%);
+.rating-badge i {
+    color: #ff6b35;
 }
 
 /* CONTENIDO */
-.game-content {
-    color: #fff;
-    width: 100%;
+.card-content {
+    padding: 1.5rem;
 }
 
 .game-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
-.game-meta {
+.game-info {
+    margin-bottom: 1rem;
+}
+
+.info-item {
     display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.25rem;
+}
+
+.info-item i {
+    color: #7c6fff;
+    font-size: 0.85rem;
+}
+
+/* FOOTER */
+.card-footer {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
-    font-size: 0.85rem;
-    opacity: 0.9;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
 }
 
-.meta-item {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
+.view-detail {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #7c6fff;
+    transition: color 0.2s ease;
 }
 
-.meta-item i {
-    font-size: 0.85rem;
+.game-card:hover .view-detail {
+    color: #5a4de0;
+}
+
+.card-footer i {
+    color: #7c6fff;
+    font-size: 0.9rem;
     transition: transform 0.2s ease;
 }
 
-.game-card:hover .meta-item i {
-    transform: scale(1.15);
-}
-
-.game-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.game-title span {
-    display: inline-block;
-}
-
-.game-card:hover .game-title span {
-    animation: marquee 4s linear infinite;
+.game-card:hover .card-footer i {
+    transform: translateX(4px);
 }
 
 /* ANIMACIÓN */
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
     }
 
     to {
@@ -339,18 +400,8 @@ label {
     }
 }
 
-@keyframes marquee {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
 .game-card {
-    animation: fadeIn 0.4s ease;
+    animation: fadeIn 0.5s ease-out;
 }
 
 /* LOADER */
@@ -362,28 +413,75 @@ label {
     color: #888;
 }
 
+/* Boton Cargar mas... */
+.load-more-container {
+    width: 100%;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.load-more-btn {
+    background-color: #7c6fff;
+    border: none;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.load-more-btn:hover {
+    background-color: #6a5acd;
+}
+
+.load-more-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
-    .game-card {
-        height: 240px;
+    .card_content {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        padding: 0;
+    }
+
+    .card-image {
+        height: 180px;
     }
 
     .game-title {
-        font-size: 0.9rem;
+        font-size: 1.1rem;
     }
 
-    .game-meta {
-        font-size: 0.8rem;
+    .card-content {
+        padding: 1.25rem;
     }
 }
 
 @media (max-width: 480px) {
     .card_content {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
     }
 
-    .game-card {
-        height: 200px;
+    .card-image {
+        height: 160px;
+    }
+
+    .game-title {
+        font-size: 1rem;
+    }
+
+    .card-content {
+        padding: 1rem;
+    }
+
+    .rating-badge {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.8rem;
     }
 }
 </style>
