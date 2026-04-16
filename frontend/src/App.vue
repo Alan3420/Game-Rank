@@ -14,18 +14,18 @@
           </div>
           <button class="logout-btn" @click="manejarCierreSesion">
             <i class="pi pi-sign-out"></i>
-            Cerrar sesión
+            <span class="btn-text">Cerrar sesión</span>
           </button>
         </template>
 
         <template v-else>
           <router-link to="/login" class="nav-link">
             <i class="pi pi-sign-in"></i>
-            Iniciar sesión
+            <span class="btn-text">Iniciar sesión</span>
           </router-link>
           <router-link to="/register" class="nav-link nav-link-primary">
             <i class="pi pi-user-plus"></i>
-            Registrarse
+            <span class="btn-text">Registrarse</span>
           </router-link>
         </template>
       </nav>
@@ -128,8 +128,6 @@ const manejarCierreSesion = () => {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: rgba(99, 102, 241, 0.08);
-  border-radius: 20px;
   color: #6366f1;
   font-weight: 600;
   font-size: 0.95rem;
@@ -144,9 +142,9 @@ const manejarCierreSesion = () => {
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: rgba(239, 68, 68, 0.08);
-  color: #dc2626;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #6366f1;
+  background-color: transparent;
+  border: none;
   border-radius: 20px;
   font-weight: 600;
   font-size: 0.9rem;
@@ -156,6 +154,7 @@ const manejarCierreSesion = () => {
 }
 
 .logout-btn:hover {
+  color: #dc2626;
   background: rgba(239, 68, 68, 0.15);
   transform: translateY(-1px);
 }
@@ -175,7 +174,6 @@ const manejarCierreSesion = () => {
 
 .nav-link:hover {
   background: rgba(0, 0, 0, 0.04);
-  color: #1f1f35;
 }
 
 .nav-link-primary {
@@ -261,6 +259,7 @@ const manejarCierreSesion = () => {
   .header-container {
     padding: 0 16px;
     min-height: 64px;
+    flex-wrap: nowrap;
   }
 
   .logo-link {
@@ -304,16 +303,14 @@ const manejarCierreSesion = () => {
 
 @media (max-width: 480px) {
   .nav-menu {
-    flex-direction: column;
     gap: 8px;
   }
-
-  .user-info {
-    order: 1;
+  .user-name{
+    display: none;
   }
 
-  .logout-btn {
-    order: 2;
+  .btn-text {
+    display: none;
   }
 
   .nav-link {

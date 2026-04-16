@@ -154,7 +154,7 @@ export default {
 
 .form-row {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -284,7 +284,9 @@ export default {
 }
 
 @media (max-width: 640px) {
-
+  .form-row{
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
   .register-container {
     padding: 2rem;
     margin: 1rem;
