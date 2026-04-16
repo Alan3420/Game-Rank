@@ -72,14 +72,18 @@ export default {
         this.errorMessage = "";
         const response = await register(this.name, this.last_name, this.email, this.password);
         console.log("Usuario creado:", response);
-        await new Promise(resolve => setTimeout(resolve, 2000));
 
         this.$router.push('/login');
+
       } catch (error) {
+
         if (error.response && error.response.status === 409) {
+
           await new Promise(resolve => setTimeout(resolve, 2000));
+
           this.errorMessage = error.response.data.message;
           console.log(error.response.data.message);
+          
         } else {
           console.log("Error:", error.message);
         }

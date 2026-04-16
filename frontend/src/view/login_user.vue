@@ -59,8 +59,6 @@ export default {
         this.errorMessage = "";
         const response = await login(this.email, this.password);
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
         console.log("Inicio de Sesion correcto");
 
         estadoAutenticacion.iniciarSesion(response.user, response.token);
