@@ -7,7 +7,7 @@
           <span class="hero-label">Bienvenido a Game Rank</span>
           <h1 class="hero-title">Descubre los mejores juegos</h1>
           <p class="hero-description">
-            Tu plataforma minimalista para explorar, comparar y descubrir videojuegos. Encuentra títulos destacados ordenados por rating y crea tu lista personal de favoritos.
+            Tu mejor plataforma para explorar, comparar y descubrir videojuegos. Encuentra títulos destacados ordenados por rating y crea tu lista personal de favoritos.
           </p>
           <div class="hero-cta">
             <button class="btn btn-primary" @click="goToLogin">
@@ -21,9 +21,7 @@
           </div>
         </div>
 
-        <div class="hero-visual">
-          <div class="hero-accent"></div>
-        </div>
+        
       </div>
     </section>
 
@@ -415,7 +413,7 @@ export default {
 }
 
 .secondary-overlay {
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: flex-end;
   padding: 16px;
 }
