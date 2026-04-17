@@ -1,5 +1,5 @@
 from flask import Blueprint,jsonify, request
-from backend.app.services import user_service
+from app.services import user_service
 
 user_option_bp = Blueprint("option_route", __name__)
 
