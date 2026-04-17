@@ -14,7 +14,7 @@
               <i class="pi pi-user"></i>
             </div>
             <div class="user-headline">
-              <h2>{{ estadoAutenticacion.usuario.name }}</h2>
+              <h2>{{ estadoAutenticacion.usuario.name }} {{estadoAutenticacion.usuario.last_name}}</h2>
               <span class="badge">Jugador Registrado</span>
             </div>
           </div>
