@@ -8,6 +8,7 @@ from app.models.Video_game import Video_game
 from app.models.Rate import Rate
 from app.models.Favorite import Favorite
 from app.routes.welcome_route import welcome_bp
+from app.routes.options_user import user_option_bp
 from app.routes.content_overview_route import content_overview_bp
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
@@ -40,6 +41,8 @@ jwt = JWTManager(app)
 # Registro de Blueprints
 app.register_blueprint(welcome_bp, url_prefix="/user")
 app.register_blueprint(content_overview_bp, url_prefix="/content")
+app.register_blueprint(user_option_bp, url_prefix="/settings")
+
 
 
 db.init_app(app)
