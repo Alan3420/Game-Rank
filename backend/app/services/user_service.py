@@ -29,7 +29,8 @@ def user_registration(name, last_name, email, passwd) -> User | str:
     except Exception as e:
         print("Error en el registro del usuario:", str(e))
         raise Exception("Error en el registro del usuario")
-
+    
+#Recordatorio: esta funcion solo la podrá usar el usuario con rol "ADMIN"
 def get_list_users() -> list[User]:
 
     try:
@@ -77,7 +78,8 @@ def user_delete(user_id) -> bool | str:
     except Exception as e:
         print("Error al eliminar el usuario:", str(e))
         raise Exception("Error al eliminar el usuario")
-    
+
+#Recordatorio: lo mismo en esta funcion solo el admin puede cambiar los roles a los usuarios que quiera.
 def change_role(user_id, new_role) -> User | str:
 
     try:
