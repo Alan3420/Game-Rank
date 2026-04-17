@@ -8,10 +8,10 @@
 
       <nav class="nav-menu">
         <template v-if="estadoAutenticacion.usuario">
-          <div class="user-info">
+          <router-link to="/user/profile" class="user-info">
             <i class="pi pi-user"></i>
             <span class="user-name">{{ estadoAutenticacion.usuario.name }}</span>
-          </div>
+          </router-link>
           <button class="logout-btn" @click="manejarCierreSesion">
             <i class="pi pi-sign-out"></i>
             <span class="btn-text">Cerrar sesión</span>
