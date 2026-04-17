@@ -4,6 +4,7 @@ import Register from "../view/register_user.vue"
 import Home from "../view/home.vue";
 import ContentOverview from "../view/contenido.vue";
 import GameDetail from "../view/GameDetail.vue";
+import perfil_user from "../view/perfil_user.vue";
 
 const routes = [
     {
@@ -32,6 +33,11 @@ const routes = [
         path: "/game/:id",
         component: GameDetail,
         meta:{title:"Game Rank - Game Detail"}
+    },
+    {
+        path: "/user/profile",
+        component: perfil_user,
+        meta:{title:"Game Rank - Profile"}
     }
 ];
 
