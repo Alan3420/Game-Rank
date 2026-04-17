@@ -80,7 +80,40 @@ def save_games(games:list, app):
 
         except Exception as e:
             print(f"Error al guardar el juego {game_api['name']}: {str(e)}")
+
+def filter_games_by_platform_or_genres(plataforma =None, genero=None) -> list[dict] | None:
+
+    try:
+        if plataforma:
             
+            games = get_all_video_games()
+
+            games_by_platforms = []
+
+            for game in games["results"]["parent_platforms"]:
+
+                
+                if game["platform"]["name"] == plataforma:
+                    games_by_platforms.append(game)
+                    
+            return game_format_resume(games_by_platforms)
+        
+        if genero:
+            games = get_all_video_games()
+            games_by_genres = []
+
+            for game in games["results"]["genres"]:
+                if game["name"] == genero:
+                    games_by_genres.append(game)
+            
+            return game_format_resume(games_by_genres)
+                
+    except Exception as e:
+        raise Exception(f"Error al obtener los juegos por plataforma/género: {str(e)}")
+    
+        
+            
+
 
 
 
