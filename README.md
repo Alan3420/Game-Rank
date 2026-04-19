@@ -39,10 +39,13 @@
     2. Crear una nueva migración: `flask --app app.main db migrate -m "Mensaje de la migración"`
     3. Aplicar las migraciones a la base de datos: `flask --app app.main db upgrade`
 
-### Comandos que se utilizan siempre en docker
-* Comando para crear y conectarse a la base de datos en docker:
-    
+### Actualmente en desuso
+```
+    ### Comandos que se utilizan siempre en docker
+    * Comando para crear y conectarse a la base de datos en docker:
+        
         docker run -d --name game_rank_db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=game_rank -p 3306:3306 mysql:8.0
+```
 
 * Comando para arrancar Vue
     1. npm run dev
@@ -55,7 +58,7 @@
 ### Como arrancar el proyecto
 * Depues de haber instalado las dependencias tanto de back `pip install -r requirements.txt` y front `npm install` y todo salio correctamente:
 
-    1. Inicializar primero el back creando la BD e insertando datos inmediatamente (estando en la carpeta /backend): `flask --app app.main db-reset` luego `python -m app.main`
+    1. Inicializar primero el back creando la BD e insertando datos inmediatamente (estando en la carpeta /backend en caso de que la base de datos no este creada): `flask --app app.main db upgrade` luego `python -m app.main`
 
     2. Inicializar por ultimo el front que se conecta al back (estando en la carpeta /frontend): `npm run dev`
 
