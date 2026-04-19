@@ -131,10 +131,19 @@ const manejarCierreSesion = () => {
   color: #6366f1;
   font-weight: 600;
   font-size: 0.95rem;
+
+  text-decoration: none;
+  border-radius: 20px;
 }
 
 .user-info i {
   font-size: 1rem;
+}
+
+.user-info:hover{
+  background-color: rgba(0, 128, 0, 0.088);
+  color: green;
+  transform: translateY(1px);
 }
 
 .logout-btn {
@@ -156,7 +165,7 @@ const manejarCierreSesion = () => {
 .logout-btn:hover {
   color: #dc2626;
   background: rgba(239, 68, 68, 0.15);
-  transform: translateY(-1px);
+  transform: translateY(1px);
 }
 
 .nav-link {

@@ -326,11 +326,13 @@ export default {
 
 @media (max-width: 680px) {
     .game-detail-page {
-        padding: 1.25rem;
+        padding: 10px;
     }
 
     .detail-banner {
-        min-height: 260px;
+        min-height: 450px;              
+        background-position: center;
+        background-attachment: scroll;
     }
 
     .detail-card {

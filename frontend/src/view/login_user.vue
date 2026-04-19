@@ -266,10 +266,14 @@ export default {
 
 @media (max-width: 480px) {
   .login-container {
-    padding: 2rem;
-    margin: 1rem;
+    padding: 2rem;     
+    max-width: 100%;
+    width: 100%;
   }
-
+  .login-page{
+    margin: 0;
+    padding: 10px;
+  }
   .login-title {
     font-size: 1.75rem;
   }
