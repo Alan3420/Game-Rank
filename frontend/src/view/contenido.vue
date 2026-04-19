@@ -483,5 +483,10 @@ label {
         padding: 0.4rem 0.6rem;
         font-size: 0.8rem;
     }
+
+    .content-overview{
+        margin: 0;
+        padding: 10px;
+    }
 }
 </style>

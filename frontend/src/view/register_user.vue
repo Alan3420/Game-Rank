@@ -289,7 +289,12 @@ export default {
   }
   .register-container {
     padding: 2rem;
-    margin: 1rem;
+    margin: 0;
+  }
+
+  .register-page{
+    margin: 0;
+    padding: 10px;
   }
 
   .register-title {
