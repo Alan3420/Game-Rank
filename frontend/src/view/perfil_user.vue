@@ -49,7 +49,7 @@
           <div class="empty-state">
             <i class="pi pi-star text-indigo"></i>
             <p>Aún no has calificado ningún juego.</p>
-            <router-link to="/" class="browse-link">Explorar juegos</router-link>
+            <router-link to="/content/overview" class="browse-link">Explorar juegos</router-link>
           </div>
         </div>
       </div>
