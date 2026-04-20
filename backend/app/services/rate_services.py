@@ -1,4 +1,4 @@
-from app.repositories.rate_repo import create_rate, update_rate, delete_rate, get_all_rates
+from app.repositories.rate_repo import create_rate, update_rate, delete_rate, get_all_rates, get_rate_by_id
 from app.models  import Rate
 
 def crear_valoracion(id_user, id_video_game, rate) -> Rate:
@@ -41,4 +41,11 @@ def get_media_game(id_video_game = None, id_user = None) -> float | int:
                 contador += 1
 
         return media/contador
+    
+def get_status_game(id_video_game) -> str:
+
+    reseña = get_rate_by_id(rate_id=id_video_game)
+
+    return reseña.status
+
   
