@@ -14,3 +14,12 @@ class Favorite(db.Model):
 
     users_rl = relationship("User", foreign_keys="[Favorite.user_id]",back_populates="favorites_rl")
     video_games_rl = relationship("Video_game", foreign_keys="[Favorite.id_game_api]",back_populates="favorites_rl")
+
+
+def to_dict(self):
+    return {
+        "fav_id": self.fav_id,
+        "user_id": self.user_id,
+        "id_game_api": self.id_game_api,
+        "date_added": str(self.date_added)
+    }
