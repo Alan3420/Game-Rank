@@ -17,3 +17,12 @@ class Video_game(db.Model):
     users_rl = relationship("User", secondary="rates", back_populates="video_games_rl", overlaps="rates_rl,video_games_rl")
     comments_rl =relationship("Comment",back_populates="video_game_rl")
     favorites_rl = relationship("Favorite", foreign_keys="[Favorite.id_game_api]",back_populates="video_games_rl")
+
+def to_dict(self):
+    return {
+        "id_game_api": self.id_game_api,
+        "name": self.name,
+        "date_release": str(self.date_release),
+        "platforms": self.platforms,
+        "development_company": self.development_company
+    }

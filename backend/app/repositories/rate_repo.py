@@ -1,38 +1,39 @@
-from app.models.Rate import Rate
 from app.database.db import db
+from app.models.Rate import Rate
 
-def get_all_rates() -> list[Rate]:
+def get_rate_by_id(id_rate):
+    return Rate.query.filter_by(id_rate=id_rate).first()
 
-    return Rate.query.all()
+def get_rate_by_user_and_game(id_user, id_game):
+    return Rate.query.filter_by(id_user=id_user, id_game_api=id_game).first()
 
-def get_rate_by_id(rate_id) -> Rate:
+def get_rates_by_game(id_game):
+    return Rate.query.filter_by(id_game_api=id_game).all()
 
-    return Rate.query.get(rate_id)
+def get_rates_by_user(id_user):
+    return Rate.query.filter_by(id_user=id_user).all()
 
-def create_rate(id_user, id_video_game, rating) -> Rate:
-
-    new_rate = Rate(id_user=id_user, id_video_game=id_video_game, rating=rating)
-    db.session.add(new_rate)
+def create_rate(id_user, id_game, rating, status):
+    rate = Rate(id_user=id_user, id_game_api=id_game, rating=rating, status=status)
+    db.session.add(rate)
     db.session.commit()
+    return rate
 
-    return new_rate
-
-
-def update_rate(rate_id, rating) -> Rate | None:
-
-    rate = get_rate_by_id(rate_id)
-    if rate:
+def update_rate(id_user, id_game, rating=None, status=None):
+    rate = get_rate_by_user_and_game(id_user=id_user, id_game=id_game)
+    if not rate:
+        return None
+    if rating:
         rate.rating = rating
-        db.session.commit()
-        return rate
-    return None
+    if status:
+        rate.status = status
+    db.session.commit()
+    return rate
 
-def delete_rate(rate_id) -> bool:
-
-    rate = get_rate_by_id(rate_id)
-
-    if rate:
-        db.session.delete(rate)
-        db.session.commit()
-        return True
-    return False
+def delete_rate(id_user, id_game):
+    rate = get_rate_by_user_and_game(id_user=id_user, id_game=id_game)
+    if not rate:
+        return False
+    db.session.delete(rate)
+    db.session.commit()
+    return True
