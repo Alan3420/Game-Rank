@@ -10,7 +10,9 @@ from app.models.Favorite import Favorite
 from app.routes.welcome_route import welcome_bp
 from app.routes.options_user_route import user_option_bp
 from app.routes.content_overview_route import content_overview_bp
-from app. routes.rates_route import rates_bp
+from app.routes.rates_route import rates_bp
+from app.routes.comment_route import comment_bp
+from app.routes.favorite_route import favorite_bp
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
@@ -44,6 +46,8 @@ app.register_blueprint(welcome_bp, url_prefix="/user")
 app.register_blueprint(content_overview_bp, url_prefix="/content")
 app.register_blueprint(user_option_bp, url_prefix="/settings")
 app.register_blueprint(rates_bp, url_prefix="/rate")
+app.register_blueprint(comment_bp, url_prefix="/comment")
+app.register_blueprint(favorite_bp, url_prefix="/favorite")
 
 
 
