@@ -16,11 +16,11 @@ class Comment(db.Model):
     video_game_rl = relationship("Video_game", back_populates="comments_rl")
 
 
-def to_dict(self):
-    return {
-        "id_comment": self.id_comment,
-        "id_user": self.id_user,
-        "id_videogame": self.id_videogame,
-        "description": self.description,
-        "date_of_comment": str(self.date_of_comment)
-    }
+    def to_dict(self):
+        return {
+            "id_comment": self.id_comment,
+            "id_user": self.id_user,
+            "id_videogame": self.id_videogame,
+            "description": self.description,
+            "date_of_comment": str(self.date_of_comment)
+        }
