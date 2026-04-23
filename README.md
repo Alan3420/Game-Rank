@@ -2,26 +2,32 @@
 # Organización del proyecto
 
         PROYECTO GAME-RANK/
+        ├── README.md
         ├── backend/
-        │   └── app/
-        │       ├── database/
-        │       ├── repositories/
-        │       ├── models/
-        │       ├── routes/
-        │       └── services/
+        │   
+        │   ├── app/
+        │   │   ├── database/
+        │   │   ├── repositories/
+        │   │   ├── models/
+        │   │   ├── routes/
+        │   │   └── services/
+        │   ├── requirements.txt
+        │   └── migrations/
         └── frontend/
+            ├── package.json
             ├── public/
             ├── src/
-            │    ├── assets/
-            │    ├── components/
-            │    ├── router/
-            │    ├── services/
-            │    ├── view/
-            │    ├── App.vue
-            │    ├── main.js
-            │    └── styles.css
-            ├── index.html
-            └── package.json
+            │   ├── assets/
+            │   ├── components/
+            │   │   ├── Content/
+            │   │   ├── GameDetail/
+            │   │   ├── Home/
+            │   │   ├── LoginRegister/
+            │   │   └── User/
+            │   ├── router/
+            │   │   └── index.js
+            │   ├── services/
+            │   └── store/
 
                 
 
@@ -56,9 +62,49 @@
         3. npm run dev
 
 ### Como arrancar el proyecto
-* Depues de haber instalado las dependencias tanto de back `pip install -r requirements.txt` y front `npm install` y todo salio correctamente:
 
-    1. Inicializar primero el back creando la BD e insertando datos inmediatamente (estando en la carpeta /backend en caso de que la base de datos no este creada): `flask --app app.main db upgrade` luego `python -m app.main`
+Antes de iniciar el proyecto, asegúrate de tener instaladas las dependencias necesarias. El proyecto puede ejecutarse de dos formas: utilizando Docker (recomendado) o de forma manual.
 
-    2. Inicializar por ultimo el front que se conecta al back (estando en la carpeta /frontend): `npm run dev`
+#### Prerrequisitos
+- **Docker y Docker Compose**: Para ejecutar con contenedores (versión recomendada).
+- **Python 3.x**: Para el backend (si se ejecuta manualmente).
+- **Node.js y npm**: Para el frontend.
+- **MySQL**: Base de datos (si se ejecuta manualmente, o se puede usar el contenedor de Docker).
+
+#### Opción 1: Usando Docker (No se esta utilizando actualmente, pero se recomienda para evitar problemas de configuración)
+Esta opción configura automáticamente el backend, frontend y la base de datos MySQL en contenedores.
+
+1. Asegúrate de tener Docker y Docker Compose instalados.
+2. Desde la raíz del proyecto, ejecuta:
+   ```
+   docker-compose up --build
+   ```
+3. El backend estará disponible en `http://localhost:8080` y el frontend en el puerto configurado por Vite (generalmente `http://localhost:5173`).
+
+#### Opción 2: Ejecución Manual
+Si prefieres ejecutar los servicios manualmente:
+
+1. **Instalar dependencias**:
+   - Para el backend (desde la carpeta `/backend`): `pip install -r requirements.txt`
+   - Para el frontend (desde la carpeta `/frontend`): `npm install`
+
+2. **Configurar la base de datos**:
+   - Asegúrate de tener MySQL corriendo. Crea una base de datos llamada `game_rank` con usuario `root` y contraseña `root`.
+   - O usa el comando Docker deprecated mencionado abajo para crear un contenedor MySQL.
+
+3. **Iniciar el backend**:
+   - Ve a la carpeta `/backend`.
+   - Si la base de datos no está creada, ejecuta: `flask --app app.main db upgrade` para aplicar las migraciones.
+   - Luego inicia el servidor: `python -m app.main`
+   - El backend correrá en `http://localhost:8080`.
+
+4. **Iniciar el frontend**:
+   - Ve a la carpeta `/frontend`.
+   - Ejecuta: `npm run dev`
+   - El frontend estará disponible en `http://localhost:5173` (o el puerto que indique Vite).
+
+Si encuentras problemas al iniciar el frontend, intenta:
+- `npm cache clean --force`
+- `npm install`
+- `npm run dev`
 
