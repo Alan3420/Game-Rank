@@ -1,10 +1,10 @@
 import {createRouter, createWebHistory} from "vue-router";
-import Login from "../view/login_user.vue";
-import Register from "../view/register_user.vue"
-import Home from "../view/home.vue";
-import ContentOverview from "../view/contenido.vue";
-import GameDetail from "../view/GameDetail.vue";
-import perfil_user from "../view/perfil_user.vue";
+import Login from "../components/LoginRegister/login_user.vue";
+import Register from "../components/LoginRegister/register_user.vue"
+import Home from "../components/Home/home.vue";
+import ContentOverview from "../components/Content/contenido.vue";
+import GameDetail from "../components/GameDetail/GameDetail.vue";
+import perfil_user from "../components/User/perfil_user.vue";
 
 const routes = [
     {
@@ -27,17 +27,17 @@ const routes = [
     {
         path: "/content/overview",
         component: ContentOverview,
-        meta:{title:"Game Rank - Content Overview"}
+        meta:{title:"Game Rank - Principal"}
     },
     {
         path: "/game/:id",
         component: GameDetail,
-        meta:{title:"Game Rank - Game Detail"}
+        meta:{title:"Game Rank - Detalles"}
     },
     {
         path: "/user/profile",
         component: perfil_user,
-        meta:{title:"Game Rank - Profile"}
+        meta:{title:"Game Rank - Perfil"}
     }
 ];
 
