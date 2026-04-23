@@ -20,6 +20,7 @@ class Comment(db.Model):
         return {
             "id_comment": self.id_comment,
             "id_user": self.id_user,
+            "username": self.users_rl.name,
             "id_videogame": self.id_videogame,
             "description": self.description,
             "date_of_comment": str(self.date_of_comment)

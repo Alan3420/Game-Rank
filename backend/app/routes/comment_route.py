@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.comment_services import crear_comentario, actualizar_comentario,eliminar_comentario, get_comentarios_juego,get_comentarios_usuario
+from app.services import user_service
 
 comment_bp = Blueprint("comment", __name__)
 
@@ -8,9 +9,9 @@ comment_bp = Blueprint("comment", __name__)
 @jwt_required()
 def create():
     try:
-        data        = request.get_json()
-        id_user     = get_jwt_identity()
-        id_game     = data.get("id_game")
+        data = request.get_json()
+        id_user = get_jwt_identity()
+        id_game = data.get("id_game")
         description = data.get("description")
 
         if not id_game or not description:
@@ -29,7 +30,7 @@ def create():
 @jwt_required()
 def update(comment_id):
     try:
-        data        = request.get_json()
+        data = request.get_json()
         description = data.get("description")
 
         if not description:
@@ -51,15 +52,18 @@ def update(comment_id):
 @jwt_required()
 def delete(comment_id):
     try:
-        resultado = eliminar_comentario(comment_id=comment_id)
+        user_id = get_jwt_identity()
+        resultado = eliminar_comentario(comment_id, user_id)
+        
+      
+        if resultado is True:
+            return jsonify({"msg": "Comentario eliminado"}), 200
+        
 
-        if type(resultado) == str:
-            return jsonify({"message": resultado}), 404
+        return jsonify({"msg": resultado}), 403 
 
-        return jsonify({"message": "Comentario eliminado"}), 200
     except Exception as e:
-        return jsonify({"message": "Error al eliminar el comentario",
-                        "error": str(e)}), 500
+        return jsonify({"error": str(e)}), 500
 
 
 @comment_bp.route("/game/<int:game_id>", methods=["GET"])
@@ -77,7 +81,9 @@ def get_by_user():
     try:
         id_user  = get_jwt_identity()
         comments = get_comentarios_usuario(id_user=id_user)
-        return jsonify({"comments": comments}), 200
+        user = user_service.get_user_by_id(id_user=id_user)
+        
+        return jsonify({"comments": comments, "user": user}), 200
     except Exception as e:
         return jsonify({"message": "Error al obtener comentarios",
                         "error": str(e)}), 500

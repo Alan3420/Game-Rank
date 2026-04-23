@@ -48,43 +48,34 @@
                 </aside>
             </section>
 
-                <section class="detail-card comments-section">
-                    <h2>Comentarios</h2>
+            <!-- Aqui van los comentarios -->
+            <section class="detail-card comments-section">
+                <h2>Comentarios <span class="comment-count">{{ comments.length }}</span></h2>
 
-                    <!-- Formulario para añadir comentario -->
-                    <div class="comment-form">
-                        <textarea 
-                            v-model="newComment" 
-                            placeholder="Escribe tu comentario..." 
-                            class="comment-input"
-                            rows="3"
-                        ></textarea>
-                        <button class="comment-submit-btn" @click="submitComment">
-                            <i class="pi pi-send"></i> Publicar
-                        </button>
+                <div v-if="comments.length === 0" class="no-comments">
+                    <i class="pi pi-comments"></i>
+                    <span>Todavía no hay comentarios para este juego</span>
+                </div>
+
+                <div v-for="comment in comments" :key="comment.id_comment" class="comment-item">
+                    <div class="comment-avatar">
+                        <i class="pi pi-user"></i>
                     </div>
-
-                    <!-- Lista de comentarios -->
-                    <div v-if="comments.length === 0" class="no-comments">
-                        <i class="pi pi-comments"></i>
-                        <span>Sé el primero en comentar este juego</span>
-                    </div>
-
-                    <div v-for="comment in comments" :key="comment.id_comment" class="comment-item">
+                    <div class="comment-content">
                         <div class="comment-header">
-                            <span class="comment-user">
-                                <i class="pi pi-user"></i> Usuario {{ comment.id_user }}
-                            </span>
+                            <span class="comment-user">{{ comment.username }}</span>
                             <span class="comment-date">{{ formatDate(comment.date_of_comment) }}</span>
                         </div>
                         <p class="comment-body">{{ comment.description }}</p>
                     </div>
-                </section>
+                </div>
+            </section>
+
             <div class="detail-actions">
                 <Button icon="pi pi-arrow-left" class="back-btn" @click="goBack" />
             </div>
 
-            
+
         </div>
 
         <div v-else class="detail-error">
@@ -92,13 +83,13 @@
             <Button icon="pi pi-arrow-left" class="back-btn" @click="goBack" />
         </div>
 
-        
+
     </div>
 </template>
 
 <script>
 import { getGameDetail } from '../services/gameDetail';
-import { getCommentsByGame, createComments } from '../services/comment_services';
+import { getCommentsByGame, createComments, deleteComment, updateComment } from '../services/comment_services';
 import Button from 'primevue/button';
 
 export default {
@@ -111,7 +102,9 @@ export default {
             bannerOffset: 0,
             errorMessage: '',
             comments: [],
-            newComment: ''
+            newComment: '',
+            editingId: null,
+            editDescription: ''
         };
     },
     computed: {
@@ -128,6 +121,8 @@ export default {
         await this.loadGameDetail();
         await this.loadComments();
         this.onScroll = this.handleBannerScroll;
+        let username = document.getElementById("user")
+
         window.addEventListener('scroll', this.onScroll, { passive: true });
     },
     beforeUnmount() {
@@ -151,6 +146,7 @@ export default {
                 this.loading = false;
             }
         },
+
         async loadComments() {
             try {
                 const gameId = this.$route.params.id;
@@ -158,28 +154,21 @@ export default {
                 this.comments = data.comments;
             } catch (error) {
                 console.error('Error al cargar comentarios:', error);
+                this.comments = [];
             }
         },
-        async submitComment() {
-            try {
-                if (!this.newComment.trim()) return;
-                const gameId = this.$route.params.id;
-                await createComments(gameId, this.newComment);
-                this.newComment = '';
-                await this.loadComments();
-            } catch (error) {
-                console.error('Error al publicar comentario:', error);
-            }
-        },
+
         handleBannerScroll() {
             const banner = this.$el.querySelector('.detail-banner');
             if (!banner) return;
             const rect = banner.getBoundingClientRect();
             this.bannerOffset = Math.round(rect.top * 0.15);
         },
+
         goBack() {
             this.$router.push('/content/overview');
         },
+
         formatDate(value) {
             if (!value) return 'No disponible';
             const date = new Date(value);
@@ -359,54 +348,23 @@ export default {
     justify-content: flex-start;
 }
 
-/*Estilo de comentarios*/
+/*Estilos de los comentarios*/
 .comments-section {
     margin-top: 0;
 }
 
-.comment-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.comment-input {
-    width: 100%;
-    padding: 1rem;
-    border-radius: 16px;
-    border: 1.5px solid #eef0ff;
-    background: #f9f9ff;
-    color: #2b2b45;
-    font-size: 0.95rem;
-    resize: vertical;
-    outline: none;
-    transition: border 0.2s;
-    box-sizing: border-box;
-}
-
-.comment-input:focus {
-    border-color: #7c6fff;
-}
-
-.comment-submit-btn {
-    align-self: flex-end;
-    padding: 0.75rem 1.5rem;
-    border-radius: 999px;
-    border: none;
-    background: #7c6fff;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
+.comment-count {
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    transition: all 0.2s;
-}
-
-.comment-submit-btn:hover {
-    background: #5a47e0;
-    transform: translateY(-1px);
+    justify-content: center;
+    background: #eef0ff;
+    color: #7c6fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
 }
 
 .no-comments {
@@ -414,39 +372,59 @@ export default {
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
-    padding: 2rem;
+    padding: 2.5rem;
     color: #9090aa;
     font-size: 0.95rem;
 }
 
 .no-comments i {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    color: #c8c8e8;
 }
 
 .comment-item {
-    padding: 1.25rem;
-    border-radius: 18px;
-    background: #f9f9ff;
-    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1.5px solid #f0f0f8;
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-avatar {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 999px;
+    background: #eef0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7c6fff;
+    font-size: 1.1rem;
+}
+
+.comment-content {
+    flex: 1;
 }
 
 .comment-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .comment-user {
-    font-weight: 600;
-    color: #4b4f72;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+    font-weight: 700;
+    color: #2b2b45;
+    font-size: 0.95rem;
 }
 
 .comment-date {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     color: #9090aa;
 }
 
@@ -454,6 +432,7 @@ export default {
     margin: 0;
     color: #4c4c66;
     line-height: 1.7;
+    font-size: 0.95rem;
 }
 
 /*Estilo de boton retroceder*/
@@ -488,7 +467,7 @@ export default {
     }
 
     .detail-banner {
-        min-height: 450px;              
+        min-height: 450px;
         background-position: center;
         background-attachment: scroll;
     }
