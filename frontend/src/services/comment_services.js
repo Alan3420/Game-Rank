@@ -33,7 +33,13 @@ export async function getCommentsByGame(game_id) {
 
 export async function deleteComment(comment_id) {
     try {
-        const response = await api.delete(`/comment/delete/${comment_id}`);
+        const tokenUser = localStorage.getItem("token")
+        const response = await api.delete(`/comment/delete/${comment_id}`,{
+            headers:{
+                Authorization: `Bearer ${tokenUser}`
+            }
+        });
+        
         return response.data;
     } catch (error) {
         console.error('Error al eliminar el comentario:', error);
@@ -43,8 +49,15 @@ export async function deleteComment(comment_id) {
 
 export async function updateComment(comment_id, description) {
     try {
+
+        const tokenUser = localStorage.getItem("token")
         const response = await api.put(`/comment/update/${comment_id}`, {
             description: description
+        },
+        {
+            headers:{
+                Authorization: `Bearer ${tokenUser}`
+            }
         });
         return response.data;
     } catch (error) {

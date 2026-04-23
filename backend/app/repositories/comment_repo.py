@@ -7,7 +7,7 @@ def get_all_comments() -> list[Comment]:
 
 def get_comment_by_id(comment_id) -> Comment:
 
-    return Comment.query.get(comment_id)
+    return Comment.query.filter_by(id_comment = comment_id).first()
 
 def get_comments_by_game(id_game):
     return Comment.query.filter_by(id_videogame=id_game).all()
@@ -31,13 +31,20 @@ def update_comment(comment_id, description) -> Comment:
 
     return comment
 
-def delete_comment(comment_id) -> bool:
+def delete_comment(comment_id, user_id) -> bool:
+    try:
+        comment = Comment.query.filter_by(
+            id_comment=comment_id, 
+            id_user=user_id
+        ).first()
 
-    comment = get_comment_by_id(comment_id)
+        if comment:
+            db.session.delete(comment)
+            db.session.commit()
+            return True
 
-    if comment:
-        db.session.delete(comment)
-        db.session.commit()
-        return True
-
-    return False
+        return False
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error en delete_comment: {e}")
+        raise e

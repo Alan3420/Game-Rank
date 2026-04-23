@@ -17,11 +17,14 @@ def actualizar_comentario(comment_id, description) -> object | str:
     except Exception as e:
         raise Exception(f"Error al actualizar el comentario: {str(e)}")
 
-def eliminar_comentario(comment_id) -> bool | str:
+def eliminar_comentario(comment_id, user_id) -> bool | str:
     try:
-        resultado = delete_comment(comment_id=comment_id)
+        
+        resultado = delete_comment(comment_id=int(comment_id), user_id=user_id)
+
         if not resultado:
             return "Comentario no encontrado"
+        
         return resultado
     except Exception as e:
         raise Exception(f"Error al eliminar el comentario: {str(e)}")

@@ -96,6 +96,9 @@ def change_role(user_id, new_role) -> User | str:
         print("Error al cambiar el rol del usuario:", str(e))
         raise Exception("Error al cambiar el rol del usuario")
 
+def get_user_by_id(id_user):
+    return user_repo.get_user_by_id(user_id=id_user)
+
 
 
 
