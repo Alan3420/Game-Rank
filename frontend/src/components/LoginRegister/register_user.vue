@@ -54,10 +54,10 @@
 
 <script>
     import jsRegister from "./script_register.js";
-    import "./style_register.css";
 
     export default {
         name: 'register',
         mixins: [jsRegister]
     };
 </script>
+<style scoped src="./style_register.css"></style>

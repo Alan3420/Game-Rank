@@ -58,7 +58,6 @@
 
 <script>
     import contenido from "./script_contenido.js";
-    import "./style_contenido.css";
     import InputText from "primevue/inputtext"
     import Button from "primevue/button"
 
@@ -68,3 +67,5 @@
         ...contenido
     };
 </script>
+
+<style scoped src="./style_contenido.css"></style>

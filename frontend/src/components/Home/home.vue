@@ -107,10 +107,11 @@
 
 <script>
   import jsHome from "./script_home.js";
-  import "./style_home.css";
 
   export default {
     name: 'GameDetail',
     mixins: [jsHome]
   };
 </script>
+
+<style scoped src="./style_home.css"></style>

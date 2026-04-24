@@ -68,10 +68,10 @@
 
 <script>
     import jsPerfil from "./script_perfil.js";
-    import "./style_perfil.css";
-
+    
     export default {
         name: 'perfil',
         mixins: [jsPerfil]
     };
 </script>
+<style scoped src="./style_perfil.css"></style>

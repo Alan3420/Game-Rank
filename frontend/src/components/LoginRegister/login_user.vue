@@ -42,10 +42,11 @@
 
 <script>
     import jslogin from "./script_login.js";
-    import "./style_login.css";
 
     export default {
         name: 'login',
         mixins: [jslogin]
     };
 </script>
+
+<style scoped src="./style_login.css"></style>
