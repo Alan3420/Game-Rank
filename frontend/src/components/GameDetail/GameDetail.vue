@@ -19,6 +19,13 @@
             </section>
 
             <section class="detail-body">
+                <div class="detail-card screenshots-card">
+                    <h3>Capturas de pantalla</h3>
+                    <div class="screenshots-grid">
+                        <img v-for="shot in game.screenshots" :key="shot.id" :src="shot.image" :alt="game.name"
+                            class="screenshot-img" />
+                    </div>
+                </div>
                 <div class="detail-card detail-description-card">
                     <h2>Descripción</h2>
                     <div class="detail-description" v-html="game.description || '<em>Descripción no disponible.</em>'">
@@ -31,7 +38,7 @@
                         <div class="tag-list">
                             <span v-if="!game.platforms?.length" class="tag empty">Sin información</span>
                             <span v-for="platform in game.platforms" :key="platform.id" class="tag">{{ platform.name
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
 
@@ -88,14 +95,14 @@
 </template>
 
 <script>
-    import jsDetalles from "./script_GameDetail.js";
-    import Button from 'primevue/button';
+import jsDetalles from "./script_GameDetail.js";
+import Button from 'primevue/button';
 
-    export default {
-        name: 'GameDetail',
-        components: { Button },
-        mixins: [jsDetalles]
-    };
+export default {
+    name: 'GameDetail',
+    components: { Button },
+    mixins: [jsDetalles]
+};
 </script>
 
 <style scoped src="./styles_GameDetail.css"></style>

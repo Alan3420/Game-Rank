@@ -7,6 +7,7 @@ export default {
     data() {
         return {
             game: null,
+            screenshots: [],
             loading: true,
             bannerOffset: 0,
             errorMessage: '',
