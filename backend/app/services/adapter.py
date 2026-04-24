@@ -43,7 +43,22 @@ def developer_format(data) -> dict | list[dict]:
             lista_developer_dict.append(developer_dict)
         
         return lista_developer_dict
+
+def screenshots_format(data) -> list:
+    if not data:
+        return []
     
+    lista_screenshots = []
+
+    for screenshot in data:
+        screenshot_dict = {
+            "id": screenshot.get("id"),
+            "image": screenshot.get("image")
+        }
+        lista_screenshots.append(screenshot_dict)
+    
+    return lista_screenshots
+
 def game_format_resume(data) -> dict:
     if type(data) != list:
         return {
@@ -70,7 +85,7 @@ def game_format_resume(data) -> dict:
         return lista_game_dict
     
 def game_format_details(data) -> dict | list[dict]:
-    
+
     if type(data) != list:
         return {
             "id": data.get("id"),
@@ -79,6 +94,7 @@ def game_format_details(data) -> dict | list[dict]:
             "description": data.get("description"),
             "imge_url": data.get("background_image"),
             "rating": data.get("rating"),
+            "screenshots": screenshots_format(data=data.get("short_screenshots", [])),
             "platforms":   platform_format(data=data.get("platforms")),
             "developers":   developer_format(data=data.get("developers")),
         }
@@ -92,6 +108,7 @@ def game_format_details(data) -> dict | list[dict]:
                 "release_date": game.get("released"),
                 "description": game.get("description"),
                 "imge_url": game.get("background_image"),
+                "screenshots": screenshots_format(data=game.get("short_screenshots", [])),
                 "rating": game.get("rating"),
                 "platforms":    platform_format(data=game.get("platforms")),
                 "developers":   developer_format(data=game.get("developers")),

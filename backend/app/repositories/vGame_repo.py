@@ -22,6 +22,12 @@ def get_game_by_id_api(game_id) -> dict:
     response = requests.get(f"{BASE_URL}/games/{game_id}", params={"key": RAWG_API_KEY})
     return response.json()
 
+def get_game_screenshots(game_id):
+    response = requests.get(f"{BASE_URL}/games/{game_id}/screenshots", params={"key": RAWG_API_KEY})
+    if response.status_code != 200:
+        return []
+    return response.json().get("results", [])
+
 def get_game_by_id_bd(game_id) -> Video_game | None:
     video_game = Video_game.query.filter_by(id_game_api=game_id).first()
 
