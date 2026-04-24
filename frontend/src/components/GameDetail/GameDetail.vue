@@ -89,7 +89,6 @@
 
 <script>
     import jsDetalles from "./script_GameDetail.js";
-    import "./styles_GameDetail.css";
     import Button from 'primevue/button';
 
     export default {
@@ -98,3 +97,5 @@
         mixins: [jsDetalles]
     };
 </script>
+
+<style scoped src="./styles_GameDetail.css"></style>
