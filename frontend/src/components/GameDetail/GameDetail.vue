@@ -50,7 +50,7 @@
                         <div v-if="game.platforms?.length" class="stat-pill">
                             <i class="pi pi-desktop"></i>
                             <span>{{ game.platforms.length }} plataforma{{ game.platforms.length !== 1 ? 's' : ''
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
                 </div>
@@ -85,49 +85,78 @@
                     </div>
 
                     <!-- COMENTARIOS -->
-                    <div class="detail-card comments-section">
-                        <div class="card-header comments-header">
-                            <div class="header-left">
+                    <div class="comments-block">
+
+                        <!-- CABECERA -->
+                        <div class="comments-block-header">
+                            <div class="cb-title">
                                 <i class="pi pi-comments"></i>
                                 <h3>Comentarios</h3>
                                 <span class="comment-count">{{ comments.length }}</span>
                             </div>
                         </div>
 
+                        <!-- LISTA VACÍA -->
                         <div v-if="comments.length === 0" class="no-comments">
-                            <i class="pi pi-inbox"></i>
-                            <p>Aún no hay comentarios para este juego.</p>
+                            <div class="no-comments-icon">
+                                <i class="pi pi-comment"></i>
+                            </div>
+                            <p>Aún no hay comentarios.</p>
+                            <span>Sé el primero en dejar tu opinión sobre este juego.</span>
                         </div>
 
+                        <!-- LISTA DE COMENTARIOS -->
                         <div v-else class="comments-list">
                             <div v-for="comment in comments" :key="comment.id_comment" class="comment-item">
+                                <!-- Avatar -->
                                 <div class="comment-avatar">
                                     <i class="pi pi-user"></i>
                                 </div>
+
+                                <!-- Contenido -->
                                 <div class="comment-content">
-                                    <div class="comment-header">
-                                        <span class="comment-user">{{ comment.username }}</span>
-                                        <span class="comment-date">{{ formatDate(comment.date_of_comment) }}</span>
+                                    <div class="comment-top">
+                                        <div class="comment-meta">
+                                            <span class="comment-user">{{ comment.username }}</span>
+                                            <span class="comment-dot"></span>
+                                            <span class="comment-date">{{ formatDate(comment.date_of_comment) }}</span>
+                                        </div>
+                                        <button v-if="comment.id_user === data_user.id_user" class="comment-delete-btn" @click="delComment(comment.id_comment)"
+                                            title="Eliminar comentario">
+                                            <i class="pi pi-trash"></i>
+                                        </button>
                                     </div>
                                     <p class="comment-body">{{ comment.description }}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- SECCIÓN PARA AGREGAR COMENTARIO -->
-                        <div class="add-comment-section">
-                            <div class="add-comment-header">
-                                <i class="pi pi-plus-circle"></i>
-                                <span>Agregar comentario</span>
+                        <!-- SEPARADOR -->
+                        <div class="comments-divider">
+                            <span>Dejar un comentario</span>
+                        </div>
+
+                        <!-- FORMULARIO -->
+                        <div class="add-comment-form">
+                            <div class="comment-avatar comment-avatar-form">
+                                <i class="pi pi-user"></i>
                             </div>
-                            <div class="add-comment-form">
-                                <textarea v-model="newComment" placeholder="Escribe tu comentario aquí..."
-                                    class="comment-input" rows="4"></textarea>
-                                <button @click="addComment" class="send-comment-btn" :disabled="!newComment?.trim()">
-                                    <i class="pi pi-send"></i>
-                                </button>
+                            <div class="comment-input-wrap">
+                                <textarea v-model="newComment" placeholder="Escribe tu opinión sobre este juego..."
+                                    class="comment-textarea" rows="3"></textarea>
+                                <div class="comment-form-footer">
+                                    <span class="comment-char-hint" :class="{ active: newComment?.length > 0 }">
+                                        {{ newComment?.length || 0 }} caracteres
+                                    </span>
+                                    <button class="comment-submit-btn" @click="addComment"
+                                        :disabled="!newComment?.trim()">
+                                        <i class="pi pi-send"></i>
+                                        Publicar
+                                    </button>
+                                </div>
                             </div>
                         </div>
+
                     </div>
 
                 </div>
@@ -144,7 +173,7 @@
                         <div class="tag-list">
                             <span v-if="!game.platforms?.length" class="tag empty">Sin información</span>
                             <span v-for="platform in game.platforms" :key="platform.id" class="tag">{{ platform.name
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
 
@@ -209,7 +238,6 @@
 <script>
 import jsDetalles from "./script_GameDetail.js";
 import Button from 'primevue/button';
-
 export default {
     name: 'GameDetail',
     components: { Button },
