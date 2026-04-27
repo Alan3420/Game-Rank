@@ -3,11 +3,16 @@
 ───────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap');
 
+* {
+    box-sizing: border-box;
+    min-width: 0;
+}
 .game-detail-page {
     min-height: 100vh;
     background: #f5f6fb;
     color: #1f1f35;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
 }
 
 /* ─────────────────────────────────────────
@@ -226,28 +231,105 @@
     color: #1f1f35;
 }
 
-/* ─────────────────────────────────────────
-   CAPTURAS
-───────────────────────────────────────── */
-.screenshots-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 0.75rem;
+/* ─── CAPTURAS — estilo Steam ─── */
+
+.sc-card {
+    padding: 0 !important;
+    overflow: hidden;
+}
+.sc-info {
+    font-size: 0.78rem;
+    color: #9090aa;
 }
 
-.screenshot-img {
+/* Visor principal */
+.sc-viewer {
+    position: relative;
     width: 100%;
-    height: 120px;
+    aspect-ratio: 16 / 8;
+    background: #0a0a14;
+    overflow: hidden;
+}
+.sc-viewer__img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 10px;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+/* Flechas de navegación */
+.sc-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.3rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background 0.18s ease, border-color 0.18s ease;
+    z-index: 2;
+}
+.sc-arrow:hover {
+    background: rgba(124, 111, 255, 0.45);
+    border-color: rgba(124, 111, 255, 0.6);
+}
+.sc-arrow--l { left: 12px; }
+.sc-arrow--r { right: 12px; }
+
+/* Tira de miniaturas */
+.sc-strip-wrap {
+    border-top: 1px solid #eaecf7;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.sc-strip-wrap::-webkit-scrollbar { display: none; }
+
+.sc-strip {
+    display: flex;
+    gap: 4px;
+    padding: 6px;
+    width: max-content;
+}
+
+.sc-thumb {
+    width: 112px;
+    height: 64px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.55;
+    transition: opacity 0.18s ease, border-color 0.18s ease;
+}
+.sc-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
+.sc-thumb--on {
+    opacity: 1;
+    border-color: #7c6fff;
+}
+.sc-thumb:hover:not(.sc-thumb--on) {
+    opacity: 0.85;
+}
 
-.screenshot-img:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 24px rgba(20, 21, 63, 0.15);
+/* Responsive */
+@media (max-width: 640px) {
+    .sc-viewer { aspect-ratio: 16 / 9; }
+    .sc-thumb { width: 80px; height: 46px; }
+    .sc-arrow { width: 30px; height: 30px; font-size: 1rem; }
 }
 
 /* ─────────────────────────────────────────
@@ -936,45 +1018,68 @@
 @media (max-width: 860px) {
     .detail-body {
         grid-template-columns: 1fr;
-        padding: 1.25rem 1.25rem;
+        padding: 1rem;
     }
 
     .detail-aside {
         position: static;
+        order: -1; /* sidebar sube arriba del main en móvil */
     }
 
     .detail-hero {
-        min-height: 420px;
+        min-height: 280px;
         background-attachment: scroll;
     }
 
-    .hero-content {
-        padding: 2rem 1.5rem;
-    }
-
     .hero-content h1 {
-        font-size: clamp(1.8rem, 7vw, 2.6rem);
+        font-size: 1.6rem;
     }
 
-    .detail-topbar {
-        padding: 1rem 1.25rem;
+    .sc-viewer {
+        aspect-ratio: 16 / 9;
+        max-height: 200px;
+    }
+
+    .sc-thumb {
+        width: 72px;
+        height: 42px;
+    }
+
+    .detail-card {
+        padding: 1.25rem;
+    }
+
+    .comment-item,
+    .add-comment-form,
+    .comments-block-header {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .comments-divider {
+        padding: 0 1rem;
     }
 }
 
 @media (max-width: 520px) {
-    .detail-hero {
-        min-height: 360px;
-    }
-
-    .detail-card {
-        padding: 1.25rem 1.25rem;
-    }
-
-    .screenshots-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .detail-topbar {
+        padding: 0.75rem 1rem;
     }
 
     .breadcrumb-hint {
         display: none;
+    }
+
+    .detail-hero {
+        min-height: 240px;
+    }
+
+    .hero-content {
+        padding: 1.25rem 1rem;
+    }
+
+    .comment-body {
+        font-size: 0.88rem;
+        max-width: 100%;
     }
 }
