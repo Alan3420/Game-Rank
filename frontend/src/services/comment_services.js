@@ -3,6 +3,7 @@ import api from './api';
 export async function createComments(id_game, description) {
     try {
         const tokenUser = localStorage.getItem("token")
+        console.log('Token de usuario:', tokenUser);
         const response = await api.post(`/comment/create`,{
             id_game: id_game,
             description: description

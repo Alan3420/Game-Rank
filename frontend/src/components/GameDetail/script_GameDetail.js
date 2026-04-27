@@ -66,6 +66,24 @@ export default {
             }
         },
 
+        async addComment() {
+            if (!this.newComment) return;
+
+            try {
+                const gameId = this.$route.params.id;
+                // const commentData = {
+                //     id_game: gameId,
+                //     description: this.newComment.trim()
+                // };
+                const newComment = await createComments(gameId, this.newComment);
+                this.comments.push(newComment.comment);
+                this.newComment = '';
+                loadComments()
+            } catch (error) {
+                console.error('Error al agregar comentario:', error);
+            }
+        },
+
         handleBannerScroll() {
             const banner = this.$el.querySelector('.detail-banner');
             if (!banner) return;
