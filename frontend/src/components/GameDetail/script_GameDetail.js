@@ -84,6 +84,33 @@ export default {
                 console.error('Error al agregar comentario:', error);
             }
         },
+        editar(comment){
+            this.editingId = comment.id_comment;
+            this.newComment = comment.description;
+        },
+        cancelarEdit(){
+            this.editingId = null;
+            this.newComment = '';
+        },
+        async updComment(){
+            if (!this.newComment) return;
+
+            try{
+                await updateComment(this.editingId, this.newComment);
+                const index = this.comments.findIndex(comment => comment.id_comment === this.editingId);
+                if (index !== -1) {
+                    this.comments[index].description = this.newComment;
+                }
+
+                this.editingId = null;
+                this.newComment = '';
+                await this.loadComments();
+            }
+            catch(error){
+                console.log("Error al actualizar el comentario");
+                
+            }
+        },
         async delComment(id_comment){
             try{
                 const response = await deleteComment(id_comment);
