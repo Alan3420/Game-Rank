@@ -580,7 +580,58 @@
     cursor: not-allowed;
 }
 
+.comment-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #c8c8e0;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    opacity: 0;
+}
 
+.comment-item:hover .comment-edit-btn {
+    opacity: 1;
+}
+
+.comment-edit-btn:hover {
+    background: rgba(124, 111, 255, 0.08);
+    color: #7c6fff;
+}
+
+.comment-cancel-btn {
+    background: none;
+    border: none;
+    font-size: 0.82rem;
+    color: #9090aa;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+    transition: color 0.15s ease;
+}
+
+.comment-cancel-btn:hover { color: #4c4c66; }
+
+.comment-submit-btn.editing {
+    background: #1f1f35;
+}
+
+.comment-submit-btn.editing:hover:not(:disabled) {
+    background: #2e2e50;
+    box-shadow: 0 4px 14px rgba(31, 31, 53, 0.3);
+}
+
+.form-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
 
 /* ── RESPONSIVE ── */
 @media (max-width: 520px) {

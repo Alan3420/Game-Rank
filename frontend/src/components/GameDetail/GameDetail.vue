@@ -121,9 +121,13 @@
                                             <span class="comment-dot"></span>
                                             <span class="comment-date">{{ formatDate(comment.date_of_comment) }}</span>
                                         </div>
-                                        <button v-if="comment.id_user === data_user.id_user" class="comment-delete-btn" @click="delComment(comment.id_comment)"
-                                            title="Eliminar comentario">
+                                        <button v-if="comment.id_user === data_user.id_user" class="comment-delete-btn"
+                                            @click="delComment(comment.id_comment)" title="Eliminar comentario">
                                             <i class="pi pi-trash"></i>
+                                        </button>
+                                        <button v-if="comment.id_user === data_user.id_user" class="comment-edit-btn"
+                                            @click="editar(comment)" title="Editar comentario">
+                                            <i class="pi pi-pencil"></i>
                                         </button>
                                     </div>
                                     <p class="comment-body">{{ comment.description }}</p>
@@ -145,13 +149,20 @@
                                 <textarea v-model="newComment" placeholder="Escribe tu opinión sobre este juego..."
                                     class="comment-textarea" rows="3"></textarea>
                                 <div class="comment-form-footer">
-                                    <span class="comment-char-hint" :class="{ active: newComment?.length > 0 }">
-                                        {{ newComment?.length || 0 }} caracteres
-                                    </span>
-                                    <button class="comment-submit-btn" @click="addComment"
+                                    <div class="form-footer-left">
+                                        <!-- Botón cancelar, solo visible al editar -->
+                                        <button v-if="editingId" class="comment-cancel-btn" @click="cancelarEdit()">
+                                            Cancelar
+                                        </button>
+                                        <span class="comment-char-hint" :class="{ active: newComment?.length > 0 }">
+                                            {{ newComment?.length || 0 }} caracteres
+                                        </span>
+                                    </div>
+                                    <button class="comment-submit-btn" :class="{ editingId: editDescription }"
+                                        @click="editingId ? updComment() : addComment()"
                                         :disabled="!newComment?.trim()">
-                                        <i class="pi pi-send"></i>
-                                        Publicar
+                                        <i :class="editingId ? 'pi pi-check' : 'pi pi-send'"></i>
+                                        {{ editingId ? 'Actualizar' : 'Publicar' }}
                                     </button>
                                 </div>
                             </div>
