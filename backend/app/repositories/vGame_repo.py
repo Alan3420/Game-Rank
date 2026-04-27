@@ -1,32 +1,12 @@
 from app.models.Video_game import Video_game
 from app.database.db import db
-import requests
-import os
-
-RAWG_API_KEY = os.getenv('RAWG_API_KEY')
-BASE_URL = "https://api.rawg.io/api"
 
 
-def get_all_video_games(page=1, per_page=10):
-    response = requests.get(
-        f"{BASE_URL}/games",
-        params={
-            "key": RAWG_API_KEY,
-            "page": page,
-            "page_size": per_page
-        }
-    )
-    return response.json()
+def get_all_video_games_bd() -> list[Video_game]:
+    return Video_game.query.all()
 
-def get_game_by_id_api(game_id) -> dict:
-    response = requests.get(f"{BASE_URL}/games/{game_id}", params={"key": RAWG_API_KEY})
-    return response.json()
-
-def get_game_screenshots(game_id):
-    response = requests.get(f"{BASE_URL}/games/{game_id}/screenshots", params={"key": RAWG_API_KEY})
-    if response.status_code != 200:
-        return []
-    return response.json().get("results", [])
+def get_video_games_by_name_bd(name) -> list[Video_game]:
+    return Video_game.query.filter(Video_game.name.like(f"%{name}%")).all()
 
 def get_game_by_id_bd(game_id) -> Video_game | None:
     video_game = Video_game.query.filter_by(id_game_api=game_id).first()
@@ -36,10 +16,6 @@ def get_game_by_id_bd(game_id) -> Video_game | None:
     
     return video_game
 
-def get_game_by_name(game_name) -> dict:
-    response = requests.get(f"{BASE_URL}/games", params={"key": RAWG_API_KEY, "search": game_name})
-        
-    return response.json()
 
 def create_video_game(id_game_api, name, date_release, platforms, development_company) -> Video_game:
     

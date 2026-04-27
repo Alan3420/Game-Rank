@@ -1,5 +1,6 @@
-from app.repositories.vGame_repo import create_video_game, get_all_video_games, get_game_by_id_api, get_game_by_id_bd, get_game_by_name, get_game_screenshots
-from app.services.adapter import game_format_details, game_format_resume, screenshots_format
+from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
+from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots
+from app.services.adapter import game_format_details, game_format_resume
 
 
 def get_video_game_details(game_id) -> dict:
