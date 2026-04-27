@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from flask import Flask
 from flask_migrate import Migrate
 from app.database.db import db
@@ -23,6 +25,7 @@ load_dotenv()
 
 
 app = Flask(__name__)
+jwt = JWTManager(app)
 
 
 # Configuración proyecto
@@ -35,11 +38,13 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         }
     }
 }
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ECHO"] = False
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=2)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
-jwt = JWTManager(app)
+
 
 # Registro de Blueprints
 app.register_blueprint(welcome_bp, url_prefix="/user")
