@@ -50,7 +50,7 @@
                         <div v-if="game.platforms?.length" class="stat-pill">
                             <i class="pi pi-desktop"></i>
                             <span>{{ game.platforms.length }} plataforma{{ game.platforms.length !== 1 ? 's' : ''
-                            }}</span>
+                                }}</span>
                         </div>
                     </div>
                 </div>
@@ -147,23 +147,25 @@
                             </div>
                             <div class="comment-input-wrap">
                                 <textarea v-model="newComment" placeholder="Escribe tu opinión sobre este juego..."
-                                    class="comment-textarea" rows="3"></textarea>
+                                    class="comment-textarea" maxlength="255" rows="3"></textarea>
                                 <div class="comment-form-footer">
                                     <div class="form-footer-left">
+                                        <span class="comment-char-hint" :class="{ active: newComment?.length > 0 }">
+                                            {{ newComment?.length || 0 }} / 255 caracteres
+                                        </span>
+                                    </div>
+                                    <div class="grp-botones">
                                         <!-- Botón cancelar, solo visible al editar -->
                                         <button v-if="editingId" class="comment-cancel-btn" @click="cancelarEdit()">
                                             Cancelar
                                         </button>
-                                        <span class="comment-char-hint" :class="{ active: newComment?.length > 0 }">
-                                            {{ newComment?.length || 0 }} caracteres
-                                        </span>
+                                        <button class="comment-submit-btn" :class="{ editingId: editDescription }"
+                                            @click="editingId ? updComment() : addComment()"
+                                            :disabled="!newComment?.trim()">
+                                            <i :class="editingId ? 'pi pi-check' : 'pi pi-send'"></i>
+                                            {{ editingId ? 'Actualizar' : 'Publicar' }}
+                                        </button>
                                     </div>
-                                    <button class="comment-submit-btn" :class="{ editingId: editDescription }"
-                                        @click="editingId ? updComment() : addComment()"
-                                        :disabled="!newComment?.trim()">
-                                        <i :class="editingId ? 'pi pi-check' : 'pi pi-send'"></i>
-                                        {{ editingId ? 'Actualizar' : 'Publicar' }}
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +186,7 @@
                         <div class="tag-list">
                             <span v-if="!game.platforms?.length" class="tag empty">Sin información</span>
                             <span v-for="platform in game.platforms" :key="platform.id" class="tag">{{ platform.name
-                            }}</span>
+                                }}</span>
                         </div>
                     </div>
 
