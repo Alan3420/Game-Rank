@@ -62,18 +62,6 @@
                 <!-- COLUMNA PRINCIPAL -->
                 <div class="detail-main">
 
-                    <!-- CAPTURAS -->
-                    <div v-if="game.screenshots?.length" class="detail-card">
-                        <div class="card-header">
-                            <i class="pi pi-images"></i>
-                            <h3>Capturas de pantalla</h3>
-                        </div>
-                        <div class="screenshots-grid">
-                            <img v-for="shot in game.screenshots" :key="shot.id" :src="shot.image" :alt="game.name"
-                                class="screenshot-img" />
-                        </div>
-                    </div>
-
                     <!-- DESCRIPCIÓN -->
                     <div class="detail-card">
                         <div class="card-header">
@@ -82,6 +70,31 @@
                         </div>
                         <div class="detail-description"
                             v-html="game.description || '<em>Descripción no disponible.</em>'"></div>
+                    </div>
+
+                    <!-- CAPTURAS DE PANTALLA -->
+                    <div v-if="game.screenshots.length" class="detail-card sc-card">
+
+                        <!-- Visor principal con flechas -->
+                        <div class="sc-viewer">
+                            <img :src="game.screenshots[activeShot].image"
+                                :alt="`${game.name} — captura ${activeShot + 1}`" class="sc-viewer__img" />
+                            <button class="sc-arrow sc-arrow--l" @click="prevShot"
+                                aria-label="Anterior">&#8249;</button>
+                            <button class="sc-arrow sc-arrow--r" @click="nextShot"
+                                aria-label="Siguiente">&#8250;</button>
+                        </div>
+
+                        <!-- Tira de miniaturas con scroll horizontal -->
+                        <div class="sc-strip-wrap">
+                            <div class="sc-strip">
+                                <div v-for="(shot, i) in game.screenshots" :key="shot.id" class="sc-thumb"
+                                    :class="{ 'sc-thumb--on': i === activeShot }" @click="activeShot = i">
+                                    <img :src="shot.image" :alt="`Captura ${i + 1}`" />
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- COMENTARIOS -->

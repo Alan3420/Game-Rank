@@ -11,6 +11,7 @@ export default {
             screenshots: [],
             loading: true,
             bannerOffset: 0,
+            activeShot: 0,
             errorMessage: '',
             comments: [],
             newComment: '',
@@ -58,6 +59,13 @@ export default {
             } finally {
                 this.loading = false;
             }
+        },
+
+        prevShot() {
+        this.activeShot = (this.activeShot - 1 + this.game.screenshots.length) % this.game.screenshots.length;
+        },
+        nextShot() {
+            this.activeShot = (this.activeShot + 1) % this.game.screenshots.length;
         },
 
         async loadComments() {
