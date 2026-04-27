@@ -1,5 +1,6 @@
 import { getGameDetail } from '../../services/gameDetail';
 import { getCommentsByGame, createComments, deleteComment, updateComment } from '../../services/comment_services';
+import { estadoAutenticacion } from '../../store/autenticacion';
 
 export default {
     name: 'GameDetail',
@@ -24,6 +25,10 @@ export default {
                 backgroundImage: this.game?.imge_url ? `linear-gradient(to bottom, rgba(19, 18, 51, 0.2), rgba(19, 18, 51, 0.85)), url(${this.game.imge_url})` : 'none',
                 backgroundPosition: position
             };
+        },
+
+        data_user() {
+            return estadoAutenticacion.usuario;
         }
     },
     async mounted() {
@@ -71,16 +76,23 @@ export default {
 
             try {
                 const gameId = this.$route.params.id;
-                // const commentData = {
-                //     id_game: gameId,
-                //     description: this.newComment.trim()
-                // };
                 const newComment = await createComments(gameId, this.newComment);
                 this.comments.push(newComment.comment);
                 this.newComment = '';
-                loadComments()
+                await this.loadComments();
             } catch (error) {
                 console.error('Error al agregar comentario:', error);
+            }
+        },
+        async delComment(id_comment){
+            try{
+                const response = await deleteComment(id_comment);
+                this.comments = this.comments.filter(comment => comment.id_comment !== id_comment)
+                await this.loadComments()
+                
+            }
+            catch(error){
+                console.error("Error al eliminar el comentario:", response.data.message);
             }
         },
 
