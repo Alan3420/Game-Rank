@@ -119,6 +119,7 @@ def game_format_details(data) -> dict | list[dict]:
             "imge_url": data.get("background_image"),
             "rating": data.get("rating"),
             "screenshots": screenshots_format(data=data.get("short_screenshots", [])),
+            "movies": trailer_format(data=data.get("movies", [])),
             "platforms":   platform_format(data=data.get("platforms")),
             "developers":   developer_format(data=data.get("developers")),
         }
@@ -133,6 +134,7 @@ def game_format_details(data) -> dict | list[dict]:
                 "description": game.get("description"),
                 "imge_url": game.get("background_image"),
                 "screenshots": screenshots_format(data=game.get("short_screenshots", [])),
+                "movies": trailer_format(data=game.get("movies", [])),
                 "rating": game.get("rating"),
                 "platforms":    platform_format(data=game.get("platforms")),
                 "developers":   developer_format(data=game.get("developers")),
