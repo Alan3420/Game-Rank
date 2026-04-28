@@ -3,7 +3,6 @@
     <div class="header-container">
       <router-link to="/" class="logo-link">
         <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank Logo" />
-        <span class="brand-name">Game Rank</span>
       </router-link>
 
       <nav class="nav-menu">
@@ -128,12 +127,13 @@ const manejarCierreSesion = () => {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  color: #6366f1;
+  background: #1f1f35;
+  color: white;
   font-weight: 600;
   font-size: 0.95rem;
-
+  transition: all 0.2s ease;
   text-decoration: none;
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 .user-info i {
@@ -141,8 +141,9 @@ const manejarCierreSesion = () => {
 }
 
 .user-info:hover{
-  background-color: rgba(0, 128, 0, 0.088);
-  color: green;
+  background: #1f1f35;
+  color: #dbffc4;
+
   transform: translateY(1px);
 }
 
@@ -151,10 +152,10 @@ const manejarCierreSesion = () => {
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  color: #6366f1;
-  background-color: transparent;
+  background: #1f1f35;
+  color: white;
   border: none;
-  border-radius: 20px;
+  border-radius: 10px;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
@@ -164,7 +165,7 @@ const manejarCierreSesion = () => {
 
 .logout-btn:hover {
   color: #dc2626;
-  background: rgba(239, 68, 68, 0.15);
+  background: #1f1f35;
   transform: translateY(1px);
 }
 

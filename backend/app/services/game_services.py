@@ -12,7 +12,6 @@ def get_video_game_details(game_id) -> dict:
         screenshots = get_game_screenshots(game_id=game_id)
         game_details["short_screenshots"] = screenshots
 
-        print(screenshots)
 
         if not game_exists:
             listaPlataformas = ""
@@ -36,8 +35,6 @@ def get_video_game_details(game_id) -> dict:
         resultado = game_format_details(game_details)
         return resultado
     except Exception as e:
-        import traceback
-        traceback.print_exc()
 
         raise Exception(f"Error al obtener los detalles del juego: {str(e)}")
 
