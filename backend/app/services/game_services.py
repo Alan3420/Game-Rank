@@ -1,5 +1,5 @@
 from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
-from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots
+from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies
 from app.services.adapter import game_format_details, game_format_resume
 
 
@@ -11,7 +11,7 @@ def get_video_game_details(game_id) -> dict:
 
         screenshots = get_game_screenshots(game_id=game_id)
         game_details["short_screenshots"] = screenshots
-
+        game_details["movies"] = get_game_movies(game_id=game_id)
 
         if not game_exists:
             listaPlataformas = ""
