@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_migrate import Migrate
 from app.database.db import db
 from app.database.seed import seed
@@ -27,6 +27,18 @@ load_dotenv()
 app = Flask(__name__)
 jwt = JWTManager(app)
 
+@jwt.unauthorized_loader
+def unauthorized_callback(error_string):
+    return jsonify({"message": "Token no válido", "error": error_string}), 401
+
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return jsonify({"message": "Token expirado"}), 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error_string):
+    return jsonify({"message": "Token inválido", "error": error_string}), 401
+
 
 # Configuración proyecto
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URI")
@@ -41,7 +53,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ECHO"] = False
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=2)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=2)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 

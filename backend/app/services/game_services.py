@@ -11,7 +11,7 @@ def get_video_game_details(game_id) -> dict:
 
         screenshots = get_game_screenshots(game_id=game_id)
         game_details["short_screenshots"] = screenshots
-        game_details["movies"] = get_game_movies(game_id=game_id)
+        game_details["movies"] = get_game_movies(game_id=game_id)[:2]
 
         if not game_exists:
             listaPlataformas = ""
@@ -33,6 +33,7 @@ def get_video_game_details(game_id) -> dict:
                               development_company=listaDevs_Company)
 
         resultado = game_format_details(game_details)
+        
         return resultado
     except Exception as e:
 
