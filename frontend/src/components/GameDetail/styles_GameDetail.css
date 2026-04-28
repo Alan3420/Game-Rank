@@ -256,6 +256,34 @@
     display: block;
     transition: opacity 0.2s ease;
 }
+.sc-thumb__video {
+    width: 100%;
+    height: 100%;
+    background: #1f1f35;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    border-radius: 8px;
+    color: white;
+}
+
+.sc-thumb__video i {
+    font-size: 1.4rem;
+    color: #7c6fff;
+}
+
+.sc-thumb__video span {
+    font-size: 0.65rem;
+    color: #9090aa;
+    text-align: center;
+    padding: 0 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 90%;
+}
 
 /* Flechas de navegación */
 .sc-arrow {

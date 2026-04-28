@@ -67,6 +67,7 @@ def trailer_format(data):
         return{
             "id": data.get("id"),
             "name": data.get("name"),
+            "preview": data.get("preview"),
             "trailer_url": data.get("data",{}).get("max")
         }
     
@@ -77,6 +78,7 @@ def trailer_format(data):
             trailer_list = {
                 "id": trailer.get("id"),
                 "name": trailer.get("name"),
+                "preview": trailer.get("preview"),
                 "trailer_url": trailer.get("data",{}).get("max")
             }
             trailer_list_dict.append(trailer_list)

@@ -50,7 +50,7 @@
                         <div v-if="game.platforms?.length" class="stat-pill">
                             <i class="pi pi-desktop"></i>
                             <span>{{ game.platforms.length }} plataforma{{ game.platforms.length !== 1 ? 's' : ''
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
                 </div>
@@ -72,12 +72,16 @@
                             v-html="game.description || '<em>Descripción no disponible.</em>'"></div>
                     </div>
 
-                    <!-- CAPTURAS DE PANTALLA -->
-                    <div v-if="game.screenshots.length" class="detail-card sc-card">
+                    <!-- Area de fotos y videos  -->
+                    <div v-if="game.screenshots?.length || game.movies?.length" class="detail-card sc-card">
 
-                        <!-- Visor principal con flechas -->
+                        <!-- Visor principal -->
                         <div class="sc-viewer">
-                            <img :src="game.screenshots[activeShot].image"
+                            <!-- Si el item activo es un vídeo -->
+                            <video v-if="mediaItems[activeShot]?.type === 'video'" :src="mediaItems[activeShot].url"
+                                class="sc-viewer__img" controls muted loop></video>
+                            <!-- Si el item activo es una imagen -->
+                            <img v-else :src="mediaItems[activeShot]?.url"
                                 :alt="`${game.name} — captura ${activeShot + 1}`" class="sc-viewer__img" />
                             <button class="sc-arrow sc-arrow--l" @click="prevShot"
                                 aria-label="Anterior">&#8249;</button>
@@ -85,12 +89,17 @@
                                 aria-label="Siguiente">&#8250;</button>
                         </div>
 
-                        <!-- Tira de miniaturas con scroll horizontal -->
+                        <!-- Tira de miniaturas -->
                         <div class="sc-strip-wrap">
                             <div class="sc-strip">
-                                <div v-for="(shot, i) in game.screenshots" :key="shot.id" class="sc-thumb"
+                                <div v-for="(item, i) in mediaItems" :key="i" class="sc-thumb"
                                     :class="{ 'sc-thumb--on': i === activeShot }" @click="activeShot = i">
-                                    <img :src="shot.image" :alt="`Captura ${i + 1}`" />
+                                    <!-- Miniatura vídeo -->
+                                    <div v-if="item.type === 'video'" class="sc-thumb__video">
+                                        <video  :poster="item.preview"></video>
+                                    </div>
+                                    <!-- Miniatura imagen -->
+                                    <img v-else :src="item.url" :alt="`Captura ${i + 1}`" />
                                 </div>
                             </div>
                         </div>
@@ -199,7 +208,7 @@
                         <div class="tag-list">
                             <span v-if="!game.platforms?.length" class="tag empty">Sin información</span>
                             <span v-for="platform in game.platforms" :key="platform.id" class="tag">{{ platform.name
-                                }}</span>
+                            }}</span>
                         </div>
                     </div>
 

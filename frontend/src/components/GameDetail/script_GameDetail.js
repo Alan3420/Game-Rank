@@ -4,7 +4,7 @@ import { estadoAutenticacion } from '../../store/autenticacion';
 
 export default {
     name: 'GameDetail',
-    
+
     data() {
         return {
             game: null,
@@ -30,7 +30,19 @@ export default {
 
         data_user() {
             return estadoAutenticacion.usuario;
-        }
+        },
+        mediaItems() {
+            const videos = (this.game?.movies || []).map(m => ({
+                type: 'video',
+                url: m.trailer_url,
+                name: m.name
+            }));
+            const images = (this.game?.screenshots || []).map(s => ({
+                type: 'image',
+                url: s.image
+            }));
+            return [...videos, ...images];
+        },
     },
     async mounted() {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -62,7 +74,7 @@ export default {
         },
 
         prevShot() {
-        this.activeShot = (this.activeShot - 1 + this.game.screenshots.length) % this.game.screenshots.length;
+            this.activeShot = (this.activeShot - 1 + this.game.screenshots.length) % this.game.screenshots.length;
         },
         nextShot() {
             this.activeShot = (this.activeShot + 1) % this.game.screenshots.length;
@@ -92,18 +104,18 @@ export default {
                 console.error('Error al agregar comentario:', error);
             }
         },
-        editar(comment){
+        editar(comment) {
             this.editingId = comment.id_comment;
             this.newComment = comment.description;
         },
-        cancelarEdit(){
+        cancelarEdit() {
             this.editingId = null;
             this.newComment = '';
         },
-        async updComment(){
+        async updComment() {
             if (!this.newComment) return;
 
-            try{
+            try {
                 await updateComment(this.editingId, this.newComment);
                 const index = this.comments.findIndex(comment => comment.id_comment === this.editingId);
                 if (index !== -1) {
@@ -114,19 +126,19 @@ export default {
                 this.newComment = '';
                 await this.loadComments();
             }
-            catch(error){
+            catch (error) {
                 console.log("Error al actualizar el comentario");
-                
+
             }
         },
-        async delComment(id_comment){
-            try{
+        async delComment(id_comment) {
+            try {
                 const response = await deleteComment(id_comment);
                 this.comments = this.comments.filter(comment => comment.id_comment !== id_comment)
                 await this.loadComments()
-                
+
             }
-            catch(error){
+            catch (error) {
                 console.error("Error al eliminar el comentario:", response.data.message);
             }
         },
