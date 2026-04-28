@@ -59,6 +59,30 @@ def screenshots_format(data) -> list:
     
     return lista_screenshots
 
+def trailer_format(data):
+    if not data:
+        return None
+    
+    if type(data) != list:
+        return{
+            "id": data.get("id"),
+            "name": data.get("name"),
+            "trailer_url": data.get("data",{}).get("max")
+        }
+    
+    else:
+        trailer_list_dict = []
+
+        for trailer in data:
+            trailer_list = {
+                "id": trailer.get("id"),
+                "name": trailer.get("name"),
+                "trailer_url": trailer.get("data",{}).get("max")
+            }
+            trailer_list_dict.append(trailer_list)
+        
+        return trailer_list_dict
+
 def game_format_resume(data) -> dict:
     if type(data) != list:
         return {
