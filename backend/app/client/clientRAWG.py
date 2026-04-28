@@ -29,3 +29,12 @@ def get_game_by_name(game_name) -> dict:
     response = requests.get(f"{BASE_URL}/games", params={"key": RAWG_API_KEY, "search": game_name})
         
     return response.json()
+
+
+def get_game_movies(game_id):
+    response = requests.get(f"{BASE_URL}/games/{game_id}/movies", params={"key": RAWG_API_KEY})
+    
+    if response.status_code != 200:
+        return []
+    
+    return response.json().get("results", [])
