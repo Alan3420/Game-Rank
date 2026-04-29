@@ -77,7 +77,7 @@ export default {
 
         prevShot() {
 
-            const total_pct = this.game.screenshots.length
+            let total_pct = this.game.screenshots.length
             if(this.game.movies != null){
                 total_pct += this.game.movies.length
             }           
@@ -86,7 +86,7 @@ export default {
         },
         nextShot() {
 
-            const total_pct = this.game.screenshots.length
+            let total_pct = this.game.screenshots.length
             if(this.game.movies != null){
                 total_pct += this.game.movies.length
             }
