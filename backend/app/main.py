@@ -53,7 +53,7 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SQLALCHEMY_ECHO"] = False
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=2)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=2)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 
 
