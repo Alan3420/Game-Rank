@@ -6,7 +6,7 @@ BASE_URL = "https://api.rawg.io/api"
 
 def get_all_video_games(page=1, per_page=10):
     response = requests.get(
-        f"{BASE_URL}/games",
+        f"{BASE_URL}/games/lists/popular",
         params={
             "key": RAWG_API_KEY,
             "page": page,
