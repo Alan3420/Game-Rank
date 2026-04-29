@@ -79,7 +79,7 @@
                         <div class="sc-viewer">
                             <!-- Si el item activo es un vídeo -->
                             <video v-if="mediaItems[activeShot]?.type === 'video'" :src="mediaItems[activeShot].url"
-                                class="sc-viewer__img" controls muted loop></video>
+                                class="sc-viewer__img" :poster="mediaItems[activeShot].preview" controls muted loop></video>
                             <!-- Si el item activo es una imagen -->
                             <img v-else :src="mediaItems[activeShot]?.url"
                                 :alt="`${game.name} — captura ${activeShot + 1}`" class="sc-viewer__img" />

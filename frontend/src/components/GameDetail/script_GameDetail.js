@@ -35,8 +35,10 @@ export default {
             const videos = (this.game?.movies || []).map(m => ({
                 type: 'video',
                 url: m.trailer_url,
-                name: m.name
+                name: m.name,
+                preview: m.preview
             }));
+            
             const images = (this.game?.screenshots || []).map(s => ({
                 type: 'image',
                 url: s.image
@@ -74,10 +76,14 @@ export default {
         },
 
         prevShot() {
-            this.activeShot = (this.activeShot - 1 + this.game.screenshots.length) % this.game.screenshots.length;
+
+            const total_pct = this.game.movies.length + this.game.screenshots.length
+            this.activeShot = (this.activeShot - 1 + total_pct) % total_pct;
         },
         nextShot() {
-            this.activeShot = (this.activeShot + 1) % this.game.screenshots.length;
+
+            const total_pct = this.game.movies.length + this.game.screenshots.length
+            this.activeShot = (this.activeShot + 1) % total_pct;
         },
 
         async loadComments() {
