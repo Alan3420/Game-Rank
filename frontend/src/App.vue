@@ -7,14 +7,56 @@
 
       <nav class="nav-menu">
         <template v-if="estadoAutenticacion.usuario">
-          <router-link to="/user/profile" class="user-info">
+          <button @click="abierto = !abierto" class="options-user">
             <i class="pi pi-user"></i>
-            <span class="user-name">{{ estadoAutenticacion.usuario.name }}</span>
-          </router-link>
-          <button class="logout-btn" @click="manejarCierreSesion">
-            <i class="pi pi-sign-out"></i>
-            <span class="btn-text">Cerrar sesión</span>
+            {{ estadoAutenticacion.usuario.name }}
+            <i v-if="abierto == false" class="pi pi-bars"></i>
+            <i v-if="abierto == true" class="pi pi-times"></i>
           </button>
+
+          <div v-if="abierto" class="desplegable-menu">
+
+            <div class="apartado-info-user">
+              <div class="icon">
+                <i class="pi pi-user"></i>
+              </div>
+
+              <div class="info">
+                <span class="user-name section">{{ estadoAutenticacion.usuario.name }}</span>
+                <span class="user-email action">{{ estadoAutenticacion.usuario.email }}</span>
+              </div>
+
+            </div>
+
+            <hr>
+            <p class="section-title-desplegable">MI CUENTA</p>
+            <div class="apartado-info-user user-hover">
+              <div class="icon">
+                <i class="pi pi-id-card"></i>
+              </div>
+
+              <div class="info">
+                <router-link to="/user/profile" class="user-info section">
+                  Perfil
+                </router-link>
+                <p class="action">Ver editar tu informacion</p>
+              </div>
+
+            </div>
+
+            <hr>
+            <div class="sect-logout log-out-hover">
+              <div class="icon separator">
+                <i class="pi pi-sign-out"></i>
+                <button class="logout-btn" @click="manejarCierreSesion">
+                  <span class="btn-text">Cerrar sesión</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
         </template>
 
         <template v-else>
@@ -62,7 +104,9 @@
 <script setup>
 import { estadoAutenticacion } from './store/autenticacion';
 import { useRouter } from 'vue-router';
+import { ref } from "vue"
 
+const abierto = ref(false);
 const router = useRouter();
 
 const manejarCierreSesion = () => {
@@ -74,7 +118,7 @@ const manejarCierreSesion = () => {
 <style scoped>
 /* Header Styles */
 .main-header {
-  background: #ffffff;
+  background: #ffffffe5;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
@@ -87,6 +131,8 @@ const manejarCierreSesion = () => {
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
+  position: relative;
+
   align-items: center;
   justify-content: space-between;
   min-height: 72px;
@@ -103,9 +149,6 @@ const manejarCierreSesion = () => {
   transition: opacity 0.2s ease;
 }
 
-.logo-link:hover {
-  opacity: 0.8;
-}
 
 #logo {
   height: 40px;
@@ -120,9 +163,126 @@ const manejarCierreSesion = () => {
   display: flex;
   align-items: center;
   gap: 20px;
+  position: relative;
+  z-index: 101;
+}
+
+/* Opciones de usuarios */
+.options-user {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px;
+  background-color: white;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.options-user:hover {
+  background-color: whitesmoke;
+  border: 1px solid #6365f1af;
+}
+
+.apartado-info-user .pi {
+  background-color: #6365f12a;
+  color: #4f46e5;
+  border-radius: 10px;
+  margin: 0;
+  padding: 7px;
+}
+
+.desplegable-menu {
+
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  margin-top: 3px;
+  min-width: 300px;
+
+
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.7);
+}
+
+.apartado-info-user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.user-hover:hover{
+  background-color: #6365f12a;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  font-weight: bold;
+}
+
+.action {
+  color: #7e7e7e;
+  font-size: 12px;
+
+}
+
+hr {
+  border: none;
+  background-color: #7e7e7e31;
+  height: 1px;
+}
+
+.section-title-desplegable {
+  color: #7e7e7e7a;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .user-info {
+  text-decoration: none;
+  color: black;
+}
+
+.separator {
+  display: flex;
+  gap: 10px;
+}
+
+.pi-sign-out {
+  background-color: #d3393935;
+  color: #d33939;
+  border-radius: 10px;
+  margin: 0;
+  padding: 7px;
+}
+
+.logout-btn {
+  border: none;
+  background-color: transparent;
+  color: #d33939;
+}
+.log-out-hover:hover{
+  background-color: #d3393935;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* .user-info {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -134,20 +294,20 @@ const manejarCierreSesion = () => {
   transition: all 0.2s ease;
   text-decoration: none;
   border-radius: 10px;
-}
+} */
 
-.user-info i {
+/* .user-info i {
   font-size: 1rem;
 }
 
-.user-info:hover{
+.user-info:hover {
   background: #1f1f35;
   color: #dbffc4;
 
   transform: translateY(1px);
-}
+} */
 
-.logout-btn {
+/* .logout-btn {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -167,7 +327,7 @@ const manejarCierreSesion = () => {
   color: #dc2626;
   background: #1f1f35;
   transform: translateY(1px);
-}
+} */
 
 .nav-link {
   display: flex;
@@ -200,7 +360,8 @@ const manejarCierreSesion = () => {
 
 /* Main Content */
 .main-content {
-  min-height: calc(100vh - 144px); /* Header + Footer height */
+  min-height: calc(100vh - 144px);
+  /* Header + Footer height */
 }
 
 /* Footer Styles */
@@ -264,6 +425,14 @@ const manejarCierreSesion = () => {
   font-size: 0.85rem;
 }
 
+/* .logout-btn {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+} */
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .header-container {
@@ -284,16 +453,12 @@ const manejarCierreSesion = () => {
     gap: 12px;
   }
 
-  .user-info {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-  }
-
   .logout-btn,
   .nav-link {
     padding: 6px 12px;
     font-size: 0.85rem;
   }
+
 
   .footer-container {
     grid-template-columns: 1fr;
@@ -315,7 +480,8 @@ const manejarCierreSesion = () => {
   .nav-menu {
     gap: 8px;
   }
-  .user-name{
+
+  .user-name {
     display: none;
   }
 
