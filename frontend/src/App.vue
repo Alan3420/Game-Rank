@@ -201,7 +201,7 @@ const manejarCierreSesion = () => {
   right: 0;
   background: white;
   border: 1px solid #ccc;
-  margin-top: 3px;
+  margin-top: 18px;
   min-width: 300px;
 
 
@@ -211,7 +211,7 @@ const manejarCierreSesion = () => {
   flex-direction: column;
   gap: 1rem;
 
-  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.2);
 }
 
 .apartado-info-user {
@@ -282,52 +282,6 @@ hr {
   cursor: pointer;
 }
 
-/* .user-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: #1f1f35;
-  color: white;
-  font-weight: 600;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  border-radius: 10px;
-} */
-
-/* .user-info i {
-  font-size: 1rem;
-}
-
-.user-info:hover {
-  background: #1f1f35;
-  color: #dbffc4;
-
-  transform: translateY(1px);
-} */
-
-/* .logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: #1f1f35;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.logout-btn:hover {
-  color: #dc2626;
-  background: #1f1f35;
-  transform: translateY(1px);
-} */
 
 .nav-link {
   display: flex;
@@ -424,14 +378,6 @@ hr {
   color: #9ca3af;
   font-size: 0.85rem;
 }
-
-/* .logout-btn {
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  width: 100%;
-  border-radius: 10px;
-  border: none;
-} */
 
 /* Responsive Design */
 @media (max-width: 768px) {
