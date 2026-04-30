@@ -1,6 +1,7 @@
 from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
-from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies
+from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases
 from app.services.adapter import game_format_details, game_format_resume
+from datetime import datetime
 
 
 def get_video_game_details(game_id) -> dict:
@@ -50,6 +51,24 @@ def get_video_game_by_name_details(game_name) -> dict | None:
     if not name_game_details["results"]:
         return None
     return game_format_details(game_details)
+
+def get_upcoming_launch_games(page, per_page):
+    try:
+        init_date = None
+        final_date = None
+
+        time = datetime.now()
+
+        init_date = time.strftime("%Y-%m-%d")
+        final_date = datetime(time.year, 12, 31).strftime("%Y-%m-%d")
+
+        return game_format_resume(get_future_releases(init_date=init_date, final_date=final_date, page=page, per_page=per_page))
+    
+    except Exception as e:
+        raise Exception(f"Error:{str(e)}")
+
+    
+
 
 
 def get_video_games_pagination(page: int, per_page: int):
