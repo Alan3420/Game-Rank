@@ -40,7 +40,7 @@ def get_game_movies(game_id):
     return response.json().get("results", [])
 
 def get_future_releases( init_date, final_date, page=1, per_page=10,):
-    response = requests.get(f"{BASE_URL}/games?dates={init_date},{final_date}&ordering=released&key={RAWG_API_KEY}")
+    response = requests.get(f"{BASE_URL}/games?dates={init_date},{final_date}&ordering=released&key={RAWG_API_KEY}", params={"page": page, "page_size": per_page})
 
     if response.status_code != 200:
         return []
