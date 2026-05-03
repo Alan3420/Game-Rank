@@ -7,21 +7,22 @@
           <span class="hero-label">Bienvenido a Game Rank</span>
           <h1 class="hero-title">Descubre los mejores juegos</h1>
           <p class="hero-description">
-            Tu mejor plataforma para explorar, comparar y descubrir videojuegos. Encuentra títulos destacados ordenados por rating y crea tu lista personal de favoritos.
+            Tu mejor plataforma para explorar, comparar y descubrir videojuegos. Encuentra títulos destacados ordenados
+            por rating y crea tu lista personal de favoritos.
           </p>
           <div class="hero-cta">
             <button class="btn btn-primary" @click="goToLogin">
               <i class="pi pi-play"></i>
               Explorar ahora
             </button>
-            <button class="btn btn-secondary" @click="goToRegister">
+            <button v-if="estadoAutenticacion.usuario === null" class="btn btn-secondary" @click="goToRegister">
               <i class="pi pi-user-plus"></i>
               Crear cuenta
             </button>
           </div>
         </div>
 
-        
+
       </div>
     </section>
 
@@ -57,7 +58,8 @@
               <i class="pi pi-calendar"></i>
               {{ topGames[0].release_date.split('-')[0] }}
             </p>
-            <p class="game-description">Posicionado como el juego más calificado en nuestra base de datos. Esta selección refleja la preferencia de la comunidad gaming global.</p>
+            <p class="game-description">Posicionado como el juego más calificado en nuestra base de datos. Esta
+              selección refleja la preferencia de la comunidad gaming global.</p>
           </div>
         </article>
 
@@ -84,14 +86,60 @@
         </div>
       </div>
 
-      <div v-else class="empty-state">
+      <div v-else class="estado-vacio">
         <i class="pi pi-inbox"></i>
-        <p>No hay juegos disponibles en este momento</p>
-      </div>
+        <p>No hay próximos lanzamientos disponibles.</p>
+    </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
+    <!-- Proximos lanzamientos -->
+    <section v-if="estadoAutenticacion.usuario !== null" class="proximos-section">
+    <div class="section-header">
+        <span class="section-eyebrow">
+            <i class="pi pi-clock"></i>
+            Próximamente
+        </span>
+        <h2>Próximos lanzamientos</h2>
+        <p>Juegos que llegarán pronto</p>
+    </div>
+
+    <div v-if="futureReleases.length > 0" class="proximos-grid">
+        <article
+            v-for="game in futureReleases"
+            :key="game.id"
+            class="juego-card"
+            @click="goToDetail(game.id)"
+        >
+            <div class="juego-imagen">
+                <img :src="game.imge_url" :alt="game.name" />
+                <div class="juego-imagen-overlay"></div>
+                <span class="juego-fecha-badge">
+                    <i class="pi pi-calendar"></i>
+                    {{ game.release_date }}
+                </span>
+            </div>
+            <div class="juego-cuerpo">
+                <h3 class="juego-titulo">{{ game.name }}</h3>
+                <div class="juego-meta">
+                    <i class="pi pi-calendar"></i>
+                    <span>{{ game.release_date }}</span>
+                </div>
+            </div>
+            <div class="juego-footer">
+                <span>Ver detalles</span>
+                <i class="pi pi-arrow-right"></i>
+            </div>
+        </article>
+    </div>
+
+    <div v-else class="estado-vacio">
+        <i class="pi pi-inbox"></i>
+        <p>No hay próximos lanzamientos disponibles.</p>
+    </div>
+</section>
+
+    <!-- Crea una cuenta nueva-->
+    <section v-if="estadoAutenticacion.usuario === null" class="cta-section">
       <div class="cta-content">
         <h2>Únete a la comunidad</h2>
         <p>Explora miles de juegos, comparte tu opinión y descubre títulos que se adapten a tus preferencias.</p>
@@ -106,12 +154,14 @@
 
 
 <script>
-  import jsHome from "./script_home.js";
+import jsHome from "./script_home.js";
+import { estadoAutenticacion } from "../../store/autenticacion.js";
 
-  export default {
-    name: 'GameDetail',
-    mixins: [jsHome]
-  };
+
+export default {
+  name: 'GameDetail',
+  mixins: [jsHome]
+};
 </script>
 
 <style scoped src="./style_home.css"></style>
