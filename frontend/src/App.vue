@@ -7,56 +7,43 @@
 
       <nav class="nav-menu">
         <template v-if="estadoAutenticacion.usuario">
-          <button @click="abierto = !abierto" class="options-user">
+          <button @click="toggle" class="options-user">
             <i class="pi pi-user"></i>
             {{ estadoAutenticacion.usuario.name }}
-            <i v-if="abierto == false" class="pi pi-bars"></i>
-            <i v-if="abierto == true" class="pi pi-times"></i>
+            <i class="pi pi-bars"></i>
           </button>
 
-          <div v-if="abierto" class="desplegable-menu">
-
+          <Popover ref="op" class="menu-popover">
             <div class="apartado-info-user">
               <div class="icon">
                 <i class="pi pi-user"></i>
               </div>
-
               <div class="info">
                 <span class="user-name section">{{ estadoAutenticacion.usuario.name }}</span>
                 <span class="user-email action">{{ estadoAutenticacion.usuario.email }}</span>
               </div>
-
             </div>
 
             <hr>
             <p class="section-title-desplegable">MI CUENTA</p>
-            <div class="apartado-info-user user-hover">
+            <div class="apartado-info-user user-hover" @click="op.hide()">
               <div class="icon">
                 <i class="pi pi-id-card"></i>
               </div>
-
               <div class="info">
-                <router-link to="/user/profile" class="user-info section">
-                  Perfil
-                </router-link>
-                <p class="action">Ver editar tu informacion</p>
+                <router-link to="/user/profile" class="user-info section">Perfil</router-link>
+                <p class="action">Ver y editar tu información</p>
               </div>
-
             </div>
 
             <hr>
-            <div class="sect-logout ">
+            <div class="sect-logout" @click="manejarCierreSesion">
               <div class="icon separator">
                 <i class="pi pi-sign-out"></i>
-                <button class="logout-btn" @click="manejarCierreSesion">
-                  <span class="btn-text">Cerrar sesión</span>
-                </button>
+                <span class="btn-text logout-btn">Cerrar sesión</span>
               </div>
-
             </div>
-
-          </div>
-
+          </Popover>
         </template>
 
         <template v-else>
@@ -102,25 +89,30 @@
 </template>
 
 <script setup>
+import Popover from 'primevue/popover';
 import { estadoAutenticacion } from './store/autenticacion';
 import { useRouter } from 'vue-router';
-import { ref } from "vue"
+import { ref } from "vue";
 
-const abierto = ref(false);
+const op = ref(null);
 const router = useRouter();
+
+const toggle = (event) => {
+  op.value.toggle(event);
+};
 
 const manejarCierreSesion = () => {
   estadoAutenticacion.cerrarSesion();
   router.push("/login");
-  abierto.value = false
 };
 </script>
 
 <style scoped>
 /* Header Styles */
-*{
+* {
   font-family: 'Sora', sans-serif;
 }
+
 .main-header {
   background: #ffffffe5;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -132,7 +124,6 @@ const manejarCierreSesion = () => {
 
 .header-container {
   max-width: 1400px;
-  margin: 0 auto;
   padding: 0 24px;
   display: flex;
   position: relative;
@@ -198,24 +189,42 @@ const manejarCierreSesion = () => {
   padding: 7px;
 }
 
-.desplegable-menu {
+/* Popover estilo propio*/
+:global(.p-popover) {
+  position: fixed !important;
 
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  margin-top: 18px;
-  min-width: 300px;
+  border: 1px solid #ccc !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.2) !important;
 
+  padding: 1rem !important;
+  margin-top: 1.1rem !important;
+  min-width: 300px !important;
+  display: flex !important;
+  flex-direction: column !important;
 
-  border-radius: 10px;
-  padding: 1rem;
+  gap: 1rem !important;
+  right: 0px !important;
+  left: auto !important;
+  max-width: calc(100vw - 48px) !important;
+  background: #ffffff !important;
+}
+
+:global(.p-popover-arrow) {
+  display: none !important;
+}
+
+:global(.p-popover-content) {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding: 0 !important;
+}
 
-  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.2);
+:global(.p-popover-flipped .p-popover-arrow),
+:global(.p-popover::before),
+:global(.p-popover::after) {
+  display: none !important;
 }
 
 .apartado-info-user {
@@ -224,7 +233,8 @@ const manejarCierreSesion = () => {
   align-items: center;
   gap: 10px;
 }
-.user-hover{
+
+.user-hover {
   cursor: pointer;
 }
 
@@ -278,7 +288,9 @@ hr {
   background-color: transparent;
   color: #d33939;
 }
-.sect-logout, .btn-text{
+
+.sect-logout,
+.btn-text {
   cursor: pointer;
 }
 
