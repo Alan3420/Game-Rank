@@ -6,6 +6,7 @@
 * {
     box-sizing: border-box;
     min-width: 0;
+    font-family: 'Sora', sans-serif;
 }
 .game-detail-page {
     min-height: 100vh;
@@ -40,7 +41,6 @@
 }
 
 .detail-error h2 {
-    font-family: 'Sora', sans-serif;
     font-size: 1.25rem;
     color: #4c4c66;
     margin: 0;
@@ -142,7 +142,6 @@
 
 .hero-content h1 {
     margin: 0 0 1.5rem 0;
-    font-family: 'Sora', sans-serif;
     font-size: clamp(2.2rem, 4vw, 3.6rem);
     font-weight: 800;
     line-height: 1.04;
@@ -224,7 +223,6 @@
 
 .card-header h3 {
     margin: 0;
-    font-family: 'Sora', sans-serif;
     font-size: 1.05rem;
     font-weight: 700;
     color: #1f1f35;
@@ -404,7 +402,6 @@
 
 .cb-title h3 {
     margin: 0;
-    font-family: 'Sora', sans-serif;
     font-size: 1.05rem;
     font-weight: 700;
     color: #1f1f35;

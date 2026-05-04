@@ -117,6 +117,9 @@ const manejarCierreSesion = () => {
 
 <style scoped>
 /* Header Styles */
+*{
+  font-family: 'Sora', sans-serif;
+}
 .main-header {
   background: #ffffffe5;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);

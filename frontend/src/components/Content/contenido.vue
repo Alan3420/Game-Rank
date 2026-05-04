@@ -2,15 +2,22 @@
 
 
     <div class="content-overview">
-        <div class="header">
-            <h1>Contenido Principal</h1>
+        <div class="catalogo-header">
+            <div class="catalogo-header-texto">
+                <span class="catalogo-eyebrow">
+                    <i class="pi pi-th-large"></i>
+                    Catálogo de juegos
+                </span>
+                <h1>Explora nuestra colección</h1>
+                <p>Encuentra tu próximo juego favorito entre cientos de títulos</p>
+            </div>
 
-            <div class="conten_view">
-                <div class="buscar_contenido">
-                    <div class="google-search">
-                        <InputText class="google-input" v-model="game_name" placeholder="Nombre del juego..." />
-                        <Button icon="pi pi-search" class="google-btn" @click="getContentCard" />
-                    </div>
+            <div class="catalogo-buscador">
+                <div class="buscador-wrap">
+                    <i class="pi pi-search buscador-icono"></i>
+                    <InputText class="buscador-input" v-model="game_name" placeholder="Buscar un juego..."
+                        @keyup.enter="getContentCard" />
+                    <Button label="Buscar" class="buscador-btn" @click="getContentCard" />
                 </div>
             </div>
         </div>
@@ -57,15 +64,15 @@
 </template>
 
 <script>
-    import contenido from "./script_contenido.js";
-    import InputText from "primevue/inputtext"
-    import Button from "primevue/button"
+import contenido from "./script_contenido.js";
+import InputText from "primevue/inputtext"
+import Button from "primevue/button"
 
-    export default {
-        name: 'contenido',
-        components: {InputText, Button},
-        ...contenido
-    };
+export default {
+    name: 'contenido',
+    components: { InputText, Button },
+    ...contenido
+};
 </script>
 
 <style scoped src="./style_contenido.css"></style>
