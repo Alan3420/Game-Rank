@@ -45,7 +45,7 @@
             </div>
 
             <hr>
-            <div class="sect-logout log-out-hover">
+            <div class="sect-logout ">
               <div class="icon separator">
                 <i class="pi pi-sign-out"></i>
                 <button class="logout-btn" @click="manejarCierreSesion">
@@ -220,9 +220,7 @@ const manejarCierreSesion = () => {
   align-items: center;
   gap: 10px;
 }
-.user-hover:hover{
-  background-color: #6365f12a;
-  border-radius: 10px;
+.user-hover{
   cursor: pointer;
 }
 
@@ -276,9 +274,7 @@ hr {
   background-color: transparent;
   color: #d33939;
 }
-.log-out-hover:hover{
-  background-color: #d3393935;
-  border-radius: 10px;
+.sect-logout, .btn-text{
   cursor: pointer;
 }
 
