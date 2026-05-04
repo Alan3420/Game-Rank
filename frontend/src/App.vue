@@ -112,6 +112,7 @@ const router = useRouter();
 const manejarCierreSesion = () => {
   estadoAutenticacion.cerrarSesion();
   router.push("/login");
+  abierto.value = false
 };
 </script>
 
