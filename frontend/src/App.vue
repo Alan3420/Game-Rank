@@ -427,14 +427,6 @@ hr {
     gap: 8px;
   }
 
-  .user-name {
-    display: none;
-  }
-
-  .btn-text {
-    display: none;
-  }
-
   .nav-link {
     order: 3;
   }
