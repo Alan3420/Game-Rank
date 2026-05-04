@@ -1,3 +1,6 @@
+*{
+  font-family: 'Sora', sans-serif;
+}
 .profile-page {
   padding: 40px 24px;
   background-color: #f1f5f9; /* Mismo fondo que tu #app */
