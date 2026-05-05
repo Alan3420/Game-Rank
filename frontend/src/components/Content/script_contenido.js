@@ -1,11 +1,13 @@
 import { getContentOverview } from "../../services/resume_cards";
 import { getContentByName } from "../../services/buscar"
+import { addTOFavorite, checkFavorite, removeTOFavorite } from "../../services/favorites_area";
 
 export default {
-    name : "contenido",
+    name: "contenido",
     data() {
         return {
             games: [],
+            favorites: new Set(),
             game_name: null,
             page: 1,
             per_page: 10,
@@ -38,6 +40,10 @@ export default {
 
                 this.games = [...this.games, ...response.games];
 
+                for (const game of response.games) {
+                    await this.initCheckFavorite(game.id);
+                }
+
                 this.hasNext = !!response.next;
 
                 this.page++;
@@ -67,6 +73,35 @@ export default {
                 console.log(response)
             } catch (error) {
                 console.error("ERRORS:", error)
+            }
+        },
+        async initCheckFavorite(gameId) {
+            try {
+                const data = await checkFavorite(gameId);
+                if (data.is_favorite) {
+                    this.favorites.add(gameId);
+                }
+            } catch (error) {
+                console.error(`Error verificando favorito ${gameId}:`, error);
+            }
+        },
+        async toggleFavorite(gameId) {
+            try {
+                if (this.favorites.has(gameId)) {
+
+                    const result = await removeTOFavorite(gameId);
+                    this.favorites.delete(gameId);
+
+                    console.log(result.message);
+                } else {
+                    // Añadir a favoritos
+                    const result = await addTOFavorite(gameId);
+                    this.favorites.add(gameId);
+                    console.log(result.message);
+                }
+            } catch (error) {
+                console.error("Error al cambiar favorito:", error);
+                alert("Error al cambiar favorito");
             }
         },
 

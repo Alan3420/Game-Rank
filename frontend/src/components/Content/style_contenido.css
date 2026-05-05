@@ -196,6 +196,26 @@ label {
 .game-card:hover .image-overlay {
     opacity: 1;
 }
+.new-fav {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #ff4d6d;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.game-card:hover .new-fav {
+    opacity: 1;
+}
 
 .rating-badge {
     position: absolute;
@@ -212,6 +232,12 @@ label {
     gap: 0.25rem;
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.game-card:hover .rating-badge {
+    opacity: 1;
 }
 
 .rating-badge i {

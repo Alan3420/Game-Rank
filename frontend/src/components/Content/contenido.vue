@@ -32,6 +32,10 @@
                         <i class="pi pi-star-fill"></i>
                         <span>{{ game.rating }}</span>
                     </div>
+                    <div class="new-fav">
+                        <i v-if="favorites.has(game.id)" @click.stop="toggleFavorite(game.id)" class="pi pi-heart-fill"></i>
+                        <i v-else @click.stop="toggleFavorite(game.id)" class="pi pi-heart"></i>
+                    </div>
                 </div>
 
                 <div class="card-content">
