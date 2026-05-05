@@ -1,4 +1,6 @@
 from app.repositories.favorite_repo import get_favorite, get_favorites_by_user, create_favorite, delete_favorite
+from app.client.clientRAWG import get_game_by_id_api
+from app.services.adapter import game_format_resume
 
 def añadir_favorito(id_user, id_game) -> object | str:
     try:
@@ -34,7 +36,9 @@ def get_favoritos_usuario(id_user) -> list:
         resultado = []
 
         for fav in favorites:
-            resultado.append(fav.to_dict())
+            game = get_game_by_id_api(fav.id_game_api)
+            if game:
+                resultado.append(game_format_resume(game))
 
         return resultado
     

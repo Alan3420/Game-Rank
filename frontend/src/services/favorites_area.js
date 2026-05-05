@@ -63,3 +63,25 @@ export const checkFavorite = async (gameID) => {
         console.error(error.response.data.message);
     }
 }
+
+export const list_favorites = async () => {
+
+    try {
+        const token = localStorage.getItem("token");
+        
+        if (!token) {
+            console.error("No se encontró el token de autenticación.");
+            return;
+        }
+
+        const response = await api.get(`/favorite/listFav`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        return response.data;
+    }
+    catch (error) {
+        console.error(error.response.data.message);
+    }
+}
