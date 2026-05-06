@@ -84,6 +84,8 @@
     <RouterView />
   </main>
 
+  <NotificationToast />
+
   <footer class="main-footer">
     <div class="footer-container">
       <div class="footer-brand">
@@ -112,6 +114,8 @@
 import { estadoAutenticacion } from './store/autenticacion';
 import { useRouter, useRoute } from 'vue-router';
 import { ref, watch, onMounted, onUnmounted } from "vue";
+import NotificationToast from './components/Notifications/NotificationToast.vue';
+import { notificaciones } from './store/notificaciones';
 
 const router = useRouter();
 const route = useRoute();
@@ -137,6 +141,7 @@ const manejarCierreSesion = () => {
   menuAbierto.value = false;
   estadoAutenticacion.cerrarSesion();
   router.push("/login");
+  notificaciones.success("Has cerrado sesión correctamente.", { title: "Hasta luego" });
 };
 
 const handleClickOutside = (e) => {

@@ -1,6 +1,7 @@
 import { getContentOverview } from "../../services/resume_cards";
 import { getContentByName } from "../../services/buscar"
 import { addTOFavorite, checkFavorite, removeTOFavorite } from "../../services/favorites_area";
+import { notificaciones } from "../../store/notificaciones";
 
 export default {
     name: "contenido",
@@ -121,22 +122,25 @@ export default {
             }
         },
         async toggleFavorite(gameId) {
+            const wasFavorite = this.favorites.has(gameId);
             try {
-                if (this.favorites.has(gameId)) {
-
-                    const result = await removeTOFavorite(gameId);
+                if (wasFavorite) {
+                    await removeTOFavorite(gameId);
                     this.favorites.delete(gameId);
-
-                    console.log(result.message);
+                    notificaciones.success("Juego eliminado de tus favoritos.", { title: "Favorito eliminado" });
                 } else {
-                    // Añadir a favoritos
-                    const result = await addTOFavorite(gameId);
+                    await addTOFavorite(gameId);
                     this.favorites.add(gameId);
-                    console.log(result.message);
+                    notificaciones.success("Juego añadido a tus favoritos.", { title: "Favorito agregado" });
                 }
             } catch (error) {
                 console.error("Error al cambiar favorito:", error);
-                alert("Error al cambiar favorito");
+                notificaciones.error(
+                    wasFavorite
+                        ? "No pudimos eliminar el juego de favoritos."
+                        : "No pudimos añadir el juego a favoritos.",
+                    { title: "Error en favoritos" }
+                );
             }
         },
 

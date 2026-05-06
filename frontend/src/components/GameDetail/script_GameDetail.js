@@ -1,6 +1,7 @@
 import { getGameDetail } from '../../services/gameDetail';
 import { getCommentsByGame, createComments, deleteComment, updateComment } from '../../services/comment_services';
 import { estadoAutenticacion } from '../../store/autenticacion';
+import { notificaciones } from '../../store/notificaciones';
 
 export default {
     name: 'GameDetail',
@@ -114,8 +115,12 @@ export default {
                 this.comments.push(newComment.comment);
                 this.newComment = '';
                 await this.loadComments();
+                notificaciones.success("Tu comentario fue publicado.", { title: "Comentario enviado" });
             } catch (error) {
                 console.error('Error al agregar comentario:', error);
+                notificaciones.error("No pudimos publicar tu comentario. Inténtalo de nuevo.", {
+                    title: "Error al comentar"
+                });
             }
         },
         editar(comment) {
@@ -139,21 +144,27 @@ export default {
                 this.editingId = null;
                 this.newComment = '';
                 await this.loadComments();
+                notificaciones.success("Comentario actualizado correctamente.", { title: "Cambios guardados" });
             }
             catch (error) {
                 console.log("Error al actualizar el comentario");
-
+                notificaciones.error("No pudimos actualizar tu comentario.", {
+                    title: "Error al editar"
+                });
             }
         },
         async delComment(id_comment) {
             try {
-                const response = await deleteComment(id_comment);
+                await deleteComment(id_comment);
                 this.comments = this.comments.filter(comment => comment.id_comment !== id_comment)
                 await this.loadComments()
-
+                notificaciones.success("Tu comentario fue eliminado.", { title: "Comentario eliminado" });
             }
             catch (error) {
-                console.error("Error al eliminar el comentario:", response.data.message);
+                console.error("Error al eliminar el comentario:", error);
+                notificaciones.error("No pudimos eliminar el comentario.", {
+                    title: "Error al eliminar"
+                });
             }
         },
 

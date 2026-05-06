@@ -1,4 +1,5 @@
 import { register } from "../../services/user_service";
+import { notificaciones } from '../../store/notificaciones';
 
 export default {
     name: "register",
@@ -17,8 +18,11 @@ export default {
       try {
         this.loading = true;
         this.errorMessage = "";
-        const response = await register(this.name, this.last_name, this.email, this.password);
-        console.log("Usuario creado:", response);
+        await register(this.name, this.last_name, this.email, this.password);
+
+        notificaciones.success("Tu cuenta fue creada correctamente. Ya puedes iniciar sesión.", {
+          title: "Cuenta creada"
+        });
 
         this.$router.push('/login');
 
@@ -29,10 +33,14 @@ export default {
           await new Promise(resolve => setTimeout(resolve, 2000));
 
           this.errorMessage = error.response.data.message;
-          console.log(error.response.data.message);
-          
+          notificaciones.error(error.response.data.message, {
+            title: "No pudimos registrarte"
+          });
+
         } else {
-          console.log("Error:", error.message);
+          notificaciones.error("Ocurrió un problema al crear la cuenta. Inténtalo de nuevo más tarde.", {
+            title: "Error en el registro"
+          });
         }
       } finally {
         this.loading = false;
