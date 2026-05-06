@@ -18,43 +18,52 @@
 
       <nav class="nav-menu">
         <template v-if="estadoAutenticacion.usuario">
-          <button @click="toggle" class="options-user">
-            <i class="pi pi-user"></i>
-            {{ estadoAutenticacion.usuario.name }}
-            <i class="pi pi-bars"></i>
-          </button>
+          <div class="user-menu" ref="userMenuRef">
+            <button @click="menuAbierto = !menuAbierto" class="options-user" :class="{ 'is-active': menuAbierto }">
+              <div class="user-avatar-btn">
+                {{ estadoAutenticacion.usuario.name?.charAt(0)?.toUpperCase() }}
+              </div>
+              <span class="user-btn-name">{{ estadoAutenticacion.usuario.name }}</span>
+              <i class="pi" :class="menuAbierto ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+            </button>
 
-          <Popover ref="op" class="menu-popover">
-            <div class="apartado-info-user">
-              <div class="icon">
-                <i class="pi pi-user"></i>
-              </div>
-              <div class="info">
-                <span class="user-name section">{{ estadoAutenticacion.usuario.name }}</span>
-                <span class="user-email action">{{ estadoAutenticacion.usuario.email }}</span>
-              </div>
-            </div>
+            <Transition name="dropdown">
+              <div v-if="menuAbierto" class="user-dropdown">
+                <div class="dropdown-header">
+                  <div class="dropdown-avatar">
+                    {{ estadoAutenticacion.usuario.name?.charAt(0)?.toUpperCase() }}{{ estadoAutenticacion.usuario.last_name?.charAt(0)?.toUpperCase() }}
+                  </div>
+                  <div class="dropdown-user-info">
+                    <span class="dropdown-name">{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</span>
+                    <span class="dropdown-email">{{ estadoAutenticacion.usuario.email }}</span>
+                  </div>
+                </div>
 
-            <hr>
-            <p class="section-title-desplegable">MI CUENTA</p>
-            <div class="apartado-info-user user-hover" @click="op.hide()">
-              <div class="icon">
-                <i class="pi pi-id-card"></i>
-              </div>
-              <div class="info">
-                <router-link to="/user/profile" class="user-info section">Perfil</router-link>
-                <p class="action">Ver y editar tu información</p>
-              </div>
-            </div>
+                <div class="dropdown-divider"></div>
 
-            <hr>
-            <div class="sect-logout" @click="manejarCierreSesion">
-              <div class="icon separator">
-                <i class="pi pi-sign-out"></i>
-                <span class="btn-text logout-btn">Cerrar sesión</span>
+                <p class="dropdown-section-label">MI CUENTA</p>
+
+                <router-link to="/user/profile" class="dropdown-item" @click="menuAbierto = false">
+                  <div class="dropdown-item-icon">
+                    <i class="pi pi-id-card"></i>
+                  </div>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-item-title">Perfil</span>
+                    <span class="dropdown-item-desc">Ver y editar tu información</span>
+                  </div>
+                </router-link>
+
+                <div class="dropdown-divider"></div>
+
+                <button class="dropdown-item dropdown-logout" @click="manejarCierreSesion">
+                  <div class="dropdown-item-icon dropdown-logout-icon">
+                    <i class="pi pi-sign-out"></i>
+                  </div>
+                  <span class="dropdown-item-title">Cerrar sesión</span>
+                </button>
               </div>
-            </div>
-          </Popover>
+            </Transition>
+          </div>
         </template>
 
         <template v-else>
@@ -100,34 +109,44 @@
 </template>
 
 <script setup>
-import Popover from 'primevue/popover';
 import { estadoAutenticacion } from './store/autenticacion';
 import { useRouter, useRoute } from 'vue-router';
-import { ref, watch } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 
-const op = ref(null);
 const router = useRouter();
 const route = useRoute();
 
 const headerSearch = ref('');
+const menuAbierto = ref(false);
+const userMenuRef = ref(null);
 
 watch(() => route.query.q, (val) => {
   headerSearch.value = val || '';
 }, { immediate: true });
+
+watch(route, () => {
+  menuAbierto.value = false;
+});
 
 const submitHeaderSearch = () => {
   const term = headerSearch.value.trim();
   router.push({ path: '/content/overview', query: term ? { q: term } : {} });
 };
 
-const toggle = (event) => {
-  op.value.toggle(event);
-};
-
 const manejarCierreSesion = () => {
+  menuAbierto.value = false;
   estadoAutenticacion.cerrarSesion();
   router.push("/login");
 };
+
+const handleClickOutside = (e) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(e.target)) {
+    menuAbierto.value = false;
+  }
+};
+
+onMounted(() => document.addEventListener('mousedown', handleClickOutside));
+onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside));
 </script>
 
 <style scoped>
@@ -223,136 +242,205 @@ const manejarCierreSesion = () => {
   z-index: 101;
 }
 
-/* Opciones de usuarios */
-.options-user {
+/* ── USER MENU ── */
+.user-menu {
   position: relative;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  padding: 10px;
-  background-color: white;
+}
 
+.options-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1f1f35;
+}
+
+.options-user:hover,
+.options-user.is-active {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.user-avatar-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  color: #1f1f35;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.options-user .pi-chevron-up,
+.options-user .pi-chevron-down {
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+
+/* ── DROPDOWN ── */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 280px;
+  background: white;
+  border: 1px solid #edeef8;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(20, 21, 63, 0.12), 0 2px 8px rgba(20, 21, 63, 0.06);
+  overflow: hidden;
+  z-index: 200;
+}
+
+.dropdown-header {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
+  padding: 16px;
 }
 
-.options-user:hover {
-  background-color: whitesmoke;
-  border: 1px solid #6365f1af;
-}
-
-.apartado-info-user .pi {
-  background-color: #6365f12a;
-  color: #4f46e5;
-  border-radius: 10px;
-  margin: 0;
-  padding: 7px;
-}
-
-/* Popover estilo propio*/
-:global(.p-popover) {
-  position: fixed !important;
-
-  border: 1px solid #ccc !important;
-  border-radius: 10px !important;
-  box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.2) !important;
-
-  padding: 1rem !important;
-  margin-top: 1.1rem !important;
-  min-width: 300px !important;
-  display: flex !important;
-  flex-direction: column !important;
-
-  gap: 1rem !important;
-  right: 0px !important;
-  left: auto !important;
-  max-width: calc(100vw - 48px) !important;
-  background: #ffffff !important;
-}
-
-:global(.p-popover-arrow) {
-  display: none !important;
-}
-
-:global(.p-popover-content) {
+.dropdown-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #6366f1;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 700;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 0 !important;
-}
-
-:global(.p-popover-flipped .p-popover-arrow),
-:global(.p-popover::before),
-:global(.p-popover::after) {
-  display: none !important;
-}
-
-.apartado-info-user {
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
 }
 
-.user-hover {
-  cursor: pointer;
-}
-
-.info {
+.dropdown-user-info {
   display: flex;
   flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.section {
-  font-weight: bold;
+.dropdown-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #1f1f35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.action {
-  color: #7e7e7e;
-  font-size: 12px;
-
+.dropdown-email {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-hr {
-  border: none;
-  background-color: #7e7e7e31;
+.dropdown-divider {
   height: 1px;
-}
-
-.section-title-desplegable {
-  color: #7e7e7e7a;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.user-info {
-  text-decoration: none;
-  color: black;
-}
-
-.separator {
-  display: flex;
-  gap: 10px;
-}
-
-.pi-sign-out {
-  background-color: #d3393935;
-  color: #d33939;
-  border-radius: 10px;
+  background: #f0f0f8;
   margin: 0;
-  padding: 7px;
 }
 
-.logout-btn {
+.dropdown-section-label {
+  margin: 0;
+  padding: 10px 16px 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #b0b0c8;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  text-decoration: none;
+  width: 100%;
+  background: none;
   border: none;
-  background-color: transparent;
+  cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  transition: background 0.15s ease;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background: #f8f8fe;
+}
+
+.dropdown-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #eef2ff;
+  color: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.dropdown-logout-icon {
+  background: #fff0f0;
   color: #d33939;
 }
 
-.sect-logout,
-.btn-text {
-  cursor: pointer;
+.dropdown-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.dropdown-item-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1f1f35;
+}
+
+.dropdown-logout .dropdown-item-title {
+  color: #d33939;
+}
+
+.dropdown-item-desc {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+/* Animación dropdown */
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.user-btn-name {
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 
@@ -476,7 +564,6 @@ hr {
     gap: 12px;
   }
 
-  .logout-btn,
   .nav-link {
     padding: 6px 12px;
     font-size: 0.85rem;
