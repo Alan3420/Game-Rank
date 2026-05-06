@@ -586,11 +586,32 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   }
 }
 
-@media (max-width: 480px) {
-  .header-search {
-    display: none;
+@media (max-width: 640px) {
+  .header-container {
+    flex-wrap: wrap;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    min-height: 0;
+    row-gap: 10px;
   }
 
+  .logo-link {
+    order: 1;
+  }
+
+  .nav-menu {
+    order: 2;
+  }
+
+  .header-search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
+@media (max-width: 480px) {
   .nav-menu {
     gap: 8px;
   }
@@ -601,6 +622,10 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
   .nav-link-primary {
     order: 4;
+  }
+
+  .user-btn-name {
+    display: none;
   }
 
   .footer-links {

@@ -62,12 +62,24 @@
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    padding: 1.25rem 2.5rem;
+    padding: 1rem 2.5rem;
     background: white;
     border-bottom: 1px solid #edeef8;
     position: sticky;
-    top: 64px;
+    top: 72px;
     z-index: 99;
+}
+
+@media (max-width: 768px) {
+    .detail-topbar {
+        top: 64px;
+    }
+}
+
+@media (max-width: 640px) {
+    .detail-topbar {
+        top: 114px;
+    }
 }
 
 .breadcrumb-hint {
