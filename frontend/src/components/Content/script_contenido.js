@@ -21,13 +21,17 @@ export default {
     mounted() {
         if (this.$route.query.q) {
             this.game_name = this.$route.query.q;
+            this.searchGames();
+        } else {
+            this.getContent();
+            this.debouncedScroll = this.debounce(this.handleScroll, 500)
+            window.addEventListener("scroll", this.debouncedScroll);
         }
-        this.getContent();
-        this.debouncedScroll = this.debounce(this.handleScroll, 500)
-        window.addEventListener("scroll", this.debouncedScroll);
     },
     beforeUnmount() {
-        window.removeEventListener("scroll", this.debouncedScroll);
+        if (this.debouncedScroll) {
+            window.removeEventListener("scroll", this.debouncedScroll);
+        }
     },
     watch: {
         '$route.query.q'(newVal) {
@@ -38,7 +42,18 @@ export default {
             this.apiCallCount = 0;
             this.showLoadMoreButton = false;
             this.favorites = new Set();
-            this.getContent();
+
+            if (this.debouncedScroll) {
+                window.removeEventListener("scroll", this.debouncedScroll);
+            }
+
+            if (this.game_name) {
+                this.searchGames();
+            } else {
+                this.debouncedScroll = this.debounce(this.handleScroll, 500);
+                window.addEventListener("scroll", this.debouncedScroll);
+                this.getContent();
+            }
         }
     },
 
@@ -75,20 +90,26 @@ export default {
             }
         },
 
-
-        async getContentCard() {
+        async searchGames() {
+            if (this.loading) return;
+            this.loading = true;
             try {
-                if (!this.game_name || this.game_name.trim() === '') {
-                    alert("Escribe un nombre de juego")
-                    return
+                const response = await getContentByName(this.game_name);
+                this.games = Array.isArray(response) ? response : [];
+                this.hasNext = false;
+                this.showLoadMoreButton = false;
+
+                for (const game of this.games) {
+                    await this.initCheckFavorite(game.id);
                 }
-                const response = await getContentByName(this.game_name)
-                alert(`Resultados: ${JSON.stringify(response)}`)
-                console.log(response)
             } catch (error) {
-                console.error("ERRORS:", error)
+                console.error("Error en búsqueda:", error);
+                this.games = [];
+            } finally {
+                this.loading = false;
             }
         },
+
         async initCheckFavorite(gameId) {
             try {
                 const data = await checkFavorite(gameId);

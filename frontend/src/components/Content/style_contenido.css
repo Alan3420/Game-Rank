@@ -54,6 +54,39 @@
     margin: 0;
 }
 
+/*estado de busqueda vacia */
+.search-empty {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #6b7280;
+}
+
+.search-empty-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    background: #f5f5fc;
+    color: #c8c8e8;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+}
+
+.search-empty h2 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #1f1f35;
+    margin: 0 0 0.5rem;
+}
+
+.search-empty p {
+    font-size: 0.95rem;
+    color: #9090aa;
+    margin: 0;
+}
+
 /* GRID */
 .card_content {
     display: grid;

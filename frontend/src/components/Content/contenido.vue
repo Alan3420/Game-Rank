@@ -13,8 +13,17 @@
             </div>
         </div>
 
-        <!-- Card del juego -->
-        <div class="card_content">
+        <!-- Empty state búsqueda -->
+        <div v-if="game_name && !loading && games.length === 0" class="search-empty">
+            <div class="search-empty-icon">
+                <i class="pi pi-search"></i>
+            </div>
+            <h2>Sin resultados</h2>
+            <p>No encontramos juegos que coincidan con "{{ game_name }}".</p>
+        </div>
+
+        <!-- Cards (mismo estilo en catálogo y búsqueda) -->
+        <div v-else class="card_content">
             <div v-for="game in games" :key="game.id" class="game-card" @click="goToDetail(game.id)">
                 <div class="card-image">
                     <img :src="game.imge_url" :alt="game.name" class="game-image" />
@@ -47,12 +56,12 @@
             </div>
         </div>
 
-        <div v-if="showLoadMoreButton" class="load-more-container">
+        <div v-if="showLoadMoreButton && !game_name" class="load-more-container">
             <Button label="Cargar más juegos" @click="loadMore" :loading="loading" class="load-more-btn" />
         </div>
 
         <div v-if="loading" class="loader">
-            <span>Cargando más juegos...</span>
+            <span>{{ game_name ? 'Buscando juegos...' : 'Cargando más juegos...' }}</span>
         </div>
     </div>
 

@@ -41,16 +41,13 @@ def get_video_game_details(game_id) -> dict:
         raise Exception(f"Error al obtener los detalles del juego: {str(e)}")
 
 
-def get_video_game_by_name_details(game_name) -> dict | None:
+def get_video_game_by_name_details(game_name) -> list:
     name_game_details = get_game_by_name(game_name=game_name)
 
-    id_game_details = name_game_details["results"][0]["id"]
+    if not name_game_details.get("results"):
+        return []
 
-    game_details = get_game_by_id_api(game_id=id_game_details)
-
-    if not name_game_details["results"]:
-        return None
-    return game_format_details(game_details)
+    return game_format_resume(name_game_details["results"])
 
 def get_upcoming_launch_games(page, per_page):
     try:
