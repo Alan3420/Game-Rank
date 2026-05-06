@@ -31,7 +31,7 @@ def add():
 @jwt_required()
 def remove():
     try:
-        data    = request.get_json()
+        data = request.get_json()
         id_user = get_jwt_identity()
         id_game = data.get("id_game")
 

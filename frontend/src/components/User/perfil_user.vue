@@ -1,100 +1,135 @@
 <template>
   <div class="profile-page">
-    <div class="profile-container">
 
-      <div class="page-header">
-        <h1>Mi Perfil</h1>
-        <p>Gestiona tu información y preferencias en Game Rank</p>
+    <div v-if="estadoAutenticacion.usuario">
+
+      <!-- Banner -->
+      <div class="profile-banner">
+        <div class="banner-glow"></div>
+        <div class="banner-inner">
+          <div class="avatar-wrapper">
+            <div class="avatar-circle">
+              {{ estadoAutenticacion.usuario.name?.charAt(0)?.toUpperCase() }}{{ estadoAutenticacion.usuario.last_name?.charAt(0)?.toUpperCase() }}
+            </div>
+          </div>
+          <div class="banner-user-info">
+            <h1>{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</h1>
+            <span class="badge">
+              <i class="pi pi-shield"></i>
+              Jugador Registrado
+            </span>
+          </div>
+        </div>
       </div>
 
-      <div v-if="estadoAutenticacion.usuario" class="profile-content">
+      <div class="profile-container">
+
+        <!-- Account info -->
         <div class="profile-card">
-          <div class="avatar-section">
-            <div class="avatar-circle">
+          <div class="card-header">
+            <div class="card-header-title">
               <i class="pi pi-user"></i>
+              <span>Información de la Cuenta</span>
             </div>
-            <div class="user-headline">
-              <h2>{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</h2>
-              <span class="badge">Jugador Registrado</span>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <div class="details-section">
-            <h3>Información de la Cuenta</h3>
-
-            <div class="info-grid">
-              <div class="info-group">
-                <span class="label"><i class="pi pi-id-card"></i> Nombre de usuario</span>
-                <span class="value">{{ estadoAutenticacion.usuario.name }}</span>
-              </div>
-
-              <div class="info-group">
-                <span class="label"><i class="pi pi-envelope"></i> Correo electrónico</span>
-                <span class="value">{{ estadoAutenticacion.usuario.email || 'No proporcionado' }}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="actions-section">
             <button class="btn-edit">
-              <i class="pi pi-pencil"></i> Editar Perfil
+              <i class="pi pi-pencil"></i>
+              Editar
             </button>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-icon-wrap">
+                <i class="pi pi-id-card"></i>
+              </div>
+              <div class="info-body">
+                <span class="info-label">Nombre de usuario</span>
+                <span class="info-value">{{ estadoAutenticacion.usuario.name }}</span>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon-wrap">
+                <i class="pi pi-envelope"></i>
+              </div>
+              <div class="info-body">
+                <span class="info-label">Correo electrónico</span>
+                <span class="info-value">{{ estadoAutenticacion.usuario.email || 'No proporcionado' }}</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="activity-card">
-          <div class="activity-header">
-            <div class="activity-titulo">
-              <i class="pi pi-heart"></i>
-              <h3>Mis Favoritos</h3>
+        <!-- Favorites -->
+        <div class="favorites-section">
+          <div class="favorites-header">
+            <div class="fav-title-group">
+              <i class="pi pi-heart-fill"></i>
+              <h2>Mis Favoritos</h2>
+              <span class="fav-count">{{ favoritos.length }}</span>
             </div>
-            <span class="activity-count">{{ favoritos.length }}</span>
           </div>
 
-          <div v-if="favoritos.length === 0" class="activity-vacio">
-            <div class="activity-vacio-icono">
+          <div v-if="favoritos.length === 0" class="fav-empty">
+            <div class="fav-empty-icon">
               <i class="pi pi-star"></i>
             </div>
-            <p>Aún no has encontrado ningún juego.</p>
-            <span>Explora el catálogo y empieza a valorar tus favoritos.</span>
-            <router-link to="/content/overview" class="activity-explorar">
+            <p>Aún no tienes favoritos</p>
+            <span>Explora el catálogo y empieza a guardar tus juegos favoritos.</span>
+            <router-link to="/content/overview" class="fav-explore-btn">
               <i class="pi pi-compass"></i>
               Explorar juegos
             </router-link>
           </div>
 
-          <div v-else class="activity-lista">
-            <div v-for="fav in favoritos" :key="fav.id_game" class="activity-item">
-              <div class="activity-item-img">
+          <div v-else class="fav-grid">
+            <div v-for="fav in favoritos" :key="fav.id" class="fav-card">
+              <div class="fav-img-wrap">
                 <img :src="fav.imge_url" :alt="fav.name" />
+                <div class="fav-img-overlay">
+                  <div class="fav-rating-badge">
+                    <i class="pi pi-star-fill"></i>
+                    <span>{{ fav.rating ?? 'N/A' }}</span>
+                  </div>
+                </div>
+                <button
+                  class="fav-remove-btn"
+                  :class="{ 'is-loading': removiendo === fav.id }"
+                  @click.stop="quitarFavorito(fav.id)"
+                  :disabled="removiendo === fav.id"
+                  title="Quitar de favoritos"
+                >
+                  <i :class="removiendo === fav.id ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
+                </button>
               </div>
-              <div class="activity-item-info">
-                <span class="activity-item-nombre">{{ fav.name }}</span>
-                <span class="activity-item-fecha">
+              <div class="fav-info">
+                <span class="fav-name">{{ fav.name }}</span>
+                <span class="fav-date">
                   <i class="pi pi-calendar"></i>
                   {{ fav.release_date ?? 'N/A' }}
                 </span>
-              </div>
-              <div class="activity-item-rating">
-                <i class="pi pi-star-fill"></i>
-                <span>{{ fav.rating ?? 'N/A' }}</span>
               </div>
             </div>
           </div>
         </div>
 
       </div>
+    </div>
 
-      <div v-else class="unauthorized-state">
-        <i class="pi pi-lock lock-icon"></i>
+    <!-- Unauthorized -->
+    <div v-else class="unauthorized-state">
+      <div class="unauthorized-card">
+        <div class="lock-icon-wrap">
+          <i class="pi pi-lock"></i>
+        </div>
         <h2>Acceso Denegado</h2>
         <p>Debes iniciar sesión para ver tu perfil.</p>
-        <router-link to="/login" class="login-btn">Ir a Iniciar Sesión</router-link>
+        <router-link to="/login" class="login-btn">
+          <i class="pi pi-sign-in"></i>
+          Iniciar Sesión
+        </router-link>
       </div>
-
     </div>
+
   </div>
 </template>
 
