@@ -8,17 +8,8 @@
                     <i class="pi pi-th-large"></i>
                     Catálogo de juegos
                 </span>
-                <h1>Explora nuestra colección</h1>
-                <p>Encuentra tu próximo juego favorito entre cientos de títulos</p>
-            </div>
-
-            <div class="catalogo-buscador">
-                <div class="buscador-wrap">
-                    <i class="pi pi-search buscador-icono"></i>
-                    <InputText class="buscador-input" v-model="game_name" placeholder="Buscar un juego..."
-                        @keyup.enter="getContentCard" />
-                    <Button label="Buscar" class="buscador-btn" @click="getContentCard" />
-                </div>
+                <h1>{{ game_name ? `Resultados para "${game_name}"` : 'Explora nuestra colección' }}</h1>
+                <p>{{ game_name ? `Mostrando resultados de búsqueda` : 'Encuentra tu próximo juego favorito entre cientos de títulos' }}</p>
             </div>
         </div>
 
@@ -69,12 +60,11 @@
 
 <script>
 import contenido from "./script_contenido.js";
-import InputText from "primevue/inputtext"
 import Button from "primevue/button"
 
 export default {
     name: 'contenido',
-    components: { InputText, Button },
+    components: { Button },
     ...contenido
 };
 </script>

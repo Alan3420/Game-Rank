@@ -5,6 +5,17 @@
         <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank Logo" />
       </router-link>
 
+      <div v-if="estadoAutenticacion.usuario" class="header-search">
+        <i class="pi pi-search header-search-icon"></i>
+        <input
+          type="text"
+          v-model="headerSearch"
+          placeholder="Buscar un juego..."
+          class="header-search-input"
+          @keyup.enter="submitHeaderSearch"
+        />
+      </div>
+
       <nav class="nav-menu">
         <template v-if="estadoAutenticacion.usuario">
           <button @click="toggle" class="options-user">
@@ -91,11 +102,23 @@
 <script setup>
 import Popover from 'primevue/popover';
 import { estadoAutenticacion } from './store/autenticacion';
-import { useRouter } from 'vue-router';
-import { ref } from "vue";
+import { useRouter, useRoute } from 'vue-router';
+import { ref, watch } from "vue";
 
 const op = ref(null);
 const router = useRouter();
+const route = useRoute();
+
+const headerSearch = ref('');
+
+watch(() => route.query.q, (val) => {
+  headerSearch.value = val || '';
+}, { immediate: true });
+
+const submitHeaderSearch = () => {
+  const term = headerSearch.value.trim();
+  router.push({ path: '/content/overview', query: term ? { q: term } : {} });
+};
 
 const toggle = (event) => {
   op.value.toggle(event);
@@ -150,8 +173,46 @@ const manejarCierreSesion = () => {
   width: auto;
 }
 
-.brand-name {
-  display: none;
+
+.header-search {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f3f4fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 0 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.header-search:focus-within {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background: #fff;
+}
+
+.header-search-icon {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.header-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.9rem;
+  color: #1f1f35;
+  padding: 10px 0;
+}
+
+.header-search-input::placeholder {
+  color: #9ca3af;
 }
 
 .nav-menu {
@@ -407,6 +468,10 @@ hr {
     height: 32px;
   }
 
+  .header-search {
+    margin: 0 12px;
+  }
+
   .nav-menu {
     gap: 12px;
   }
@@ -435,6 +500,10 @@ hr {
 }
 
 @media (max-width: 480px) {
+  .header-search {
+    display: none;
+  }
+
   .nav-menu {
     gap: 8px;
   }

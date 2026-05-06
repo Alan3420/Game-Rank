@@ -19,13 +19,27 @@ export default {
         }
     },
     mounted() {
+        if (this.$route.query.q) {
+            this.game_name = this.$route.query.q;
+        }
         this.getContent();
         this.debouncedScroll = this.debounce(this.handleScroll, 500)
         window.addEventListener("scroll", this.debouncedScroll);
-
     },
     beforeUnmount() {
         window.removeEventListener("scroll", this.debouncedScroll);
+    },
+    watch: {
+        '$route.query.q'(newVal) {
+            this.game_name = newVal || null;
+            this.games = [];
+            this.page = 1;
+            this.hasNext = true;
+            this.apiCallCount = 0;
+            this.showLoadMoreButton = false;
+            this.favorites = new Set();
+            this.getContent();
+        }
     },
 
 
