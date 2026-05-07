@@ -49,8 +49,6 @@ export default {
     async loadFutureReleases() {
       try {
         const response = await getFutureReleases(1, 10);
-        console.log(response);
-
         this.futureReleases = response || [];
       } catch (error) {
         console.error('Error loading future releases:', error);

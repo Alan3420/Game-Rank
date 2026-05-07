@@ -1,5 +1,6 @@
 import { getGameDetail } from '../../services/gameDetail';
 import { getCommentsByGame, createComments, deleteComment, updateComment } from '../../services/comment_services';
+import { addTOFavorite, removeTOFavorite, checkFavorite } from '../../services/favorites_area';
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
 
@@ -17,7 +18,9 @@ export default {
             comments: [],
             newComment: '',
             editingId: null,
-            editDescription: ''
+            editDescription: '',
+            isFavorite: false,
+            favoriteLoading: false
         };
     },
     computed: {
@@ -51,6 +54,7 @@ export default {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
         await this.loadGameDetail();
         await this.loadComments();
+        await this.checkIsFavorite();
         this.onScroll = this.handleBannerScroll;
         window.addEventListener('scroll', this.onScroll, { passive: true });
     },
@@ -59,7 +63,10 @@ export default {
     },
     beforeRouteUpdate(to, from, next) {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-        this.loadGameDetail(to.params.id).then(() => next());
+        this.loadGameDetail(to.params.id).then(() => {
+            this.checkIsFavorite();
+            next();
+        });
     },
     methods: {
         async loadGameDetail(id = null) {
@@ -177,6 +184,50 @@ export default {
 
         goBack() {
             this.$router.push('/content/overview');
+        },
+
+        async checkIsFavorite() {
+            if (!estadoAutenticacion.usuario || !this.game?.id) {
+                this.isFavorite = false;
+                return;
+            }
+            try {
+                const data = await checkFavorite(this.game.id);
+                this.isFavorite = !!data?.is_favorite;
+            } catch (error) {
+                console.error('Error verificando favorito:', error);
+                this.isFavorite = false;
+            }
+        },
+
+        async toggleFavorite() {
+            if (!estadoAutenticacion.usuario) {
+                notificaciones.error("Inicia sesión para añadir juegos a favoritos.", {
+                    title: "Acceso requerido"
+                });
+                return;
+            }
+            if (this.favoriteLoading || !this.game?.id) return;
+
+            this.favoriteLoading = true;
+            try {
+                if (this.isFavorite) {
+                    await removeTOFavorite(this.game.id);
+                    this.isFavorite = false;
+                    notificaciones.success("Juego eliminado de favoritos.", { title: "Favorito eliminado" });
+                } else {
+                    await addTOFavorite(this.game.id);
+                    this.isFavorite = true;
+                    notificaciones.success("Juego añadido a favoritos.", { title: "Favorito añadido" });
+                }
+            } catch (error) {
+                console.error('Error al cambiar favorito:', error);
+                notificaciones.error("No pudimos actualizar tus favoritos.", {
+                    title: "Error"
+                });
+            } finally {
+                this.favoriteLoading = false;
+            }
         },
 
         formatDate(value) {

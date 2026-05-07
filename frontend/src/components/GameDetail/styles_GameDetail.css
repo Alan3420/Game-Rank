@@ -188,6 +188,61 @@
 }
 
 /* ─────────────────────────────────────────
+   BOTÓN FAVORITO HERO
+───────────────────────────────────────── */
+.hero-fav-btn {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 3;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.hero-fav-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.75);
+    transform: scale(1.06);
+}
+
+.hero-fav-btn.is-fav {
+    color: #ff4d6d;
+    border-color: rgba(255, 77, 109, 0.7);
+}
+
+.hero-fav-btn.is-fav:hover {
+    background: rgba(255, 77, 109, 0.15);
+    border-color: #ff4d6d;
+}
+
+.hero-fav-btn:disabled,
+.hero-fav-btn.is-loading {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+    .hero-fav-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+        bottom: 1rem;
+        right: 1rem;
+    }
+}
+
+/* ─────────────────────────────────────────
    CUERPO: 2 COLUMNAS
 ───────────────────────────────────────── */
 .detail-body {

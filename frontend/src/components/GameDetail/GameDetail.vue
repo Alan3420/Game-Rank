@@ -54,6 +54,16 @@
                         </div>
                     </div>
                 </div>
+                <button
+                    class="hero-fav-btn"
+                    :class="{ 'is-fav': isFavorite, 'is-loading': favoriteLoading }"
+                    :disabled="favoriteLoading"
+                    @click="toggleFavorite"
+                    :title="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+                >
+                    <i v-if="favoriteLoading" class="pi pi-spin pi-spinner"></i>
+                    <i v-else :class="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+                </button>
             </section>
 
             <!-- CUERPO: 2 columnas -->
