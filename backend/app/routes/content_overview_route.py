@@ -7,7 +7,7 @@ from app.services.game_services import get_video_game_details, get_video_game_by
 content_overview_bp = Blueprint('content_overview_route', __name__)
 
 
-@content_overview_bp.route('/overview')
+@content_overview_bp.route('/overview', methods=["GET"])
 @jwt_required()
 def overview():
     try:
@@ -31,7 +31,7 @@ def overview():
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos", "error": str(e)}), 500
 
-@content_overview_bp.route('/search')
+@content_overview_bp.route('/search', methods=["GET"])
 @jwt_required()
 def search_by_name():
     try:
@@ -46,7 +46,7 @@ def search_by_name():
         return jsonify({"message": "Error al buscar el juego", "error": str(e)}), 500
     
 
-@content_overview_bp.route('/overview/<int:game_id>')
+@content_overview_bp.route('/overview/<int:game_id>', methods=["GET"])
 @jwt_required()
 def overview_by_id(game_id):
     try:
@@ -56,7 +56,7 @@ def overview_by_id(game_id):
         return jsonify({"message": "Error al obtener los detalles del juego", "error": str(e)}), 500
 
 
-@content_overview_bp.route("/release")
+@content_overview_bp.route("/release", methods=["GET"])
 @jwt_required()
 def future_release():
     try:

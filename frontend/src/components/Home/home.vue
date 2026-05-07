@@ -27,7 +27,7 @@
     </section>
 
     <!-- Top Games Section -->
-    <section class="games-section">
+    <section v-if="estadoAutenticacion.usuario !== null"  class="games-section">
       <div class="section-header">
         <h2>Los 3 mejores juegos</h2>
         <p>Clasificados por calificación de usuarios</p>
@@ -88,7 +88,7 @@
 
       <div v-else class="estado-vacio">
         <i class="pi pi-inbox"></i>
-        <p>No hay próximos lanzamientos disponibles.</p>
+        <p>No hay juegos disponibles.</p>
     </div>
     </section>
 
