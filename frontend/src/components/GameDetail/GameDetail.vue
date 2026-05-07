@@ -30,8 +30,8 @@
             </div>
 
             <!-- HERO BANNER -->
-            <section class="detail-hero" :style="bannerStyle">
-                <div class="hero-gradient"></div>
+            <section class="detail-hero">
+                <img v-if="game.imge_url" class="hero-image" :src="game.imge_url" :alt="game.name" />
                 <div class="hero-content">
                     <span class="detail-category">
                         <i class="pi pi-gamepad"></i>

@@ -12,7 +12,6 @@ export default {
             game: null,
             screenshots: [],
             loading: true,
-            bannerOffset: 0,
             activeShot: 0,
             errorMessage: '',
             comments: [],
@@ -24,14 +23,6 @@ export default {
         };
     },
     computed: {
-        bannerStyle() {
-            const position = `center calc(50% + ${this.bannerOffset}px)`;
-            return {
-                backgroundImage: this.game?.imge_url ? `linear-gradient(to bottom, rgba(19, 18, 51, 0.2), rgba(19, 18, 51, 0.85)), url(${this.game.imge_url})` : 'none',
-                backgroundPosition: position
-            };
-        },
-
         data_user() {
             return estadoAutenticacion.usuario;
         },
@@ -55,11 +46,6 @@ export default {
         await this.loadGameDetail();
         await this.loadComments();
         await this.checkIsFavorite();
-        this.onScroll = this.handleBannerScroll;
-        window.addEventListener('scroll', this.onScroll, { passive: true });
-    },
-    beforeUnmount() {
-        window.removeEventListener('scroll', this.onScroll);
     },
     beforeRouteUpdate(to, from, next) {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -173,13 +159,6 @@ export default {
                     title: "Error al eliminar"
                 });
             }
-        },
-
-        handleBannerScroll() {
-            const banner = this.$el.querySelector('.detail-banner');
-            if (!banner) return;
-            const rect = banner.getBoundingClientRect();
-            this.bannerOffset = Math.round(rect.top * 0.15);
         },
 
         goBack() {
