@@ -93,12 +93,12 @@
                 </div>
                 <button
                   class="fav-remove-btn"
-                  :class="{ 'is-loading': removiendo === fav.id }"
+                  :class="{ 'is-loading': remover === fav.id }"
                   @click.stop="quitarFavorito(fav.id)"
-                  :disabled="removiendo === fav.id"
+                  :disabled="remover === fav.id"
                   title="Quitar de favoritos"
                 >
-                  <i :class="removiendo === fav.id ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
+                  <i :class="remover === fav.id ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
                 </button>
               </div>
               <div class="fav-info">
