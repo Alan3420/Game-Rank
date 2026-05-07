@@ -8,7 +8,7 @@ favorite_bp = Blueprint("favorite", __name__)
 @jwt_required()
 def add():
     try:
-        data    = request.get_json()
+        data = request.get_json()
         id_user = get_jwt_identity()
         id_game = data.get("id_game")
 
@@ -54,7 +54,7 @@ def remove():
 def list_favorites():
 
     try:
-        id_user   = get_jwt_identity()
+        id_user = get_jwt_identity()
         favorites = get_favoritos_usuario(id_user=id_user)
 
         return jsonify({"favorites": favorites}), 200
@@ -69,9 +69,10 @@ def check(game_id):
 
     try:
         id_user = get_jwt_identity()
-        is_fav  = es_favorito(id_user=id_user, id_game=game_id)
+        is_fav = es_favorito(id_user=id_user, id_game=game_id)
         
         return jsonify({"is_favorite": is_fav}), 200
+    
     except Exception as e:
         return jsonify({"message": "Error al comprobar favorito",
                         "error": str(e)}), 500

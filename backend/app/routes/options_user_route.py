@@ -1,9 +1,11 @@
 from flask import Blueprint,jsonify, request
+from flask_jwt_extended import jwt_required
 from app.services import user_service
 
 user_option_bp = Blueprint("option_route", __name__)
 
 @user_option_bp.route("/options", methods=["GET", "PUT", "DELETE"])
+@jwt_required()
 def user_options():
 
     if request.method == "PUT":

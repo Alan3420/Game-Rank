@@ -7,11 +7,7 @@ export const addTOFavorite = async (gameID) => {
             console.error("No se encontró el token de autenticación.");
             return;
         }
-        const response = await api.post(`/favorite/add`, { id_game: gameID }, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        const response = await api.post(`/favorite/add`, { id_game: gameID })
 
         return response.data;
     }
@@ -30,10 +26,7 @@ export const removeTOFavorite = async (gameID) => {
 
         const response = await api.delete('/favorite/remove',
             {
-                data: { id_game: gameID },
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                data: { id_game: gameID }
             }
         );
 
@@ -52,11 +45,7 @@ export const checkFavorite = async (gameID) => {
             return;
         }
 
-        const response = await api.get(`/favorite/check/${gameID}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        const response = await api.get(`/favorite/check/${gameID}`);
         return response.data;
     }
     catch (error) {
@@ -74,11 +63,7 @@ export const list_favorites = async () => {
             return;
         }
 
-        const response = await api.get(`/favorite/listFav`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        const response = await api.get(`/favorite/listFav`);
         return response.data;
     }
     catch (error) {

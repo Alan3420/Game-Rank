@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app
 import threading
+from flask_jwt_extended import jwt_required
 from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games
 
 
@@ -7,6 +8,7 @@ content_overview_bp = Blueprint('content_overview_route', __name__)
 
 
 @content_overview_bp.route('/overview')
+@jwt_required()
 def overview():
     try:
         page = request.args.get('page', default=1, type=int)
@@ -30,6 +32,7 @@ def overview():
         return jsonify({"message": "Error al obtener los juegos", "error": str(e)}), 500
 
 @content_overview_bp.route('/search')
+@jwt_required()
 def search_by_name():
     try:
         name = request.args.get('name', default=None, type=str)
@@ -44,6 +47,7 @@ def search_by_name():
     
 
 @content_overview_bp.route('/overview/<int:game_id>')
+@jwt_required()
 def overview_by_id(game_id):
     try:
         game_details = get_video_game_details(game_id=game_id)
@@ -53,6 +57,7 @@ def overview_by_id(game_id):
 
 
 @content_overview_bp.route("/release")
+@jwt_required()
 def future_release():
     try:
         page = request.args.get('page', default=1, type=int)

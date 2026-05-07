@@ -9,11 +9,11 @@ rates_bp = Blueprint("rates", __name__)
 @jwt_required()
 def create():
     try:
-        data    = request.get_json()
+        data = request.get_json()
         id_user = get_jwt_identity()
         id_game = data.get("id_game")
-        rating  = data.get("rating")
-        status  = data.get("status")
+        rating = data.get("rating")
+        status = data.get("status")
 
         if not id_game or not rating:
             return jsonify({"message": "id_game y rating son obligatorios"}), 400
@@ -26,6 +26,7 @@ def create():
 
         return jsonify({"message": "Valoración creada",
                         "rate": resultado.to_dict()}), 201
+    
     except Exception as e:
         return jsonify({"message": "Error al crear la valoración",
                         "error": str(e)}), 500
@@ -35,11 +36,11 @@ def create():
 @jwt_required()
 def update():
     try:
-        data    = request.get_json()
+        data = request.get_json()
         id_user = get_jwt_identity()
         id_game = data.get("id_game")
-        rating  = data.get("rating")
-        status  = data.get("status")
+        rating = data.get("rating")
+        status = data.get("status")
 
         if not id_game:
             return jsonify({"message": "id_game es obligatorio"}), 400
@@ -60,7 +61,7 @@ def update():
 @jwt_required()
 def delete():
     try:
-        data    = request.get_json()
+        data = request.get_json()
         id_user = get_jwt_identity()
         id_game = data.get("id_game")
 
@@ -82,7 +83,9 @@ def delete():
 def get_avg(game_id):
     try:
         avg = get_media_juego(id_game=game_id)
+
         return jsonify({"game_id": game_id, "avg_rating": avg}), 200
+    
     except Exception as e:
         return jsonify({"message": "Error al obtener la media",
                         "error": str(e)}), 500
@@ -92,7 +95,9 @@ def get_avg(game_id):
 def get_by_game(game_id):
     try:
         rates = get_valoraciones_juego(id_game=game_id)
+
         return jsonify({"rates": rates}), 200
+    
     except Exception as e:
         return jsonify({"message": "Error al obtener valoraciones",
                         "error": str(e)}), 500
@@ -103,7 +108,9 @@ def get_by_user():
     try:
         id_user = get_jwt_identity()
         rates   = get_valoraciones_usuario(id_user=id_user)
+
         return jsonify({"rates": rates}), 200
+    
     except Exception as e:
         return jsonify({"message": "Error al obtener valoraciones",
                         "error": str(e)}), 500
@@ -113,7 +120,7 @@ def get_by_user():
 @jwt_required()
 def get_status():
     try:
-        data    = request.get_json()
+        data = request.get_json()
         id_user = get_jwt_identity()
         id_game = data.get("id_game")
 

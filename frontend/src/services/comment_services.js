@@ -3,16 +3,11 @@ import api from './api';
 export async function createComments(id_game, description) {
     try {
         const tokenUser = localStorage.getItem("token")
-        console.log('Token de usuario:', tokenUser);
-        const response = await api.post(`/comment/create`,{
+        const response = await api.post(`/comment/create`, {
             id_game: id_game,
             description: description
         },
-    {
-        headers:{
-            Authorization: `Bearer ${tokenUser}`
-        }
-    });
+        );
 
         return response.data;
     } catch (error) {
@@ -35,12 +30,8 @@ export async function getCommentsByGame(game_id) {
 export async function deleteComment(comment_id) {
     try {
         const tokenUser = localStorage.getItem("token")
-        const response = await api.delete(`/comment/delete/${comment_id}`,{
-            headers:{
-                Authorization: `Bearer ${tokenUser}`
-            }
-        });
-        
+        const response = await api.delete(`/comment/delete/${comment_id}`);
+
         return response.data;
     } catch (error) {
         console.error('Error al eliminar el comentario:', error);
@@ -54,12 +45,8 @@ export async function updateComment(comment_id, description) {
         const tokenUser = localStorage.getItem("token")
         const response = await api.put(`/comment/update/${comment_id}`, {
             description: description
-        },
-        {
-            headers:{
-                Authorization: `Bearer ${tokenUser}`
-            }
         });
+        
         return response.data;
     } catch (error) {
         console.error('Error al actualizar el comentario:', error);

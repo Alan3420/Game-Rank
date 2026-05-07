@@ -30,6 +30,7 @@ def register():
         last_name_user = register_data.get("last_name")
         email_user = register_data.get("email")
         password_user = register_data.get("password")
+
         user = user_service.user_registration(name=name_user, 
                                               last_name=last_name_user, 
                                               email=email_user, 
@@ -39,12 +40,15 @@ def register():
 
             return jsonify({"message": "Usuario registrado exitosamente", 
                             "user": user.to_dict()}), 201
+        
         else:
             return jsonify({"message": user}), 409
+        
     except Exception as e:
         return jsonify({"message": "Error al registrar el usuario", "error": str(e)}), 500
 
-@welcome_bp.route("/logout")
-def logout():
-    return jsonify({"message": "A finalizado la sesion"}), 200
+# @welcome_bp.route("/logout")
+# def logout():
+
+#     return jsonify({"message": "A finalizado la sesion"}), 200
 
