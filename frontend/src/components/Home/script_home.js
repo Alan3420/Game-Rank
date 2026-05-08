@@ -14,6 +14,8 @@ export default {
     };
   },
   async mounted() {
+    if (!localStorage.getItem("token")) return;
+
     if (this.topGames.length === 0) {
       await this.loadTopGames();
     }

@@ -46,7 +46,7 @@
                         </div>
                         <div class="stat-pill stat-pill-community" title="Media de la comunidad de Game Rank">
                             <i class="pi pi-star-fill"></i>
-                            <span>{{ communityAvg > 0 ? communityAvg : 'Sin votos' }}</span>
+                            <span>{{ communityAvg > 0 ? communityAvg : '0' }}</span>
                             <small class="stat-pill-tag">Comunidad</small>
                         </div>
                         <div class="stat-pill">
@@ -288,7 +288,7 @@
                                 <span class="meta-label">Puntuación comunidad</span>
                                 <span class="meta-value">
                                     <i class="pi pi-star-fill meta-star meta-star-community"></i>
-                                    {{ communityAvg > 0 ? communityAvg : 'Sin votos' }}
+                                    {{ communityAvg > 0 ? communityAvg : '0' }}
                                 </span>
                             </li>
                             <li>

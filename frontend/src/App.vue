@@ -150,7 +150,19 @@ const handleClickOutside = (e) => {
   }
 };
 
-onMounted(() => document.addEventListener('mousedown', handleClickOutside));
+onMounted(() => {
+  document.addEventListener('mousedown', handleClickOutside);
+
+  const flash = localStorage.getItem('flashNotificacion');
+  if (flash) {
+    localStorage.removeItem('flashNotificacion');
+    try {
+      const { type, title, message } = JSON.parse(flash);
+      const fn = type === 'success' ? notificaciones.success : notificaciones.error;
+      fn(message, { title });
+    } catch {}
+  }
+});
 onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside));
 </script>
 
