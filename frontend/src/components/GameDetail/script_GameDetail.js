@@ -1,6 +1,7 @@
 import { getGameDetail } from '../../services/gameDetail';
 import { getCommentsByGame, createComments, deleteComment, updateComment } from '../../services/comment_services';
 import { addTOFavorite, removeTOFavorite, checkFavorite } from '../../services/favorites_area';
+import { saveRate, updateRate, deleteRate, getAvgRate } from '../../services/rate_services';
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
 
@@ -19,13 +20,26 @@ export default {
             editingId: null,
             editDescription: '',
             isFavorite: false,
-            favoriteLoading: false
+            favoriteLoading: false,
+            formRating: 0,
+            formHover: 0,
+            communityAvg: 0
         };
     },
     computed: {
         data_user() {
             return estadoAutenticacion.usuario;
         },
+
+        hasOwnComment() {
+            if (!this.data_user) return false;
+            return this.comments.some(c => c.id_user === this.data_user.id_user);
+        },
+
+        formDisabled() {
+            return this.hasOwnComment && !this.editingId;
+        },
+
         mediaItems() {
             const videos = (this.game?.movies || []).map(m => ({
                 type: 'video',
@@ -33,7 +47,7 @@ export default {
                 name: m.name,
                 preview: m.preview
             }));
-            
+
             const images = (this.game?.screenshots || []).map(s => ({
                 type: 'image',
                 url: s.image
@@ -41,19 +55,27 @@ export default {
             return [...videos, ...images];
         },
     },
+
     async mounted() {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
         await this.loadGameDetail();
         await this.loadComments();
+        await this.loadCommunityAvg();
         await this.checkIsFavorite();
     },
     beforeRouteUpdate(to, from, next) {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        this.formRating = 0;
+        this.formHover = 0;
+        this.editingId = null;
+        this.newComment = '';
         this.loadGameDetail(to.params.id).then(() => {
             this.checkIsFavorite();
+            this.loadCommunityAvg();
             next();
         });
     },
+
     methods: {
         async loadGameDetail(id = null) {
             try {
@@ -72,16 +94,16 @@ export default {
         prevShot() {
 
             let total_pct = this.game.screenshots.length
-            if(this.game.movies != null){
+            if (this.game.movies != null) {
                 total_pct += this.game.movies.length
-            }           
+            }
 
             this.activeShot = (this.activeShot - 1 + total_pct) % total_pct;
         },
         nextShot() {
 
             let total_pct = this.game.screenshots.length
-            if(this.game.movies != null){
+            if (this.game.movies != null) {
                 total_pct += this.game.movies.length
             }
 
@@ -93,50 +115,95 @@ export default {
                 const gameId = this.$route.params.id;
                 const data = await getCommentsByGame(gameId);
                 this.comments = data.comments;
+                this.syncFormRatingFromUserComments();
             } catch (error) {
                 console.error('Error al cargar comentarios:', error);
                 this.comments = [];
             }
         },
 
+        async loadCommunityAvg() {
+            try {
+                const gameId = this.$route.params.id;
+                const data = await getAvgRate(gameId);
+                this.communityAvg = data?.avg_rating ?? 0;
+            } catch (error) {
+                console.error('Error al cargar la media de la comunidad:', error);
+                this.communityAvg = 0;
+            }
+        },
+
+        syncFormRatingFromUserComments() {
+            if (!this.data_user || this.editingId) return;
+            const mine = this.comments.find(c => c.id_user === this.data_user.id_user && c.rating);
+            if (mine) this.formRating = mine.rating;
+        },
+
+        setFormRating(value) {
+            this.formRating = value;
+        },
+
         async addComment() {
-            if (!this.newComment) return;
+            if (!this.newComment?.trim()) return;
+
+            if (!this.formRating) {
+
+                notificaciones.error("Selecciona una valoración antes de publicar.", {
+                    title: "Valoración requerida"
+                });
+
+                return;
+            }
 
             try {
                 const gameId = this.$route.params.id;
-                const newComment = await createComments(gameId, this.newComment);
-                this.comments.push(newComment.comment);
+                await saveRate(gameId, this.formRating);
+                await createComments(gameId, this.newComment);
+
                 this.newComment = '';
                 await this.loadComments();
+                await this.loadCommunityAvg();
+
                 notificaciones.success("Tu comentario fue publicado.", { title: "Comentario enviado" });
+
             } catch (error) {
                 console.error('Error al agregar comentario:', error);
+
                 notificaciones.error("No pudimos publicar tu comentario. Inténtalo de nuevo.", {
                     title: "Error al comentar"
                 });
             }
         },
+
         editar(comment) {
             this.editingId = comment.id_comment;
             this.newComment = comment.description;
+            if (comment.rating) this.formRating = comment.rating;
         },
         cancelarEdit() {
             this.editingId = null;
             this.newComment = '';
+            this.formHover = 0;
+            this.syncFormRatingFromUserComments();
         },
         async updComment() {
-            if (!this.newComment) return;
+            if (!this.newComment?.trim()) return;
+            if (!this.formRating) {
+                notificaciones.error("Selecciona una valoración antes de actualizar.", {
+                    title: "Valoración requerida"
+                });
+                return;
+            }
 
             try {
+                const gameId = this.$route.params.id;
+                await updateRate(gameId, this.formRating);
                 await updateComment(this.editingId, this.newComment);
-                const index = this.comments.findIndex(comment => comment.id_comment === this.editingId);
-                if (index !== -1) {
-                    this.comments[index].description = this.newComment;
-                }
 
                 this.editingId = null;
                 this.newComment = '';
                 await this.loadComments();
+                await this.loadCommunityAvg();
                 notificaciones.success("Comentario actualizado correctamente.", { title: "Cambios guardados" });
             }
             catch (error) {
@@ -148,10 +215,15 @@ export default {
         },
         async delComment(id_comment) {
             try {
+                const gameId = this.$route.params.id;
                 await deleteComment(id_comment);
-                this.comments = this.comments.filter(comment => comment.id_comment !== id_comment)
-                await this.loadComments()
-                notificaciones.success("Tu comentario fue eliminado.", { title: "Comentario eliminado" });
+                await deleteRate(gameId);
+                this.formRating = 0;
+                this.formHover = 0;
+                this.comments = this.comments.filter(comment => comment.id_comment !== id_comment);
+                await this.loadComments();
+                await this.loadCommunityAvg();
+                notificaciones.success("Tu comentario y valoración fueron eliminados.", { title: "Comentario eliminado" });
             }
             catch (error) {
                 console.error("Error al eliminar el comentario:", error);
@@ -212,11 +284,8 @@ export default {
         formatDate(value) {
             if (!value) return 'No disponible';
             const date = new Date(value);
-            return date.toLocaleDateString('es-ES', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+            const meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+            return `${date.getDate()} ${meses[date.getMonth()]} ${date.getFullYear()}`;
         }
     }
 };

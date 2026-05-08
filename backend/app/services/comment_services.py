@@ -1,7 +1,11 @@
 from app.repositories.comment_repo import get_comment_by_id, get_comments_by_game,get_comments_by_user, create_comment, update_comment, delete_comment
+from app.repositories.rate_repo import get_rates_by_game
 
 def crear_comentario(id_user, id_game, description) -> object | str:
     try:
+        existing = [c for c in get_comments_by_game(id_game=id_game) if c.id_user == id_user]
+        if existing:
+            return "Ya has comentado este juego"
         comment = create_comment(id_user=id_user, id_game=id_game, description=description)
         return comment
     except Exception as e:
@@ -32,10 +36,14 @@ def eliminar_comentario(comment_id, user_id) -> bool | str:
 def get_comentarios_juego(id_game) -> list:
     try:
         comments = get_comments_by_game(id_game=id_game)
-        resultado = []
+        rates = get_rates_by_game(id_game=id_game)
+        rating_by_user = {r.id_user: r.rating for r in rates}
 
+        resultado = []
         for comment in comments:
-            resultado.append(comment.to_dict())
+            data = comment.to_dict()
+            data["rating"] = rating_by_user.get(comment.id_user)
+            resultado.append(data)
 
         return resultado
     except Exception as e:

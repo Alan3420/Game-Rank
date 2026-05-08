@@ -39,9 +39,15 @@
                     </span>
                     <h1>{{ game.name }}</h1>
                     <div class="detail-stats">
-                        <div class="stat-pill">
+                        <div class="stat-pill" title="Puntuación oficial RAWG">
                             <i class="pi pi-star-fill"></i>
                             <span>{{ game.rating ?? 'N/A' }}</span>
+                            <small class="stat-pill-tag">Oficial</small>
+                        </div>
+                        <div class="stat-pill stat-pill-community" title="Media de la comunidad de Game Rank">
+                            <i class="pi pi-star-fill"></i>
+                            <span>{{ communityAvg > 0 ? communityAvg : 'Sin votos' }}</span>
+                            <small class="stat-pill-tag">Comunidad</small>
                         </div>
                         <div class="stat-pill">
                             <i class="pi pi-calendar"></i>
@@ -162,6 +168,11 @@
                                             <i class="pi pi-pencil"></i>
                                         </button>
                                     </div>
+                                    <div v-if="comment.rating" class="comment-stars" :title="`${comment.rating} de 5`">
+                                        <i v-for="n in 5" :key="n" class="pi"
+                                           :class="n <= comment.rating ? 'pi-star-fill' : 'pi-star'"></i>
+                                        <span class="comment-stars-value">{{ comment.rating }}/5</span>
+                                    </div>
                                     <p class="comment-body">{{ comment.description }}</p>
                                 </div>
                             </div>
@@ -169,17 +180,33 @@
 
                         <!-- SEPARADOR -->
                         <div class="comments-divider">
-                            <span>Dejar un comentario</span>
+                            <span>{{ editingId ? 'Editar tu comentario' : 'Dejar un comentario' }}</span>
                         </div>
 
                         <!-- FORMULARIO -->
-                        <div class="add-comment-form">
+                        <div class="add-comment-form" :class="{ 'is-disabled': formDisabled }">
                             <div class="comment-avatar comment-avatar-form">
                                 <i class="pi pi-user"></i>
                             </div>
                             <div class="comment-input-wrap">
+                                <div class="rating-input" @mouseleave="formHover = 0">
+                                    <span class="rating-input-label">Tu valoración</span>
+                                    <div class="rating-input-stars">
+                                        <button v-for="n in 5" :key="n" type="button" class="rating-star-btn"
+                                            :class="{ 'is-active': n <= (formHover || formRating) }"
+                                            @click="setFormRating(n)" @mouseenter="formHover = n"
+                                            :disabled="formDisabled"
+                                            :title="`${n} de 5`">
+                                            <i class="pi pi-star-fill"></i>
+                                        </button>
+                                    </div>
+                                    <span class="rating-input-value">
+                                        {{ (formHover || formRating) ? `${formHover || formRating}/5` : 'Sin votar' }}
+                                    </span>
+                                </div>
                                 <textarea v-model="newComment" placeholder="Escribe tu opinión sobre este juego..."
-                                    class="comment-textarea" maxlength="255" rows="3"></textarea>
+                                    class="comment-textarea" maxlength="255" rows="3"
+                                    :disabled="formDisabled"></textarea>
                                 <div class="comment-form-footer">
                                     <div class="form-footer-left">
                                         <span class="comment-char-hint" :class="{ active: newComment?.length > 0 }">
@@ -193,7 +220,7 @@
                                         </button>
                                         <button class="comment-submit-btn" :class="{ editingId: editDescription }"
                                             @click="editingId ? updComment() : addComment()"
-                                            :disabled="!newComment?.trim()">
+                                            :disabled="formDisabled || !newComment?.trim() || !formRating">
                                             <i :class="editingId ? 'pi pi-check' : 'pi pi-send'"></i>
                                             {{ editingId ? 'Actualizar' : 'Publicar' }}
                                         </button>
@@ -251,10 +278,17 @@
                         </div>
                         <ul class="meta-list">
                             <li>
-                                <span class="meta-label">Puntuación</span>
+                                <span class="meta-label">Puntuación oficial (RAWG)</span>
                                 <span class="meta-value">
                                     <i class="pi pi-star-fill meta-star"></i>
                                     {{ game.rating ?? 'N/A' }}
+                                </span>
+                            </li>
+                            <li>
+                                <span class="meta-label">Puntuación comunidad</span>
+                                <span class="meta-value">
+                                    <i class="pi pi-star-fill meta-star meta-star-community"></i>
+                                    {{ communityAvg > 0 ? communityAvg : 'Sin votos' }}
                                 </span>
                             </li>
                             <li>

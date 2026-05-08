@@ -17,11 +17,14 @@ def create():
         if not id_game or not description:
             return jsonify({"message": "id_game y description son obligatorios"}), 400
 
-        comment = crear_comentario(id_user=id_user, id_game=id_game,
-                                    description=description)
+        resultado = crear_comentario(id_user=id_user, id_game=id_game,
+                                      description=description)
+
+        if type(resultado) == str:
+            return jsonify({"message": resultado}), 409
 
         return jsonify({"message": "Comentario creado",
-                        "comment": comment.to_dict()}), 201
+                        "comment": resultado.to_dict()}), 201
     except Exception as e:
         return jsonify({"message": "Error al crear el comentario",
                         "error": str(e)}), 500
