@@ -16,7 +16,7 @@
             <h1>{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</h1>
             <span class="badge">
               <i class="pi pi-shield"></i>
-              Jugador Registrado
+              Explorador
             </span>
           </div>
         </div>
@@ -31,7 +31,7 @@
               <i class="pi pi-user"></i>
               <span>Información de la Cuenta</span>
             </div>
-            <button class="btn-edit">
+            <button class="btn-edit" @click="abrirModalEditar">
               <i class="pi pi-pencil"></i>
               Editar
             </button>
@@ -113,6 +113,70 @@
         </div>
 
       </div>
+
+      <!-- Modal Editar Perfil -->
+      <div v-if="mostrarModalEditar" class="edit-modal-overlay" @click.self="cerrarModalEditar">
+        <div class="edit-modal">
+          <div class="edit-modal-header">
+            <div class="edit-modal-title">
+              <div class="edit-modal-icon">
+                <i class="pi pi-user-edit"></i>
+              </div>
+              <div>
+                <h3>Editar Perfil</h3>
+                <span>Actualiza tu información personal</span>
+              </div>
+            </div>
+            <button class="edit-modal-close" @click="cerrarModalEditar">
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+
+          <div class="edit-modal-body">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="pi pi-id-card"></i>
+                Nombre de usuario
+              </label>
+              <input
+                type="text"
+                class="form-input"
+                :value="estadoAutenticacion.usuario?.name"
+                placeholder="Ingresa tu nombre"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                <i class="pi pi-envelope"></i>
+                Correo electrónico
+                <span class="form-badge-disabled">No editable</span>
+              </label>
+              <input
+                type="email"
+                class="form-input is-disabled"
+                :value="estadoAutenticacion.usuario?.email || 'No proporcionado'"
+                disabled
+              />
+              <span class="form-hint">
+                <i class="pi pi-info-circle"></i>
+                El correo electrónico no se puede modificar.
+              </span>
+            </div>
+          </div>
+
+          <div class="edit-modal-footer">
+            <button class="btn-cancel" @click="cerrarModalEditar">
+              Cancelar
+            </button>
+            <button class="btn-save">
+              <i class="pi pi-check"></i>
+              Guardar cambios
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <!-- Unauthorized -->

@@ -8,13 +8,20 @@ export default {
     return {
       estadoAutenticacion,
       favoritos: [],
-      remover: null
+      remover: null,
+      mostrarModalEditar: false
     };
   },
   async mounted() {
     await this.cargarFavoritos();
   },
   methods: {
+    abrirModalEditar() {
+      this.mostrarModalEditar = true;
+    },
+    cerrarModalEditar() {
+      this.mostrarModalEditar = false;
+    },
     async cargarFavoritos() {
       try {
         const data = await list_favorites();
