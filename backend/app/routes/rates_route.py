@@ -120,9 +120,8 @@ def get_by_user():
 @jwt_required()
 def get_status():
     try:
-        data = request.get_json()
         id_user = get_jwt_identity()
-        id_game = data.get("id_game")
+        id_game = request.args.get("id_game", type=int)
 
         if not id_game:
             return jsonify({"message": "id_game es obligatorio"}), 400
