@@ -53,6 +53,10 @@
             </div>
           </div>
           <div class="game-content featured-content">
+            <span class="detail-category">
+              <i class="pi pi-gamepad"></i>
+              Videojuego
+            </span>
             <h3>{{ topGames[0].name }}</h3>
             <p class="game-year">
               <i class="pi pi-calendar"></i>
@@ -104,32 +108,14 @@
     </div>
 
     <div v-if="futureReleases.length > 0" class="proximos-grid">
-        <article
+        <GameCard
             v-for="game in futureReleases"
             :key="game.id"
-            class="juego-card"
+            :game="game"
+            :is-favorite="favorites.has(game.id)"
             @click="goToDetail(game.id)"
-        >
-            <div class="juego-imagen">
-                <img :src="game.imge_url" :alt="game.name" />
-                <div class="juego-imagen-overlay"></div>
-                <span class="juego-fecha-badge">
-                    <i class="pi pi-calendar"></i>
-                    {{ game.release_date }}
-                </span>
-            </div>
-            <div class="juego-cuerpo">
-                <h3 class="juego-titulo">{{ game.name }}</h3>
-                <div class="juego-meta">
-                    <i class="pi pi-calendar"></i>
-                    <span>{{ game.release_date }}</span>
-                </div>
-            </div>
-            <div class="juego-footer">
-                <span>Ver detalles</span>
-                <i class="pi pi-arrow-right"></i>
-            </div>
-        </article>
+            @action="toggleFavorite"
+        />
     </div>
 
     <div v-else class="estado-vacio">
@@ -156,10 +142,11 @@
 <script>
 import jsHome from "./script_home.js";
 import { estadoAutenticacion } from "../../store/autenticacion.js";
-
+import GameCard from "../Cards/GameCard.vue";
 
 export default {
   name: 'GameDetail',
+  components: { GameCard },
   mixins: [jsHome]
 };
 </script>

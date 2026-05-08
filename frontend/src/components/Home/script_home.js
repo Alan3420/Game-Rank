@@ -1,6 +1,8 @@
 import { getContentOverview } from '../../services/resume_cards.js';
 import { getFutureReleases } from '../../services/clasif_content.js';
 import { estadoAutenticacion } from '../../store/autenticacion.js';
+import { checkFavorite, addTOFavorite, removeTOFavorite } from '../../services/favorites_area.js';
+import { notificaciones } from '../../store/notificaciones.js';
 import { computed } from 'vue';
 
 export default {
@@ -9,6 +11,7 @@ export default {
     return {
       topGames: [],
       futureReleases: [],
+      favorites: new Set(),
       carouselTrack: null,
       isLoading: false
     };
@@ -41,6 +44,10 @@ export default {
         const sorted = validGames.sort((a, b) => b.rating - a.rating);
         this.topGames = sorted.slice(0, 3);
 
+        for (const game of this.topGames) {
+          await this.initCheckFavorite(game.id);
+        }
+
       } catch (error) {
         console.error('Error loading top games:', error);
       } finally {
@@ -52,8 +59,46 @@ export default {
       try {
         const response = await getFutureReleases(1, 10);
         this.futureReleases = response || [];
+
+        for (const game of this.futureReleases) {
+          await this.initCheckFavorite(game.id);
+        }
       } catch (error) {
         console.error('Error loading future releases:', error);
+      }
+    },
+
+    async initCheckFavorite(gameId) {
+      try {
+        const data = await checkFavorite(gameId);
+        if (data.is_favorite) {
+          this.favorites.add(gameId);
+        }
+      } catch (error) {
+        console.error(`Error verificando favorito ${gameId}:`, error);
+      }
+    },
+
+    async toggleFavorite(gameId) {
+      const wasFavorite = this.favorites.has(gameId);
+      try {
+        if (wasFavorite) {
+          await removeTOFavorite(gameId);
+          this.favorites.delete(gameId);
+          notificaciones.success("Juego eliminado de tus favoritos.", { title: "Favorito eliminado" });
+        } else {
+          await addTOFavorite(gameId);
+          this.favorites.add(gameId);
+          notificaciones.success("Juego añadido a tus favoritos.", { title: "Favorito agregado" });
+        }
+      } catch (error) {
+        console.error("Error al cambiar favorito:", error);
+        notificaciones.error(
+          wasFavorite
+            ? "No pudimos eliminar el juego de favoritos."
+            : "No pudimos añadir el juego a favoritos.",
+          { title: "Error en favoritos" }
+        );
       }
     },
 

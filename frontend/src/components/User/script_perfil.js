@@ -1,6 +1,7 @@
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { list_favorites, removeTOFavorite } from "../../services/favorites_area";
 import { notificaciones } from '../../store/notificaciones';
+import { useRouter } from 'vue-router';
 
 export default {
   name: "perfil",
@@ -9,10 +10,12 @@ export default {
       estadoAutenticacion,
       favoritos: [],
       remover: null,
-      mostrarModalEditar: false
+      mostrarModalEditar: false,
+      router: null
     };
   },
   async mounted() {
+    this.router = useRouter();
     await this.cargarFavoritos();
   },
   methods: {
@@ -44,6 +47,9 @@ export default {
       } finally {
         this.remover = null;
       }
+    },
+    goToDetail(gameId) {
+      this.router.push(`/game/${gameId}`);
     }
   }
 }

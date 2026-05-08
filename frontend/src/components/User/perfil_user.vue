@@ -82,33 +82,15 @@
           </div>
 
           <div v-else class="fav-grid">
-            <div v-for="fav in favoritos" :key="fav.id" class="fav-card">
-              <div class="fav-img-wrap">
-                <img :src="fav.imge_url" :alt="fav.name" />
-                <div class="fav-img-overlay">
-                  <div class="fav-rating-badge">
-                    <i class="pi pi-star-fill"></i>
-                    <span>{{ fav.rating ?? 'N/A' }}</span>
-                  </div>
-                </div>
-                <button
-                  class="fav-remove-btn"
-                  :class="{ 'is-loading': remover === fav.id }"
-                  @click.stop="quitarFavorito(fav.id)"
-                  :disabled="remover === fav.id"
-                  title="Quitar de favoritos"
-                >
-                  <i :class="remover === fav.id ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
-                </button>
-              </div>
-              <div class="fav-info">
-                <span class="fav-name">{{ fav.name }}</span>
-                <span class="fav-date">
-                  <i class="pi pi-calendar"></i>
-                  {{ fav.release_date ?? 'N/A' }}
-                </span>
-              </div>
-            </div>
+            <GameCard
+              v-for="fav in favoritos"
+              :key="fav.id"
+              :game="fav"
+              removable
+              :is-loading="remover === fav.id"
+              @click="goToDetail(fav.id)"
+              @action="quitarFavorito"
+            />
           </div>
         </div>
 
@@ -200,9 +182,11 @@
 
 <script>
 import jsPerfil from "./script_perfil.js";
+import GameCard from "../Cards/GameCard.vue";
 
 export default {
   name: 'perfil',
+  components: { GameCard },
   mixins: [jsPerfil]
 };
 </script>
