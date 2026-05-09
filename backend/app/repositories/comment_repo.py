@@ -1,5 +1,6 @@
 from app.models.Comment import Comment
 from app.database.db import db
+from datetime import date
 
 def get_all_comments() -> list[Comment]:
 
@@ -22,11 +23,11 @@ def create_comment(description, id_user, id_game):
     return comment
 
 def update_comment(comment_id, description) -> Comment:
-
     comment = get_comment_by_id(comment_id)
 
     if comment:
         comment.description = description
+        comment.date_of_update = date.today()
         db.session.commit()
 
     return comment

@@ -3,6 +3,9 @@ from app.repositories.rate_repo import get_rate_by_user_and_game, get_rates_by_g
 
 def crear_valoracion(id_user, id_game, rating, status) -> object | str:
     try:
+        if not isinstance(rating, int) or rating < 0 or rating > 5:
+            return "La valoración debe ser un número entero entre 0 y 5"
+
         if get_rate_by_user_and_game(id_user=id_user, id_game=id_game):
             return "Ya has valorado este juego"
         return create_rate(id_user=id_user, id_game=id_game, rating=rating, status=status)
@@ -12,6 +15,10 @@ def crear_valoracion(id_user, id_game, rating, status) -> object | str:
 
 def actualizar_valoracion(id_user, id_game, rating=None, status=None) -> object | str:
     try:
+        if rating is not None:
+            if not isinstance(rating, int) or rating < 0 or rating > 5:
+                return "La valoración debe ser un número entero entre 0 y 5"
+
         rate = update_rate(id_user=id_user, id_game=id_game,
                            rating=rating, status=status)
         if not rate:

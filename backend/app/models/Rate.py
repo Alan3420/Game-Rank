@@ -1,15 +1,16 @@
 from datetime import datetime
 from app.database.db import db
-from sqlalchemy import Column, String, Integer, Date,ForeignKey
+from sqlalchemy import Column, String, Integer, Date, ForeignKey, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 
 class Rate(db.Model):
-    __tablename__ ="rates"
+    __tablename__ = "rates"
+    __table_args__ = (PrimaryKeyConstraint('id_user', 'id_game_api'),)
 
-    id_rate = Column(Integer, primary_key=True, autoincrement=True)
-    id_user = Column(Integer,ForeignKey("users.id_user"), primary_key=True)
-    id_game_api= Column(Integer,ForeignKey("videoGame.id_game_api"), primary_key=True)
-    date_rate= Column(Date, nullable=False, default=datetime.today)
+    id_rate = Column(Integer, autoincrement=True, unique=True)
+    id_user = Column(Integer, ForeignKey("users.id_user"), nullable=False)
+    id_game_api = Column(Integer, ForeignKey("videoGame.id_game_api"), nullable=False)
+    date_rate = Column(Date, nullable=False, default=datetime.today)
     rating = Column(Integer, nullable=False)
     status = Column(String(20), nullable=True)
 

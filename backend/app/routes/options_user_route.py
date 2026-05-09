@@ -97,29 +97,3 @@ def change_role():
         return jsonify({"message": str(error_validacion)}), 400
     except Exception as error:
         return jsonify({"message": "Error al actualizar el rol del usuario", "error": str(error)}), 500
-
-@user_option_bp.route("/change-role", methods=["PUT"])
-@jwt_required()
-@admin_required
-def change_role():
-    """Solo administradores pueden cambiar roles de usuarios"""
-    try:
-        data_role = request.get_json()
-
-        id_user = data_role.get("id_user")
-        new_role = data_role.get("new_role")
-
-        if not id_user or not new_role:
-            return jsonify({"message": "id_user y new_role son obligatorios"}), 400
-
-        user_updated = user_service.change_role(user_id=id_user, new_role=new_role)
-
-        if type(user_updated) != str:
-            return jsonify({"message": "Rol del usuario actualizado exitosamente",
-                            "user": user_updated.to_dict()}), 200
-        else:
-            return jsonify({"message": user_updated}), 404
-    except ValueError as e:
-        return jsonify({"message": str(e)}), 400
-    except Exception as e:
-        return jsonify({"message": "Error al actualizar el rol del usuario", "error": str(e)}), 500

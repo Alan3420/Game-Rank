@@ -15,11 +15,23 @@ def user_authentication(email, passwd) -> User |None:
 def user_registration(name, last_name, email, passwd) -> User | str:
 
     try:
+        if not name or len(name) < 1 or len(name) > 50:
+            return "El nombre debe tener entre 1 y 50 caracteres"
+
+        if not last_name or len(last_name) < 1 or len(last_name) > 50:
+            return "El apellido debe tener entre 1 y 50 caracteres"
+
+        if not email or len(email) > 100:
+            return "El email debe tener un máximo de 100 caracteres"
+
+        if not passwd or len(passwd) < 8:
+            return "La contraseña debe tener un mínimo de 8 caracteres"
+
         user_exist = user_repo.get_user_by_email(email)
 
         if user_exist is not None:
             return "Existe un usuario registrado con ese email"
-       
+
         new_user = user_repo.create_user(username=name, last_name=last_name, email=email, password=passwd)
 
         return new_user
@@ -50,10 +62,22 @@ def user_update(user_id, name, last_name, email, passwd) -> User | str:
         if not user:
             return "Usuario no encontrado"
 
-        if email and email != user.email:
-            email_exists = user_repo.get_user_by_email(email)
-            if email_exists:
-                return "El correo electrónico ya está en uso por otro usuario"
+        if name and (len(name) < 1 or len(name) > 50):
+            return "El nombre debe tener entre 1 y 50 caracteres"
+
+        if last_name and (len(last_name) < 1 or len(last_name) > 50):
+            return "El apellido debe tener entre 1 y 50 caracteres"
+
+        if email:
+            if len(email) > 100:
+                return "El email debe tener un máximo de 100 caracteres"
+            if email != user.email:
+                email_exists = user_repo.get_user_by_email(email)
+                if email_exists:
+                    return "El correo electrónico ya está en uso por otro usuario"
+
+        if passwd and len(passwd) < 8:
+            return "La contraseña debe tener un mínimo de 8 caracteres"
 
         updated_user = user_repo.update_user(user_id=user_id, username=name, last_name=last_name, email=email, password=passwd)
 

@@ -3,6 +3,9 @@ from app.repositories.rate_repo import get_rates_by_game
 
 def crear_comentario(id_user, id_game, description) -> object | str:
     try:
+        if not description or len(description) < 1 or len(description) > 255:
+            return "La descripción debe tener entre 1 y 255 caracteres"
+
         existing = [c for c in get_comments_by_game(id_game=id_game) if c.id_user == id_user]
         if existing:
             return "Ya has comentado este juego"
@@ -13,10 +16,13 @@ def crear_comentario(id_user, id_game, description) -> object | str:
 
 def actualizar_comentario(comment_id, description) -> object | str:
     try:
+        if description and (len(description) < 1 or len(description) > 255):
+            return "La descripción debe tener entre 1 y 255 caracteres"
+
         comment = update_comment(comment_id=comment_id, description=description)
         if not comment:
             return "Comentario no encontrado"
-        
+
         return comment
     except Exception as e:
         raise Exception(f"Error al actualizar el comentario: {str(e)}")
