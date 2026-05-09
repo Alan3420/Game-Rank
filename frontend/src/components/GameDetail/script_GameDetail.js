@@ -144,14 +144,31 @@ export default {
         },
 
         async addComment() {
-            if (!this.newComment?.trim()) return;
+            if (!this.newComment?.trim()) {
+                notificaciones.error("El comentario no puede estar vacío.", {
+                    title: "Comentario requerido"
+                });
+                return;
+            }
+
+            if (this.newComment.length > 255) {
+                notificaciones.error("El comentario no puede exceder 255 caracteres.", {
+                    title: "Comentario muy largo"
+                });
+                return;
+            }
 
             if (!this.formRating) {
-
                 notificaciones.error("Selecciona una valoración antes de publicar.", {
                     title: "Valoración requerida"
                 });
+                return;
+            }
 
+            if (this.formRating < 0 || this.formRating > 5) {
+                notificaciones.error("La valoración debe estar entre 0 y 5.", {
+                    title: "Valoración inválida"
+                });
                 return;
             }
 
@@ -161,6 +178,8 @@ export default {
                 await createComments(gameId, this.newComment);
 
                 this.newComment = '';
+                this.formRating = 0;
+                this.formHover = 0;
                 await this.loadComments();
                 await this.loadCommunityAvg();
 
@@ -169,7 +188,12 @@ export default {
             } catch (error) {
                 console.error('Error al agregar comentario:', error);
 
-                notificaciones.error("No pudimos publicar tu comentario. Inténtalo de nuevo.", {
+                let mensajeError = "No pudimos publicar tu comentario. Inténtalo de nuevo.";
+                if (error.response?.data?.message) {
+                    mensajeError = error.response.data.message;
+                }
+
+                notificaciones.error(mensajeError, {
                     title: "Error al comentar"
                 });
             }
@@ -187,10 +211,30 @@ export default {
             this.syncFormRatingFromUserComments();
         },
         async updComment() {
-            if (!this.newComment?.trim()) return;
+            if (!this.newComment?.trim()) {
+                notificaciones.error("El comentario no puede estar vacío.", {
+                    title: "Comentario requerido"
+                });
+                return;
+            }
+
+            if (this.newComment.length > 255) {
+                notificaciones.error("El comentario no puede exceder 255 caracteres.", {
+                    title: "Comentario muy largo"
+                });
+                return;
+            }
+
             if (!this.formRating) {
                 notificaciones.error("Selecciona una valoración antes de actualizar.", {
                     title: "Valoración requerida"
+                });
+                return;
+            }
+
+            if (this.formRating < 0 || this.formRating > 5) {
+                notificaciones.error("La valoración debe estar entre 0 y 5.", {
+                    title: "Valoración inválida"
                 });
                 return;
             }
@@ -202,13 +246,21 @@ export default {
 
                 this.editingId = null;
                 this.newComment = '';
+                this.formRating = 0;
+                this.formHover = 0;
                 await this.loadComments();
                 await this.loadCommunityAvg();
                 notificaciones.success("Comentario actualizado correctamente.", { title: "Cambios guardados" });
             }
             catch (error) {
                 console.log("Error al actualizar el comentario");
-                notificaciones.error("No pudimos actualizar tu comentario.", {
+
+                let mensajeError = "No pudimos actualizar tu comentario.";
+                if (error.response?.data?.message) {
+                    mensajeError = error.response.data.message;
+                }
+
+                notificaciones.error(mensajeError, {
                     title: "Error al editar"
                 });
             }

@@ -605,6 +605,19 @@
     font-weight: 500;
 }
 
+.comment-edited {
+    font-size: 0.78rem;
+    color: #9a7adf;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.comment-edited i {
+    font-size: 0.65rem;
+}
+
 .comment-body {
     margin: 0;
     color: #4c4c66;

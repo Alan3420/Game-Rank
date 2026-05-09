@@ -158,6 +158,11 @@
                                             <span class="comment-user">{{ comment.username }}</span>
                                             <span class="comment-dot"></span>
                                             <span class="comment-date">{{ formatDate(comment.date_of_comment) }}</span>
+                                            <span v-if="comment.date_of_update" class="comment-edited">
+                                                <span class="comment-dot"></span>
+                                                <i class="pi pi-pencil"></i>
+                                                editado el {{ formatDate(comment.date_of_update) }}
+                                            </span>
                                         </div>
                                         <button v-if="comment.id_user === data_user.id_user" class="comment-delete-btn"
                                             @click="delComment(comment.id_comment)" title="Eliminar comentario">
