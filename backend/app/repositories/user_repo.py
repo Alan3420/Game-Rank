@@ -23,13 +23,13 @@ def update_user(user_id, username=None, last_name=None, email=None, password=Non
     user = get_user_by_id(user_id)
     if user:
         if username:
-            user.username = username
+            user.name = username
         if last_name:
             user.last_name = last_name
         if email:
             user.email = email
         if password:
-            user.password = password
+            user.set_password(password)
         db.session.commit()
     return user
 
@@ -40,3 +40,13 @@ def delete_user(user_id) -> bool:
         db.session.commit()
         return True
     return False
+
+def update_user_role(user_id, new_role) -> User:
+    user = get_user_by_id(user_id)
+    if user:
+        if new_role in ['user', 'admin']:
+            user.role = new_role
+            db.session.commit()
+        else:
+            raise ValueError(f"Rol inválido: {new_role}. Roles permitidos: user, admin")
+    return user

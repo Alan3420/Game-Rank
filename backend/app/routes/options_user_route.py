@@ -1,90 +1,125 @@
-from flask import Blueprint,jsonify, request
-from flask_jwt_extended import jwt_required
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import user_service
+from app.repositories.user_repo import get_user_by_id
+from app.autorizacion.validadores import admin_required
 
 user_option_bp = Blueprint("option_route", __name__)
 
-@user_option_bp.route("/options", methods=["GET", "PUT", "DELETE"])
+@user_option_bp.route("/options", methods=["PUT"])
 @jwt_required()
-def user_options():
-
-    if request.method == "PUT":
-        return edit_user()
-    
-    elif request.method == "DELETE":
-        return delete_user()
-    
-    elif request.method == "GET":
-        return get_list_users()
-
 def edit_user():
     try:
-        data_update = request.get_json()
+        usuario_actual_id = get_jwt_identity()
+        datos_actualizacion = request.get_json()
 
-        id_user = data_update.get("id_user")
-        name_user = data_update.get("name")
-        last_name_user = data_update.get("last_name")
-        email_user = data_update.get("email")
-        password_user = data_update.get("password")
+        id_usuario = datos_actualizacion.get("id_user")
 
-        user_updated = user_service.user_update(user_id=id_user, 
-                                                name=name_user, 
-                                                last_name=last_name_user, 
-                                                email=email_user, 
-                                                passwd=password_user)
+        usuario_actual = get_user_by_id(usuario_actual_id)
+        if usuario_actual.role != 'admin' and int(id_usuario) != usuario_actual_id:
+            return jsonify({"message": "No tienes permisos para editar este usuario"}), 403
 
-        if type(user_updated) != str:
-            return jsonify({"message": "Usuario actualizado exitosamente", 
-                            "user": user_updated.to_dict()}), 200
+        nombre_usuario = datos_actualizacion.get("name")
+        apellido_usuario = datos_actualizacion.get("last_name")
+        email_usuario = datos_actualizacion.get("email")
+        contraseña_usuario = datos_actualizacion.get("password")
+
+        usuario_actualizado = user_service.user_update(user_id=id_usuario,
+                                                       name=nombre_usuario,
+                                                       last_name=apellido_usuario,
+                                                       email=email_usuario,
+                                                       passwd=contraseña_usuario)
+
+        if type(usuario_actualizado) != str:
+            return jsonify({"message": "Usuario actualizado exitosamente",
+                            "user": usuario_actualizado.to_dict()}), 200
         else:
-            return jsonify({"message": user_updated}), 409
-    except Exception as e:
-        return jsonify({"message": "Error al actualizar el usuario", "error": str(e)}), 500
-    
+            return jsonify({"message": usuario_actualizado}), 409
+    except Exception as error:
+        return jsonify({"message": "Error al actualizar el usuario", "error": str(error)}), 500
 
+@user_option_bp.route("/options", methods=["DELETE"])
+@jwt_required()
+@admin_required
 def delete_user():
     try:
-        data_delete = request.get_json()
+        datos_eliminacion = request.get_json()
 
-        id_user = data_delete.get("id_user")
+        id_usuario = datos_eliminacion.get("id_user")
 
-        resultado_delete = user_service.user_delete(user_id=id_user)
+        resultado_eliminacion = user_service.user_delete(user_id=id_usuario)
 
-        if type(resultado_delete) != str:
+        if type(resultado_eliminacion) != str:
             return jsonify({"message": "Usuario eliminado exitosamente"}), 200
         else:
-            return jsonify({"message": resultado_delete}), 404
-    except Exception as e:
-        return jsonify({"message": "Error al eliminar el usuario", "error": str(e)}), 500
-    
+            return jsonify({"message": resultado_eliminacion}), 404
+    except Exception as error:
+        return jsonify({"message": "Error al eliminar el usuario", "error": str(error)}), 500
+
+@user_option_bp.route("/options", methods=["GET"])
+@jwt_required()
+@admin_required
 def get_list_users():
-
     try:
-        users = user_service.get_list_users()
-        user_dict = []
+        usuarios = user_service.get_list_users()
+        usuarios_dict = []
 
-        for user in users:
-            user_dict.append(user.to_dict())
-        
+        for usuario in usuarios:
+            usuarios_dict.append(usuario.to_dict())
+
         return jsonify({"message": "Lista de usuarios obtenida exitosamente",
-                        "users": user_dict}), 200
-    
-    except Exception as e:
-        return jsonify({"message": "Error al obtener la lista de usuarios", "error": str(e)}), 500
+                        "users": usuarios_dict}), 200
 
+    except Exception as error:
+        return jsonify({"message": "Error al obtener la lista de usuarios", "error": str(error)}), 500
+
+@user_option_bp.route("/change-role", methods=["PUT"])
+@jwt_required()
+@admin_required
 def change_role():
+    try:
+        datos_rol = request.get_json()
+
+        id_usuario = datos_rol.get("id_user")
+        nuevo_rol = datos_rol.get("new_role")
+
+        if not id_usuario or not nuevo_rol:
+            return jsonify({"message": "id_user y new_role son obligatorios"}), 400
+
+        usuario_actualizado = user_service.change_role(user_id=id_usuario, new_role=nuevo_rol)
+
+        if type(usuario_actualizado) != str:
+            return jsonify({"message": "Rol del usuario actualizado exitosamente",
+                            "user": usuario_actualizado.to_dict()}), 200
+        else:
+            return jsonify({"message": usuario_actualizado}), 404
+    except ValueError as error_validacion:
+        return jsonify({"message": str(error_validacion)}), 400
+    except Exception as error:
+        return jsonify({"message": "Error al actualizar el rol del usuario", "error": str(error)}), 500
+
+@user_option_bp.route("/change-role", methods=["PUT"])
+@jwt_required()
+@admin_required
+def change_role():
+    """Solo administradores pueden cambiar roles de usuarios"""
     try:
         data_role = request.get_json()
 
         id_user = data_role.get("id_user")
         new_role = data_role.get("new_role")
 
+        if not id_user or not new_role:
+            return jsonify({"message": "id_user y new_role son obligatorios"}), 400
+
         user_updated = user_service.change_role(user_id=id_user, new_role=new_role)
 
         if type(user_updated) != str:
-            return jsonify({"message": "Rol del usuario actualizado exitosamente", 
+            return jsonify({"message": "Rol del usuario actualizado exitosamente",
                             "user": user_updated.to_dict()}), 200
         else:
             return jsonify({"message": user_updated}), 404
+    except ValueError as e:
+        return jsonify({"message": str(e)}), 400
     except Exception as e:
         return jsonify({"message": "Error al actualizar el rol del usuario", "error": str(e)}), 500
