@@ -69,7 +69,20 @@ app.register_blueprint(favorite_bp, url_prefix="/favorite")
 
 
 db.init_app(app)
-CORS(app)
+
+# Configurar CORS restrictivamente
+origenes_permitidos = [
+    "http://localhost:3000",      # React/Vue desarrollo (puerto típico)
+    "http://localhost:5173",      # Vite desarrollo
+    "http://localhost:8080",      # Webpack desarrollo
+    "http://localhost:5000",      # Flask desarrollo
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:8080",
+    "http://127.0.0.1:5000",
+]
+
+CORS(app, origins=origenes_permitidos, allow_headers=["Content-Type", "Authorization"])
 
 #Migraciones
 migraciones = Migrate(app, db)
