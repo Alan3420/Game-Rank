@@ -1,5 +1,5 @@
 from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
-from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases
+from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering
 from app.services.adapter import game_format_details, game_format_resume
 from datetime import datetime
 
@@ -100,6 +100,33 @@ def save_games(games: list, app):
 
         except Exception as e:
             print(f"Error al guardar el juego {game_api['name']}: {str(e)}")
+
+
+def get_random_game_video() -> dict | None:
+    try:
+        import random
+
+        orderings = ["-added", "-rating", "-metacritic"]
+
+        for ordering in orderings:
+            games = get_games_by_ordering(ordering=ordering, per_page=40)
+
+            if not games:
+                continue
+
+            random.shuffle(games)
+
+            for game in games[:15]:
+                videos = get_game_movies(game_id=game["id"])
+
+                if videos:
+                    video_url = videos[0].get("data", {}).get("max")
+                    if video_url:
+                        return {"video_url": video_url}
+
+        return None
+    except Exception as e:
+        raise Exception(f"Error al obtener video aleatorio: {str(e)}")
 
 
 def filter_games_by_platform_or_genres(plataforma=None, genero=None) -> list[dict] | None:

@@ -44,5 +44,22 @@ def get_future_releases( init_date, final_date, page=1, per_page=10,):
 
     if response.status_code != 200:
         return []
-    
+
     return response.json().get("results")
+
+def get_games_by_ordering(ordering="-added", per_page=40):
+    response = requests.get(
+        f"{BASE_URL}/games",
+        params={
+            "key": RAWG_API_KEY,
+            "ordering": ordering,
+            "page_size": per_page,
+            "dates": "2018-01-01,2026-12-31"
+        },
+        timeout=5
+    )
+
+    if response.status_code != 200:
+        return []
+
+    return response.json().get("results", [])

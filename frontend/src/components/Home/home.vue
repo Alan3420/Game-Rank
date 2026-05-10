@@ -2,6 +2,10 @@
   <div class="home-page">
     <!-- Hero Section -->
     <section class="hero-section">
+      <video v-if="heroVideo" class="hero-video" autoplay muted loop playsinline>
+        <source :src="heroVideo.video_url" type="video/mp4" />
+      </video>
+      <div class="hero-overlay-dark"></div>
       <div class="hero-content">
         <div class="hero-text">
           <span class="hero-label">Bienvenido a Game Rank</span>

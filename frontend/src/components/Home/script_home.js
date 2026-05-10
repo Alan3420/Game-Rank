@@ -1,4 +1,4 @@
-import { getContentOverview } from '../../services/resume_cards.js';
+import { getContentOverview, getHeroVideo } from '../../services/resume_cards.js';
 import { getFutureReleases } from '../../services/clasif_content.js';
 import { estadoAutenticacion } from '../../store/autenticacion.js';
 import { checkFavorite, addTOFavorite, removeTOFavorite } from '../../services/favorites_area.js';
@@ -13,10 +13,13 @@ export default {
       futureReleases: [],
       favorites: new Set(),
       carouselTrack: null,
-      isLoading: false
+      isLoading: false,
+      heroVideo: null
     };
   },
   async mounted() {
+    await this.loadHeroVideo();
+
     if (!localStorage.getItem("token")) return;
 
     if (this.topGames.length === 0) {
@@ -27,6 +30,15 @@ export default {
     }
   },
   methods: {
+    async loadHeroVideo() {
+      try {
+        const video = await getHeroVideo();
+        this.heroVideo = video;
+      } catch (error) {
+        console.error('Error al cargar video del hero:', error);
+      }
+    },
+
     async loadTopGames() {
       this.isLoading = true;
       try {

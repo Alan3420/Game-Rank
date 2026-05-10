@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
 import threading
 from flask_jwt_extended import jwt_required
-from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games
+from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games, get_random_game_video
 
 
 content_overview_bp = Blueprint('content_overview_route', __name__)
@@ -66,6 +66,20 @@ def future_release():
         games = get_upcoming_launch_games(page=page, per_page=per_page)
 
         return jsonify(games), 200
-    
+
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos", "error": str(e)}), 500
+
+
+@content_overview_bp.route("/hero-video", methods=["GET"])
+def get_hero_video():
+    try:
+        video = get_random_game_video()
+
+        if not video:
+            return jsonify({"message": "No hay videos disponibles"}), 404
+
+        return jsonify(video), 200
+
+    except Exception as e:
+        return jsonify({"message": "Error al obtener video", "error": str(e)}), 500
