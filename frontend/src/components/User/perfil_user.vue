@@ -14,9 +14,9 @@
           </div>
           <div class="banner-user-info">
             <h1>{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</h1>
-            <span class="badge">
-              <i class="pi pi-shield"></i>
-              Explorador
+            <span class="badge" :class="{ 'badge-admin': isAdmin }">
+              <i :class="isAdmin ? 'pi pi-crown' : 'pi pi-shield'"></i>
+              {{ isAdmin ? 'Administrador' : 'Usuario' }}
             </span>
           </div>
         </div>
@@ -31,10 +31,32 @@
               <i class="pi pi-user"></i>
               <span>Información de la Cuenta</span>
             </div>
-            <button class="btn-edit" @click="abrirModalEditar">
-              <i class="pi pi-pencil"></i>
-              Editar
-            </button>
+            <div class="btn-group" ref="menuEditarRef">
+              <button class="btn-edit btn-edit-primary" @click="mostrarMenuEditar = !mostrarMenuEditar">
+                <i class="pi pi-sliders-v"></i>
+                <span>Editar Perfil</span>
+                <i class="pi" :class="mostrarMenuEditar ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+              </button>
+
+              <Transition name="dropdown-edit">
+                <div v-if="mostrarMenuEditar" class="edit-menu-dropdown">
+                  <button class="edit-menu-item" @click="abrirModalEditar">
+                    <i class="pi pi-pencil"></i>
+                    <div class="edit-menu-text">
+                      <span class="edit-menu-title">Editar Información</span>
+                      <span class="edit-menu-desc">Nombre y apellidos</span>
+                    </div>
+                  </button>
+                  <button class="edit-menu-item" @click="abrirModalCambiarContraseña">
+                    <i class="pi pi-lock"></i>
+                    <div class="edit-menu-text">
+                      <span class="edit-menu-title">Cambiar Contraseña</span>
+                      <span class="edit-menu-desc">Seguridad de tu cuenta</span>
+                    </div>
+                  </button>
+                </div>
+              </Transition>
+            </div>
           </div>
 
           <div class="info-grid">
@@ -91,6 +113,38 @@
               @click="goToDetail(fav.id)"
               @action="quitarFavorito"
             />
+          </div>
+        </div>
+
+        <!-- Admin Panel (solo visible para admins) -->
+        <div v-if="isAdmin" class="admin-panel">
+          <div class="admin-header">
+            <div class="admin-title-group">
+              <i class="pi pi-sliders-v"></i>
+              <h2>Panel de Administración</h2>
+              <span class="admin-badge">Admin</span>
+            </div>
+            <p class="admin-subtitle">Acceso a herramientas exclusivas de administrador</p>
+          </div>
+
+          <div class="admin-actions">
+            <button class="admin-action-btn" @click="irAPanelAdmin">
+              <i class="pi pi-users"></i>
+              <div class="admin-btn-content">
+                <span class="admin-btn-title">Gestionar Usuarios</span>
+                <span class="admin-btn-desc">Ver, editar y eliminar usuarios</span>
+              </div>
+              <i class="pi pi-arrow-right"></i>
+            </button>
+
+            <button class="admin-action-btn" @click="irAConfigAdmin">
+              <i class="pi pi-cog"></i>
+              <div class="admin-btn-content">
+                <span class="admin-btn-title">Configuración</span>
+                <span class="admin-btn-desc">Ajustes del sistema</span>
+              </div>
+              <i class="pi pi-arrow-right"></i>
+            </button>
           </div>
         </div>
 
@@ -154,6 +208,83 @@
             <button class="btn-save">
               <i class="pi pi-check"></i>
               Guardar cambios
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Cambiar Contraseña -->
+      <div v-if="mostrarModalCambiarContraseña" class="edit-modal-overlay" @click.self="cerrarModalCambiarContraseña">
+        <div class="edit-modal">
+          <div class="edit-modal-header">
+            <div class="edit-modal-title">
+              <div class="edit-modal-icon" style="background: #6366f1; color: white;">
+                <i class="pi pi-lock"></i>
+              </div>
+              <div>
+                <h3>Cambiar Contraseña</h3>
+                <span>Actualiza tu contraseña para mantener tu cuenta segura</span>
+              </div>
+            </div>
+            <button class="edit-modal-close" @click="cerrarModalCambiarContraseña">
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+
+          <div class="edit-modal-body">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="pi pi-lock"></i>
+                Contraseña Actual
+              </label>
+              <input
+                v-model="formularioCambiarContraseña.actual"
+                type="password"
+                class="form-input"
+                placeholder="Ingresa tu contraseña actual"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                <i class="pi pi-lock"></i>
+                Nueva Contraseña
+              </label>
+              <input
+                v-model="formularioCambiarContraseña.nueva"
+                type="password"
+                class="form-input"
+                placeholder="Ingresa tu nueva contraseña (mín. 8 caracteres)"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                <i class="pi pi-lock"></i>
+                Confirmar Contraseña
+              </label>
+              <input
+                v-model="formularioCambiarContraseña.confirmar"
+                type="password"
+                class="form-input"
+                placeholder="Confirma tu nueva contraseña"
+              />
+            </div>
+
+            <div v-if="errorCambiarContraseña" class="error-alert">
+              <i class="pi pi-exclamation-circle"></i>
+              {{ errorCambiarContraseña }}
+            </div>
+          </div>
+
+          <div class="edit-modal-footer">
+            <button class="btn-cancel" @click="cerrarModalCambiarContraseña">
+              Cancelar
+            </button>
+            <button class="btn-save" @click="guardarCambioContraseña" :disabled="cambiandoContraseña">
+              <i v-if="!cambiandoContraseña" class="pi pi-check"></i>
+              <i v-else class="pi pi-spin pi-spinner"></i>
+              {{ cambiandoContraseña ? 'Actualizando...' : 'Cambiar Contraseña' }}
             </button>
           </div>
         </div>

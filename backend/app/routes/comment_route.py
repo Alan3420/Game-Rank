@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.comment_services import crear_comentario, actualizar_comentario,eliminar_comentario, get_comentarios_juego,get_comentarios_usuario
+from app.services.comment_services import crear_comentario, actualizar_comentario, eliminar_comentario, get_comentarios_juego, get_comentarios_usuario
 from app.services import user_service
+from app.repositories.user_repo import get_user_by_id
 
 comment_bp = Blueprint("comment", __name__)
 
@@ -56,14 +57,15 @@ def update(comment_id):
 def delete(comment_id):
     try:
         user_id = get_jwt_identity()
-        resultado = eliminar_comentario(comment_id, user_id)
-        
-      
+        usuario = get_user_by_id(user_id)
+        es_admin = usuario.role == 'admin' if usuario else False
+
+        resultado = eliminar_comentario(comment_id, user_id, es_admin=es_admin)
+
         if resultado is True:
             return jsonify({"msg": "Comentario eliminado"}), 200
-        
 
-        return jsonify({"msg": resultado}), 403 
+        return jsonify({"msg": resultado}), 403
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

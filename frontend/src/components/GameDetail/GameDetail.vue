@@ -164,7 +164,7 @@
                                                 editado el {{ formatDate(comment.date_of_update) }}
                                             </span>
                                         </div>
-                                        <button v-if="comment.id_user === data_user.id_user" class="comment-delete-btn"
+                                        <button v-if="comment.id_user === data_user.id_user || data_user?.role === 'admin'" class="comment-delete-btn"
                                             @click="delComment(comment.id_comment)" title="Eliminar comentario">
                                             <i class="pi pi-trash"></i>
                                         </button>

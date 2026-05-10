@@ -5,6 +5,7 @@ import Home from "../components/Home/home.vue";
 import ContentOverview from "../components/Content/contenido.vue";
 import GameDetail from "../components/GameDetail/GameDetail.vue";
 import perfil_user from "../components/User/perfil_user.vue";
+import AdminUsers from "../components/Admin/AdminUsers.vue";
 
 const routes = [
     {
@@ -38,6 +39,16 @@ const routes = [
         path: "/user/profile",
         component: perfil_user,
         meta:{title:"Game Rank - Perfil"}
+    },
+    {
+        path: "/profile",
+        component: perfil_user,
+        meta:{title:"Game Rank - Perfil"}
+    },
+    {
+        path: "/admin/users",
+        component: AdminUsers,
+        meta:{title:"Game Rank - Gestión de Usuarios"}
     }
 ];
 

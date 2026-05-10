@@ -97,3 +97,31 @@ def change_role():
         return jsonify({"message": str(error_validacion)}), 400
     except Exception as error:
         return jsonify({"message": "Error al actualizar el rol del usuario", "error": str(error)}), 500
+
+@user_option_bp.route("/change-password", methods=["PUT"])
+@jwt_required()
+def change_password():
+    try:
+        usuario_actual_id = get_jwt_identity()
+        datos_cambio = request.get_json()
+
+        contraseña_actual = datos_cambio.get("current_password")
+        contraseña_nueva = datos_cambio.get("new_password")
+
+        if not contraseña_actual or not contraseña_nueva:
+            return jsonify({"message": "Las contraseñas actual y nueva son obligatorias"}), 400
+
+        resultado = user_service.change_password(
+            user_id=usuario_actual_id,
+            contraseña_actual=contraseña_actual,
+            contraseña_nueva=contraseña_nueva
+        )
+
+        if type(resultado) != str:
+            return jsonify({"message": "Contraseña actualizada exitosamente",
+                            "user": resultado.to_dict()}), 200
+        else:
+            return jsonify({"message": resultado}), 400
+
+    except Exception as error:
+        return jsonify({"message": "Error al cambiar la contraseña", "error": str(error)}), 500

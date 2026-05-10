@@ -123,7 +123,27 @@ def change_role(user_id, new_role) -> User | str:
 def get_user_by_id(id_user):
     return user_repo.get_user_by_id(user_id=id_user)
 
+def change_password(user_id, contraseña_actual, contraseña_nueva) -> User | str:
+    try:
+        user = user_repo.get_user_by_id(user_id)
 
+        if not user:
+            return "Usuario no encontrado"
 
+        if not user.check_password(contraseña_actual):
+            return "La contraseña actual es incorrecta"
 
-    
+        if len(contraseña_nueva) < 8:
+            return "La contraseña debe tener un mínimo de 8 caracteres"
+
+        if contraseña_actual == contraseña_nueva:
+            return "La nueva contraseña debe ser diferente a la actual"
+
+        usuario_actualizado = user_repo.update_user(user_id=user_id, password=contraseña_nueva)
+
+        return usuario_actualizado
+
+    except Exception as e:
+        print("Error al cambiar la contraseña:", str(e))
+        raise Exception("Error al cambiar la contraseña")
+

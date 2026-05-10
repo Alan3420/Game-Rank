@@ -8,18 +8,38 @@
 
       <form @submit.prevent="handleLogin" class="login-form">
         <div class="form-group">
-          <label for="email" class="form-label">Correo Electrónico</label>
-          <input type="email" id="email" v-model="email" placeholder="tu@email.com" class="form-input" required>
+          <label for="email" class="form-label">
+            Correo Electrónico
+          </label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            placeholder="tu@email.com"
+            class="form-input"
+            maxlength="100"
+            required
+          >
         </div>
 
         <div class="form-group">
-          <label for="passwd" class="form-label">Contraseña</label>
-          <input type="password" id="passwd" v-model="password" placeholder="Tu contraseña" class="form-input" required>
+          <label for="passwd" class="form-label">
+            Contraseña
+          </label>
+          <input
+            type="password"
+            id="passwd"
+            v-model="password"
+            placeholder="Tu contraseña"
+            class="form-input"
+            maxlength="50"
+            required
+          >
         </div>
 
-        <button type="submit" :disabled="loading" class="btn btn-primary">
-          <span v-if="!loading">Iniciar Sesión</span>
-          <span v-else class="dots-loader">
+        <button type="submit" :disabled="loading || !isFormValid" class="btn btn-primary">
+          <span :style="{ visibility: loading ? 'hidden' : 'visible' }">Iniciar Sesión</span>
+          <span v-if="loading" class="dots-loader">
             <span></span>
             <span></span>
             <span></span>

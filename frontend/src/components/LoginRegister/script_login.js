@@ -12,6 +12,14 @@ export default {
       errorMessage: ""
     }
   },
+  computed: {
+    isFormValid() {
+      return (
+        this.email.length > 0 && this.email.length <= 100 &&
+        this.password.length >= 8 && this.password.length <= 50
+      );
+    }
+  },
   methods: {
     async handleLogin() {
       try {

@@ -53,6 +53,30 @@
                   </div>
                 </router-link>
 
+                <div v-if="isAdmin" class="dropdown-divider"></div>
+
+                <p v-if="isAdmin" class="dropdown-section-label">ADMINISTRACIÓN</p>
+
+                <router-link v-if="isAdmin" to="/admin/users" class="dropdown-item" @click="menuAbierto = false">
+                  <div class="dropdown-item-icon">
+                    <i class="pi pi-users"></i>
+                  </div>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-item-title">Gestionar Usuarios</span>
+                    <span class="dropdown-item-desc">Ver y editar usuarios</span>
+                  </div>
+                </router-link>
+
+                <button v-if="isAdmin" class="dropdown-item" @click="irAConfigAdmin">
+                  <div class="dropdown-item-icon">
+                    <i class="pi pi-cog"></i>
+                  </div>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-item-title">Configuración</span>
+                    <span class="dropdown-item-desc">Ajustes del sistema</span>
+                  </div>
+                </button>
+
                 <div class="dropdown-divider"></div>
 
                 <button class="dropdown-item dropdown-logout" @click="manejarCierreSesion">
@@ -113,7 +137,7 @@
 <script setup>
 import { estadoAutenticacion } from './store/autenticacion';
 import { useRouter, useRoute } from 'vue-router';
-import { ref, watch, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted, onUnmounted, computed } from "vue";
 import NotificationToast from './components/Notifications/NotificationToast.vue';
 import { notificaciones } from './store/notificaciones';
 
@@ -123,6 +147,8 @@ const route = useRoute();
 const headerSearch = ref('');
 const menuAbierto = ref(false);
 const userMenuRef = ref(null);
+
+const isAdmin = computed(() => estadoAutenticacion.usuario?.role === 'admin');
 
 watch(() => route.query.q, (val) => {
   headerSearch.value = val || '';
@@ -142,6 +168,11 @@ const manejarCierreSesion = () => {
   estadoAutenticacion.cerrarSesion();
   router.push("/login");
   notificaciones.success("Has cerrado sesión correctamente.", { title: "Hasta luego" });
+};
+
+const irAConfigAdmin = () => {
+  menuAbierto.value = false;
+  notificaciones.info("Panel de configuración en desarrollo.", { title: "Próximamente" });
 };
 
 const handleClickOutside = (e) => {

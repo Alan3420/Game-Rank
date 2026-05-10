@@ -10,28 +10,60 @@
         <div class="form-row">
           <div class="form-group">
             <label for="name" class="form-label">Nombre</label>
-            <input id="name" v-model="name" type="text" placeholder="Tu nombre" class="form-input" required>
+            <input
+              id="name"
+              v-model="name"
+              type="text"
+              placeholder="Tu nombre"
+              class="form-input"
+              maxlength="50"
+              required
+            >
           </div>
 
           <div class="form-group">
             <label for="last_name" class="form-label">Apellidos</label>
-            <input id="last_name" v-model="last_name" type="text" placeholder="Tus apellidos" class="form-input" required>
+            <input
+              id="last_name"
+              v-model="last_name"
+              type="text"
+              placeholder="Tus apellidos"
+              class="form-input"
+              maxlength="50"
+              required
+            >
           </div>
         </div>
 
         <div class="form-group">
           <label for="email" class="form-label">Correo Electrónico</label>
-          <input id="email" v-model="email" type="email" placeholder="tu@email.com" class="form-input" required>
+          <input
+            id="email"
+            v-model="email"
+            type="email"
+            placeholder="tu@email.com"
+            class="form-input"
+            maxlength="100"
+            required
+          >
         </div>
 
         <div class="form-group">
           <label for="password" class="form-label">Contraseña</label>
-          <input id="password" v-model="password" type="password" placeholder="Mínimo 6 caracteres" class="form-input" required>
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            placeholder="Mínimo 8 caracteres"
+            class="form-input"
+            maxlength="50"
+            required
+          >
         </div>
 
-        <button type="submit" :disabled="loading" class="btn btn-primary">
-          <span v-if="!loading">Crear Cuenta</span>
-          <span v-else class="dots-loader">
+        <button type="submit" :disabled="loading || !isFormValid" class="btn btn-primary">
+          <span :style="{ visibility: loading ? 'hidden' : 'visible' }">Crear Cuenta</span>
+          <span v-if="loading" class="dots-loader">
             <span></span>
             <span></span>
             <span></span>

@@ -8,8 +8,8 @@ class Favorite(db.Model):
     __tablename__ = 'favorites'
 
     fav_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id_user'), primary_key=True, nullable=False)
-    id_game_api = Column(Integer, ForeignKey('videoGame.id_game_api'), primary_key=True, nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id_user', ondelete="CASCADE"), primary_key=True, nullable=False)
+    id_game_api = Column(Integer, ForeignKey('videoGame.id_game_api', ondelete="CASCADE"), primary_key=True, nullable=False)
     date_added = Column(Date, nullable=False, default=datetime.now)
 
     users_rl = relationship("User", foreign_keys="[Favorite.user_id]",back_populates="favorites_rl")

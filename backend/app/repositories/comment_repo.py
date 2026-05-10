@@ -32,12 +32,15 @@ def update_comment(comment_id, description) -> Comment:
 
     return comment
 
-def delete_comment(comment_id, user_id) -> bool:
+def delete_comment(comment_id, user_id, es_admin=False) -> bool:
     try:
-        comment = Comment.query.filter_by(
-            id_comment=comment_id, 
-            id_user=user_id
-        ).first()
+        if es_admin:
+            comment = Comment.query.filter_by(id_comment=comment_id).first()
+        else:
+            comment = Comment.query.filter_by(
+                id_comment=comment_id,
+                id_user=user_id
+            ).first()
 
         if comment:
             db.session.delete(comment)

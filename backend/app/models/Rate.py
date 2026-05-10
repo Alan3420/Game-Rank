@@ -8,8 +8,8 @@ class Rate(db.Model):
     __table_args__ = (PrimaryKeyConstraint('id_user', 'id_game_api'),)
 
     id_rate = Column(Integer, autoincrement=True, unique=True)
-    id_user = Column(Integer, ForeignKey("users.id_user"), nullable=False)
-    id_game_api = Column(Integer, ForeignKey("videoGame.id_game_api"), nullable=False)
+    id_user = Column(Integer, ForeignKey("users.id_user", ondelete="CASCADE"), nullable=False)
+    id_game_api = Column(Integer, ForeignKey("videoGame.id_game_api", ondelete="CASCADE"), nullable=False)
     date_rate = Column(Date, nullable=False, default=datetime.today)
     rating = Column(Integer, nullable=False)
     status = Column(String(20), nullable=True)
