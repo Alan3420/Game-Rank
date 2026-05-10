@@ -4,33 +4,54 @@
         PROYECTO GAME-RANK/
         ├── README.md
         ├── backend/
-        │   
         │   ├── app/
+        │   │   ├── autorizacion/
+        │   │   ├── client/
         │   │   ├── database/
-        │   │   ├── repositories/
         │   │   ├── models/
+        │   │   ├── repositories/
         │   │   ├── routes/
         │   │   └── services/
-        │   ├── requirements.txt
-        │   └── migrations/
+        │   ├── migrations/
+        │   └── requirements.txt
         └── frontend/
-            ├── package.json
             ├── public/
             ├── src/
             │   ├── assets/
             │   ├── components/
+            │   │   ├── Admin/
+            │   │   ├── Cards/
             │   │   ├── Content/
             │   │   ├── GameDetail/
             │   │   ├── Home/
             │   │   ├── LoginRegister/
+            │   │   ├── Notifications/
             │   │   └── User/
             │   ├── router/
-            │   │   └── index.js
             │   ├── services/
             │   └── store/
+            └── package.json
+
+## Funcionalidades Principales
+
+### Sistema de Caché Inteligente
+El backend implementa un sistema centralizado de caché con TTL (Time To Live) para todas las llamadas a la API de RAWG. Esto reduce significativamente el número de solicitudes externas y mejora la velocidad de respuesta de la aplicación. La caché almacena un máximo de 150 entradas con una duración de 3600 segundos (1 hora).
+
+### Videos de Fondo Dinámicos
+El home page presenta videos de juegos como fondo en la sección hero, cargados aleatoriamente desde la API de RAWG. Los videos se seleccionan de juegos populares, bien valorados o con puntuación alta en Metacritic, garantizando contenido de calidad. Los videos se reproducen en máxima resolución disponible (480p o superior).
+
+### Gestión de Usuarios Administrativa
+El panel de administración permite gestionar usuarios del sistema. Los administradores pueden:
+- Ver lista de todos los usuarios y otros admins (exceptuando su propio perfil)
+- Cambiar roles de usuarios entre 'user' y 'admin'
+- Eliminar usuarios (con eliminación cascada de sus favoritos, comentarios y valoraciones)
+- Editar información de usuarios
+
+### Accesibilidad de Contenido
+El video del hero section en la página de inicio es accesible tanto para usuarios autenticados como anónimos, permitiendo que todos los visitantes vean la presentación visual de la plataforma.
 
                 
-
+## Información adicional
 * Extensiones extras en vsCode utilizadas:
     1. Mysql (Database Client)
     2. Docker
