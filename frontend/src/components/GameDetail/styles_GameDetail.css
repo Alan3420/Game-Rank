@@ -108,7 +108,7 @@
 ───────────────────────────────────────── */
 .detail-hero {
     position: relative;
-    min-height: 620px;
+    min-height: 850px;
     background-color: #131233;
     display: flex;
     align-items: flex-end;
@@ -1155,7 +1155,7 @@
     }
 
     .detail-hero {
-        min-height: 280px;
+        min-height: 540px;
         background-attachment: scroll;
     }
 
@@ -1195,7 +1195,7 @@
     }
 
     .detail-hero {
-        min-height: 240px;
+        min-height: 540px;
     }
 
     .hero-content {

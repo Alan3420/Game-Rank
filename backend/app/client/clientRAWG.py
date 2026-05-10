@@ -1,65 +1,101 @@
 import requests
 import os
+import time
+from collections import OrderedDict
 
 RAWG_API_KEY = os.getenv('RAWG_API_KEY')
 BASE_URL = "https://api.rawg.io/api"
 
-def get_all_video_games(page=1, per_page=10):
+
+class CacheWithTTL:
+    def __init__(self, max_size=150, ttl=3600):
+        self.cache = OrderedDict()
+        self.max_size = max_size
+        self.ttl = ttl
+        self.timestamps = {}
+
+    def get(self, key):
+        if key not in self.cache:
+            return None
+
+        if time.time() - self.timestamps[key] > self.ttl:
+            del self.cache[key]
+            del self.timestamps[key]
+            return None
+
+        return self.cache[key]
+
+    def set(self, key, value):
+        if key in self.cache:
+            del self.cache[key]
+
+        if len(self.cache) >= self.max_size:
+            oldest_key = next(iter(self.cache))
+            del self.cache[oldest_key]
+            del self.timestamps[oldest_key]
+
+        self.cache[key] = value
+        self.timestamps[key] = time.time()
+
+
+cache = CacheWithTTL(max_size=150, ttl=3600)
+
+
+def _request_with_cache(endpoint, params=None):
+    cache_key = f"{endpoint}_{str(params)}"
+
+    cached_result = cache.get(cache_key)
+    if cached_result is not None:
+        return cached_result
+
     response = requests.get(
-        f"{BASE_URL}/games/lists/popular",
-        params={
-            "key": RAWG_API_KEY,
-            "page": page,
-            "page_size": per_page
-        }
-    )
-    return response.json()
-
-def get_game_by_id_api(game_id) -> dict:
-    response = requests.get(f"{BASE_URL}/games/{game_id}", params={"key": RAWG_API_KEY})
-    return response.json()
-
-def get_game_screenshots(game_id):
-    response = requests.get(f"{BASE_URL}/games/{game_id}/screenshots", params={"key": RAWG_API_KEY})
-    if response.status_code != 200:
-        return []
-    return response.json().get("results", [])
-
-def get_game_by_name(game_name) -> dict:
-    response = requests.get(f"{BASE_URL}/games", params={"key": RAWG_API_KEY, "search": game_name})
-        
-    return response.json()
-
-
-def get_game_movies(game_id):
-    response = requests.get(f"{BASE_URL}/games/{game_id}/movies", params={"key": RAWG_API_KEY})
-    
-    if response.status_code != 200:
-        return []
-    
-    return response.json().get("results", [])
-
-def get_future_releases( init_date, final_date, page=1, per_page=10,):
-    response = requests.get(f"{BASE_URL}/games?dates={init_date},{final_date}&ordering=released&key={RAWG_API_KEY}", params={"page": page, "page_size": per_page})
-
-    if response.status_code != 200:
-        return []
-
-    return response.json().get("results")
-
-def get_games_by_ordering(ordering="-added", per_page=40):
-    response = requests.get(
-        f"{BASE_URL}/games",
-        params={
-            "key": RAWG_API_KEY,
-            "ordering": ordering,
-            "page_size": per_page,
-            "dates": "2018-01-01,2026-12-31"
-        },
+        f"{BASE_URL}{endpoint}",
+        params={**(params or {}), "key": RAWG_API_KEY},
         timeout=5
     )
 
     if response.status_code != 200:
-        return []
+        return None
 
-    return response.json().get("results", [])
+    result = response.json()
+    cache.set(cache_key, result)
+    return result
+
+
+def get_all_video_games(page=1, per_page=10):
+    result = _request_with_cache("/games/lists/popular", {"page": page, "page_size": per_page})
+    return result or {}
+
+def get_game_by_id_api(game_id) -> dict:
+    result = _request_with_cache(f"/games/{game_id}")
+    return result or {}
+
+def get_game_screenshots(game_id):
+    result = _request_with_cache(f"/games/{game_id}/screenshots")
+    return result.get("results", []) if result else []
+
+def get_game_by_name(game_name) -> dict:
+    result = _request_with_cache("/games", {"search": game_name})
+    return result or {}
+
+
+def get_game_movies(game_id):
+    result = _request_with_cache(f"/games/{game_id}/movies")
+    return result.get("results", []) if result else []
+
+def get_future_releases(init_date, final_date, page=1, per_page=10):
+    result = _request_with_cache("/games", {
+        "dates": f"{init_date},{final_date}",
+        "ordering": "released",
+        "page": page,
+        "page_size": per_page
+    })
+    return result.get("results", []) if result else []
+
+def get_games_by_ordering(ordering="-added", per_page=40):
+    result = _request_with_cache("/games", {
+        "ordering": ordering,
+        "page_size": per_page,
+        "dates": "2018-01-01,2026-12-31"
+    })
+    return result.get("results", []) if result else []
