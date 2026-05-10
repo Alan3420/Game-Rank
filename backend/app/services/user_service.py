@@ -43,13 +43,13 @@ def user_registration(name, last_name, email, passwd) -> User | str:
         raise Exception("Error en el registro del usuario")
     
 #Recordatorio: esta funcion solo la podrá usar el usuario con rol "ADMIN"
-def get_list_users() -> list[User]:
+def get_list_users(exclude_user_id=None) -> list[User]:
 
     try:
-        list_users = user_repo.get_all_users()
+        list_users = user_repo.get_all_users(exclude_user_id=exclude_user_id)
 
         return list_users
-    
+
     except Exception as e:
         print("Error al obtener la lista de usuarios:", str(e))
         raise Exception("Error al obtener la lista de usuarios")

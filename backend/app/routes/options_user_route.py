@@ -61,7 +61,8 @@ def delete_user():
 @admin_required
 def get_list_users():
     try:
-        usuarios = user_service.get_list_users()
+        usuario_actual_id = get_jwt_identity()
+        usuarios = user_service.get_list_users(exclude_user_id=usuario_actual_id)
         usuarios_dict = []
 
         for usuario in usuarios:

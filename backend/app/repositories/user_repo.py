@@ -1,7 +1,9 @@
 from app.database.db import db
 from app.models.User import User
 
-def get_all_users() -> list[User]:
+def get_all_users(exclude_user_id=None) -> list[User]:
+    if exclude_user_id:
+        return User.query.filter(User.id_user != exclude_user_id).all()
     return User.query.all()
 
 def get_user_by_id(user_id) -> User:
@@ -36,6 +38,14 @@ def update_user(user_id, username=None, last_name=None, email=None, password=Non
 def delete_user(user_id) -> bool:
     user = get_user_by_id(user_id)
     if user:
+        from app.models.Favorite import Favorite
+        from app.models.Comment import Comment
+        from app.models.Rate import Rate
+
+        db.session.query(Favorite).filter(Favorite.user_id == user_id).delete()
+        db.session.query(Comment).filter(Comment.id_user == user_id).delete()
+        db.session.query(Rate).filter(Rate.id_user == user_id).delete()
+
         db.session.delete(user)
         db.session.commit()
         return True
