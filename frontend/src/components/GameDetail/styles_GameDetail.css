@@ -1128,6 +1128,129 @@
     box-shadow: 0 4px 12px rgba(31, 31, 53, 0.2);
 }
 /* ─────────────────────────────────────────
+   DARK MODE
+───────────────────────────────────────── */
+[data-theme="dark"] .game-detail-page {
+  background: var(--color-bg);
+}
+
+[data-theme="dark"] .back-btn {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+[data-theme="dark"] .back-btn:hover {
+  background: var(--color-border);
+  color: var(--color-text);
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .sc-strip-wrap {
+  border-top-color: var(--color-border-lightest);
+}
+
+[data-theme="dark"] .comment-item:hover {
+  background: var(--color-surface-hover);
+}
+
+[data-theme="dark"] .comment-textarea {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .comment-textarea::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+[data-theme="dark"] .comment-textarea:focus {
+  background: var(--color-surface);
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(107, 95, 224, 0.10);
+}
+
+[data-theme="dark"] .add-comment-form.is-disabled .comment-textarea {
+  background: var(--color-surface-alt);
+  color: var(--color-text-placeholder);
+  border-color: var(--color-border-lightest);
+}
+
+[data-theme="dark"] .rating-input {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .rating-input:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-dark);
+}
+
+[data-theme="dark"] .rating-input-label {
+  color: var(--color-text-medium);
+}
+
+[data-theme="dark"] .no-comments-icon {
+  background: var(--color-surface-hover);
+  color: var(--color-text-placeholder);
+}
+
+[data-theme="dark"] .comment-submit-btn:disabled {
+  background: var(--color-surface-hover);
+  color: var(--color-text-placeholder);
+}
+
+[data-theme="dark"] .tag.empty {
+  background: var(--color-surface-hover);
+}
+
+[data-theme="dark"] .hero-fav-btn {
+  background: rgba(15, 17, 21, 0.65);
+  border-color: rgba(255, 255, 255, 0.20);
+}
+
+[data-theme="dark"] .hero-fav-btn.is-fav {
+  color: var(--color-favorite);
+  border-color: rgba(194, 58, 92, 0.50);
+  background: rgba(194, 58, 92, 0.12);
+}
+
+[data-theme="dark"] .tag {
+  background: rgba(107, 95, 224, 0.12);
+  color: #a09adc;
+  border-color: rgba(107, 95, 224, 0.18);
+}
+
+[data-theme="dark"] .tag:hover {
+  background: rgba(107, 95, 224, 0.22);
+  color: #c0baff;
+}
+
+[data-theme="dark"] .dev-item {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border-light);
+}
+
+[data-theme="dark"] .dev-avatar {
+  background: rgba(107, 95, 224, 0.12);
+  color: var(--color-secondary);
+}
+
+[data-theme="dark"] .comment-avatar {
+  background: rgba(107, 95, 224, 0.12);
+  color: var(--color-secondary);
+}
+
+[data-theme="dark"] .comment-stars i {
+  color: var(--color-star);
+}
+
+[data-theme="dark"] .comment-stars i.pi-star {
+  color: var(--color-border-dark);
+}
+
+/* ─────────────────────────────────────────
    RESPONSIVE
 ───────────────────────────────────────── */
 @media (max-width: 1024px) {

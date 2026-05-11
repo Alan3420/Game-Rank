@@ -1012,6 +1012,27 @@
 }
 
 
+/* ── DARK MODE ── */
+[data-theme="dark"] .fav-remove-btn {
+  background: rgba(204, 53, 53, 0.20);
+  color: #ef6666;
+  border: 1px solid rgba(204, 53, 53, 0.30);
+}
+
+[data-theme="dark"] .fav-remove-btn:hover {
+  background: rgba(204, 53, 53, 0.40);
+}
+
+[data-theme="dark"] .fav-rating-badge {
+  background: rgba(191, 144, 48, 0.18);
+  color: var(--color-star);
+  border-color: rgba(191, 144, 48, 0.25);
+}
+
+[data-theme="dark"] .fav-rating-badge i {
+  color: var(--color-star);
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .profile-banner {

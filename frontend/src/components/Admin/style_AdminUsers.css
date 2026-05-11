@@ -388,6 +388,50 @@
   }
 }
 
+/* ── DARK MODE ── */
+[data-theme="dark"] .role-badge {
+  background: var(--color-surface-hover);
+  color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .users-table tbody tr {
+  border-bottom-color: var(--color-border-lightest);
+}
+
+[data-theme="dark"] .users-table tbody tr:hover {
+  background: var(--color-surface-hover);
+}
+
+[data-theme="dark"] .promote-btn {
+  background: rgba(107, 95, 224, 0.13);
+  color: var(--color-primary);
+}
+
+[data-theme="dark"] .promote-btn:hover {
+  background: rgba(107, 95, 224, 0.28);
+  color: #c0baff;
+}
+
+[data-theme="dark"] .demote-btn {
+  background: rgba(191, 144, 48, 0.12);
+  color: var(--color-star);
+}
+
+[data-theme="dark"] .demote-btn:hover {
+  background: rgba(191, 144, 48, 0.26);
+  color: #e8c060;
+}
+
+[data-theme="dark"] .delete-btn {
+  background: rgba(204, 53, 53, 0.12);
+  color: var(--color-danger);
+}
+
+[data-theme="dark"] .delete-btn:hover {
+  background: rgba(204, 53, 53, 0.26);
+  color: #ef6666;
+}
+
 @media (max-width: 600px) {
   .admin-container {
     padding: 20px 12px;

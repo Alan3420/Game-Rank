@@ -12,6 +12,10 @@
       </div>
 
       <nav class="nav-menu">
+        <button class="theme-toggle" @click="toggleTema" :title="tema === 'dark' ? 'Modo claro' : 'Modo oscuro'">
+          <i class="pi" :class="tema === 'dark' ? 'pi-sun' : 'pi-moon'"></i>
+        </button>
+
         <template v-if="estadoAutenticacion.usuario">
           <div class="user-menu" ref="userMenuRef">
             <button @click="menuAbierto = !menuAbierto" class="options-user" :class="{ 'is-active': menuAbierto }">
@@ -190,6 +194,13 @@ const route = useRoute();
 const headerSearch = ref('');
 const menuAbierto = ref(false);
 const userMenuRef = ref(null);
+const tema = ref(localStorage.getItem('tema') || 'light');
+
+const toggleTema = () => {
+  tema.value = tema.value === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', tema.value);
+  localStorage.setItem('tema', tema.value);
+};
 
 const confirmEliminarAbierto = ref(false);
 const confirmTexto = ref('');
@@ -267,6 +278,7 @@ const handleClickOutside = (e) => {
 };
 
 onMounted(() => {
+  document.documentElement.setAttribute('data-theme', tema.value);
   document.addEventListener('mousedown', handleClickOutside);
 
   const flash = localStorage.getItem('flashNotificacion');
@@ -290,7 +302,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 .main-header {
   background: var(--color-surface-translucent);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--color-border-lightest);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -375,6 +387,29 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   z-index: 101;
 }
 
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
 /* ── USER MENU ── */
 .user-menu {
   position: relative;
@@ -385,7 +420,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   align-items: center;
   gap: 8px;
   padding: 6px 12px 6px 6px;
-  background: white;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 999px;
   cursor: pointer;
@@ -429,7 +464,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   top: calc(100% + 10px);
   right: 0;
   width: 280px;
-  background: white;
+  background: var(--color-surface);
   border: 1px solid var(--color-border-light);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(20, 21, 63, 0.12), 0 2px 8px rgba(20, 21, 63, 0.06);
@@ -515,7 +550,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .dropdown-item:hover {
-  background: #f8f8fe;
+  background: var(--color-surface-hover);
 }
 
 .dropdown-item-icon {
@@ -559,7 +594,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .confirm-modal {
-  background: white;
+  background: var(--color-surface);
   border-radius: 20px;
   padding: 2rem;
   max-width: 440px;
@@ -667,14 +702,14 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .confirm-btn-cancel {
-  background: white;
+  background: var(--color-surface);
   border-color: var(--color-border);
   color: var(--color-text-secondary);
 }
 
 .confirm-btn-cancel:hover:not(:disabled) {
-  background: #f8f8fe;
-  border-color: #d1d5db;
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-dark);
 }
 
 .confirm-btn-delete {
@@ -769,7 +804,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .nav-link:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--color-surface-hover);
 }
 
 .nav-link-primary {
@@ -793,7 +828,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 /* Footer Styles */
 .main-footer {
   background: var(--color-bg-gradient-start);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--color-border-lightest);
   margin-top: auto;
 }
 

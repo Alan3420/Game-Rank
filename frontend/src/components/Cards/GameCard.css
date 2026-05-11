@@ -175,6 +175,18 @@
   transform: translateX(4px);
 }
 
+/* ── DARK MODE ── */
+[data-theme="dark"] .card-action {
+  background: rgba(31, 36, 48, 0.90);
+  color: var(--color-favorite);
+  border: 1px solid rgba(194, 58, 92, 0.30);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .rating-badge {
+  color: var(--color-star);
+}
+
 /* ANIMACIÓN */
 @keyframes fadeIn {
   from {
