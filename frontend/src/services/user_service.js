@@ -41,6 +41,14 @@ export async function changeUserRole(id_user, new_role) {
     return response.data;
 }
 
+export async function updateUser(id_user, datos) {
+    const response = await api.put("/settings/options", {
+        id_user: id_user,
+        ...datos
+    });
+    return response.data;
+}
+
 export async function deleteUser(id_user) {
     const response = await api.delete("/settings/options", {
         data: { id_user: id_user }

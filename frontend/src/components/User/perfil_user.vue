@@ -174,13 +174,30 @@
             <div class="form-group">
               <label class="form-label">
                 <i class="pi pi-id-card"></i>
-                Nombre de usuario
+                Nombre
               </label>
               <input
+                v-model="formularioEditar.name"
                 type="text"
                 class="form-input"
-                :value="estadoAutenticacion.usuario?.name"
                 placeholder="Ingresa tu nombre"
+                maxlength="50"
+                :disabled="guardandoEditar"
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
+                <i class="pi pi-id-card"></i>
+                Apellido
+              </label>
+              <input
+                v-model="formularioEditar.last_name"
+                type="text"
+                class="form-input"
+                placeholder="Ingresa tu apellido"
+                maxlength="50"
+                :disabled="guardandoEditar"
               />
             </div>
 
@@ -201,15 +218,21 @@
                 El correo electrónico no se puede modificar.
               </span>
             </div>
+
+            <div v-if="errorEditar" class="error-alert">
+              <i class="pi pi-exclamation-circle"></i>
+              {{ errorEditar }}
+            </div>
           </div>
 
           <div class="edit-modal-footer">
-            <button class="btn-cancel" @click="cerrarModalEditar">
+            <button class="btn-cancel" @click="cerrarModalEditar" :disabled="guardandoEditar">
               Cancelar
             </button>
-            <button class="btn-save">
-              <i class="pi pi-check"></i>
-              Guardar cambios
+            <button class="btn-save" @click="guardarCambiosPerfil" :disabled="guardandoEditar">
+              <i v-if="!guardandoEditar" class="pi pi-check"></i>
+              <i v-else class="pi pi-spin pi-spinner"></i>
+              {{ guardandoEditar ? 'Guardando...' : 'Guardar cambios' }}
             </button>
           </div>
         </div>

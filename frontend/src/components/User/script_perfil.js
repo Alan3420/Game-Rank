@@ -1,6 +1,6 @@
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { list_favorites, removeTOFavorite } from "../../services/favorites_area";
-import { changePassword } from "../../services/user_service";
+import { changePassword, updateUser } from "../../services/user_service";
 import { notificaciones } from '../../store/notificaciones';
 import { useRouter } from 'vue-router';
 import { onMounted, onUnmounted, ref } from 'vue';
@@ -23,6 +23,12 @@ export default {
       },
       errorCambiarContraseña: '',
       cambiandoContraseña: false,
+      formularioEditar: {
+        name: '',
+        last_name: ''
+      },
+      errorEditar: '',
+      guardandoEditar: false,
       router: null
     };
   },
@@ -41,10 +47,65 @@ export default {
   },
   methods: {
     abrirModalEditar() {
+      this.mostrarMenuEditar = false;
+      this.formularioEditar = {
+        name: estadoAutenticacion.usuario?.name || '',
+        last_name: estadoAutenticacion.usuario?.last_name || ''
+      };
+      this.errorEditar = '';
       this.mostrarModalEditar = true;
     },
     cerrarModalEditar() {
+      if (this.guardandoEditar) return;
       this.mostrarModalEditar = false;
+      this.errorEditar = '';
+    },
+    async guardarCambiosPerfil() {
+      const name = this.formularioEditar.name?.trim();
+      const last_name = this.formularioEditar.last_name?.trim();
+
+      if (!name || !last_name) {
+        this.errorEditar = 'El nombre y el apellido son obligatorios.';
+        return;
+      }
+
+      if (name.length > 50 || last_name.length > 50) {
+        this.errorEditar = 'Cada campo debe tener máximo 50 caracteres.';
+        return;
+      }
+
+      const sinCambios =
+        name === estadoAutenticacion.usuario?.name &&
+        last_name === estadoAutenticacion.usuario?.last_name;
+
+      if (sinCambios) {
+        this.errorEditar = 'No has hecho ningún cambio.';
+        return;
+      }
+
+      this.guardandoEditar = true;
+      this.errorEditar = '';
+
+      try {
+        const id_user = estadoAutenticacion.usuario.id_user;
+        const response = await updateUser(id_user, { name, last_name });
+
+        estadoAutenticacion.actualizarUsuario({ name, last_name });
+
+        this.mostrarModalEditar = false;
+        notificaciones.success("Tu información ha sido actualizada.", {
+          title: "Perfil actualizado"
+        });
+      } catch (error) {
+        console.error('Error al actualizar perfil:', error);
+        let mensaje = "No pudimos actualizar tu información.";
+        if (error.response?.data?.message) {
+          mensaje = error.response.data.message;
+        }
+        this.errorEditar = mensaje;
+      } finally {
+        this.guardandoEditar = false;
+      }
     },
     async cargarFavoritos() {
       this.favoritosLoading = true;

@@ -16,7 +16,7 @@ def edit_user():
         id_usuario = datos_actualizacion.get("id_user")
 
         usuario_actual = get_user_by_id(usuario_actual_id)
-        if usuario_actual.role != 'admin' and int(id_usuario) != usuario_actual_id:
+        if usuario_actual.role != 'admin' and int(id_usuario) != int(usuario_actual_id):
             return jsonify({"message": "No tienes permisos para editar este usuario"}), 403
 
         nombre_usuario = datos_actualizacion.get("name")

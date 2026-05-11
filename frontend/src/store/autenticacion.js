@@ -17,5 +17,11 @@ export const estadoAutenticacion = reactive({
         this.usuario = null;
         localStorage.removeItem("datos_usuario");
         localStorage.removeItem("token");
+    },
+
+    // Actualizar datos del usuario en memoria + localStorage
+    actualizarUsuario(datosNuevos) {
+        this.usuario = { ...this.usuario, ...datosNuevos };
+        localStorage.setItem("datos_usuario", JSON.stringify(this.usuario));
     }
 });
