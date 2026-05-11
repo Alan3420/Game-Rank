@@ -16,9 +16,8 @@
 }
 
 /* ─────────────────────────────────────────
-   ESTADOS: LOADER / ERROR
+   ESTADO ERROR
 ───────────────────────────────────────── */
-.detail-loader,
 .detail-error {
     min-height: 70vh;
     display: flex;
@@ -28,11 +27,6 @@
     gap: 1.25rem;
     color: #9090aa;
     font-size: 0.95rem;
-}
-
-.loader-spinner i {
-    font-size: 2.2rem;
-    color: #7c6fff;
 }
 
 .detail-error i {

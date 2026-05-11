@@ -37,9 +37,7 @@
         <p>Clasificados por calificación de usuarios</p>
       </div>
 
-      <div v-if="isLoading" class="loading-container">
-        <span>Cargando juegos destacados...</span>
-      </div>
+      <Loader v-if="isLoading" message="Cargando juegos destacados..." />
 
       <div v-else-if="topGames.length > 0" class="games-layout">
         <!-- Juego principal (más grande) -->
@@ -111,7 +109,9 @@
         <p>Juegos que llegarán pronto</p>
     </div>
 
-    <div v-if="futureReleases.length > 0" class="proximos-grid">
+    <Loader v-if="isFutureLoading" message="Cargando próximos lanzamientos..." />
+
+    <div v-else-if="futureReleases.length > 0" class="proximos-grid">
         <GameCard
             v-for="game in futureReleases"
             :key="game.id"
@@ -147,10 +147,11 @@
 import jsHome from "./script_home.js";
 import { estadoAutenticacion } from "../../store/autenticacion.js";
 import GameCard from "../Cards/GameCard.vue";
+import Loader from "../Loader/Loader.vue";
 
 export default {
   name: 'GameDetail',
-  components: { GameCard },
+  components: { GameCard, Loader },
   mixins: [jsHome]
 };
 </script>

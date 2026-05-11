@@ -2,12 +2,7 @@
     <div class="game-detail-page">
 
         <!-- Loader -->
-        <div v-if="loading" class="detail-loader">
-            <div class="loader-spinner">
-                <i class="pi pi-spin pi-spinner"></i>
-            </div>
-            <span>Cargando detalles del juego...</span>
-        </div>
+        <Loader v-if="loading" message="Cargando detalles del juego..." full-height />
 
         <!-- Error -->
         <div v-else-if="!game" class="detail-error">
@@ -322,9 +317,10 @@
 <script>
 import jsDetalles from "./script_GameDetail.js";
 import Button from 'primevue/button';
+import Loader from '../Loader/Loader.vue';
 export default {
     name: 'GameDetail',
-    components: { Button },
+    components: { Button, Loader },
     mixins: [jsDetalles]
 };
 </script>

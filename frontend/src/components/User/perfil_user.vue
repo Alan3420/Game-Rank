@@ -91,7 +91,9 @@
             </div>
           </div>
 
-          <div v-if="favoritos.length === 0" class="fav-empty">
+          <Loader v-if="favoritosLoading" message="Cargando tus favoritos..." />
+
+          <div v-else-if="favoritos.length === 0" class="fav-empty">
             <div class="fav-empty-icon">
               <i class="pi pi-star"></i>
             </div>
@@ -314,10 +316,11 @@
 <script>
 import jsPerfil from "./script_perfil.js";
 import GameCard from "../Cards/GameCard.vue";
+import Loader from "../Loader/Loader.vue";
 
 export default {
   name: 'perfil',
-  components: { GameCard },
+  components: { GameCard, Loader },
   mixins: [jsPerfil]
 };
 </script>

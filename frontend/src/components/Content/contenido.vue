@@ -32,13 +32,11 @@
       />
     </div>
 
-    <div v-if="showLoadMoreButton && !game_name" class="load-more-container">
-      <Button label="Cargar más juegos" @click="loadMore" :loading="loading" class="load-more-btn" />
+    <div v-if="showLoadMoreButton && !game_name && !loading" class="load-more-container">
+      <Button label="Cargar más juegos" @click="loadMore" class="load-more-btn" />
     </div>
 
-    <div v-if="loading" class="loader">
-      <span>{{ game_name ? 'Buscando juegos...' : 'Cargando más juegos...' }}</span>
-    </div>
+    <Loader v-if="loading" size="small" :message="game_name ? 'Buscando juegos...' : 'Cargando más juegos...'" />
   </div>
 </template>
 
@@ -46,10 +44,11 @@
 import contenido from "./script_contenido.js";
 import Button from "primevue/button"
 import GameCard from "../Cards/GameCard.vue"
+import Loader from "../Loader/Loader.vue"
 
 export default {
     name: 'contenido',
-    components: { Button, GameCard },
+    components: { Button, GameCard, Loader },
     ...contenido
 };
 </script>

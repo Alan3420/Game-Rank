@@ -11,6 +11,7 @@ export default {
     return {
       estadoAutenticacion,
       favoritos: [],
+      favoritosLoading: true,
       remover: null,
       mostrarModalEditar: false,
       mostrarModalCambiarContraseña: false,
@@ -46,11 +47,14 @@ export default {
       this.mostrarModalEditar = false;
     },
     async cargarFavoritos() {
+      this.favoritosLoading = true;
       try {
         const data = await list_favorites();
         this.favoritos = data.favorites;
       } catch (error) {
         console.error(error.listfavoritos.message);
+      } finally {
+        this.favoritosLoading = false;
       }
     },
     async quitarFavorito(idGame) {

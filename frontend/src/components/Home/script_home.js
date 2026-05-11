@@ -13,7 +13,8 @@ export default {
       futureReleases: [],
       favorites: new Set(),
       carouselTrack: null,
-      isLoading: false,
+      isLoading: true,
+      isFutureLoading: true,
       heroVideo: null
     };
   },
@@ -78,6 +79,8 @@ export default {
         }
       } catch (error) {
         console.error('Error loading future releases:', error);
+      } finally {
+        this.isFutureLoading = false;
       }
     },
 
