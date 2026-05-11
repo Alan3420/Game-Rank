@@ -106,7 +106,7 @@ def get_random_game_video() -> dict | None:
     try:
         import random
 
-        orderings = ["-added", "-rating", "-metacritic"]
+        orderings = ["-added", "-rating", "-metacritic", "-released", "-relevance"]
 
         for ordering in orderings:
             games = get_games_by_ordering(ordering=ordering, per_page=40)
@@ -116,13 +116,24 @@ def get_random_game_video() -> dict | None:
 
             random.shuffle(games)
 
-            for game in games[:15]:
-                videos = get_game_movies(game_id=game["id"])
+            for game in games:
+                try:
+                    game_id = game.get("id")
+                    if not game_id:
+                        continue
 
-                if videos:
-                    video_url = videos[0].get("data", {}).get("max")
-                    if video_url:
-                        return {"video_url": video_url}
+                    videos = get_game_movies(game_id=game_id)
+
+                    if not videos:
+                        continue
+
+                    for v in videos:
+                        data = v.get("data") or {}
+                        video_url = data.get("max") or data.get("480")
+                        if video_url:
+                            return {"video_url": video_url}
+                except Exception:
+                    continue
 
         return None
     except Exception as e:

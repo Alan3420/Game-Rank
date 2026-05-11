@@ -7,13 +7,8 @@
 
       <div v-if="estadoAutenticacion.usuario" class="header-search">
         <i class="pi pi-search header-search-icon"></i>
-        <input
-          type="text"
-          v-model="headerSearch"
-          placeholder="Buscar un juego..."
-          class="header-search-input"
-          @keyup.enter="submitHeaderSearch"
-        />
+        <input type="text" v-model="headerSearch" placeholder="Buscar un juego..." class="header-search-input"
+          @keyup.enter="submitHeaderSearch" />
       </div>
 
       <nav class="nav-menu">
@@ -31,10 +26,12 @@
               <div v-if="menuAbierto" class="user-dropdown">
                 <div class="dropdown-header">
                   <div class="dropdown-avatar">
-                    {{ estadoAutenticacion.usuario.name?.charAt(0)?.toUpperCase() }}{{ estadoAutenticacion.usuario.last_name?.charAt(0)?.toUpperCase() }}
+                    {{ estadoAutenticacion.usuario.name?.charAt(0)?.toUpperCase() }}{{
+                      estadoAutenticacion.usuario.last_name?.charAt(0)?.toUpperCase() }}
                   </div>
                   <div class="dropdown-user-info">
-                    <span class="dropdown-name">{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</span>
+                    <span class="dropdown-name">{{ estadoAutenticacion.usuario.name }} {{
+                      estadoAutenticacion.usuario.last_name }}</span>
                     <span class="dropdown-email">{{ estadoAutenticacion.usuario.email }}</span>
                   </div>
                 </div>
@@ -79,6 +76,20 @@
 
                 <div class="dropdown-divider"></div>
 
+                <p class="dropdown-section-label">OPCIONES</p>
+
+                <button class="dropdown-item dropdown-danger" @click="abrirConfirmEliminar">
+                  <div class="dropdown-item-icon dropdown-danger-icon">
+                    <i class="pi pi-trash"></i>
+                  </div>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-item-title">Eliminar cuenta</span>
+                    <span class="dropdown-item-desc">Borrar permanentemente tu cuenta</span>
+                  </div>
+                </button>
+
+                <div class="dropdown-divider"></div>
+
                 <button class="dropdown-item dropdown-logout" @click="manejarCierreSesion">
                   <div class="dropdown-item-icon dropdown-logout-icon">
                     <i class="pi pi-sign-out"></i>
@@ -110,6 +121,37 @@
 
   <NotificationToast />
 
+  <Transition name="modal-fade">
+    <div v-if="confirmEliminarAbierto" class="confirm-overlay" @click.self="cerrarConfirmEliminar">
+      <div class="confirm-modal">
+        <div class="confirm-icon-wrap">
+          <i class="pi pi-exclamation-triangle"></i>
+        </div>
+        <h2>¿Eliminar tu cuenta?</h2>
+        <p>Esta acción es <strong>permanente</strong>. Se borrarán todos tus comentarios, valoraciones y favoritos. No
+          podrás recuperar tu cuenta.</p>
+
+        <div class="confirm-input-group">
+          <label>Escribe <strong>ELIMINAR</strong> para confirmar:</label>
+          <input type="text" v-model="confirmTexto" class="confirm-input" placeholder="ELIMINAR"
+            :disabled="eliminandoCuenta" />
+        </div>
+
+        <div class="confirm-actions">
+          <button class="confirm-btn confirm-btn-cancel" @click="cerrarConfirmEliminar" :disabled="eliminandoCuenta">
+            Cancelar
+          </button>
+          <button class="confirm-btn confirm-btn-delete" @click="confirmarEliminarCuenta"
+            :disabled="confirmTexto !== 'ELIMINAR' || eliminandoCuenta">
+            <i v-if="eliminandoCuenta" class="pi pi-spin pi-spinner"></i>
+            <i v-else class="pi pi-trash"></i>
+            {{ eliminandoCuenta ? 'Eliminando...' : 'Eliminar cuenta' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </Transition>
+
   <footer class="main-footer">
     <div class="footer-container">
       <div class="footer-brand">
@@ -140,6 +182,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { ref, watch, onMounted, onUnmounted, computed } from "vue";
 import NotificationToast from './components/Notifications/NotificationToast.vue';
 import { notificaciones } from './store/notificaciones';
+import { deleteOwnAccount } from './services/user_service';
 
 const router = useRouter();
 const route = useRoute();
@@ -147,6 +190,10 @@ const route = useRoute();
 const headerSearch = ref('');
 const menuAbierto = ref(false);
 const userMenuRef = ref(null);
+
+const confirmEliminarAbierto = ref(false);
+const confirmTexto = ref('');
+const eliminandoCuenta = ref(false);
 
 const isAdmin = computed(() => estadoAutenticacion.usuario?.role === 'admin');
 
@@ -175,6 +222,44 @@ const irAConfigAdmin = () => {
   notificaciones.info("Panel de configuración en desarrollo.", { title: "Próximamente" });
 };
 
+const abrirConfirmEliminar = () => {
+  menuAbierto.value = false;
+  confirmTexto.value = '';
+  confirmEliminarAbierto.value = true;
+};
+
+const cerrarConfirmEliminar = () => {
+  if (eliminandoCuenta.value) return;
+  confirmEliminarAbierto.value = false;
+  confirmTexto.value = '';
+};
+
+const confirmarEliminarCuenta = async () => {
+
+  if (confirmTexto.value !== 'ELIMINAR' || eliminandoCuenta.value) return;
+  eliminandoCuenta.value = true;
+
+  try {
+
+    await deleteOwnAccount();
+    confirmEliminarAbierto.value = false;
+    estadoAutenticacion.cerrarSesion();
+    router.push("/login");
+    notificaciones.success("Tu cuenta ha sido eliminada permanentemente.", { title: "Cuenta eliminada" });
+
+  } catch (error) {
+
+    console.error('Error al eliminar la cuenta:', error);
+    notificaciones.error(
+      error.response?.data?.message || "No pudimos eliminar tu cuenta. Inténtalo de nuevo.",
+      { title: "Error" }
+    );
+    
+  } finally {
+    eliminandoCuenta.value = false;
+  }
+};
+
 const handleClickOutside = (e) => {
   if (userMenuRef.value && !userMenuRef.value.contains(e.target)) {
     menuAbierto.value = false;
@@ -191,7 +276,7 @@ onMounted(() => {
       const { type, title, message } = JSON.parse(flash);
       const fn = type === 'success' ? notificaciones.success : notificaciones.error;
       fn(message, { title });
-    } catch {}
+    } catch { }
   }
 });
 onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside));
@@ -449,6 +534,184 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 .dropdown-logout-icon {
   background: #fff0f0;
   color: #d33939;
+}
+
+.dropdown-danger-icon {
+  background: #fff0f0;
+  color: #d33939;
+}
+
+.dropdown-danger .dropdown-item-title {
+  color: #d33939;
+}
+
+/* ── MODAL CONFIRMACIÓN ── */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 30, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.confirm-modal {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+  border: 1px solid #edeef8;
+}
+
+.confirm-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #fff0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+
+.confirm-icon-wrap i {
+  font-size: 1.8rem;
+  color: #d33939;
+}
+
+.confirm-modal h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1f1f35;
+  margin: 0 0 0.75rem;
+}
+
+.confirm-modal p {
+  font-size: 0.92rem;
+  color: #6b7280;
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+
+.confirm-modal p strong {
+  color: #d33939;
+  font-weight: 700;
+}
+
+.confirm-input-group {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-input-group label {
+  display: block;
+  font-size: 0.82rem;
+  color: #4c4c66;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.confirm-input-group label strong {
+  color: #1f1f35;
+  font-weight: 700;
+}
+
+.confirm-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.92rem;
+  color: #1f1f35;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.confirm-input:focus {
+  border-color: #d33939;
+  box-shadow: 0 0 0 3px rgba(211, 57, 57, 0.1);
+}
+
+.confirm-input:disabled {
+  background: #f5f5fc;
+  cursor: not-allowed;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: stretch;
+}
+
+.confirm-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirm-btn-cancel {
+  background: white;
+  border-color: #e5e7eb;
+  color: #4c4c66;
+}
+
+.confirm-btn-cancel:hover:not(:disabled) {
+  background: #f8f8fe;
+  border-color: #d1d5db;
+}
+
+.confirm-btn-delete {
+  background: #d33939;
+  color: white;
+  box-shadow: 0 4px 14px rgba(211, 57, 57, 0.25);
+}
+
+.confirm-btn-delete:hover:not(:disabled) {
+  background: #b32d2d;
+  box-shadow: 0 8px 22px rgba(211, 57, 57, 0.35);
+  transform: translateY(-1px);
+}
+
+.confirm-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.modal-fade-enter-active .confirm-modal,
+.modal-fade-leave-active .confirm-modal {
+  transition: transform 0.2s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+.modal-fade-enter-from .confirm-modal,
+.modal-fade-leave-to .confirm-modal {
+  transform: scale(0.95);
 }
 
 .dropdown-item-text {

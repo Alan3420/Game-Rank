@@ -99,6 +99,22 @@ def change_role():
     except Exception as error:
         return jsonify({"message": "Error al actualizar el rol del usuario", "error": str(error)}), 500
 
+@user_option_bp.route("/account", methods=["DELETE"])
+@jwt_required()
+def delete_own_account():
+    try:
+        usuario_actual_id = get_jwt_identity()
+
+        resultado = user_service.user_delete(user_id=usuario_actual_id)
+
+        if type(resultado) != str:
+            return jsonify({"message": "Cuenta eliminada exitosamente"}), 200
+        else:
+            return jsonify({"message": resultado}), 404
+    except Exception as error:
+        return jsonify({"message": "Error al eliminar la cuenta", "error": str(error)}), 500
+
+
 @user_option_bp.route("/change-password", methods=["PUT"])
 @jwt_required()
 def change_password():

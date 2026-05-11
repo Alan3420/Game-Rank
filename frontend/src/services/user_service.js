@@ -47,3 +47,8 @@ export async function deleteUser(id_user) {
     });
     return response.data;
 }
+
+export async function deleteOwnAccount() {
+    const response = await api.delete("/settings/account");
+    return response.data;
+}

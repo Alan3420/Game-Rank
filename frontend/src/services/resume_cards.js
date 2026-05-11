@@ -23,6 +23,9 @@ export async function getHeroVideo() {
         const response = await api.get('/content/hero-video');
         return response.data;
     } catch (error) {
+        if (error.response?.status === 404) {
+            return null;
+        }
         console.error('Error obteniendo video del hero:', error);
         throw error;
     }

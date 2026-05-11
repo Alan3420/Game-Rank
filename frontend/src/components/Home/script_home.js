@@ -33,9 +33,10 @@ export default {
     async loadHeroVideo() {
       try {
         const video = await getHeroVideo();
-        this.heroVideo = video;
+        this.heroVideo = video || null;
       } catch (error) {
         console.error('Error al cargar video del hero:', error);
+        this.heroVideo = null;
       }
     },
 
