@@ -3,7 +3,7 @@
 }
 .register-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fb 0%, #f3f4fa 100%);
+  background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,7 +11,7 @@
 }
 
 .register-container {
-  background: white;
+  background: var(--color-surface);
   border-radius: 24px;
   padding: 3rem;
   box-shadow: 0 20px 60px rgba(20, 21, 63, 0.08);
@@ -28,7 +28,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
 }
 
 .register-header {
@@ -40,13 +40,13 @@
   margin: 0 0 0.5rem 0;
   font-size: 2rem;
   font-weight: 900;
-  color: #1f1f35;
+  color: var(--color-text);
   letter-spacing: -0.02em;
 }
 
 .register-subtitle {
   margin: 0;
-  color: #6b7280;
+  color: var(--color-text-medium);
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -71,7 +71,7 @@
 
 .form-label {
   font-weight: 600;
-  color: #374151;
+  color: var(--color-text-secondary);
   font-size: 0.9rem;
   display: flex;
   justify-content: space-between;
@@ -80,7 +80,7 @@
 
 .char-count {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
   font-weight: 400;
 }
 
@@ -93,7 +93,7 @@
 
 .form-input {
   padding: 0.875rem 1rem;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--color-border);
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
@@ -102,13 +102,13 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #6366f1;
-  background: white;
+  border-color: var(--color-primary);
+  background: var(--color-surface);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .form-input::placeholder {
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
 }
 
 .btn {
@@ -134,8 +134,8 @@
 }
 
 .btn-primary {
-  background: #6366f1;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-on-dark);
   box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
@@ -193,19 +193,19 @@
 
 .register-footer p {
   margin: 0;
-  color: #6b7280;
+  color: var(--color-text-medium);
   font-size: 0.9rem;
 }
 
 .link {
-  color: #6366f1;
+  color: var(--color-primary);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .link:hover {
-  color: #4f46e5;
+  color: var(--color-primary-hover);
   text-decoration: underline;
 }
 

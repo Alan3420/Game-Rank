@@ -5,8 +5,8 @@
 
 .home-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fb 0%, #f3f4fa 100%);
-  color: #1f1f35;
+  background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
+  color: var(--color-text);
 }
 
 /* Hero Section */
@@ -113,8 +113,8 @@
 }
 
 .btn-primary {
-  background: #6366f1;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-on-dark);
   box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
@@ -136,8 +136,8 @@
 }
 
 .btn-accent {
-  background: white;
-  color: #6366f1;
+  background: var(--color-surface);
+  color: var(--color-primary);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
@@ -178,7 +178,7 @@
   margin: 0 0 8px;
   font-size: 2.5rem;
   font-weight: 900;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 .section-header p {
@@ -204,7 +204,7 @@
 }
 
 .game-card {
-  background: white;
+  background: var(--color-surface);
   border-radius: 20px;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -295,11 +295,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: white;
+  background: var(--color-surface);
   padding: 12px 16px;
   border-radius: 12px;
   font-weight: 800;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 .rating-display i {
@@ -310,11 +310,11 @@
 .rating-badge {
   display: inline-flex;
   align-items: center;
-  background: white;
+  background: var(--color-surface);
   padding: 8px 12px;
   border-radius: 10px;
   font-weight: 700;
-  color: #1f1f35;
+  color: var(--color-text);
   font-size: 0.95rem;
 }
 
@@ -334,7 +334,7 @@
   margin: 0;
   font-size: 1.8rem;
   font-weight: 800;
-  color: #1f1f35;
+  color: var(--color-text);
   line-height: 1.2;
 }
 
@@ -342,7 +342,7 @@
   margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 .game-year,
@@ -383,11 +383,11 @@
 
 /* CARD */
 .juego-card {
-  background: white;
+  background: var(--color-surface);
   border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid #edeef8;
+  border: 1px solid var(--color-border-light);
   display: flex;
   flex-direction: column;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
@@ -458,7 +458,7 @@
 .juego-titulo {
   font-size: 0.95rem;
   font-weight: 700;
-  color: #1f1f35;
+  color: var(--color-text);
   margin: 0 0 0.5rem 0;
   line-height: 1.35;
   display: -webkit-box;
@@ -471,7 +471,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.78rem;
-  color: #9090aa;
+  color: var(--color-text-light);
   font-weight: 500;
 }
 
@@ -486,10 +486,10 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1.25rem;
-  border-top: 1px solid #f0f0f8;
+  border-top: 1px solid var(--color-border-lightest);
   font-size: 0.82rem;
   font-weight: 600;
-  color: #7c6fff;
+  color: var(--color-secondary);
   transition: color 0.2s ease;
 }
 
@@ -503,14 +503,14 @@
 }
 
 .juego-card:hover .juego-footer {
-  color: #5a4de0;
+  color: var(--color-secondary-hover);
 }
 
 /* ESTADO VACÍO */
 .estado-vacio {
   padding: 5rem 1rem;
   text-align: center;
-  color: #9090aa;
+  color: var(--color-text-light);
   font-size: 0.92rem;
 }
 
@@ -536,10 +536,10 @@
 
 /* CTA Section */
 .cta-section {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
   padding: 80px 40px;
   text-align: center;
-  color: white;
+  color: var(--color-text-on-dark);
 }
 
 .cta-content {

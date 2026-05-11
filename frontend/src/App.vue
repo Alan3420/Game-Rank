@@ -289,7 +289,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .main-header {
-  background: #ffffffe5;
+  background: var(--color-surface-translucent);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   position: sticky;
   top: 0;
@@ -313,7 +313,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  color: #1f1f35;
+  color: var(--color-text);
   font-weight: 800;
   font-size: 1.25rem;
   transition: opacity 0.2s ease;
@@ -333,21 +333,21 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #f3f4fa;
-  border: 1px solid #e5e7eb;
+  background: var(--color-bg-gradient-end);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 0 14px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .header-search:focus-within {
-  border-color: #6366f1;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  background: #fff;
+  background: var(--color-surface);
 }
 
 .header-search-icon {
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
   font-size: 0.85rem;
   flex-shrink: 0;
 }
@@ -359,12 +359,12 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   outline: none;
   font-family: 'Sora', sans-serif;
   font-size: 0.9rem;
-  color: #1f1f35;
+  color: var(--color-text);
   padding: 10px 0;
 }
 
 .header-search-input::placeholder {
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
 }
 
 .nav-menu {
@@ -386,19 +386,19 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   gap: 8px;
   padding: 6px 12px 6px 6px;
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   border-radius: 999px;
   cursor: pointer;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   font-family: 'Sora', sans-serif;
   font-size: 0.88rem;
   font-weight: 600;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 .options-user:hover,
 .options-user.is-active {
-  border-color: #6366f1;
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
@@ -406,9 +406,9 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  color: #1f1f35;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   font-size: 0.8rem;
   font-weight: 700;
   display: flex;
@@ -420,7 +420,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 .options-user .pi-chevron-up,
 .options-user .pi-chevron-down {
   font-size: 0.7rem;
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
 }
 
 /* ── DROPDOWN ── */
@@ -430,7 +430,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   right: 0;
   width: 280px;
   background: white;
-  border: 1px solid #edeef8;
+  border: 1px solid var(--color-border-light);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(20, 21, 63, 0.12), 0 2px 8px rgba(20, 21, 63, 0.06);
   overflow: hidden;
@@ -448,7 +448,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #6366f1;
+  background: var(--color-primary);
   color: white;
   font-size: 0.95rem;
   font-weight: 700;
@@ -469,7 +469,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 .dropdown-name {
   font-weight: 700;
   font-size: 0.9rem;
-  color: #1f1f35;
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -477,7 +477,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 .dropdown-email {
   font-size: 0.78rem;
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -485,7 +485,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 .dropdown-divider {
   height: 1px;
-  background: #f0f0f8;
+  background: var(--color-border-lightest);
   margin: 0;
 }
 
@@ -522,8 +522,8 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: #eef2ff;
-  color: #6366f1;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -532,17 +532,17 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .dropdown-logout-icon {
-  background: #fff0f0;
-  color: #d33939;
+  background: var(--color-danger-light);
+  color: var(--color-danger);
 }
 
 .dropdown-danger-icon {
-  background: #fff0f0;
-  color: #d33939;
+  background: var(--color-danger-light);
+  color: var(--color-danger);
 }
 
 .dropdown-danger .dropdown-item-title {
-  color: #d33939;
+  color: var(--color-danger);
 }
 
 /* ── MODAL CONFIRMACIÓN ── */
@@ -566,14 +566,14 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   width: 100%;
   text-align: center;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
-  border: 1px solid #edeef8;
+  border: 1px solid var(--color-border-light);
 }
 
 .confirm-icon-wrap {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: #fff0f0;
+  background: var(--color-danger-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -582,25 +582,25 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 .confirm-icon-wrap i {
   font-size: 1.8rem;
-  color: #d33939;
+  color: var(--color-danger);
 }
 
 .confirm-modal h2 {
   font-size: 1.35rem;
   font-weight: 800;
-  color: #1f1f35;
+  color: var(--color-text);
   margin: 0 0 0.75rem;
 }
 
 .confirm-modal p {
   font-size: 0.92rem;
-  color: #6b7280;
+  color: var(--color-text-medium);
   margin: 0 0 1.5rem;
   line-height: 1.5;
 }
 
 .confirm-modal p strong {
-  color: #d33939;
+  color: var(--color-danger);
   font-weight: 700;
 }
 
@@ -612,35 +612,35 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 .confirm-input-group label {
   display: block;
   font-size: 0.82rem;
-  color: #4c4c66;
+  color: var(--color-text-secondary);
   margin-bottom: 6px;
   font-weight: 500;
 }
 
 .confirm-input-group label strong {
-  color: #1f1f35;
+  color: var(--color-text);
   font-weight: 700;
 }
 
 .confirm-input {
   width: 100%;
   padding: 10px 14px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
   border-radius: 10px;
   font-family: 'Sora', sans-serif;
   font-size: 0.92rem;
-  color: #1f1f35;
+  color: var(--color-text);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .confirm-input:focus {
-  border-color: #d33939;
+  border-color: var(--color-danger);
   box-shadow: 0 0 0 3px rgba(211, 57, 57, 0.1);
 }
 
 .confirm-input:disabled {
-  background: #f5f5fc;
+  background: var(--color-surface-hover);
   cursor: not-allowed;
 }
 
@@ -668,8 +668,8 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 .confirm-btn-cancel {
   background: white;
-  border-color: #e5e7eb;
-  color: #4c4c66;
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
 }
 
 .confirm-btn-cancel:hover:not(:disabled) {
@@ -678,13 +678,13 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .confirm-btn-delete {
-  background: #d33939;
+  background: var(--color-danger);
   color: white;
   box-shadow: 0 4px 14px rgba(211, 57, 57, 0.25);
 }
 
 .confirm-btn-delete:hover:not(:disabled) {
-  background: #b32d2d;
+  background: var(--color-danger-hover);
   box-shadow: 0 8px 22px rgba(211, 57, 57, 0.35);
   transform: translateY(-1px);
 }
@@ -723,16 +723,16 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 .dropdown-item-title {
   font-size: 0.88rem;
   font-weight: 600;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 .dropdown-logout .dropdown-item-title {
-  color: #d33939;
+  color: var(--color-danger);
 }
 
 .dropdown-item-desc {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
 }
 
 /* Animación dropdown */
@@ -760,7 +760,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  color: #6b7280;
+  color: var(--color-text-medium);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9rem;
@@ -773,14 +773,14 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .nav-link-primary {
-  background: #6366f1;
+  background: var(--color-primary);
   color: white;
-  border: 1px solid #6366f1;
+  border: 1px solid var(--color-primary);
 }
 
 .nav-link-primary:hover {
-  background: #4f46e5;
-  border-color: #4f46e5;
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
   transform: translateY(-1px);
 }
 
@@ -792,7 +792,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 /* Footer Styles */
 .main-footer {
-  background: #f8f9fb;
+  background: var(--color-bg-gradient-start);
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   margin-top: auto;
 }
@@ -811,12 +811,12 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   margin: 0 0 8px;
   font-size: 1.25rem;
   font-weight: 800;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 .footer-brand p {
   margin: 0;
-  color: #6b7280;
+  color: var(--color-text-medium);
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -830,7 +830,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #6b7280;
+  color: var(--color-text-medium);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9rem;
@@ -838,7 +838,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 }
 
 .footer-link:hover {
-  color: #6366f1;
+  color: var(--color-primary);
 }
 
 .footer-copyright {
@@ -847,7 +847,7 @@ onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside))
 
 .footer-copyright p {
   margin: 0;
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
   font-size: 0.85rem;
 }
 

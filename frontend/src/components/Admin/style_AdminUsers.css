@@ -4,14 +4,14 @@
 
 .admin-users-page {
   min-height: 100vh;
-  background: #f8f9fb;
+  background: var(--color-bg-gradient-start);
 }
 
 /* ── TOPBAR ── */
 .admin-topbar {
-  background: white;
+  background: var(--color-surface);
   padding: 24px 40px;
-  border-bottom: 1px solid #edeef8;
+  border-bottom: 1px solid var(--color-border-light);
   box-shadow: 0 2px 8px rgba(20, 21, 63, 0.05);
   position: sticky;
   top: 72px;
@@ -50,9 +50,9 @@
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
-  background: white;
-  border: 1px solid #e5e7eb;
-  color: #374151;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
@@ -61,9 +61,9 @@
 }
 
 .back-btn:hover {
-  background: #f5f5fc;
-  border-color: #6366f1;
-  color: #6366f1;
+  background: var(--color-surface-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .topbar-title {
@@ -75,10 +75,10 @@
 
 .topbar-title i {
   font-size: 1.8rem;
-  color: #6366f1;
+  color: var(--color-primary);
   width: 44px;
   height: 44px;
-  background: #eef2ff;
+  background: var(--color-primary-light);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -88,7 +88,7 @@
 .topbar-title h1 {
   margin: 0;
   font-size: 1.8rem;
-  color: #1f1f35;
+  color: var(--color-text);
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -99,8 +99,8 @@
 }
 
 .stat-badge {
-  background: #eef2ff;
-  color: #6366f1;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -117,10 +117,10 @@
 
 /* ── USERS SECTION ── */
 .users-section {
-  background: white;
+  background: var(--color-surface);
   border-radius: 20px;
   padding: 32px;
-  border: 1px solid #edeef8;
+  border: 1px solid var(--color-border-light);
   box-shadow: 0 4px 20px rgba(20, 21, 63, 0.07);
 }
 
@@ -136,7 +136,7 @@
   margin: 0;
   font-size: 1.3rem;
   font-weight: 700;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 .filter-group {
@@ -147,22 +147,22 @@
 .search-input {
   width: 100%;
   padding: 12px 16px;
-  border: 1.5px solid #e5e7eb;
+  border: 1.5px solid var(--color-border);
   border-radius: 12px;
   font-size: 0.95rem;
-  background: #f8f9fc;
+  background: var(--color-surface-alt);
   transition: all 0.2s ease;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #6366f1;
-  background: white;
+  border-color: var(--color-primary);
+  background: var(--color-surface);
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
 }
 
 .search-input::placeholder {
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
 }
 
 /* ── USERS TABLE ── */
@@ -176,8 +176,8 @@
 }
 
 .users-table thead {
-  background: #f8f9fc;
-  border-bottom: 2px solid #edeef8;
+  background: var(--color-surface-alt);
+  border-bottom: 2px solid var(--color-border-light);
 }
 
 .users-table th {
@@ -185,7 +185,7 @@
   text-align: left;
   font-weight: 700;
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--color-text-medium);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -201,7 +201,7 @@
 
 .users-table td {
   padding: 16px;
-  color: #1f1f35;
+  color: var(--color-text);
   font-size: 0.95rem;
 }
 
@@ -215,8 +215,8 @@
 .user-avatar {
   width: 40px;
   height: 40px;
-  background: #eef2ff;
-  color: #6366f1;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -234,11 +234,11 @@
 
 .user-fullname {
   font-weight: 600;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 .user-email {
-  color: #6b7280;
+  color: var(--color-text-medium);
   font-size: 0.9rem;
 }
 
@@ -251,7 +251,7 @@
   align-items: center;
   gap: 6px;
   background: #f3f4f6;
-  color: #374151;
+  color: var(--color-text-secondary);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 0.85rem;
@@ -259,12 +259,12 @@
 }
 
 .role-badge.role-admin {
-  background: #eef2ff;
-  color: #6366f1;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
 }
 
 .user-date {
-  color: #9ca3af;
+  color: var(--color-text-placeholder);
   font-size: 0.9rem;
 }
 
@@ -290,13 +290,13 @@
 }
 
 .promote-btn {
-  background: #eef2ff;
-  color: #6366f1;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
 }
 
 .promote-btn:hover {
-  background: #6366f1;
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-on-dark);
 }
 
 .demote-btn {
@@ -306,7 +306,7 @@
 
 .demote-btn:hover {
   background: #d97706;
-  color: white;
+  color: var(--color-text-on-dark);
 }
 
 .delete-btn {
@@ -316,7 +316,7 @@
 
 .delete-btn:hover {
   background: #dc2626;
-  color: white;
+  color: var(--color-text-on-dark);
 }
 
 /* ── EMPTY STATE ── */
@@ -332,7 +332,7 @@
 .empty-icon {
   width: 64px;
   height: 64px;
-  background: #f5f5fc;
+  background: var(--color-surface-hover);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -345,7 +345,7 @@
   margin: 0;
   font-weight: 600;
   font-size: 1rem;
-  color: #1f1f35;
+  color: var(--color-text);
 }
 
 /* ── RESPONSIVE ── */

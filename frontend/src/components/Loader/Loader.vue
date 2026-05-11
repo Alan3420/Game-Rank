@@ -69,7 +69,7 @@ export default {
 
 .loader-dot {
   display: inline-block;
-  background: #6366f1;
+  background: var(--color-primary);
   border-radius: 50%;
   animation: loader-bounce 1.4s infinite ease-in-out both;
 }
@@ -113,7 +113,7 @@ export default {
 }
 
 .loader-message {
-  color: #6b7280;
+  color: var(--color-text-medium);
   font-size: 0.92rem;
   font-weight: 500;
   text-align: center;
