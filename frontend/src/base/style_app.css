@@ -232,7 +232,7 @@
   padding: 10px 16px 6px;
   font-size: 0.68rem;
   font-weight: 700;
-  color: #b0b0c8;
+  color: var(--color-text-placeholder);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -681,4 +681,52 @@
     flex-direction: column;
     gap: 12px;
   }
+}
+
+/* ── DARK MODE ── */
+[data-theme="dark"] .dropdown-item-title {
+  color: white;
+}
+
+[data-theme="dark"] .dropdown-item-desc {
+  color: var(--color-text-light);
+}
+
+[data-theme="dark"] .dropdown-item {
+  border: 1px solid transparent;
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+  border-color: var(--color-border-light);
+}
+
+[data-theme="dark"] .confirm-btn-cancel {
+  background: var(--color-surface);
+  border-color: var(--color-border-light);
+  color: white;
+}
+
+[data-theme="dark"] .confirm-btn-cancel:hover:not(:disabled) {
+  background: var(--color-surface);
+  border-color: var(--color-border-light);
+  color: white;
+}
+
+[data-theme="dark"] .confirm-input {
+  background: var(--color-surface-alt);
+  color: white;
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .confirm-input:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(204, 53, 53, 0.15);
+}
+
+[data-theme="dark"] .confirm-input::placeholder {
+  color: var(--color-text-light);
+}
+
+[data-theme="dark"] .confirm-input-group label {
+  color: var(--color-text);
 }
