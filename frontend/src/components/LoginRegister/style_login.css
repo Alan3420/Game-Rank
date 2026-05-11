@@ -92,6 +92,7 @@
   font-size: 1rem;
   transition: all 0.3s ease;
   background: #fafafa;
+  color: var(--color-text);
 }
 
 .form-input:focus {
@@ -103,6 +104,33 @@
 
 .form-input::placeholder {
   color: var(--color-text-placeholder);
+}
+
+[data-theme="dark"] .form-input {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .form-input:focus {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(107, 95, 224, 0.2);
+}
+
+[data-theme="dark"] .form-input:not(:placeholder-shown) {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+[data-theme="dark"] .form-input:-webkit-autofill,
+[data-theme="dark"] .form-input:-webkit-autofill:hover,
+[data-theme="dark"] .form-input:-webkit-autofill:focus,
+[data-theme="dark"] .form-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--color-surface-alt) inset !important;
+  -webkit-text-fill-color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
 }
 
 .btn {
@@ -128,14 +156,23 @@
 }
 
 .btn-primary {
-  background: var(--color-primary);
+  background: var(--color-dark-btn);
   color: var(--color-text-on-dark);
   box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
 .btn-primary:hover:not(:disabled) {
+  background: var(--color-dark-btn-hover);
   transform: translateY(-2px);
   box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+[data-theme="dark"] .btn-primary {
+  box-shadow: none;
+}
+
+[data-theme="dark"] .btn-primary:hover:not(:disabled) {
+  box-shadow: none;
 }
 
 .dots-loader {

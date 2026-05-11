@@ -31,7 +31,7 @@
 
 .detail-error i {
     font-size: 3rem;
-    color: #c8c8e8;
+    color: var(--color-text-light);
 }
 
 .detail-error h2 {
@@ -151,7 +151,7 @@
     border-radius: 999px;
     background: rgba(124, 111, 255, 0.75);
     backdrop-filter: blur(8px);
-    color: #f9f9ff;
+    color: var(--color-text-on-dark);
     font-weight: 600;
     font-size: 0.8rem;
     letter-spacing: 0.04em;
@@ -183,7 +183,7 @@
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    color: #f0f0ff;
+    color: var(--color-text-on-dark);
     font-size: 0.88rem;
     font-weight: 500;
 }
@@ -203,7 +203,7 @@
 }
 
 .stat-pill-community i {
-    color: #b3e5ff;
+    color: #6cb5ff;
 }
 
 /* ─────────────────────────────────────────
@@ -1112,7 +1112,7 @@
 ───────────────────────────────────────── */
 .back-btn {
     border-radius: 10px;
-    background: var(--color-text);
+    background: var(--color-dark-btn);
     color: white;
     padding: 0.6rem 1.25rem;
     font-size: 0.88rem;
@@ -1122,10 +1122,10 @@
 }
 
 .back-btn:hover {
-    background: var(--color-border-lightest);
-    color: #4b4f72;
-    border-color: var(--color-text);
-    box-shadow: 0 4px 12px rgba(31, 31, 53, 0.2);
+    background: var(--color-dark-btn-hover);
+    color: white;
+    border-color: var(--color-dark-btn);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 /* ─────────────────────────────────────────
    DARK MODE
@@ -1135,16 +1135,16 @@
 }
 
 [data-theme="dark"] .back-btn {
-  background: var(--color-surface-hover);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
+  background: var(--color-dark-btn);
+  color: white;
+  border: 1px solid var(--color-dark-btn);
 }
 
 [data-theme="dark"] .back-btn:hover {
-  background: var(--color-border);
-  color: var(--color-text);
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: var(--color-dark-btn-hover);
+  color: white;
+  border-color: var(--color-dark-btn-hover);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 [data-theme="dark"] .sc-strip-wrap {

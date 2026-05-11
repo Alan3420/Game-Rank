@@ -113,14 +113,23 @@
 }
 
 .btn-primary {
-  background: var(--color-primary);
+  background: var(--color-dark-btn);
   color: var(--color-text-on-dark);
   box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
 .btn-primary:hover {
+  background: var(--color-dark-btn-hover);
   transform: translateY(-2px);
   box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+}
+
+[data-theme="dark"] .btn-primary {
+  box-shadow: none;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+  box-shadow: none;
 }
 
 .btn-secondary {
@@ -137,11 +146,13 @@
 
 .btn-accent {
   background: var(--color-surface);
-  color: var(--color-primary);
+  color: var(--color-dark-btn);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .btn-accent:hover {
+  background: var(--color-surface);
+  color: var(--color-dark-btn-hover);
   transform: translateY(-2px);
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
 }
@@ -540,6 +551,18 @@
   padding: 80px 40px;
   text-align: center;
   color: var(--color-text-on-dark);
+}
+
+[data-theme="dark"] .cta-section {
+  background: var(--color-dark-btn);
+}
+
+[data-theme="dark"] .cta-section .btn-accent {
+  color: white;
+}
+
+[data-theme="dark"] .cta-section .btn-accent:hover {
+  color: white;
 }
 
 .cta-content {

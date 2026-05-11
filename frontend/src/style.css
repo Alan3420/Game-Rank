@@ -45,6 +45,10 @@
   /* === SCROLLBAR === */
   --color-scrollbar: #e1e4f0;
   --color-scrollbar-thumb: #c4c8d8;
+
+  /* === DARK BUTTON BG === */
+  --color-dark-btn: #6366f1;
+  --color-dark-btn-hover: #4f46e5;
 }
 
 [data-theme="dark"] {
@@ -94,6 +98,10 @@
   /* === SCROLLBAR === */
   --color-scrollbar: #2B3240;
   --color-scrollbar-thumb: #4A5568;
+
+  /* === DARK BUTTON BG === */
+  --color-dark-btn: #1a1f33;
+  --color-dark-btn-hover: #252d47;
 }
 
 * {

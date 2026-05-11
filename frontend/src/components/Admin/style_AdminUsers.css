@@ -50,9 +50,9 @@
   align-items: center;
   gap: 8px;
   padding: 10px 18px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
+  background: var(--color-dark-btn);
+  border: 1px solid var(--color-dark-btn);
+  color: white;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
@@ -61,9 +61,9 @@
 }
 
 .back-btn:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background: var(--color-dark-btn-hover);
+  border-color: var(--color-dark-btn-hover);
+  color: white;
 }
 
 .topbar-title {
@@ -389,6 +389,18 @@
 }
 
 /* ── DARK MODE ── */
+[data-theme="dark"] .back-btn {
+  background: var(--color-dark-btn);
+  border-color: var(--color-dark-btn);
+  color: white;
+}
+
+[data-theme="dark"] .back-btn:hover {
+  background: var(--color-dark-btn-hover);
+  border-color: var(--color-dark-btn-hover);
+  color: white;
+}
+
 [data-theme="dark"] .role-badge {
   background: var(--color-surface-hover);
   color: var(--color-text-secondary);
