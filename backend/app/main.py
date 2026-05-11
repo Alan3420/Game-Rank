@@ -80,6 +80,8 @@ origenes_permitidos = [
     "http://127.0.0.1:5173",
     "http://127.0.0.1:8080",
     "http://127.0.0.1:5000",
+    "http://192.168.1.202:5173",  # IP local Vite
+    "http://192.168.1.202:3000",  # IP local puerto alternativo
 ]
 
 CORS(app, origins=origenes_permitidos, allow_headers=["Content-Type", "Authorization"])
