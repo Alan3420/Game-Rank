@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request, current_app
-import threading
 from flask_jwt_extended import jwt_required
 from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered
 
@@ -17,12 +16,8 @@ def overview():
 
         games = get_video_games_pagination(page=page, per_page=per_page)
 
-        # Esta libreria va guardando en segundo plano lo que va lanzando la API sin interrupir el proceso, asi la la BD se va alimentando.
-        thread = threading.Thread(
-            target=save_games,
-            args=(games["games"], current_app._get_current_object())
-        )
-        thread.start()
+        save_games(games=games.get("games", []), app=current_app._get_current_object())
+        
 
         if name:
             games = [g for g in games if name.lower() in g["name"].lower()]
@@ -41,6 +36,8 @@ def search_by_name():
             return jsonify({"message": "Nombre requerido"}), 400
 
         games = get_video_game_by_name_details(game_name=name)
+        save_games(games=games, app=current_app._get_current_object())
+
         return jsonify(games), 200
     except Exception as e:
         return jsonify({"message": "Error al buscar el juego", "error": str(e)}), 500
@@ -64,6 +61,8 @@ def future_release():
         per_page = request.args.get('per_page', default=10, type=int)
 
         games = get_upcoming_launch_games(page=page, per_page=per_page)
+        save_games(games=games, app=current_app._get_current_object())
+
 
         return jsonify(games), 200
 
@@ -92,6 +91,8 @@ def filtered_games():
             dates=dates,
             search=search
         )
+        save_games(games=games.get("games", []), app=current_app._get_current_object())
+
         return jsonify(games), 200
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos filtrados", "error": str(e)}), 500

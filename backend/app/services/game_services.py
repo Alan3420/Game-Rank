@@ -2,6 +2,12 @@ from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
 from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering, get_games_filtered
 from app.services.adapter import game_format_details, game_format_resume
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
+
+
+
+pool_guardado_segundo_plano = ThreadPoolExecutor(
+    max_workers=5, thread_name_prefix="save_game")
 
 
 def get_video_game_details(game_id) -> dict:
@@ -34,7 +40,7 @@ def get_video_game_details(game_id) -> dict:
                               development_company=listaDevs_Company)
 
         resultado = game_format_details(game_details)
-        
+
         return resultado
     except Exception as e:
 
@@ -49,6 +55,7 @@ def get_video_game_by_name_details(game_name) -> list:
 
     return game_format_resume(name_game_details["results"])
 
+
 def get_upcoming_launch_games(page, per_page):
     try:
         init_date = None
@@ -60,12 +67,9 @@ def get_upcoming_launch_games(page, per_page):
         final_date = datetime(time.year, 12, 31).strftime("%Y-%m-%d")
 
         return game_format_resume(get_future_releases(init_date=init_date, final_date=final_date, page=page, per_page=per_page))
-    
+
     except Exception as e:
         raise Exception(f"Error:{str(e)}")
-
-    
-
 
 
 def get_video_games_pagination(page: int, per_page: int):
@@ -83,30 +87,29 @@ def get_video_games_pagination(page: int, per_page: int):
         raise Exception(f"Error: {str(e)}")
 
 
-def save_games(games: list, app):
+def _guardar_juego_si_no_existe(id_juego, app):
     with app.app_context():
         try:
-            listaJuegos = game_format_details(games)
+            if get_game_by_id_bd(id_juego):
+                return
+            get_video_game_details(game_id=id_juego)
+        except Exception as error:
+            print(f"Error al guardar el juego con id {id_juego}: {str(error)}")
 
-            if type(listaJuegos) == list:
 
-                for game_resum in listaJuegos:
-
-                    game_api = get_game_by_id_api(game_id=game_resum["id"])
-                    id_bd = get_game_by_id_bd(game_api["id"])
-
-                    if not id_bd:
-                        get_video_game_details(game_id=game_api["id"])
-
-        except Exception as e:
-            print(f"Error al guardar el juego {game_api['name']}: {str(e)}")
+def save_games(games: list[dict] | None, app):
+    if not games:
+        return
+    for juego in games:
+        pool_guardado_segundo_plano.submit(_guardar_juego_si_no_existe, juego["id"], app)
 
 
 def get_random_game_video() -> dict | None:
     try:
         import random
 
-        orderings = ["-added", "-rating", "-metacritic", "-released", "-relevance"]
+        orderings = ["-added", "-rating",
+                     "-metacritic", "-released", "-relevance"]
 
         for ordering in orderings:
             games = get_games_by_ordering(ordering=ordering, per_page=40)
