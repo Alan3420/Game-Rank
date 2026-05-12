@@ -38,6 +38,7 @@
   --color-favorite: #ff4d6d;
   --color-favorite-light: #fff0f3;
   --color-star: #ffd369;
+  --color-star-community: #6cb5ff;
   --color-rating: #ffb800;
   --color-rating-bg: #fff8e6;
   --color-rating-text: #b08800;
@@ -91,6 +92,7 @@
   --color-favorite: #C23A5C;
   --color-favorite-light: rgba(194, 58, 92, 0.12);
   --color-star: #C49530;
+  --color-star-community: #4a9fd4;
   --color-rating: #BF9030;
   --color-rating-bg: rgba(191, 144, 48, 0.10);
   --color-rating-text: #D4A840;

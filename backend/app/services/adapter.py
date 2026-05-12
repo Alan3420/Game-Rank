@@ -110,6 +110,22 @@ def game_format_resume(data) -> dict:
         
         return lista_game_dict
     
+def genre_format(data) -> list[dict]:
+    if not data:
+        return []
+
+    lista_genre_dict = []
+
+    for genre in data:
+        genre_dict = {
+            "id": genre.get("id"),
+            "name": genre.get("name"),
+        }
+        lista_genre_dict.append(genre_dict)
+
+    return lista_genre_dict
+
+
 def game_format_details(data) -> dict | list[dict]:
 
     if type(data) != list:
@@ -120,14 +136,15 @@ def game_format_details(data) -> dict | list[dict]:
             "description": data.get("description"),
             "imge_url": data.get("background_image"),
             "rating": data.get("rating"),
+            "genres":      genre_format(data=data.get("genres", [])),
             "screenshots": screenshots_format(data=data.get("short_screenshots", [])),
-            "movies": trailer_format(data=data.get("movies", [])),
+            "movies":      trailer_format(data=data.get("movies", [])),
             "platforms":   platform_format(data=data.get("platforms")),
-            "developers":   developer_format(data=data.get("developers")),
+            "developers":  developer_format(data=data.get("developers")),
         }
     else:
         lista_game_dict = []
-        
+
         for game in data:
             game_dict = {
                 "id": game.get("id"),
@@ -135,12 +152,13 @@ def game_format_details(data) -> dict | list[dict]:
                 "release_date": game.get("released"),
                 "description": game.get("description"),
                 "imge_url": game.get("background_image"),
-                "screenshots": screenshots_format(data=game.get("short_screenshots", [])),
-                "movies": trailer_format(data=game.get("movies", [])),
                 "rating": game.get("rating"),
-                "platforms":    platform_format(data=game.get("platforms")),
-                "developers":   developer_format(data=game.get("developers")),
+                "genres":      genre_format(data=game.get("genres", [])),
+                "screenshots": screenshots_format(data=game.get("short_screenshots", [])),
+                "movies":      trailer_format(data=game.get("movies", [])),
+                "platforms":   platform_format(data=game.get("platforms")),
+                "developers":  developer_format(data=game.get("developers")),
             }
             lista_game_dict.append(game_dict)
-        
+
         return lista_game_dict

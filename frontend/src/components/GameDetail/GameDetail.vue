@@ -28,31 +28,55 @@
             <section class="detail-hero">
                 <img v-if="game.imge_url" class="hero-image" :src="game.imge_url" :alt="game.name" />
                 <div class="hero-content">
-                    <span class="detail-category">
-                        <i class="pi pi-gamepad"></i>
-                        Videojuego
-                    </span>
+                    <div class="detail-categories">
+                        <span
+                            v-for="genre in game.genres"
+                            :key="genre.id"
+                            class="detail-category"
+                        >{{ genre.name }}</span>
+                    </div>
+
                     <h1>{{ game.name }}</h1>
+
                     <div class="detail-stats">
-                        <div class="stat-pill" title="Puntuación oficial RAWG">
-                            <i class="pi pi-star-fill"></i>
-                            <span>{{ game.rating ?? 'N/A' }}</span>
-                            <small class="stat-pill-tag">Oficial</small>
+                        <div class="stat-item" title="Puntuación oficial RAWG">
+                            <span class="stat-value">
+                                <i class="pi pi-star-fill"></i>
+                                {{ game.rating ?? 'N/A' }}
+                            </span>
+                            <span class="stat-label">RAWG</span>
                         </div>
-                        <div class="stat-pill stat-pill-community" title="Media de la comunidad de Game Rank">
-                            <i class="pi pi-star-fill"></i>
-                            <span>{{ communityAvg > 0 ? communityAvg : '0' }}</span>
-                            <small class="stat-pill-tag">Comunidad</small>
+
+                        <div class="stat-sep"></div>
+
+                        <div class="stat-item stat-item--community" title="Media de la comunidad de Game Rank">
+                            <span class="stat-value">
+                                <i class="pi pi-star-fill"></i>
+                                {{ communityAvg > 0 ? communityAvg : '—' }}
+                            </span>
+                            <span class="stat-label">Comunidad</span>
                         </div>
-                        <div class="stat-pill">
-                            <i class="pi pi-calendar"></i>
-                            <span>{{ formatDate(game.release_date) }}</span>
+
+                        <div class="stat-sep"></div>
+
+                        <div class="stat-item">
+                            <span class="stat-value">
+                                <i class="pi pi-calendar"></i>
+                                {{ formatDate(game.release_date) }}
+                            </span>
+                            <span class="stat-label">Lanzamiento</span>
                         </div>
-                        <div v-if="game.platforms?.length" class="stat-pill">
-                            <i class="pi pi-desktop"></i>
-                            <span>{{ game.platforms.length }} plataforma{{ game.platforms.length !== 1 ? 's' : ''
-                            }}</span>
-                        </div>
+
+                        <template v-if="game.platforms?.length">
+                            <div class="stat-sep"></div>
+                            <div class="stat-item">
+                                <span class="stat-value">
+                                    <i class="pi pi-desktop"></i>
+                                    {{ game.platforms.length }}
+                                </span>
+                                <span class="stat-label">{{ game.platforms.length !== 1 ? 'Plataformas' : 'Plataforma' }}</span>
+                            </div>
+                        </template>
                     </div>
                 </div>
                 <button
