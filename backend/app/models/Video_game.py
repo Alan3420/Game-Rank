@@ -12,6 +12,7 @@ class Video_game(db.Model):
     users_rl = relationship("User", secondary="rates", back_populates="video_games_rl", overlaps="rates_rl,video_games_rl")
     comments_rl = relationship("Comment", back_populates="video_game_rl")
     favorites_rl = relationship("Favorite", foreign_keys="[Favorite.id_game_api]", back_populates="video_games_rl")
+    tierlist_items_rl = relationship("TierListItem", back_populates="video_games_rl")
 
     def __init__(self, id_game_api, name=None, date_release=None,
                  platforms=None, development_company=None, **kwargs):
