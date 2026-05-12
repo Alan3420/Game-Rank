@@ -1,6 +1,4 @@
 import { estadoAutenticacion } from '../store/autenticacion';
-import { useRouter, useRoute } from 'vue-router';
-import { ref, watch, computed } from "vue";
 import { notificaciones } from '../store/notificaciones';
 import { deleteOwnAccount } from '../services/user_service';
 
@@ -40,17 +38,15 @@ export default {
 
 
     submitHeaderSearch() {
-      const router = useRouter();
       const term = this.headerSearch.trim();
-      router.push({ path: '/content/overview', query: term ? { q: term } : {} });
+      this.$router.push({ path: '/content/overview', query: term ? { q: term } : {} });
     },
 
 
     manejarCierreSesion() {
-      const router = useRouter();
       this.menuAbierto = false;
       estadoAutenticacion.cerrarSesion();
-      router.push("/login");
+      this.$router.push("/login");
       notificaciones.success("Has cerrado sesión correctamente.", { title: "Hasta luego" });
     },
 
@@ -77,7 +73,6 @@ export default {
 
     async confirmarEliminarCuenta() {
 
-      const router = useRouter();
       if (this.confirmTexto !== 'ELIMINAR' || this.eliminandoCuenta) return;
       this.eliminandoCuenta = true;
 
@@ -88,7 +83,7 @@ export default {
         this.confirmEliminarAbierto = false;
         estadoAutenticacion.cerrarSesion();
 
-        router.push("/login");
+        this.$router.push("/login");
         notificaciones.success("Tu cuenta ha sido eliminada permanentemente.", { title: "Cuenta eliminada" });
 
       } catch (error) {
@@ -114,14 +109,13 @@ export default {
 
 
   watch: {
-    'route.query.q'(val) {
+    '$route.query.q'(val) {
       this.headerSearch = val || '';
     }
   },
 
   mounted() {
 
-    const route = useRoute();
     document.documentElement.setAttribute('data-theme', this.tema);
     document.addEventListener('mousedown', this.handleClickOutside);
 

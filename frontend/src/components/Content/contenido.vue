@@ -23,9 +23,10 @@
     <!-- Cards usando GameCard component -->
     <div v-else class="card_content">
       <GameCard
-        v-for="game in games"
+        v-for="(game, index) in games"
         :key="game.id"
         :game="game"
+        :index="index"
         :is-favorite="favorites.has(game.id)"
         @click="goToDetail(game.id)"
         @action="toggleFavorite"

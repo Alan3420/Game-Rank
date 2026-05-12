@@ -1,5 +1,5 @@
 <template>
-  <div class="game-card" @click="handleCardClick">
+  <div class="game-card" :style="{ '--card-index': index }" @click="handleCardClick">
     <!-- IMAGEN -->
     <div class="card-image">
       <img :src="game.imge_url" :alt="game.name" class="game-image" />
@@ -72,6 +72,10 @@ defineProps({
   isLoading: {
     type: Boolean,
     default: false
+  },
+  index: {
+    type: Number,
+    default: 0
   }
 });
 

@@ -113,9 +113,10 @@
 
     <div v-else-if="futureReleases.length > 0" class="proximos-grid">
         <GameCard
-            v-for="game in futureReleases"
+            v-for="(game, index) in futureReleases"
             :key="game.id"
             :game="game"
+            :index="index"
             :is-favorite="favorites.has(game.id)"
             @click="goToDetail(game.id)"
             @action="toggleFavorite"

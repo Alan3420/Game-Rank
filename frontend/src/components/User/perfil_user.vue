@@ -107,9 +107,10 @@
 
           <div v-else class="fav-grid">
             <GameCard
-              v-for="fav in favoritos"
+              v-for="(fav, index) in favoritos"
               :key="fav.id"
               :game="fav"
+              :index="index"
               removable
               :is-loading="remover === fav.id"
               @click="goToDetail(fav.id)"
