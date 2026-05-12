@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
 import threading
 from flask_jwt_extended import jwt_required
-from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games, get_random_game_video
+from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered
 
 
 content_overview_bp = Blueprint('content_overview_route', __name__)
@@ -69,6 +69,32 @@ def future_release():
 
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos", "error": str(e)}), 500
+
+
+@content_overview_bp.route('/filtered', methods=["GET"])
+@jwt_required()
+def filtered_games():
+    try:
+        page = request.args.get('page', default=1, type=int)
+        per_page = request.args.get('per_page', default=20, type=int)
+        ordering = request.args.get('ordering', default=None, type=str)
+        genres = request.args.get('genres', default=None, type=str)
+        platforms = request.args.get('platforms', default=None, type=str)
+        dates = request.args.get('dates', default=None, type=str)
+        search = request.args.get('search', default=None, type=str)
+
+        games = get_video_games_filtered(
+            page=page,
+            per_page=per_page,
+            ordering=ordering,
+            genres=genres,
+            platforms=platforms,
+            dates=dates,
+            search=search
+        )
+        return jsonify(games), 200
+    except Exception as e:
+        return jsonify({"message": "Error al obtener los juegos filtrados", "error": str(e)}), 500
 
 
 @content_overview_bp.route("/hero-video", methods=["GET"])

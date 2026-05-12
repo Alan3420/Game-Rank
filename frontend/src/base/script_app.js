@@ -8,7 +8,6 @@ export default {
     return {
       headerSearch: '',
       menuAbierto: false,
-      userMenuRef: null,
       tema: localStorage.getItem('tema') || 'light',
       confirmEliminarAbierto: false,
       confirmTexto: '',
@@ -100,7 +99,7 @@ export default {
 
 
     handleClickOutside(e) {
-      if (this.userMenuRef && !this.userMenuRef.contains(e.target)) {
+      if (this.$refs.userMenuRef && !this.$refs.userMenuRef.contains(e.target)) {
         this.menuAbierto = false;
       }
     }

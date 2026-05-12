@@ -113,6 +113,35 @@
   color: var(--color-primary);
 }
 
+/* ── ACCESO DIRECTO CATÁLOGO ── */
+.header-catalog-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.header-catalog-link:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.header-catalog-link i {
+  font-size: 0.85rem;
+}
+
 /* ── USER MENU ── */
 .user-menu {
   position: relative;
@@ -660,6 +689,11 @@
   }
 }
 
+/* El catálogo en dropdown solo se muestra en móvil */
+.dropdown-catalog-mobile {
+  display: none;
+}
+
 @media (max-width: 480px) {
   .nav-menu {
     gap: 8px;
@@ -675,6 +709,21 @@
 
   .user-btn-name {
     display: none;
+  }
+
+  .header-catalog-link {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .header-catalog-link span {
+    display: none;
+  }
+
+  .dropdown-catalog-mobile {
+    display: flex;
   }
 
   .footer-links {

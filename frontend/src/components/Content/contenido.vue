@@ -6,21 +6,49 @@
           <i class="pi pi-th-large"></i>
           Catálogo de juegos
         </span>
-        <h1>{{ game_name ? `Resultados para "${game_name}"` : 'Explora nuestra colección' }}</h1>
-        <p>{{ game_name ? `Mostrando resultados de búsqueda` : 'Encuentra tu próximo juego favorito entre cientos de títulos' }}</p>
+        <h1>
+          <template v-if="game_name && hasActiveFilters">Resultados filtrados para "{{ game_name }}"</template>
+          <template v-else-if="game_name">Resultados para "{{ game_name }}"</template>
+          <template v-else-if="hasActiveFilters">Catálogo filtrado</template>
+          <template v-else>Explora nuestra colección</template>
+        </h1>
+        <p>
+          <template v-if="game_name && hasActiveFilters">Búsqueda con {{ activeFiltersCount }} filtro{{ activeFiltersCount !== 1 ? 's' : '' }} aplicado{{ activeFiltersCount !== 1 ? 's' : '' }}</template>
+          <template v-else-if="game_name">Mostrando resultados de búsqueda</template>
+          <template v-else-if="hasActiveFilters">{{ activeFiltersCount }} filtro{{ activeFiltersCount !== 1 ? 's' : '' }} aplicado{{ activeFiltersCount !== 1 ? 's' : '' }}</template>
+          <template v-else>Encuentra tu próximo juego favorito entre cientos de títulos</template>
+        </p>
+      </div>
+
+      <div class="catalogo-header-actions">
+        <button
+          class="filter-toggle-btn"
+          :class="{ 'is-active': filterPanelOpen }"
+          @click="filterPanelOpen = !filterPanelOpen"
+        >
+          <i class="pi pi-sliders-h"></i>
+          <span>Filtros</span>
+          <span v-if="activeFiltersCount > 0" class="filter-badge">{{ activeFiltersCount }}</span>
+          <i class="pi" :class="filterPanelOpen ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+        </button>
       </div>
     </div>
 
-    <!-- Empty state búsqueda -->
-    <div v-if="game_name && !loading && games.length === 0" class="search-empty">
+    <div class="filter-panel-anchor">
+      <FilterPanel :open="filterPanelOpen" @apply="applyFilters" @clear="clearFilters" />
+    </div>
+
+    <!-- Empty state -->
+    <div v-if="isFiltering && !loading && games.length === 0" class="search-empty">
       <div class="search-empty-icon">
         <i class="pi pi-search"></i>
       </div>
       <h2>Sin resultados</h2>
-      <p>No encontramos juegos que coincidan con "{{ game_name }}".</p>
+      <p v-if="game_name">No encontramos juegos que coincidan con "{{ game_name }}"{{ hasActiveFilters ? ' con los filtros aplicados' : '' }}.</p>
+      <p v-else>No encontramos juegos con los filtros aplicados.</p>
     </div>
 
-    <!-- Cards usando GameCard component -->
+    <!-- Cards -->
     <div v-else class="card_content">
       <GameCard
         v-for="(game, index) in games"
@@ -33,7 +61,7 @@
       />
     </div>
 
-    <div v-if="showLoadMoreButton && !game_name && !loading" class="load-more-container">
+    <div v-if="showLoadMoreButton && !loading" class="load-more-container">
       <Button label="Cargar más juegos" @click="loadMore" class="load-more-btn" />
     </div>
 
@@ -46,10 +74,11 @@ import contenido from "./script_contenido.js";
 import Button from "primevue/button"
 import GameCard from "../Cards/GameCard.vue"
 import Loader from "../Loader/Loader.vue"
+import FilterPanel from "../Filters/FilterPanel.vue"
 
 export default {
     name: 'contenido',
-    components: { Button, GameCard, Loader },
+    components: { Button, GameCard, Loader, FilterPanel },
     ...contenido
 };
 </script>

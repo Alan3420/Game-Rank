@@ -17,6 +17,11 @@
         </button>
 
         <template v-if="estadoAutenticacion.usuario">
+          <router-link to="/content/overview" class="header-catalog-link">
+            <i class="pi pi-th-large"></i>
+            <span>Catálogo</span>
+          </router-link>
+
           <div class="user-menu" ref="userMenuRef">
             <button @click="menuAbierto = !menuAbierto" class="options-user" :class="{ 'is-active': menuAbierto }">
               <div class="user-avatar-btn">
@@ -39,6 +44,30 @@
                     <span class="dropdown-email">{{ estadoAutenticacion.usuario.email }}</span>
                   </div>
                 </div>
+
+                <div class="dropdown-divider"></div>
+
+                <p class="dropdown-section-label">Explorar</p>
+
+                <router-link to="/" class="dropdown-item" @click="menuAbierto = false">
+                  <div class="dropdown-item-icon">
+                    <i class="pi pi-home"></i>
+                  </div>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-item-title">Inicio</span>
+                    <span class="dropdown-item-desc">Volver a la página principal</span>
+                  </div>
+                </router-link>
+
+                <router-link to="/content/overview" class="dropdown-item dropdown-catalog-mobile" @click="menuAbierto = false">
+                  <div class="dropdown-item-icon">
+                    <i class="pi pi-th-large"></i>
+                  </div>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-item-title">Catálogo</span>
+                    <span class="dropdown-item-desc">Explorar todos los juegos</span>
+                  </div>
+                </router-link>
 
                 <div class="dropdown-divider"></div>
 

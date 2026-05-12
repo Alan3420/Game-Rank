@@ -1,5 +1,5 @@
 from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
-from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering
+from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering, get_games_filtered
 from app.services.adapter import game_format_details, game_format_resume
 from datetime import datetime
 
@@ -138,6 +138,26 @@ def get_random_game_video() -> dict | None:
         return None
     except Exception as e:
         raise Exception(f"Error al obtener video aleatorio: {str(e)}")
+
+
+def get_video_games_filtered(page, per_page, ordering=None, genres=None, platforms=None, dates=None, search=None):
+    try:
+        result = get_games_filtered(
+            page=page,
+            per_page=per_page,
+            ordering=ordering,
+            genres=genres,
+            platforms=platforms,
+            dates=dates,
+            search=search
+        )
+        return {
+            "games": game_format_resume(result.get("results", [])),
+            "next": result.get("next"),
+            "previous": result.get("previous")
+        }
+    except Exception as e:
+        raise Exception(f"Error: {str(e)}")
 
 
 def filter_games_by_platform_or_genres(plataforma=None, genero=None) -> list[dict] | None:

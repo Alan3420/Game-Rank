@@ -1,0 +1,197 @@
+.filter-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .filter-panel {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Section */
+.filter-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-medium);
+    margin-bottom: 0.75rem;
+}
+
+/* Chips */
+.filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 99px;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface-alt);
+    color: var(--color-text-secondary);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.filter-chip:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--color-primary-light);
+}
+
+.filter-chip.is-active {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.filter-chip i {
+    font-size: 0.75rem;
+}
+
+/* Year range */
+.filter-year-range {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.filter-year-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.filter-year-input label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.filter-year-input input {
+    width: 100px;
+    padding: 0.45rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    font-family: 'Sora', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.filter-year-input input:focus {
+    border-color: var(--color-primary);
+}
+
+.filter-year-sep {
+    color: var(--color-text-light);
+    font-size: 1rem;
+    margin-top: 1.4rem;
+}
+
+/* Actions */
+.filter-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.25rem;
+    border-top: 1px solid var(--color-border-light);
+    flex-wrap: wrap;
+}
+
+.filter-btn-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Sora', sans-serif;
+}
+
+.filter-btn-clear:hover {
+    border-color: var(--color-danger);
+    color: var(--color-danger);
+    background: var(--color-danger-light);
+}
+
+.filter-btn-apply {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-dark-btn);
+    background: var(--color-dark-btn);
+    color: var(--color-text-on-dark);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    font-family: 'Sora', sans-serif;
+}
+
+.filter-btn-apply:hover {
+    background: var(--color-dark-btn-hover);
+    border-color: var(--color-dark-btn-hover);
+}
+
+/* Slide transition */
+.filter-slide-enter-active,
+.filter-slide-leave-active {
+    transition: all 0.25s ease;
+    overflow: hidden;
+}
+
+.filter-slide-enter-from,
+.filter-slide-leave-to {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+@media (max-width: 600px) {
+    .filter-panel {
+        padding: 1.1rem;
+        gap: 1.2rem;
+    }
+
+    .filter-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .filter-btn-apply,
+    .filter-btn-clear {
+        justify-content: center;
+    }
+}

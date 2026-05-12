@@ -1,3 +1,49 @@
+import re
+
+NSFW_TAG_SLUGS = {
+    "adult", "nsfw", "hentai", "eroge", "nudity",
+    "sexual-content", "adults-only", "pornographic",
+    "erotic", "xxx", "18-plus", "porn"
+}
+
+NSFW_NAME_KEYWORDS = {
+    "porn", "hentai", "xxx", "nsfw", "eroge",
+    "rule34", "r34", "futanari", "yiff", "ahegao",
+    "lewd", "ecchi", "naked", "nude", "nudes",
+    "boobs", "tits", "pussy", "cum"
+}
+
+
+def has_nsfw_name(name) -> bool:
+    if not name:
+        return False
+    tokens = re.findall(r"\b\w+\b", name.lower())
+    for token in tokens:
+        if token in NSFW_NAME_KEYWORDS:
+            return True
+    return False
+
+
+def is_adult_content(game_data) -> bool:
+    if not game_data:
+        return False
+
+    esrb = game_data.get("esrb_rating")
+    if esrb and esrb.get("id") == 5:
+        return True
+
+    if has_nsfw_name(game_data.get("name", "")):
+        return True
+
+    if not esrb:
+        tags = game_data.get("tags") or []
+        for tag in tags:
+            slug = (tag.get("slug") or "").lower()
+            if slug in NSFW_TAG_SLUGS:
+                return True
+
+    return False
+
 
 def platform_format(data) -> dict | list[dict]:
     if not data:
@@ -97,8 +143,11 @@ def game_format_resume(data) -> dict:
         }
     else:
         lista_game_dict = []
-        
+
         for game in data:
+            if is_adult_content(game):
+                continue
+
             game_dict = {
                 "id": game.get("id"),
                 "name": game.get("name"),
@@ -107,9 +156,9 @@ def game_format_resume(data) -> dict:
                 "rating": game.get("rating"),
             }
             lista_game_dict.append(game_dict)
-        
+
         return lista_game_dict
-    
+
 def genre_format(data) -> list[dict]:
     if not data:
         return []

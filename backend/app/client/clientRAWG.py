@@ -75,7 +75,7 @@ def get_game_screenshots(game_id):
     return result.get("results", []) if result else []
 
 def get_game_by_name(game_name) -> dict:
-    result = _request_with_cache("/games", {"search": game_name})
+    result = _request_with_cache("/games", {"search": game_name, "exclude_additions": "true"})
     return result or {}
 
 
@@ -88,7 +88,8 @@ def get_future_releases(init_date, final_date, page=1, per_page=10):
         "dates": f"{init_date},{final_date}",
         "ordering": "released",
         "page": page,
-        "page_size": per_page
+        "page_size": per_page,
+        "exclude_additions": "true"
     })
     return result.get("results", []) if result else []
 
@@ -96,6 +97,22 @@ def get_games_by_ordering(ordering="-added", per_page=40):
     result = _request_with_cache("/games", {
         "ordering": ordering,
         "page_size": per_page,
-        "dates": "2018-01-01,2026-12-31"
+        "dates": "2018-01-01,2026-12-31",
+        "exclude_additions": "true"
     })
     return result.get("results", []) if result else []
+
+def get_games_filtered(page=1, per_page=20, ordering=None, genres=None, platforms=None, dates=None, search=None):
+    params = {"page": page, "page_size": per_page, "exclude_additions": "true"}
+    if ordering:
+        params["ordering"] = ordering
+    if genres:
+        params["genres"] = genres
+    if platforms:
+        params["platforms"] = platforms
+    if dates:
+        params["dates"] = dates
+    if search:
+        params["search"] = search
+    result = _request_with_cache("/games", params)
+    return result or {}
