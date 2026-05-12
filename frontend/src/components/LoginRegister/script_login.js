@@ -33,7 +33,7 @@ export default {
           title: "¡Hola de nuevo!"
         });
 
-        this.$router.push('/content/overview');
+        this.$router.push('/');
 
       } catch (error) {
         if (error.response && error.response.status === 401) {

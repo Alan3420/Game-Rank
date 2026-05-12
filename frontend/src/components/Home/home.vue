@@ -1,32 +1,83 @@
 <template>
   <div class="home-page">
-    <!-- Hero Section -->
-    <section class="hero-section">
+    <!-- Hero Section - No Autenticado -->
+    <section v-if="!estadoAutenticacion.usuario" class="hero-section">
       <video v-if="heroVideo" class="hero-video" autoplay muted loop playsinline>
         <source :src="heroVideo.video_url" type="video/mp4" />
       </video>
       <div class="hero-overlay-dark"></div>
       <div class="hero-content">
         <div class="hero-text">
-          <span class="hero-label">Bienvenido a Game Rank</span>
-          <h1 class="hero-title">Descubre los mejores juegos</h1>
+          <h1 class="hero-title">Descubre, valora y comparte tus juegos favoritos</h1>
           <p class="hero-description">
-            Tu mejor plataforma para explorar, comparar y descubrir videojuegos. Encuentra títulos destacados ordenados
-            por rating y crea tu lista personal de favoritos.
+            Explora miles de juegos, accede a críticas de la comunidad, crea tus tier lists personalizadas
+            y conecta con otros jugadores apasionados.
           </p>
+
+          <div class="hero-features">
+            <div class="feature-item">
+              <i class="pi pi-star-fill"></i>
+              <span>Millones de reseñas</span>
+            </div>
+            <div class="feature-item">
+              <i class="pi pi-users"></i>
+              <span>Comunidad activa</span>
+            </div>
+            <div class="feature-item">
+              <i class="pi pi-list"></i>
+              <span>Tier lists personalizadas</span>
+            </div>
+          </div>
+
           <div class="hero-cta">
-            <button class="btn btn-primary" @click="goToLogin">
-              <i class="pi pi-play"></i>
-              Explorar ahora
-            </button>
-            <button v-if="estadoAutenticacion.usuario === null" class="btn btn-secondary" @click="goToRegister">
+            <button class="btn btn-primary" @click="goToRegister">
               <i class="pi pi-user-plus"></i>
-              Crear cuenta
+              Comenzar gratis
+            </button>
+            <button class="btn btn-secondary" @click="goToLogin">
+              <i class="pi pi-sign-in"></i>
+              Iniciar sesión
             </button>
           </div>
         </div>
+      </div>
+    </section>
 
+    <!-- Hero Section - Autenticado -->
+    <section v-else class="hero-section">
+      <video v-if="heroVideo" class="hero-video" autoplay muted loop playsinline>
+        <source :src="heroVideo.video_url" type="video/mp4" />
+      </video>
+      <div class="hero-overlay-dark"></div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">¿Qué quieres explorar hoy?</h1>
+          <p class="hero-description">
+            Continúa descubriendo nuevos juegos, actualiza tus valoraciones y mantén tu colección de favoritos al día.
+          </p>
 
+          <div class="hero-quick-actions">
+            <router-link to="/content/overview" class="quick-action-btn">
+              <i class="pi pi-search"></i>
+              <span>Explorar catálogo</span>
+            </router-link>
+            <router-link to="/user/profile" class="quick-action-btn">
+              <i class="pi pi-heart"></i>
+              <span>Mis favoritos</span>
+            </router-link>
+            <button class="quick-action-btn" @click="scrollToReleases">
+              <i class="pi pi-calendar"></i>
+              <span>Próximos lanzamientos</span>
+            </button>
+          </div>
+
+          <div class="hero-cta">
+            <button class="btn btn-primary" @click="goToExplore">
+              <i class="pi pi-arrow-right"></i>
+              Comenzar a explorar
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -99,7 +150,7 @@
     </section>
 
     <!-- Proximos lanzamientos -->
-    <section v-if="estadoAutenticacion.usuario !== null" class="proximos-section">
+    <section v-if="estadoAutenticacion.usuario !== null" id="proximos-section" class="proximos-section">
     <div class="section-header">
         <span class="section-eyebrow">
             <i class="pi pi-clock"></i>

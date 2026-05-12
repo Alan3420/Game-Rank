@@ -139,6 +139,17 @@ export default {
 
     goToRegister() {
       this.$router.push("/register");
+    },
+
+    goToExplore() {
+      this.$router.push('/content/overview');
+    },
+
+    scrollToReleases() {
+      const element = document.getElementById('proximos-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   },
   computed: {
