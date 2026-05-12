@@ -26,7 +26,7 @@
 
             <!-- HERO BANNER -->
             <section class="detail-hero">
-                <img v-if="game.imge_url" class="hero-image" :src="game.imge_url" :alt="game.name" />
+                <GameImage v-if="game.imge_url" :src="game.imge_url" :alt="game.name" class="hero-image" />
                 <div class="hero-content">
                     <div class="detail-categories">
                         <span
@@ -283,7 +283,7 @@
                             <div v-if="!game.developers?.length" class="tag empty">Sin información</div>
                             <div v-for="dev in game.developers" :key="dev.id" class="dev-item">
                                 <div class="dev-avatar">
-                                    <img v-if="dev.image" :src="dev.image" :alt="dev.name" />
+                                    <GameImage v-if="dev.image" :src="dev.image" :alt="dev.name" />
                                     <i v-else class="pi pi-building"></i>
                                 </div>
                                 <div class="dev-info">
@@ -342,9 +342,10 @@
 import jsDetalles from "./script_GameDetail.js";
 import Button from 'primevue/button';
 import Loader from '../Loader/Loader.vue';
+import GameImage from '../Image/GameImage.vue';
 export default {
     name: 'GameDetail',
-    components: { Button, Loader },
+    components: { Button, Loader, GameImage },
     mixins: [jsDetalles]
 };
 </script>

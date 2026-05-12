@@ -2,7 +2,7 @@
   <div class="game-card" :style="{ '--card-index': index }" @click="handleCardClick">
     <!-- IMAGEN -->
     <div class="card-image">
-      <img :src="game.imge_url" :alt="game.name" class="game-image" />
+      <GameImage :src="game.imge_url" :alt="game.name" class="game-image" />
       <div class="image-overlay"></div>
 
       <!-- Botón Acciones (Favorito o Eliminar) -->
@@ -54,6 +54,8 @@
 </template>
 
 <script setup>
+import GameImage from '../Image/GameImage.vue';
+
 const emit = defineEmits(['action', 'click']);
 
 defineProps({
