@@ -169,8 +169,10 @@
             :game="game"
             :index="index"
             :is-favorite="favorites.has(game.id)"
+            :status="statuses.get(game.id) || null"
             @click="goToDetail(game.id)"
             @action="toggleFavorite"
+            @update:status="handleStatusUpdate"
         />
     </div>
 

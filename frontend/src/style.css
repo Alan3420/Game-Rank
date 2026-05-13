@@ -50,6 +50,26 @@
   /* === DARK BUTTON BG === */
   --color-dark-btn: #6366f1;
   --color-dark-btn-hover: #4f46e5;
+
+  /* === GAME STATUS === */
+  --status-pendiente: #3b82f6;
+  --status-pendiente-bg: rgba(59, 130, 246, 0.12);
+  --status-jugando: #22c55e;
+  --status-jugando-bg: rgba(34, 197, 94, 0.12);
+  --status-pausado: #f59e0b;
+  --status-pausado-bg: rgba(245, 158, 11, 0.12);
+  --status-completado: #8b5cf6;
+  --status-completado-bg: rgba(139, 92, 246, 0.12);
+
+  /* colores sólidos (sin transparencia) para badges */
+  --status-pendiente-solid-bg: #dbeafe;
+  --status-pendiente-solid-text: #1d4ed8;
+  --status-jugando-solid-bg: #dcfce7;
+  --status-jugando-solid-text: #15803d;
+  --status-pausado-solid-bg: #fef3c7;
+  --status-pausado-solid-text: #92400e;
+  --status-completado-solid-bg: #ede9fe;
+  --status-completado-solid-text: #5b21b6;
 }
 
 [data-theme="dark"] {
@@ -104,6 +124,26 @@
   /* === DARK BUTTON BG === */
   --color-dark-btn: #1a1f33;
   --color-dark-btn-hover: #252d47;
+
+  /* === GAME STATUS === */
+  --status-pendiente: #60a5fa;
+  --status-pendiente-bg: rgba(96, 165, 250, 0.15);
+  --status-jugando: #4ade80;
+  --status-jugando-bg: rgba(74, 222, 128, 0.15);
+  --status-pausado: #fbbf24;
+  --status-pausado-bg: rgba(251, 191, 36, 0.15);
+  --status-completado: #a78bfa;
+  --status-completado-bg: rgba(167, 139, 250, 0.15);
+
+  /* colores sólidos dark mode */
+  --status-pendiente-solid-bg: #1e3a5f;
+  --status-pendiente-solid-text: #93c5fd;
+  --status-jugando-solid-bg: #14532d;
+  --status-jugando-solid-text: #86efac;
+  --status-pausado-solid-bg: #422006;
+  --status-pausado-solid-text: #fcd34d;
+  --status-completado-solid-bg: #2e1065;
+  --status-completado-solid-text: #c4b5fd;
 }
 
 * {

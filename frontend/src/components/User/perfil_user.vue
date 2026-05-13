@@ -24,64 +24,151 @@
 
       <div class="profile-container">
 
-        <!-- Account info -->
-        <div class="profile-card">
-          <div class="card-header">
-            <div class="card-header-title">
-              <i class="pi pi-user"></i>
-              <span>Información de la Cuenta</span>
-            </div>
-            <div class="btn-group" ref="menuEditarRef">
-              <button class="btn-edit btn-edit-primary" @click="mostrarMenuEditar = !mostrarMenuEditar">
-                <i class="pi pi-sliders-v"></i>
-                <span>Editar Perfil</span>
-                <i class="pi" :class="mostrarMenuEditar ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
-              </button>
+        <!-- LAYOUT 2 COLUMNAS: info usuario | Mi Colección -->
+        <div class="profile-top-layout">
 
-              <Transition name="dropdown-edit">
-                <div v-if="mostrarMenuEditar" class="edit-menu-dropdown">
-                  <button class="edit-menu-item" @click="abrirModalEditar">
-                    <i class="pi pi-pencil"></i>
-                    <div class="edit-menu-text">
-                      <span class="edit-menu-title">Editar Información</span>
-                      <span class="edit-menu-desc">Nombre y apellidos</span>
-                    </div>
-                  </button>
-                  <button class="edit-menu-item" @click="abrirModalCambiarContraseña">
-                    <i class="pi pi-lock"></i>
-                    <div class="edit-menu-text">
-                      <span class="edit-menu-title">Cambiar Contraseña</span>
-                      <span class="edit-menu-desc">Seguridad de tu cuenta</span>
-                    </div>
-                  </button>
+          <!-- IZQUIERDA: Account info -->
+          <div class="profile-card">
+            <div class="card-header">
+              <div class="card-header-title">
+                <i class="pi pi-user"></i>
+                <span>Información de la Cuenta</span>
+              </div>
+              <div class="btn-group" ref="menuEditarRef">
+                <button class="btn-edit btn-edit-primary" @click="mostrarMenuEditar = !mostrarMenuEditar">
+                  <i class="pi pi-sliders-v"></i>
+                  <span>Editar Perfil</span>
+                  <i class="pi" :class="mostrarMenuEditar ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+                </button>
+
+                <Transition name="dropdown-edit">
+                  <div v-if="mostrarMenuEditar" class="edit-menu-dropdown">
+                    <button class="edit-menu-item" @click="abrirModalEditar">
+                      <i class="pi pi-pencil"></i>
+                      <div class="edit-menu-text">
+                        <span class="edit-menu-title">Editar Información</span>
+                        <span class="edit-menu-desc">Nombre y apellidos</span>
+                      </div>
+                    </button>
+                    <button class="edit-menu-item" @click="abrirModalCambiarContraseña">
+                      <i class="pi pi-lock"></i>
+                      <div class="edit-menu-text">
+                        <span class="edit-menu-title">Cambiar Contraseña</span>
+                        <span class="edit-menu-desc">Seguridad de tu cuenta</span>
+                      </div>
+                    </button>
+                  </div>
+                </Transition>
+              </div>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-icon-wrap">
+                  <i class="pi pi-id-card"></i>
                 </div>
-              </Transition>
+                <div class="info-body">
+                  <span class="info-label">Nombre de usuario</span>
+                  <span class="info-value">{{ estadoAutenticacion.usuario.name }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <div class="info-icon-wrap">
+                  <i class="pi pi-envelope"></i>
+                </div>
+                <div class="info-body">
+                  <span class="info-label">Correo electrónico</span>
+                  <span class="info-value">{{ estadoAutenticacion.usuario.email || 'No proporcionado' }}</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-icon-wrap">
-                <i class="pi pi-id-card"></i>
+          <!-- DERECHA: Mi Colección (sidebar lista) -->
+          <div class="coleccion-aside">
+            <div class="coleccion-aside-header">
+              <div class="coleccion-title-group">
+                <i class="pi pi-bookmark-fill"></i>
+                <h2>Mi Colección</h2>
+                <span class="coleccion-count">{{ coleccion.length }}</span>
               </div>
-              <div class="info-body">
-                <span class="info-label">Nombre de usuario</span>
-                <span class="info-value">{{ estadoAutenticacion.usuario.name }}</span>
+
+              <!-- Filtro tabs compactos -->
+              <div class="coleccion-tabs">
+                <button
+                  class="coleccion-tab"
+                  :class="{ 'is-active': filtroColeccion === 'todos' }"
+                  @click="filtroColeccion = 'todos'"
+                >Todos</button>
+                <button
+                  v-for="key in STATUS_LIST"
+                  :key="key"
+                  class="coleccion-tab"
+                  :class="{ 'is-active': filtroColeccion === key }"
+                  :style="filtroColeccion === key ? { '--tab-color': STATUS_META[key].solidText, '--tab-bg': STATUS_META[key].solidBg } : {}"
+                  @click="filtroColeccion = key"
+                >
+                  {{ STATUS_META[key].label }}
+                </button>
               </div>
             </div>
-            <div class="info-item">
-              <div class="info-icon-wrap">
-                <i class="pi pi-envelope"></i>
-              </div>
-              <div class="info-body">
-                <span class="info-label">Correo electrónico</span>
-                <span class="info-value">{{ estadoAutenticacion.usuario.email || 'No proporcionado' }}</span>
+
+            <Loader v-if="coleccionLoading" message="Cargando..." />
+
+            <div v-else-if="coleccion.length === 0" class="coleccion-empty-small">
+              <i class="pi pi-bookmark"></i>
+              <span>Tu colección está vacía. Marca el estado de un juego desde el catálogo.</span>
+              <router-link to="/content/overview" class="coleccion-explore-link">Explorar</router-link>
+            </div>
+
+            <div v-else-if="coleccionFiltrada.length === 0" class="coleccion-empty-small">
+              <i :class="'pi ' + STATUS_META[filtroColeccion]?.icon"></i>
+              <span>Sin juegos en "{{ STATUS_META[filtroColeccion]?.label }}"</span>
+            </div>
+
+            <div v-else class="coleccion-list">
+              <div
+                v-for="item in coleccionFiltrada"
+                :key="item.id_status"
+                class="coleccion-item"
+                @click="goToDetail(item.game.id)"
+              >
+                <!-- Thumbnail -->
+                <div class="coleccion-item-thumb">
+                  <img v-if="item.game.imge_url" :src="item.game.imge_url" :alt="item.game.name" />
+                  <i v-else class="pi pi-gamepad"></i>
+                </div>
+
+                <!-- Nombre -->
+                <span class="coleccion-item-name">{{ item.game.name }}</span>
+
+                <!-- Status badge sólido -->
+                <span
+                  class="coleccion-item-status"
+                  :style="{ background: STATUS_META[item.status]?.solidBg, color: STATUS_META[item.status]?.solidText }"
+                >
+                  <i :class="'pi ' + STATUS_META[item.status]?.icon"></i>
+                  {{ STATUS_META[item.status]?.label }}
+                </span>
+
+                <!-- Favorito -->
+                <button
+                  class="coleccion-item-fav"
+                  :class="{ 'is-fav': favoritosIds.has(item.game.id), 'is-loading': favLoadingId === item.game.id }"
+                  @click.stop="toggleFavoritoColeccion(item.game.id)"
+                  :title="favoritosIds.has(item.game.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+                >
+                  <i v-if="favLoadingId === item.game.id" class="pi pi-spin pi-spinner"></i>
+                  <i v-else :class="favoritosIds.has(item.game.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+                </button>
               </div>
             </div>
           </div>
+
         </div>
+        <!-- fin profile-top-layout -->
 
-        <!-- Favorites -->
+        <!-- Mis Favoritos (ancho completo) -->
         <div class="favorites-section">
           <div class="favorites-header">
             <div class="fav-title-group">
@@ -113,8 +200,10 @@
               :index="index"
               removable
               :is-loading="remover === fav.id"
+              :status="statuses.get(fav.id) || null"
               @click="goToDetail(fav.id)"
               @action="quitarFavorito"
+              @update:status="handleStatusUpdate"
             />
           </div>
         </div>

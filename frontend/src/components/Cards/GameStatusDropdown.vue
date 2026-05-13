@@ -1,0 +1,184 @@
+<template>
+    <div class="gsd-panel" ref="panelRef" @click.stop>
+        <div class="gsd-options">
+            <button
+                v-for="key in STATUS_LIST"
+                :key="key"
+                class="gsd-option"
+                :class="{ 'is-active': currentStatus === key, 'is-loading': loading }"
+                @click.stop="handleSelect(key)"
+                :disabled="loading"
+            >
+                <span>{{ STATUS_META[key].label }}</span>
+                <i v-if="currentStatus === key" class="pi pi-check gsd-check"></i>
+            </button>
+        </div>
+
+        <div v-if="currentStatus" class="gsd-divider"></div>
+
+        <button
+            v-if="currentStatus"
+            class="gsd-remove"
+            @click.stop="handleRemove"
+            :disabled="loading"
+        >
+            <i v-if="loading" class="pi pi-spin pi-spinner"></i>
+            <span v-else>Quitar estado</span>
+        </button>
+    </div>
+</template>
+
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
+import { setGameStatus, removeGameStatus } from '../../services/user_game_status.js';
+import { notificaciones } from '../../store/notificaciones.js';
+
+const props = defineProps({
+    gameId: { type: Number, required: true },
+    currentStatus: { type: String, default: null }
+});
+
+const emit = defineEmits(['close', 'update:status']);
+
+const panelRef = ref(null);
+const loading = ref(false);
+
+function onDocClick(e) {
+    if (panelRef.value && !panelRef.value.contains(e.target)) {
+        emit('close');
+    }
+}
+
+onMounted(() => {
+    setTimeout(() => document.addEventListener('mousedown', onDocClick), 0);
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('mousedown', onDocClick);
+});
+
+async function handleSelect(status) {
+    if (loading.value || status === props.currentStatus) {
+        emit('close');
+        return;
+    }
+    loading.value = true;
+    try {
+        await setGameStatus(props.gameId, status);
+        emit('update:status', { gameId: props.gameId, status });
+        notificaciones.success(`Estado actualizado a "${STATUS_META[status].label}".`, { title: 'Estado guardado' });
+        emit('close');
+    } catch {
+        notificaciones.error('No pudimos guardar el estado.', { title: 'Error' });
+    } finally {
+        loading.value = false;
+    }
+}
+
+async function handleRemove() {
+    if (loading.value) return;
+    loading.value = true;
+    try {
+        await removeGameStatus(props.gameId);
+        emit('update:status', { gameId: props.gameId, status: null });
+        notificaciones.success('Estado eliminado.', { title: 'Estado eliminado' });
+        emit('close');
+    } catch {
+        notificaciones.error('No pudimos eliminar el estado.', { title: 'Error' });
+    } finally {
+        loading.value = false;
+    }
+}
+</script>
+
+<style scoped>
+.gsd-panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    overflow: hidden;
+    min-width: 160px;
+}
+
+.gsd-options {
+    display: flex;
+    flex-direction: column;
+}
+
+.gsd-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 14px;
+    border: none;
+    background: transparent;
+    color: var(--color-text);
+    font-size: 0.84rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-align: left;
+    font-family: 'Sora', sans-serif;
+}
+
+.gsd-option:hover:not(:disabled) {
+    background: var(--color-surface-hover);
+}
+
+.gsd-option.is-active {
+    color: var(--color-primary);
+    font-weight: 700;
+    background: var(--color-primary-light);
+}
+
+.gsd-option:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.gsd-check {
+    font-size: 0.72rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
+}
+
+.gsd-divider {
+    height: 1px;
+    background: var(--color-border-light);
+    margin: 2px 0;
+}
+
+.gsd-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 9px 14px;
+    border: none;
+    background: transparent;
+    color: var(--color-danger);
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    font-family: 'Sora', sans-serif;
+}
+
+.gsd-remove:hover:not(:disabled) {
+    background: var(--color-danger-light);
+}
+
+.gsd-remove:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+[data-theme="dark"] .gsd-panel {
+    border-color: var(--color-border);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+</style>

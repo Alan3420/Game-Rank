@@ -1,18 +1,27 @@
 import { estadoAutenticacion } from '../../store/autenticacion';
-import { list_favorites, removeTOFavorite } from "../../services/favorites_area";
+import { list_favorites, removeTOFavorite, addTOFavorite } from "../../services/favorites_area";
+import { listGameStatuses, listGameStatusesFull } from "../../services/user_game_status";
 import { changePassword, updateUser } from "../../services/user_service";
 import { notificaciones } from '../../store/notificaciones';
 import { useRouter } from 'vue-router';
 import { onMounted, onUnmounted, ref } from 'vue';
+import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
 
 export default {
   name: "perfil",
   data() {
     return {
       estadoAutenticacion,
+      STATUS_META,
+      STATUS_LIST,
       favoritos: [],
       favoritosLoading: true,
       remover: null,
+      statuses: new Map(),
+      coleccion: [],
+      coleccionLoading: true,
+      filtroColeccion: 'todos',
+      favLoadingId: null,
       mostrarModalEditar: false,
       mostrarModalCambiarContraseña: false,
       mostrarMenuEditar: false,
@@ -35,11 +44,27 @@ export default {
   computed: {
     isAdmin() {
       return estadoAutenticacion.usuario?.role === 'admin';
+    },
+    coleccionFiltrada() {
+      if (this.filtroColeccion === 'todos') return this.coleccion;
+      return this.coleccion.filter(item => item.status === this.filtroColeccion);
+    },
+    coleccionPorEstado() {
+      const result = {};
+      for (const key of STATUS_LIST) {
+        result[key] = this.coleccion.filter(item => item.status === key);
+      }
+      return result;
+    },
+    favoritosIds() {
+      return new Set(this.favoritos.map(f => f.id));
     }
   },
   async mounted() {
     this.router = useRouter();
     await this.cargarFavoritos();
+    await this.loadStatuses();
+    await this.cargarColeccion();
     document.addEventListener('mousedown', this.handleClickOutsideMenu);
   },
   beforeUnmount() {
@@ -107,6 +132,50 @@ export default {
         this.guardandoEditar = false;
       }
     },
+    async loadStatuses() {
+      try {
+        const data = await listGameStatuses();
+        const map = new Map();
+        for (const s of data.statuses) {
+          map.set(s.id_game_api, s.status);
+        }
+        this.statuses = map;
+      } catch {
+        // fallo silencioso
+      }
+    },
+
+    handleStatusUpdate({ gameId, status }) {
+      const map = new Map(this.statuses);
+      if (status) {
+        map.set(gameId, status);
+      } else {
+        map.delete(gameId);
+      }
+      this.statuses = map;
+      // Refrescar la colección por estados también
+      if (status) {
+        const idx = this.coleccion.findIndex(c => c.game.id === gameId);
+        if (idx !== -1) {
+          this.coleccion[idx] = { ...this.coleccion[idx], status };
+        }
+      } else {
+        this.coleccion = this.coleccion.filter(c => c.game.id !== gameId);
+      }
+    },
+
+    async cargarColeccion() {
+      this.coleccionLoading = true;
+      try {
+        const data = await listGameStatusesFull();
+        this.coleccion = data.statuses;
+      } catch {
+        this.coleccion = [];
+      } finally {
+        this.coleccionLoading = false;
+      }
+    },
+
     async cargarFavoritos() {
       this.favoritosLoading = true;
       try {
@@ -116,6 +185,26 @@ export default {
         console.error(error.listfavoritos.message);
       } finally {
         this.favoritosLoading = false;
+      }
+    },
+    async toggleFavoritoColeccion(gameId) {
+      if (this.favLoadingId === gameId) return;
+      this.favLoadingId = gameId;
+      try {
+        if (this.favoritosIds.has(gameId)) {
+          await removeTOFavorite(gameId);
+          this.favoritos = this.favoritos.filter(f => f.id !== gameId);
+          notificaciones.success("Juego eliminado de tus favoritos.", { title: "Favorito eliminado" });
+        } else {
+          await addTOFavorite(gameId);
+          const gameData = this.coleccion.find(c => c.game.id === gameId)?.game;
+          if (gameData) this.favoritos.push(gameData);
+          notificaciones.success("Juego añadido a tus favoritos.", { title: "Favorito añadido" });
+        }
+      } catch (error) {
+        notificaciones.error("No pudimos actualizar favoritos.", { title: "Error" });
+      } finally {
+        this.favLoadingId = null;
       }
     },
     async quitarFavorito(idGame) {

@@ -6,7 +6,7 @@
 .game-card {
   background: var(--color-surface);
   border-radius: 16px;
-  overflow: hidden;
+  /* sin overflow:hidden para permitir que el dropdown se salga */
   cursor: pointer;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -20,12 +20,19 @@
   border-color: var(--color-dark-btn);
 }
 
+/* Cuando el dropdown está abierto, sube el z-index sobre otras cards */
+.game-card.has-dropdown {
+  z-index: 50;
+}
+
 /* IMAGEN */
 .card-image {
   position: relative;
   width: 100%;
   height: 200px;
   overflow: hidden;
+  /* clips la imagen a las esquinas redondeadas superiores */
+  border-radius: 16px 16px 0 0;
 }
 
 .game-image {
@@ -54,45 +61,62 @@
   opacity: 1;
 }
 
-.card-action {
+/* === CLUSTER DE ACCIONES === */
+.card-actions-cluster {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.game-card:hover .card-actions-cluster {
+  opacity: 1;
+}
+
+.card-action-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
   background: rgba(255, 255, 255, 0.95);
   color: var(--color-favorite);
-  padding: 0.5rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
   backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  transition: opacity 0.3s ease, background 0.2s ease;
-  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s ease, background 0.15s ease;
+  flex-shrink: 0;
 }
 
-.game-card:hover .card-action {
-  opacity: 1;
+.card-action-btn:hover {
+  transform: scale(1.12);
+  background: white;
 }
 
-.card-action i {
-  cursor: pointer;
+.card-action-btn--danger {
+  color: var(--color-danger);
 }
 
-.card-action.is-loading {
-  opacity: 1;
+.card-action-btn--status {
+  color: var(--color-text-medium);
 }
 
+/* === RATING BADGE === */
 .rating-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 10px;
+  right: 10px;
   background: rgba(255, 193, 7, 0.95);
   color: var(--color-text);
-  padding: 0.5rem 0.75rem;
+  padding: 0.4rem 0.65rem;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -109,6 +133,34 @@
 
 .rating-badge i {
   color: #ff6b35;
+}
+
+/* === STATUS BADGE — siempre visible, colores sólidos === */
+.status-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  /* background y color vienen por inline style desde statusMeta.solidBg / solidText */
+}
+
+.status-badge i {
+  font-size: 0.7rem;
+}
+
+/* === DROPDOWN POSICIONAMIENTO === */
+.card-status-dropdown-wrap {
+  position: absolute;
+  top: 52px; /* justo debajo del cluster: 10px offset + 34px button + 8px gap */
+  left: 8px;
+  z-index: 200;
 }
 
 /* CONTENIDO */
@@ -175,12 +227,18 @@
   transform: translateX(4px);
 }
 
-/* ── DARK MODE ── */
-[data-theme="dark"] .card-action {
-  background: rgba(31, 36, 48, 0.90);
-  color: var(--color-favorite);
-  border: 1px solid rgba(194, 58, 92, 0.30);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+/* DARK MODE */
+[data-theme="dark"] .game-card {
+  border-color: var(--color-border);
+}
+
+[data-theme="dark"] .card-action-btn {
+  background: rgba(31, 36, 48, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .card-action-btn:hover {
+  background: rgba(42, 49, 64, 0.98);
 }
 
 [data-theme="dark"] .rating-badge {
@@ -193,7 +251,6 @@
     opacity: 0;
     transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -205,7 +262,7 @@
   animation-delay: calc(var(--card-index, 0) * 90ms);
 }
 
-/* RESPONSIVE */
+/* RESPONSIVE — en móvil siempre visibles los botones */
 @media (max-width: 768px) {
   .card-image {
     height: 180px;
@@ -217,6 +274,10 @@
 
   .card-content {
     padding: 1.25rem;
+  }
+
+  .card-actions-cluster {
+    opacity: 1;
   }
 }
 

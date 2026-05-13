@@ -1,9 +1,11 @@
 import { getGameDetail } from '../../services/gameDetail';
 import { getCommentsByGame, createComments, deleteComment, updateComment } from '../../services/comment_services';
 import { addTOFavorite, removeTOFavorite, checkFavorite } from '../../services/favorites_area';
+import { getGameStatus } from '../../services/user_game_status';
 import { saveRate, updateRate, deleteRate, getAvgRate } from '../../services/rate_services';
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
+import { STATUS_META } from '../../utils/statusMeta.js';
 
 export default {
     name: 'GameDetail',
@@ -23,7 +25,10 @@ export default {
             favoriteLoading: false,
             formRating: 0,
             formHover: 0,
-            communityAvg: 0
+            communityAvg: 0,
+            gameStatus: null,
+            showStatusModal: false,
+            STATUS_META
         };
     },
     computed: {
@@ -62,6 +67,7 @@ export default {
         await this.loadComments();
         await this.loadCommunityAvg();
         await this.checkIsFavorite();
+        await this.loadStatus();
     },
     beforeRouteUpdate(to, from, next) {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -69,9 +75,12 @@ export default {
         this.formHover = 0;
         this.editingId = null;
         this.newComment = '';
+        this.gameStatus = null;
+        this.showStatusModal = false;
         this.loadGameDetail(to.params.id).then(() => {
             this.checkIsFavorite();
             this.loadCommunityAvg();
+            this.loadStatus();
             next();
         });
     },
@@ -287,6 +296,23 @@ export default {
 
         goBack() {
             this.$router.push('/content/overview');
+        },
+
+        async loadStatus() {
+            if (!estadoAutenticacion.usuario || !this.game?.id) {
+                this.gameStatus = null;
+                return;
+            }
+            try {
+                const data = await getGameStatus(this.game.id);
+                this.gameStatus = data?.status?.status || null;
+            } catch {
+                this.gameStatus = null;
+            }
+        },
+
+        handleStatusUpdate({ status }) {
+            this.gameStatus = status;
         },
 
         async checkIsFavorite() {

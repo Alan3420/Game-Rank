@@ -79,16 +79,43 @@
                         </template>
                     </div>
                 </div>
-                <button
-                    class="hero-fav-btn"
-                    :class="{ 'is-fav': isFavorite, 'is-loading': favoriteLoading }"
-                    :disabled="favoriteLoading"
-                    @click="toggleFavorite"
-                    :title="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
-                >
-                    <i v-if="favoriteLoading" class="pi pi-spin pi-spinner"></i>
-                    <i v-else :class="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
-                </button>
+                <!-- Botones del hero: favorito + estado -->
+                <div class="hero-action-group">
+                    <button
+                        class="hero-fav-btn"
+                        :class="{ 'is-fav': isFavorite, 'is-loading': favoriteLoading }"
+                        :disabled="favoriteLoading"
+                        @click="toggleFavorite"
+                        :title="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+                    >
+                        <i v-if="favoriteLoading" class="pi pi-spin pi-spinner"></i>
+                        <i v-else :class="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+                    </button>
+
+                    <!-- Status button + dropdown wrapper -->
+                    <div class="hero-status-wrap">
+                        <button
+                            class="hero-status-btn"
+                            :class="{ 'has-status': gameStatus }"
+                            :style="gameStatus ? { '--status-c': STATUS_META[gameStatus]?.color, '--status-bg': STATUS_META[gameStatus]?.solidBg, color: STATUS_META[gameStatus]?.solidText } : {}"
+                            @click.stop="showStatusModal = !showStatusModal"
+                            :title="gameStatus ? `Estado: ${STATUS_META[gameStatus]?.label}` : 'Marcar estado del juego'"
+                        >
+                            <i :class="'pi ' + (gameStatus ? STATUS_META[gameStatus]?.icon : 'pi-bookmark')"></i>
+                            <span>{{ gameStatus ? STATUS_META[gameStatus]?.label : 'Estado' }}</span>
+                        </button>
+
+                        <!-- Dropdown de estado -->
+                        <div v-if="showStatusModal && game" class="hero-status-dropdown-wrap">
+                            <GameStatusDropdown
+                                :game-id="game.id"
+                                :current-status="gameStatus"
+                                @close="showStatusModal = false"
+                                @update:status="handleStatusUpdate"
+                            />
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- CUERPO: 2 columnas -->
@@ -343,9 +370,10 @@ import jsDetalles from "./script_GameDetail.js";
 import Button from 'primevue/button';
 import Loader from '../Loader/Loader.vue';
 import GameImage from '../Image/GameImage.vue';
+import GameStatusDropdown from '../Cards/GameStatusDropdown.vue';
 export default {
     name: 'GameDetail',
-    components: { Button, Loader, GameImage },
+    components: { Button, Loader, GameImage, GameStatusDropdown },
     mixins: [jsDetalles]
 };
 </script>

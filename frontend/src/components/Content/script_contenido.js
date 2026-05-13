@@ -1,7 +1,9 @@
 import { getContentOverview } from "../../services/resume_cards";
 import { getFilteredGames } from "../../services/catalog_filters";
 import { addTOFavorite, checkFavorite, removeTOFavorite } from "../../services/favorites_area";
+import { listGameStatuses } from "../../services/user_game_status";
 import { notificaciones } from "../../store/notificaciones";
+import { estadoAutenticacion } from "../../store/autenticacion";
 
 export default {
     name: "contenido",
@@ -9,6 +11,7 @@ export default {
         return {
             games: [],
             favorites: new Set(),
+            statuses: new Map(),
             game_name: null,
             page: 1,
             per_page: 20,
@@ -45,7 +48,7 @@ export default {
             return this.hasActiveFilters || !!this.game_name;
         }
     },
-    mounted() {
+    async mounted() {
         if (this.$route.query.q) {
             this.game_name = this.$route.query.q;
         }
@@ -57,6 +60,9 @@ export default {
             window.addEventListener("scroll", this.debouncedScroll);
         }
         document.addEventListener('mousedown', this.handleFilterClickOutside);
+        if (estadoAutenticacion.usuario) {
+            await this.loadStatuses();
+        }
     },
     beforeUnmount() {
         if (this.debouncedScroll) {
@@ -92,6 +98,29 @@ export default {
             this.apiCallCount = 0;
             this.showLoadMoreButton = false;
             this.favorites = new Set();
+        },
+
+        async loadStatuses() {
+            try {
+                const data = await listGameStatuses();
+                const map = new Map();
+                for (const s of data.statuses) {
+                    map.set(s.id_game_api, s.status);
+                }
+                this.statuses = map;
+            } catch {
+                // fallo silencioso, no crítico
+            }
+        },
+
+        handleStatusUpdate({ gameId, status }) {
+            const map = new Map(this.statuses);
+            if (status) {
+                map.set(gameId, status);
+            } else {
+                map.delete(gameId);
+            }
+            this.statuses = map;
         },
 
         async getContent() {

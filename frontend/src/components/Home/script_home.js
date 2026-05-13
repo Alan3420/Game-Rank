@@ -2,6 +2,7 @@ import { getContentOverview, getHeroVideo } from '../../services/resume_cards.js
 import { getFutureReleases } from '../../services/clasif_content.js';
 import { estadoAutenticacion } from '../../store/autenticacion.js';
 import { checkFavorite, addTOFavorite, removeTOFavorite } from '../../services/favorites_area.js';
+import { listGameStatuses } from '../../services/user_game_status.js';
 import { notificaciones } from '../../store/notificaciones.js';
 import { computed } from 'vue';
 
@@ -12,6 +13,7 @@ export default {
       topGames: [],
       futureReleases: [],
       favorites: new Set(),
+      statuses: new Map(),
       carouselTrack: null,
       isLoading: true,
       isFutureLoading: true,
@@ -29,6 +31,7 @@ export default {
     if (this.futureReleases.length === 0) {
       await this.loadFutureReleases();
     }
+    await this.loadStatuses();
   },
   methods: {
     async loadHeroVideo() {
@@ -82,6 +85,29 @@ export default {
       } finally {
         this.isFutureLoading = false;
       }
+    },
+
+    async loadStatuses() {
+      try {
+        const data = await listGameStatuses();
+        const map = new Map();
+        for (const s of data.statuses) {
+          map.set(s.id_game_api, s.status);
+        }
+        this.statuses = map;
+      } catch {
+        // fallo silencioso, no crítico
+      }
+    },
+
+    handleStatusUpdate({ gameId, status }) {
+      const map = new Map(this.statuses);
+      if (status) {
+        map.set(gameId, status);
+      } else {
+        map.delete(gameId);
+      }
+      this.statuses = map;
     },
 
     async initCheckFavorite(gameId) {

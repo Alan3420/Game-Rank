@@ -239,13 +239,19 @@
 }
 
 /* ─────────────────────────────────────────
-   BOTÓN FAVORITO HERO
+   BOTONES HERO (favorito + estado)
 ───────────────────────────────────────── */
-.hero-fav-btn {
+.hero-action-group {
     position: absolute;
     bottom: 1.5rem;
     right: 1.5rem;
     z-index: 3;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.hero-fav-btn {
     width: 52px;
     height: 52px;
     border-radius: 50%;
@@ -259,6 +265,7 @@
     justify-content: center;
     backdrop-filter: blur(8px);
     transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
 }
 
 .hero-fav-btn:hover {
@@ -283,13 +290,70 @@
     opacity: 0.7;
 }
 
+/* Wrapper para posicionar el dropdown relativo al botón de estado */
+.hero-status-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.hero-status-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 18px;
+    height: 52px;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    color: var(--color-text-on-dark);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    font-family: 'Sora', sans-serif;
+    white-space: nowrap;
+}
+
+.hero-status-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.75);
+    transform: scale(1.03);
+}
+
+.hero-status-btn.has-status {
+    /* color e inline background vienen de style binding con solidBg/solidText */
+    border-color: var(--status-c, rgba(255, 255, 255, 0.6));
+}
+
+.hero-status-btn i {
+    font-size: 1rem;
+}
+
+/* Dropdown posicionado arriba del botón */
+.hero-status-dropdown-wrap {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    z-index: 300;
+}
+
 @media (max-width: 600px) {
+    .hero-action-group {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
     .hero-fav-btn {
         width: 44px;
         height: 44px;
         font-size: 1.1rem;
-        bottom: 1rem;
-        right: 1rem;
+    }
+
+    .hero-status-btn {
+        height: 44px;
+        padding: 0 14px;
+        font-size: 0.82rem;
     }
 }
 
@@ -1275,7 +1339,8 @@
   background: var(--color-surface-hover);
 }
 
-[data-theme="dark"] .hero-fav-btn {
+[data-theme="dark"] .hero-fav-btn,
+[data-theme="dark"] .hero-status-btn {
   background: rgba(15, 17, 21, 0.65);
   border-color: rgba(255, 255, 255, 0.20);
 }
@@ -1345,7 +1410,7 @@
         min-height: 540px;
     }
 
-    .hero-fav-btn {
+    .hero-action-group {
         top: 1rem;
         bottom: auto;
         right: 1rem;
@@ -1417,10 +1482,19 @@
         min-height: 480px;
     }
 
-    .hero-fav-btn {
-        width: 40px;
+    .hero-fav-btn,
+    .hero-status-btn {
         height: 40px;
         font-size: 1rem;
+    }
+
+    .hero-fav-btn {
+        width: 40px;
+    }
+
+    .hero-status-btn {
+        padding: 0 12px;
+        font-size: 0.8rem;
     }
 
     .hero-content {
