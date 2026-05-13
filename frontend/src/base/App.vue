@@ -189,22 +189,39 @@
     <div class="footer-container">
       <div class="footer-brand">
         <h3>Game Rank</h3>
+        <p>Tu plataforma para descubrir, rankear y coleccionar videojuegos.</p>
       </div>
 
-      <div class="footer-links">
-        <a href="https://github.com/Alan3420" target="_blank" class="footer-link">
-          <i class="pi pi-github"></i>
-          GitHub
-        </a>
-        <a href="https://rawg.io" target="_blank" class="footer-link">
-          <i class="pi pi-external-link"></i>
-          RAWG API
-        </a>
+      <div class="footer-section">
+        <h4 class="footer-section-title">Explorar</h4>
+        <nav class="footer-nav">
+          <RouterLink to="/" class="footer-nav-link">Inicio</RouterLink>
+          <RouterLink v-if="estadoAutenticacion.usuario" to="/content/overview" class="footer-nav-link">Catálogo</RouterLink>
+          <RouterLink v-if="estadoAutenticacion.usuario" to="/user/profile" class="footer-nav-link">Mi Perfil</RouterLink>
+          <RouterLink v-if="isAdmin" to="/admin/users" class="footer-nav-link">Gestión de Usuarios</RouterLink>
+        </nav>
       </div>
 
-      <div class="footer-copyright">
-        <p>&copy; 2026 Game Rank. Todos los derechos reservados.</p>
+      <div class="footer-section footer-section--right">
+        <div class="footer-author">
+          <span class="footer-label">Creado por</span>
+          <a href="https://github.com/Alan3420" target="_blank" class="footer-author-link">
+            <i class="pi pi-github"></i>
+            Alan Novas Mateo
+          </a>
+        </div>
+        <div class="footer-powered">
+          <span class="footer-label">Powered by</span>
+          <a href="https://rawg.io" target="_blank" class="footer-link">
+            <i class="pi pi-external-link"></i>
+            RAWG
+          </a>
+        </div>
       </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 Game Rank. Todos los derechos reservados.</p>
     </div>
   </footer>
 </template>
