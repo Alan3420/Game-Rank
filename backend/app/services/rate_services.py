@@ -1,26 +1,25 @@
 from app.repositories.rate_repo import get_rate_by_user_and_game, get_rates_by_game, get_rates_by_user, create_rate, update_rate, delete_rate
 
 
-def crear_valoracion(id_user, id_game, rating, status) -> object | str:
+def crear_valoracion(id_user, id_game, rating) -> object | str:
     try:
         if not isinstance(rating, int) or rating < 0 or rating > 5:
             return "La valoración debe ser un número entero entre 0 y 5"
 
         if get_rate_by_user_and_game(id_user=id_user, id_game=id_game):
             return "Ya has valorado este juego"
-        return create_rate(id_user=id_user, id_game=id_game, rating=rating, status=status)
+        return create_rate(id_user=id_user, id_game=id_game, rating=rating)
     except Exception as e:
         raise Exception(f"Error al crear la valoración: {str(e)}")
 
 
-def actualizar_valoracion(id_user, id_game, rating=None, status=None) -> object | str:
+def actualizar_valoracion(id_user, id_game, rating=None) -> object | str:
     try:
         if rating is not None:
             if not isinstance(rating, int) or rating < 0 or rating > 5:
                 return "La valoración debe ser un número entero entre 0 y 5"
 
-        rate = update_rate(id_user=id_user, id_game=id_game,
-                           rating=rating, status=status)
+        rate = update_rate(id_user=id_user, id_game=id_game, rating=rating)
         if not rate:
             return "Valoración no encontrada"
         return rate
@@ -62,11 +61,3 @@ def get_valoraciones_usuario(id_user) -> list:
         return [r.to_dict() for r in rates]
     except Exception as e:
         raise Exception(f"Error al obtener valoraciones: {str(e)}")
-
-
-def get_estado_juego(id_user, id_game) -> str | None:
-    try:
-        rate = get_rate_by_user_and_game(id_user=id_user, id_game=id_game)
-        return rate.status if rate else None
-    except Exception as e:
-        raise Exception(f"Error al obtener el estado: {str(e)}")

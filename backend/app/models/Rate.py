@@ -1,6 +1,6 @@
 from datetime import datetime
 from app.database.db import db
-from sqlalchemy import Column, String, Integer, Date, ForeignKey, PrimaryKeyConstraint
+from sqlalchemy import Column, Integer, Date, ForeignKey, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship
 
 class Rate(db.Model):
@@ -12,7 +12,6 @@ class Rate(db.Model):
     id_game_api = Column(Integer, ForeignKey("videoGame.id_game_api", ondelete="CASCADE"), nullable=False)
     date_rate = Column(Date, nullable=False, default=datetime.today)
     rating = Column(Integer, nullable=False)
-    status = Column(String(20), nullable=True)
 
     video_games_rl = relationship("Video_game", back_populates="rates_rl", overlaps="users_rl,video_games_rl")
     users_rl =relationship("User", back_populates="rates_rl", overlaps="users_rl,video_games_rl,rates_rl")
@@ -23,6 +22,5 @@ class Rate(db.Model):
             "id_user": self.id_user,
             "id_game_api": self.id_game_api,
             "date_rate": str(self.date_rate),
-            "rating": self.rating,
-            "status": self.status
+            "rating": self.rating
         }
