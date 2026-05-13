@@ -1,7 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.user_game_status_service import (
-    establecer_status, obtener_status_juego, listar_statuses_usuario, quitar_status
+    establecer_status, obtener_status_juego, listar_statuses_usuario,
+    listar_statuses_con_juegos, quitar_status
 )
 
 status_bp = Blueprint("status", __name__)
@@ -39,7 +40,7 @@ def get_status(id_game):
         registro = obtener_status_juego(id_user=id_user, id_game=id_game)
 
         if not registro:
-            return jsonify({"message": "Sin status para este juego"}), 404
+            return jsonify({"status": None}), 200
 
         return jsonify({"status": registro.to_dict()}), 200
     except Exception as e:
@@ -56,6 +57,18 @@ def list_statuses():
         return jsonify({"statuses": registros}), 200
     except Exception as e:
         return jsonify({"message": "Error al listar los statuses",
+                        "error": str(e)}), 500
+
+
+@status_bp.route("/list/full", methods=["GET"])
+@jwt_required()
+def list_statuses_full():
+    try:
+        id_user = int(get_jwt_identity())
+        registros = listar_statuses_con_juegos(id_user=id_user)
+        return jsonify({"statuses": registros}), 200
+    except Exception as e:
+        return jsonify({"message": "Error al listar los statuses con juegos",
                         "error": str(e)}), 500
 
 
