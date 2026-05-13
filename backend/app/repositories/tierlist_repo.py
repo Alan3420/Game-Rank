@@ -46,12 +46,6 @@ def obtener_item_por_id(id_item) -> TierListItem | None:
     return TierListItem.query.filter_by(id_item=id_item).first()
 
 
-def obtener_item_por_posicion(id_tierlist, rank, position) -> TierListItem | None:
-    return TierListItem.query.filter_by(
-        id_tierlist=id_tierlist, rank=rank, position=position
-    ).first()
-
-
 def obtener_item_por_juego(id_tierlist, id_game_api) -> TierListItem | None:
     return TierListItem.query.filter_by(
         id_tierlist=id_tierlist, id_game_api=id_game_api
@@ -64,26 +58,23 @@ def contar_items_en_rank(id_tierlist, rank) -> int:
     ).count()
 
 
-def crear_item_tierlist(id_tierlist, id_game_api, rank, position) -> TierListItem:
+def crear_item_tierlist(id_tierlist, id_game_api, rank) -> TierListItem:
     item = TierListItem(
         id_tierlist=id_tierlist,
         id_game_api=id_game_api,
-        rank=rank,
-        position=position
+        rank=rank
     )
     db.session.add(item)
     db.session.commit()
     return item
 
 
-def actualizar_item_tierlist(id_item, rank=None, position=None) -> TierListItem | None:
+def actualizar_item_tierlist(id_item, rank=None) -> TierListItem | None:
     item = obtener_item_por_id(id_item=id_item)
     if not item:
         return None
     if rank is not None:
         item.rank = rank
-    if position is not None:
-        item.position = position
     db.session.commit()
     return item
 

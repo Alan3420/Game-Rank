@@ -106,17 +106,15 @@ def agregar_juego(id_tierlist):
         id_user = get_jwt_identity()
         id_game_api = data.get("id_game")
         rank = data.get("rank")
-        position = data.get("position")
 
-        if not id_game_api or not rank or position is None:
-            return jsonify({"message": "id_game, rank y position son obligatorios"}), 400
+        if not id_game_api or not rank:
+            return jsonify({"message": "id_game y rank son obligatorios"}), 400
 
         resultado = agregar_juego_a_tierlist(
             id_tierlist=id_tierlist,
             id_user=id_user,
             id_game_api=id_game_api,
-            rank=rank,
-            position=position
+            rank=rank
         )
 
         if type(resultado) == str:
@@ -136,16 +134,14 @@ def mover_juego(id_item):
         data = request.get_json()
         id_user = get_jwt_identity()
         nuevo_rank = data.get("rank")
-        nueva_position = data.get("position")
 
-        if not nuevo_rank or nueva_position is None:
-            return jsonify({"message": "rank y position son obligatorios"}), 400
+        if not nuevo_rank:
+            return jsonify({"message": "rank es obligatorio"}), 400
 
         resultado = mover_juego_en_tierlist(
             id_item=id_item,
             id_user=id_user,
-            nuevo_rank=nuevo_rank,
-            nueva_position=nueva_position
+            nuevo_rank=nuevo_rank
         )
 
         if type(resultado) == str:
