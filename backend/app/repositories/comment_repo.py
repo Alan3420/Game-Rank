@@ -22,8 +22,14 @@ def create_comment(description, id_user, id_game):
     db.session.commit()
     return comment
 
-def update_comment(comment_id, description) -> Comment:
-    comment = get_comment_by_id(comment_id)
+def update_comment(comment_id, description, user_id, es_admin=False) -> Comment:
+    if es_admin:
+        comment = Comment.query.filter_by(id_comment=comment_id).first()
+    else:
+        comment = Comment.query.filter_by(
+            id_comment=comment_id,
+            id_user=user_id
+        ).first()
 
     if comment:
         comment.description = description

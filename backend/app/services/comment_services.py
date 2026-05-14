@@ -14,12 +14,17 @@ def crear_comentario(id_user, id_game, description) -> object | str:
     except Exception as e:
         raise Exception(f"Error al crear el comentario: {str(e)}")
 
-def actualizar_comentario(comment_id, description) -> object | str:
+def actualizar_comentario(comment_id, description, user_id, es_admin=False) -> object | str:
     try:
         if description and (len(description) < 1 or len(description) > 255):
             return "La descripción debe tener entre 1 y 255 caracteres"
 
-        comment = update_comment(comment_id=comment_id, description=description)
+        comment = update_comment(
+            comment_id=comment_id,
+            description=description,
+            user_id=user_id,
+            es_admin=es_admin
+        )
         if not comment:
             return "Comentario no encontrado"
 

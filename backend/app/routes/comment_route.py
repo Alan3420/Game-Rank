@@ -40,8 +40,14 @@ def update(comment_id):
         if not description:
             return jsonify({"message": "description es obligatoria"}), 400
 
+        user_id = get_jwt_identity()
+        usuario = get_user_by_id(user_id)
+        es_admin = usuario.role == 'admin' if usuario else False
+
         resultado = actualizar_comentario(comment_id=comment_id,
-                                           description=description)
+                                           description=description,
+                                           user_id=user_id,
+                                           es_admin=es_admin)
 
         if type(resultado) == str:
             return jsonify({"message": resultado}), 404
