@@ -1,27 +1,32 @@
 import { reactive } from 'vue';
+import { getMe } from '../services/user_service';
 
 export const estadoAutenticacion = reactive({
 
-    //iniciar sesion y guardar datos en localStorage
+    usuario: null,
+
     iniciarSesion(datosRecibidos, token) {
         this.usuario = datosRecibidos;
-        localStorage.setItem("datos_usuario", JSON.stringify(datosRecibidos));
         localStorage.setItem("token", token);
     },
 
-    usuario: JSON.parse(localStorage.getItem("datos_usuario")) || null,
+    async restaurarSesion() {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+        try {
+            const data = await getMe();
+            this.usuario = data.user;
+        } catch {
+            this.cerrarSesion();
+        }
+    },
 
-
-    // Funcion para limpiar todo al salir
     cerrarSesion() {
         this.usuario = null;
-        localStorage.removeItem("datos_usuario");
         localStorage.removeItem("token");
     },
 
-    // Actualizar datos del usuario en memoria + localStorage
     actualizarUsuario(datosNuevos) {
         this.usuario = { ...this.usuario, ...datosNuevos };
-        localStorage.setItem("datos_usuario", JSON.stringify(this.usuario));
     }
 });

@@ -60,3 +60,8 @@ export async function deleteOwnAccount() {
     const response = await api.delete("/settings/account");
     return response.data;
 }
+
+export async function getMe() {
+    const response = await api.get("/user/me");
+    return response.data;
+}

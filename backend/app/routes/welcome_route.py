@@ -1,6 +1,7 @@
 from app.services import user_service
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from app.repositories.user_repo import get_user_by_id
 
 welcome_bp = Blueprint('welcome_route', __name__)
 @welcome_bp.route("/login", methods=["POST"])
@@ -47,8 +48,12 @@ def register():
     except Exception as e:
         return jsonify({"message": "Error al registrar el usuario", "error": str(e)}), 500
 
-# @welcome_bp.route("/logout")
-# def logout():
-
-#     return jsonify({"message": "A finalizado la sesion"}), 200
+@welcome_bp.route("/me", methods=["GET"])
+@jwt_required()
+def get_me():
+    user_id = get_jwt_identity()
+    user = get_user_by_id(user_id)
+    if not user:
+        return jsonify({"message": "Usuario no encontrado"}), 404
+    return jsonify({"user": user.to_dict()}), 200
 

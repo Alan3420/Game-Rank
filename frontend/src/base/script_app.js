@@ -118,6 +118,8 @@ export default {
     document.documentElement.setAttribute('data-theme', this.tema);
     document.addEventListener('mousedown', this.handleClickOutside);
 
+    estadoAutenticacion.restaurarSesion();
+
     const flash = localStorage.getItem('flashNotificacion');
 
     if (flash) {
