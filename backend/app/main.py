@@ -45,10 +45,12 @@ def invalid_token_callback(error_string):
 # Configuración proyecto
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URI")
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 280,
     "connect_args": {
         "ssl": {
-            "ca": os.path.join(os.path.dirname(__file__), 'ca.pem') 
-            
+            "ca": os.path.join(os.path.dirname(__file__), 'ca.pem')
+
         }
     }
 }
