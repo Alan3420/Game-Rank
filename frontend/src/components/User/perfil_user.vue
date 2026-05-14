@@ -234,7 +234,7 @@
 
             <div v-else class="fav-grid">
               <GameCard
-                v-for="(fav, index) in favoritos"
+                v-for="(fav, index) in favoritosPaginados"
                 :key="fav.id"
                 :game="fav"
                 :index="index"
@@ -245,6 +245,34 @@
                 @action="quitarFavorito"
                 @update:status="handleStatusUpdate"
               />
+            </div>
+
+            <div v-if="!favoritosLoading && favoritos.length > FAVS_POR_PAGINA" class="fav-pagination">
+              <button
+                class="fav-page-btn fav-page-nav"
+                :disabled="paginaFavoritos === 1"
+                @click="paginaFavoritos--"
+                aria-label="Página anterior"
+              >
+                <i class="pi pi-chevron-left"></i>
+              </button>
+
+              <button
+                v-for="n in totalPaginasFavoritos"
+                :key="n"
+                class="fav-page-btn"
+                :class="{ 'is-active': paginaFavoritos === n }"
+                @click="paginaFavoritos = n"
+              >{{ n }}</button>
+
+              <button
+                class="fav-page-btn fav-page-nav"
+                :disabled="paginaFavoritos === totalPaginasFavoritos"
+                @click="paginaFavoritos++"
+                aria-label="Página siguiente"
+              >
+                <i class="pi pi-chevron-right"></i>
+              </button>
             </div>
           </div>
 

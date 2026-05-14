@@ -17,6 +17,8 @@ export default {
       favoritos: [],
       favoritosLoading: true,
       remover: null,
+      paginaFavoritos: 1,
+      FAVS_POR_PAGINA: 8,
       statuses: new Map(),
       coleccion: [],
       coleccionLoading: true,
@@ -58,6 +60,13 @@ export default {
     },
     favoritosIds() {
       return new Set(this.favoritos.map(f => f.id));
+    },
+    totalPaginasFavoritos() {
+      return Math.max(1, Math.ceil(this.favoritos.length / this.FAVS_POR_PAGINA));
+    },
+    favoritosPaginados() {
+      const inicio = (this.paginaFavoritos - 1) * this.FAVS_POR_PAGINA;
+      return this.favoritos.slice(inicio, inicio + this.FAVS_POR_PAGINA);
     }
   },
   async mounted() {
@@ -194,6 +203,7 @@ export default {
         if (this.favoritosIds.has(gameId)) {
           await removeTOFavorite(gameId);
           this.favoritos = this.favoritos.filter(f => f.id !== gameId);
+          if (this.paginaFavoritos > this.totalPaginasFavoritos) this.paginaFavoritos = this.totalPaginasFavoritos;
           notificaciones.success("Juego eliminado de tus favoritos.", { title: "Favorito eliminado" });
         } else {
           await addTOFavorite(gameId);
@@ -212,6 +222,7 @@ export default {
       try {
         await removeTOFavorite(idGame);
         this.favoritos = this.favoritos.filter(f => f.id !== idGame);
+        if (this.paginaFavoritos > this.totalPaginasFavoritos) this.paginaFavoritos = this.totalPaginasFavoritos;
         notificaciones.success("Juego eliminado de tus favoritos.", { title: "Favorito eliminado" });
       } catch (error) {
         console.error("Error al quitar favorito:", error);
