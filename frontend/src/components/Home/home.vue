@@ -10,22 +10,17 @@
         <div class="hero-text">
           <h1 class="hero-title">Descubre, valora y comparte tus juegos favoritos</h1>
           <p class="hero-description">
-            Explora miles de juegos, accede a críticas de la comunidad, crea tus tier lists personalizadas
-            y conecta con otros jugadores apasionados.
+            Explora miles de juegos, descubre valoraciones y opiniones de la comunidad, puntúa tus títulos favoritos y conecta con otros jugadores apasionados.
           </p>
 
           <div class="hero-features">
             <div class="feature-item">
               <i class="pi pi-star-fill"></i>
-              <span>Millones de reseñas</span>
+              <span>Reseñas de la comunidad</span>
             </div>
             <div class="feature-item">
               <i class="pi pi-users"></i>
-              <span>Comunidad activa</span>
-            </div>
-            <div class="feature-item">
-              <i class="pi pi-list"></i>
-              <span>Tier lists personalizadas</span>
+              <span>Jugadores que comparten opiniones</span>
             </div>
           </div>
 

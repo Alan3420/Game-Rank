@@ -193,7 +193,7 @@
                   :style="{ background: STATUS_META[item.status]?.solidBg, color: STATUS_META[item.status]?.solidText }"
                 >
                   <i :class="'pi ' + STATUS_META[item.status]?.icon"></i>
-                  {{ STATUS_META[item.status]?.label }}
+                  <span class="status-label">{{ STATUS_META[item.status]?.label }}</span>
                 </span>
                 <button
                   class="coleccion-item-fav"

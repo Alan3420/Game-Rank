@@ -1541,3 +1541,36 @@
         max-width: 100%;
     }
 }
+
+@media (max-width: 450px) {
+    .detail-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .stat-sep {
+        display: none;
+    }
+
+    .stat-item {
+        padding: 0.5rem 0.6rem;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.07);
+        align-items: center;
+        flex: unset;
+    }
+
+    .stat-item:first-child {
+        padding-left: 0.6rem;
+    }
+
+    .stat-value {
+        justify-content: center;
+    }
+
+    .stat-label {
+        text-align: center;
+    }
+}

@@ -1070,6 +1070,7 @@
   border: 1px solid var(--color-border-light);
   box-shadow: 0 4px 20px rgba(20, 21, 63, 0.07);
   overflow: hidden;
+  min-width: 0;
 }
 
 .coleccion-header {
@@ -1307,7 +1308,9 @@
 
 @media (max-width: 900px) {
   .banner-stats {
-    display: none;
+    margin-left: 0;
+    gap: 16px;
+    padding: 12px 18px;
   }
   .coleccion-grid {
     grid-template-columns: 1fr;
@@ -1362,12 +1365,56 @@
     font-size: 1.5rem;
   }
 
+  .banner-stats {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 12px;
+  }
+
+  .banner-stat-divider {
+    display: none;
+  }
+
+  .banner-stat {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 8px;
+    min-width: 0;
+  }
+
+  .banner-stat-value {
+    font-size: 1.3rem;
+  }
+
+  .banner-stat-label {
+    font-size: 0.6rem;
+  }
+
   .profile-card {
     padding: 16px;
   }
 
   .coleccion-header {
     padding: 14px 16px 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .coleccion-tabs {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .coleccion-item-status .status-label {
+    display: none;
+  }
+
+  .coleccion-item-status {
+    padding: 4px 7px;
   }
 
   .favorites-section {
