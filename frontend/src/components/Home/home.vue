@@ -77,71 +77,108 @@
     </section>
 
     <!-- Top Games Section -->
-    <section v-if="estadoAutenticacion.usuario !== null"  class="games-section">
+    <section v-if="estadoAutenticacion.usuario !== null" class="top-section">
       <div class="section-header">
-        <h2>Los 3 mejores juegos</h2>
-        <p>Clasificados por calificación de usuarios</p>
+        <span class="section-eyebrow">
+          <i class="pi pi-trophy"></i>
+          Ranking
+        </span>
+        <h2>Los mejores juegos</h2>
+        <p>Clasificados por calificación de la comunidad</p>
       </div>
 
       <Loader v-if="isLoading" message="Cargando juegos destacados..." />
 
-      <div v-else-if="topGames.length > 0" class="games-layout">
-        <!-- Juego principal (más grande) -->
-        <article class="game-card game-card-featured">
-          <div class="game-image-container featured-image">
-            <img :src="topGames[0].imge_url" :alt="topGames[0].name" />
-            <div class="game-rank">
-              <span class="rank-label">1</span>
-            </div>
-            <div class="game-overlay">
-              <div class="rating-display">
-                <i class="pi pi-star-fill"></i>
-                <span>{{ topGames[0].rating }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="game-content featured-content">
-            <span class="detail-category">
-              <i class="pi pi-gamepad"></i>
-              Videojuego
-            </span>
-            <h3>{{ topGames[0].name }}</h3>
-            <p class="game-year">
-              <i class="pi pi-calendar"></i>
-              {{ topGames[0].release_date.split('-')[0] }}
-            </p>
-            <p class="game-description">Posicionado como el juego más calificado en nuestra base de datos. Esta
-              selección refleja la preferencia de la comunidad gaming global.</p>
-          </div>
-        </article>
+      <div v-else-if="topGames.length > 0" class="top-podium">
 
-        <!-- Juegos secundarios (más pequeños) -->
-        <div class="games-secondary">
-          <article v-for="(game, idx) in topGames.slice(1, 3)" :key="game.id" class="game-card game-card-secondary">
-            <div class="game-image-container">
-              <img :src="game.imge_url" :alt="game.name" />
-              <div class="game-rank">
-                <span class="rank-label">{{ idx + 2 }}</span>
-              </div>
-              <div class="game-overlay secondary-overlay">
-                <div class="rating-badge">{{ game.rating }}</div>
+        <!-- Rank 2 -->
+        <div class="top-slot top-slot--2">
+          <article v-if="topGames[1]" class="top-card top-card--silver" @click="goToDetail(topGames[1].id)">
+            <div class="top-card-img-wrap">
+              <img :src="topGames[1].imge_url" :alt="topGames[1].name" />
+              <div class="top-card-img-overlay"></div>
+              <div class="top-card-medal medal--silver">
+                <span class="medal-num">2</span>
+                <i class="pi pi-trophy"></i>
               </div>
             </div>
-            <div class="game-content">
-              <h4>{{ game.name }}</h4>
-              <p class="game-meta">
+            <div class="top-card-body">
+              <h3 class="top-card-name">{{ topGames[1].name }}</h3>
+              <span class="top-card-year">
                 <i class="pi pi-calendar"></i>
-                {{ game.release_date.split('-')[0] }}
-              </p>
+                {{ topGames[1].release_date.split('-')[0] }}
+              </span>
+              <div class="top-card-rating">
+                <i class="pi pi-star-fill"></i>
+                <span class="top-card-score">{{ topGames[1].rating }}</span>
+                <span class="top-card-denom">/ 10</span>
+              </div>
             </div>
           </article>
         </div>
+
+        <!-- Rank 1 (centro, destacado) -->
+        <div class="top-slot top-slot--1">
+          <div class="top-best-label">
+            <i class="pi pi-crown"></i>
+            Mejor valorado
+          </div>
+          <article class="top-card top-card--gold" @click="goToDetail(topGames[0].id)">
+            <div class="top-card-img-wrap">
+              <img :src="topGames[0].imge_url" :alt="topGames[0].name" />
+              <div class="top-card-img-overlay"></div>
+              <div class="top-card-medal medal--gold">
+                <span class="medal-num">1</span>
+                <i class="pi pi-trophy"></i>
+              </div>
+            </div>
+            <div class="top-card-body">
+              <h3 class="top-card-name">{{ topGames[0].name }}</h3>
+              <span class="top-card-year">
+                <i class="pi pi-calendar"></i>
+                {{ topGames[0].release_date.split('-')[0] }}
+              </span>
+              <div class="top-card-rating">
+                <i class="pi pi-star-fill"></i>
+                <span class="top-card-score">{{ topGames[0].rating }}</span>
+                <span class="top-card-denom">/ 10</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Rank 3 -->
+        <div class="top-slot top-slot--3">
+          <article v-if="topGames[2]" class="top-card top-card--bronze" @click="goToDetail(topGames[2].id)">
+            <div class="top-card-img-wrap">
+              <img :src="topGames[2].imge_url" :alt="topGames[2].name" />
+              <div class="top-card-img-overlay"></div>
+              <div class="top-card-medal medal--bronze">
+                <span class="medal-num">3</span>
+                <i class="pi pi-trophy"></i>
+              </div>
+            </div>
+            <div class="top-card-body">
+              <h3 class="top-card-name">{{ topGames[2].name }}</h3>
+              <span class="top-card-year">
+                <i class="pi pi-calendar"></i>
+                {{ topGames[2].release_date.split('-')[0] }}
+              </span>
+              <div class="top-card-rating">
+                <i class="pi pi-star-fill"></i>
+                <span class="top-card-score">{{ topGames[2].rating }}</span>
+                <span class="top-card-denom">/ 10</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
       </div>
 
       <div v-else class="estado-vacio">
         <i class="pi pi-inbox"></i>
         <p>No hay juegos disponibles.</p>
-    </div>
+      </div>
     </section>
 
     <!-- Proximos lanzamientos -->
