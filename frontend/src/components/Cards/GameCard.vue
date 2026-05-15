@@ -10,10 +10,9 @@
       <GameImage :src="game.imge_url" :alt="game.name" class="game-image" />
       <div class="image-overlay"></div>
 
-      <!-- Rating Badge -->
-      <div class="rating-badge">
-        <i class="pi pi-star-fill"></i>
-        <span>{{ game.rating }}</span>
+      <!-- Metacritic Badge -->
+      <div class="rating-badge" :class="game.metacritic ? metacriticClass(game.metacritic) : 'mc-na'">
+        {{ game.metacritic ?? '—' }}
       </div>
 
       <!-- Cluster de acciones (hover) -->
@@ -112,6 +111,12 @@ const props = defineProps({
 const showDropdown = ref(false);
 
 const statusMeta = computed(() => props.status ? STATUS_META[props.status] : null);
+
+function metacriticClass(score) {
+  if (score >= 80) return 'mc-green';
+  if (score >= 50) return 'mc-yellow';
+  return 'mc-red';
+}
 
 function handleCardClick() {
   if (showDropdown.value) {

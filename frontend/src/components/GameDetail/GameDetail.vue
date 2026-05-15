@@ -39,12 +39,12 @@
                     <h1>{{ game.name }}</h1>
 
                     <div class="detail-stats">
-                        <div class="stat-item" title="Puntuación oficial RAWG">
+                        <div class="stat-item" title="Puntuación Metacritic">
                             <span class="stat-value">
-                                <i class="pi pi-star-fill"></i>
-                                {{ game.rating ?? 'N/A' }}
+                                <span v-if="game.metacritic" class="mc-badge" :class="metacriticClass(game.metacritic)">{{ game.metacritic }}</span>
+                                <span v-else class="mc-badge mc-na">N/A</span>
                             </span>
-                            <span class="stat-label">RAWG</span>
+                            <span class="stat-label">Metacritic</span>
                         </div>
 
                         <div class="stat-sep"></div>
@@ -166,6 +166,43 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <!-- LOGROS -->
+                    <div v-if="logros.length" class="logros-band">
+                        <div class="logros-band__header">
+                            <div class="logros-band__title">
+                                <i class="pi pi-trophy"></i>
+                                <h3>Logros</h3>
+                                <span class="logros-band__count">{{ logros.length }}</span>
+                            </div>
+                            <div class="logros-leyenda">
+                                <span class="rareza-dot rareza-raro"></span><span>Raro</span>
+                                <span class="rareza-dot rareza-infrecuente"></span><span>Infrecuente</span>
+                                <span class="rareza-dot rareza-comun"></span><span>Común</span>
+                            </div>
+                        </div>
+                        <div class="logros-strip">
+                            <div
+                                v-for="logro in logros"
+                                :key="logro.id"
+                                class="logro-tile"
+                                :class="logroRareza(logro.percent)"
+                                :title="logro.description"
+                            >
+                                <div class="logro-tile__img">
+                                    <GameImage v-if="logro.image" :src="logro.image" :alt="logro.name" />
+                                    <i v-else class="pi pi-trophy"></i>
+                                </div>
+                                <div class="logro-tile__info">
+                                    <span class="logro-tile__name">{{ logro.name }}</span>
+                                    <span v-if="logro.percent !== null" class="logro-tile__pct">{{ logro.percent.toFixed(1) }}%</span>
+                                </div>
+                                <div class="logro-tile__rareza-bar">
+                                    <div class="logro-tile__rareza-fill" :style="{ width: Math.min(logro.percent ?? 0, 100) + '%' }"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- COMENTARIOS -->
@@ -317,11 +354,56 @@
                         </div>
                     </div>
 
-                    <!-- Desarrolladores -->
+                    <!-- Equipo creativo -->
+                    <div v-if="game.team?.length" class="detail-card sidebar-card">
+                        <div class="card-header">
+                            <i class="pi pi-id-card"></i>
+                            <h3>Equipo creativo</h3>
+                        </div>
+                        <div class="team-list">
+                            <div v-for="member in game.team" :key="member.id" class="team-item">
+                                <div class="team-avatar">
+                                    <GameImage v-if="member.image" :src="member.image" :alt="member.name" />
+                                    <i v-else class="pi pi-user"></i>
+                                </div>
+                                <div class="team-info">
+                                    <span class="team-name">{{ member.name }}</span>
+                                    <span class="team-roles">{{ member.roles.join(', ') || 'Equipo' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DLCs y expansiones -->
+                    <div v-if="adiciones.length" class="detail-card sidebar-card">
+                        <div class="card-header">
+                            <i class="pi pi-plus-circle"></i>
+                            <h3>DLCs y expansiones</h3>
+                        </div>
+                        <div class="adiciones-list">
+                            <div
+                                v-for="dlc in adiciones"
+                                :key="dlc.id"
+                                class="adicion-item"
+                                @click="irAlJuego(dlc.id)"
+                            >
+                                <div class="adicion-thumb">
+                                    <GameImage v-if="dlc.imge_url" :src="dlc.imge_url" :alt="dlc.name" />
+                                    <i v-else class="pi pi-image"></i>
+                                </div>
+                                <div class="adicion-info">
+                                    <span class="adicion-name">{{ dlc.name }}</span>
+                                    <span class="adicion-date">{{ formatDate(dlc.release_date) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estudios -->
                     <div class="detail-card sidebar-card">
                         <div class="card-header">
                             <i class="pi pi-users"></i>
-                            <h3>Desarrolladores</h3>
+                            <h3>Estudios</h3>
                         </div>
                         <div class="dev-list">
                             <div v-if="!game.developers?.length" class="tag empty">Sin información</div>
@@ -332,7 +414,7 @@
                                 </div>
                                 <div class="dev-info">
                                     <span class="dev-name">{{ dev.name }}</span>
-                                    <span class="dev-label">Desarrollador</span>
+                                    <span class="dev-label">Estudio</span>
                                 </div>
                             </div>
                         </div>
@@ -346,10 +428,10 @@
                         </div>
                         <ul class="meta-list">
                             <li>
-                                <span class="meta-label">Puntuación oficial (RAWG)</span>
+                                <span class="meta-label">Metacritic</span>
                                 <span class="meta-value">
-                                    <i class="pi pi-star-fill meta-star"></i>
-                                    {{ game.rating ?? 'N/A' }}
+                                    <span v-if="game.metacritic" class="mc-badge" :class="metacriticClass(game.metacritic)">{{ game.metacritic }}</span>
+                                    <span v-else>—</span>
                                 </span>
                             </li>
                             <li>

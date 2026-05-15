@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app
 from flask_jwt_extended import jwt_required
-from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered, obtener_saga_servicio
+from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered, obtener_saga_servicio, obtener_adicciones_servicio, obtener_logros_servicio
 
 
 content_overview_bp = Blueprint('content_overview_route', __name__)
@@ -98,6 +98,16 @@ def filtered_games():
         return jsonify({"message": "Error al obtener los juegos filtrados", "error": str(e)}), 500
 
 
+@content_overview_bp.route('/overview/<int:game_id>/adicciones', methods=["GET"])
+@jwt_required()
+def adicciones_del_juego(game_id):
+    try:
+        adicciones = obtener_adicciones_servicio(game_id=game_id)
+        return jsonify(adicciones), 200
+    except Exception as e:
+        return jsonify({"message": "Error al obtener adicciones", "error": str(e)}), 500
+
+
 @content_overview_bp.route('/overview/<int:game_id>/saga', methods=["GET"])
 @jwt_required()
 def saga_del_juego(game_id):
@@ -106,6 +116,16 @@ def saga_del_juego(game_id):
         return jsonify(juegos), 200
     except Exception as e:
         return jsonify({"message": "Error al obtener saga del juego", "error": str(e)}), 500
+
+
+@content_overview_bp.route('/overview/<int:game_id>/logros', methods=["GET"])
+@jwt_required()
+def logros_del_juego(game_id):
+    try:
+        logros = obtener_logros_servicio(game_id=game_id)
+        return jsonify(logros), 200
+    except Exception as e:
+        return jsonify({"message": "Error al obtener logros", "error": str(e)}), 500
 
 
 @content_overview_bp.route("/hero-video", methods=["GET"])

@@ -131,6 +131,21 @@ def trailer_format(data):
         
         return trailer_list_dict
 
+def equipo_format(data) -> list:
+    if not data:
+        return []
+    result = []
+    for member in data:
+        roles = [p.get("name", "").capitalize() for p in member.get("positions", [])]
+        result.append({
+            "id": member.get("id"),
+            "name": member.get("name"),
+            "image": member.get("image"),
+            "roles": roles
+        })
+    return result
+
+
 def stores_format(data) -> list:
     if not data:
         return []
@@ -146,15 +161,35 @@ def stores_format(data) -> list:
     return result
 
 
+def logros_format(data) -> list:
+    if not data:
+        return []
+    result = []
+    for logro in data:
+        percent = logro.get("percent")
+        try:
+            percent = float(percent) if percent is not None else None
+        except (ValueError, TypeError):
+            percent = None
+        result.append({
+            "id": logro.get("id"),
+            "name": logro.get("name"),
+            "description": logro.get("description"),
+            "image": logro.get("image"),
+            "percent": percent
+        })
+    return result
+
+
 def game_format_resume(data) -> dict:
     if type(data) != list:
         return {
-        
             "id": data.get("id"),
             "name": data.get("name"),
             "release_date": data.get("released"),
             "imge_url": data.get("background_image"),
             "rating": data.get("rating"),
+            "metacritic": data.get("metacritic"),
         }
     else:
         lista_game_dict = []
@@ -169,6 +204,7 @@ def game_format_resume(data) -> dict:
                 "release_date": game.get("released"),
                 "imge_url": game.get("background_image"),
                 "rating": game.get("rating"),
+                "metacritic": game.get("metacritic"),
             }
             lista_game_dict.append(game_dict)
 
@@ -200,12 +236,14 @@ def game_format_details(data) -> dict | list[dict]:
             "description": data.get("description"),
             "imge_url": data.get("background_image"),
             "rating": data.get("rating"),
+            "metacritic": data.get("metacritic"),
             "genres":      genre_format(data=data.get("genres", [])),
             "screenshots": screenshots_format(data=data.get("short_screenshots", [])),
             "movies":      trailer_format(data=data.get("movies", [])),
             "platforms":   platform_format(data=data.get("platforms")),
             "developers":  developer_format(data=data.get("developers")),
             "stores":      stores_format(data=data.get("stores", [])),
+            "team":        equipo_format(data=data.get("team", [])),
         }
     else:
         lista_game_dict = []
@@ -218,12 +256,14 @@ def game_format_details(data) -> dict | list[dict]:
                 "description": game.get("description"),
                 "imge_url": game.get("background_image"),
                 "rating": game.get("rating"),
+                "metacritic": game.get("metacritic"),
                 "genres":      genre_format(data=game.get("genres", [])),
                 "screenshots": screenshots_format(data=game.get("short_screenshots", [])),
                 "movies":      trailer_format(data=game.get("movies", [])),
                 "platforms":   platform_format(data=game.get("platforms")),
                 "developers":  developer_format(data=game.get("developers")),
                 "stores":      stores_format(data=game.get("stores", [])),
+                "team":        equipo_format(data=game.get("team", [])),
             }
             lista_game_dict.append(game_dict)
 

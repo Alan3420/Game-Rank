@@ -173,6 +173,32 @@
     color: var(--color-text-on-dark);
 }
 
+/* ── METACRITIC BADGE ── */
+.mc-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    border-radius: 8px;
+    padding: 0.18rem 0.6rem;
+    min-width: 40px;
+    color: #ffffff;
+    font-family: 'Sora', sans-serif;
+}
+
+.mc-badge.mc-green  { background: #1a9e62; }
+.mc-badge.mc-yellow { background: #c97d0c; }
+.mc-badge.mc-red    { background: #c03030; }
+.mc-badge.mc-na     {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-width: unset;
+}
+
 /* ── STATS ── */
 .detail-stats {
     display: flex;
@@ -526,6 +552,231 @@
     color: var(--color-text-secondary);
     line-height: 1.85;
     font-size: 0.96rem;
+}
+
+/* ─────────────────────────────────────────
+   LOGROS — CINTURÓN
+───────────────────────────────────────── */
+.logros-band {
+    background: var(--color-surface);
+    border-radius: 20px;
+    border: 1px solid rgba(124, 111, 255, 0.07);
+    box-shadow: 0 1px 3px rgba(20, 21, 63, 0.05), 0 8px 24px rgba(20, 21, 63, 0.06);
+    overflow: hidden;
+}
+
+.logros-band__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.75rem;
+    border-bottom: 1px solid var(--color-border-lightest);
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.logros-band__title {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.logros-band__title i {
+    font-size: 1rem;
+    color: var(--color-secondary);
+}
+
+.logros-band__title h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.logros-band__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef0ff;
+    color: var(--color-secondary);
+    font-size: 0.78rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 0.15rem 0.65rem;
+    min-width: 26px;
+}
+
+.logros-leyenda {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    font-weight: 500;
+}
+
+.rareza-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.rareza-dot.rareza-raro       { background: #c97d0c; }
+.rareza-dot.rareza-infrecuente { background: #5b7fce; }
+.rareza-dot.rareza-comun       { background: #6b7280; }
+
+/* Strip horizontal con scroll */
+.logros-strip {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-light) transparent;
+    padding: 1.25rem 1.75rem;
+    gap: 0.75rem;
+}
+
+.logros-strip::-webkit-scrollbar {
+    height: 4px;
+}
+
+.logros-strip::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.logros-strip::-webkit-scrollbar-thumb {
+    background: var(--color-border-light);
+    border-radius: 4px;
+}
+
+/* Tile individual */
+.logro-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 96px;
+    gap: 0.5rem;
+    padding: 0.85rem 0.65rem 0.7rem;
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    background: #f7f8ff;
+    cursor: default;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.logro-tile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(20, 21, 63, 0.1);
+}
+
+.logro-tile.rareza-raro {
+    border-color: rgba(201, 125, 12, 0.35);
+    background: #fdf8ee;
+}
+
+.logro-tile.rareza-infrecuente {
+    border-color: rgba(91, 127, 206, 0.3);
+    background: #f0f4ff;
+}
+
+.logro-tile.rareza-comun {
+    border-color: rgba(107, 114, 128, 0.18);
+    background: #f7f8ff;
+}
+
+.logro-tile__img {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eef0ff;
+    flex-shrink: 0;
+}
+
+.logro-tile__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.logro-tile__img i {
+    font-size: 1.3rem;
+    color: var(--color-secondary);
+}
+
+.logro-tile__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    width: 100%;
+}
+
+.logro-tile__name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text);
+    text-align: center;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.logro-tile__pct {
+    font-size: 0.67rem;
+    font-weight: 700;
+    color: var(--color-text-light);
+    letter-spacing: 0.02em;
+}
+
+/* Barra de rareza */
+.logro-tile__rareza-bar {
+    width: 100%;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--color-border-lightest);
+    overflow: hidden;
+}
+
+.logro-tile__rareza-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.rareza-raro       .logro-tile__rareza-fill { background: #c97d0c; }
+.rareza-infrecuente .logro-tile__rareza-fill { background: #5b7fce; }
+.rareza-comun       .logro-tile__rareza-fill { background: #6b7280; }
+
+/* Dark mode */
+[data-theme="dark"] .logros-band__count {
+    background: rgba(107, 95, 224, 0.12);
+}
+
+[data-theme="dark"] .logro-tile {
+    background: var(--color-surface-alt);
+    border-color: var(--color-border-light);
+}
+
+[data-theme="dark"] .logro-tile.rareza-raro {
+    background: rgba(201, 125, 12, 0.08);
+    border-color: rgba(201, 125, 12, 0.3);
+}
+
+[data-theme="dark"] .logro-tile.rareza-infrecuente {
+    background: rgba(91, 127, 206, 0.08);
+    border-color: rgba(91, 127, 206, 0.25);
+}
+
+[data-theme="dark"] .logro-tile__img {
+    background: rgba(107, 95, 224, 0.12);
 }
 
 /* ─────────────────────────────────────────
@@ -1211,6 +1462,152 @@
     color: var(--color-secondary);
 }
 
+/* EQUIPO CREATIVO */
+.team-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.team-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    background: #f9f9ff;
+    border: 1px solid var(--color-border-light);
+    transition: box-shadow 0.15s ease;
+}
+
+.team-item:hover {
+    box-shadow: 0 4px 12px rgba(124, 111, 255, 0.1);
+}
+
+.team-avatar {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+    background: #eef0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--color-secondary);
+    flex-shrink: 0;
+}
+
+.team-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.team-avatar i {
+    font-size: 1rem;
+}
+
+.team-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.team-name {
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 0.88rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.team-roles {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* DLCs Y EXPANSIONES */
+.adiciones-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.adicion-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 12px;
+    background: #f9f9ff;
+    border: 1px solid var(--color-border-light);
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.adicion-item:hover {
+    background: #f0f1ff;
+    box-shadow: 0 4px 12px rgba(124, 111, 255, 0.1);
+}
+
+.adicion-thumb {
+    width: 52px;
+    height: 36px;
+    min-width: 52px;
+    border-radius: 8px;
+    background: #eef0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--color-secondary);
+    flex-shrink: 0;
+}
+
+.adicion-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.adicion-thumb i {
+    font-size: 0.9rem;
+}
+
+.adicion-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+
+.adicion-name {
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.adicion-date {
+    font-size: 0.73rem;
+    color: var(--color-text-light);
+    font-weight: 500;
+}
+
+/* Badge metacritic dentro del sidebar (fondo claro) */
+.meta-value .mc-badge.mc-na {
+    color: var(--color-text-light);
+}
+
 /* METADATOS */
 .meta-list {
     list-style: none;
@@ -1483,6 +1880,30 @@
 
 [data-theme="dark"] .comment-stars i.pi-star {
   color: var(--color-border-dark);
+}
+
+[data-theme="dark"] .team-item {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border-light);
+}
+
+[data-theme="dark"] .team-avatar {
+  background: rgba(107, 95, 224, 0.12);
+  color: var(--color-secondary);
+}
+
+[data-theme="dark"] .adicion-item {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border-light);
+}
+
+[data-theme="dark"] .adicion-item:hover {
+  background: var(--color-surface-hover);
+}
+
+[data-theme="dark"] .adicion-thumb {
+  background: rgba(107, 95, 224, 0.12);
+  color: var(--color-secondary);
 }
 
 /* ─────────────────────────────────────────

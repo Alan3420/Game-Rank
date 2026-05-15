@@ -1,4 +1,4 @@
-import { getGameDetail, obtenerSagaDelJuego } from '../../services/gameDetail';
+import { getGameDetail, obtenerSagaDelJuego, obtenerAdiccionesJuego, obtenerLogrosJuego } from '../../services/gameDetail';
 import { getCommentsByGame, createComments, deleteComment, updateComment } from '../../services/comment_services';
 import { addTOFavorite, removeTOFavorite, checkFavorite } from '../../services/favorites_area';
 import { getGameStatus } from '../../services/user_game_status';
@@ -29,7 +29,9 @@ export default {
             gameStatus: null,
             showStatusModal: false,
             STATUS_META,
-            juegosSaga: []
+            juegosSaga: [],
+            adiciones: [],
+            logros: []
         };
     },
     computed: {
@@ -70,6 +72,8 @@ export default {
         await this.checkIsFavorite();
         await this.loadStatus();
         this.cargarSagaDelJuego();
+        this.cargarAdiciones();
+        this.cargarLogros();
     },
 
     watch: {
@@ -83,12 +87,16 @@ export default {
             this.gameStatus = null;
             this.showStatusModal = false;
             this.juegosSaga = [];
+            this.adiciones = [];
+            this.logros = [];
             this.loadGameDetail(newId).then(() => {
                 this.loadComments();
                 this.loadCommunityAvg();
                 this.checkIsFavorite();
                 this.loadStatus();
                 this.cargarSagaDelJuego(newId);
+                this.cargarAdiciones(newId);
+                this.cargarLogros(newId);
             });
         }
     },
@@ -374,6 +382,24 @@ export default {
             return `${date.getDate()} ${meses[date.getMonth()]} ${date.getFullYear()}`;
         },
 
+        async cargarAdiciones(id = null) {
+            try {
+                const gameId = id || this.$route.params.id;
+                this.adiciones = await obtenerAdiccionesJuego(gameId);
+            } catch {
+                this.adiciones = [];
+            }
+        },
+
+        async cargarLogros(id = null) {
+            try {
+                const gameId = id || this.$route.params.id;
+                this.logros = await obtenerLogrosJuego(gameId);
+            } catch {
+                this.logros = [];
+            }
+        },
+
         async cargarSagaDelJuego(id = null) {
             try {
                 const gameId = id || this.$route.params.id;
@@ -385,6 +411,20 @@ export default {
 
         irAlJuego(gameId) {
             this.$router.push(`/game/${gameId}`);
+        },
+
+        logroRareza(percent) {
+            if (percent === null || percent === undefined) return 'rareza-comun';
+            if (percent < 10) return 'rareza-raro';
+            if (percent < 40) return 'rareza-infrecuente';
+            return 'rareza-comun';
+        },
+
+        metacriticClass(score) {
+            if (!score && score !== 0) return 'mc-na';
+            if (score >= 80) return 'mc-green';
+            if (score >= 50) return 'mc-yellow';
+            return 'mc-red';
         },
 
         getStoreIcon(slug) {

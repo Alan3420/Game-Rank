@@ -107,33 +107,27 @@
   color: var(--color-text-medium);
 }
 
-/* === RATING BADGE === */
+/* === METACRITIC BADGE === */
 .rating-badge {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(255, 193, 7, 0.95);
-  color: var(--color-text);
-  padding: 0.4rem 0.65rem;
-  border-radius: 20px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  padding: 0.25rem 0.55rem;
+  border-radius: 7px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  font-family: 'Sora', sans-serif;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  min-width: 36px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-.game-card:hover .rating-badge {
-  opacity: 1;
-}
-
-.rating-badge i {
-  color: #ff6b35;
-}
+.rating-badge.mc-green  { background: #1a9e62; }
+.rating-badge.mc-yellow { background: #c97d0c; }
+.rating-badge.mc-red    { background: #c03030; }
+.rating-badge.mc-na     { background: #6b7280; }
 
 /* === STATUS BADGE — siempre visible, colores sólidos === */
 .status-badge {
@@ -241,9 +235,6 @@
   background: rgba(42, 49, 64, 0.98);
 }
 
-[data-theme="dark"] .rating-badge {
-  color: var(--color-star);
-}
 
 /* ANIMACIÓN */
 @keyframes fadeIn {

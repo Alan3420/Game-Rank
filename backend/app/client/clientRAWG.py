@@ -102,8 +102,23 @@ def get_games_by_ordering(ordering="-added", per_page=40):
     })
     return result.get("results", []) if result else []
 
+def obtener_equipo_desarrollo(game_id, page_size=8):
+    result = _request_with_cache(f"/games/{game_id}/development-team", {"page_size": page_size})
+    return result.get("results", []) if result else []
+
+
+def obtener_adicciones_juego(game_id, page_size=6):
+    result = _request_with_cache(f"/games/{game_id}/additions", {"page_size": page_size})
+    return result.get("results", []) if result else []
+
+
 def obtener_saga_del_juego(game_id, page_size=8):
     result = _request_with_cache(f"/games/{game_id}/game-series", {"page_size": page_size})
+    return result.get("results", []) if result else []
+
+
+def obtener_logros_juego(game_id, page_size=12):
+    result = _request_with_cache(f"/games/{game_id}/achievements", {"page_size": page_size})
     return result.get("results", []) if result else []
 
 
