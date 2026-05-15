@@ -282,6 +282,23 @@
 
                     </div>
 
+                    <!-- MÁS DE ESTA SAGA -->
+                    <div v-if="juegosSaga.length" class="detail-card sugeridos-card">
+                        <div class="card-header">
+                            <i class="pi pi-th-large"></i>
+                            <h3>Más de esta saga</h3>
+                        </div>
+                        <div class="sugeridos-grid">
+                            <GameCard
+                                v-for="(juego, i) in juegosSaga"
+                                :key="juego.id"
+                                :game="juego"
+                                :index="i"
+                                @click="irAlJuego(juego.id)"
+                            />
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- SIDEBAR -->
@@ -357,6 +374,29 @@
                             </li>
                         </ul>
                     </div>
+                    
+                    <!-- Dónde comprar -->
+                    <div v-if="game.stores?.length" class="detail-card sidebar-card">
+                        <div class="card-header">
+                            <i class="pi pi-shopping-cart"></i>
+                            <h3>Dónde comprar</h3>
+                        </div>
+                        <div class="store-list">
+                            <a
+                                v-for="store in game.stores"
+                                :key="store.id"
+                                :href="store.url"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="store-btn"
+                            >
+                                <i :class="'pi ' + getStoreIcon(store.slug)"></i>
+                                <span>{{ store.name }}</span>
+                                <i class="pi pi-external-link store-btn__ext"></i>
+                            </a>
+                        </div>
+                    </div>
+
 
                 </aside>
             </section>
@@ -371,9 +411,10 @@ import Button from 'primevue/button';
 import Loader from '../Loader/Loader.vue';
 import GameImage from '../Image/GameImage.vue';
 import GameStatusDropdown from '../Cards/GameStatusDropdown.vue';
+import GameCard from '../Cards/GameCard.vue';
 export default {
     name: 'GameDetail',
-    components: { Button, Loader, GameImage, GameStatusDropdown },
+    components: { Button, Loader, GameImage, GameStatusDropdown, GameCard },
     mixins: [jsDetalles]
 };
 </script>

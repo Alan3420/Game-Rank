@@ -9,3 +9,13 @@ export async function getGameDetail(gameId) {
         throw error;
     }
 }
+
+export async function obtenerSagaDelJuego(gameId) {
+    try {
+        const response = await api.get(`/content/overview/${gameId}/saga`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener saga del juego:', error);
+        return [];
+    }
+}

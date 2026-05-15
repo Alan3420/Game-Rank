@@ -1,4 +1,4 @@
-import { getGameDetail } from '../../services/gameDetail';
+import { getGameDetail, obtenerSagaDelJuego } from '../../services/gameDetail';
 import { getCommentsByGame, createComments, deleteComment, updateComment } from '../../services/comment_services';
 import { addTOFavorite, removeTOFavorite, checkFavorite } from '../../services/favorites_area';
 import { getGameStatus } from '../../services/user_game_status';
@@ -28,7 +28,8 @@ export default {
             communityAvg: 0,
             gameStatus: null,
             showStatusModal: false,
-            STATUS_META
+            STATUS_META,
+            juegosSaga: []
         };
     },
     computed: {
@@ -68,21 +69,28 @@ export default {
         await this.loadCommunityAvg();
         await this.checkIsFavorite();
         await this.loadStatus();
+        this.cargarSagaDelJuego();
     },
-    beforeRouteUpdate(to, from, next) {
-        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-        this.formRating = 0;
-        this.formHover = 0;
-        this.editingId = null;
-        this.newComment = '';
-        this.gameStatus = null;
-        this.showStatusModal = false;
-        this.loadGameDetail(to.params.id).then(() => {
-            this.checkIsFavorite();
-            this.loadCommunityAvg();
-            this.loadStatus();
-            next();
-        });
+
+    watch: {
+        '$route.params.id'(newId, oldId) {
+            if (!newId || newId === oldId) return;
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            this.formRating = 0;
+            this.formHover = 0;
+            this.editingId = null;
+            this.newComment = '';
+            this.gameStatus = null;
+            this.showStatusModal = false;
+            this.juegosSaga = [];
+            this.loadGameDetail(newId).then(() => {
+                this.loadComments();
+                this.loadCommunityAvg();
+                this.checkIsFavorite();
+                this.loadStatus();
+                this.cargarSagaDelJuego(newId);
+            });
+        }
     },
 
     methods: {
@@ -364,6 +372,36 @@ export default {
             const date = new Date(value);
             const meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
             return `${date.getDate()} ${meses[date.getMonth()]} ${date.getFullYear()}`;
+        },
+
+        async cargarSagaDelJuego(id = null) {
+            try {
+                const gameId = id || this.$route.params.id;
+                this.juegosSaga = await obtenerSagaDelJuego(gameId);
+            } catch {
+                this.juegosSaga = [];
+            }
+        },
+
+        irAlJuego(gameId) {
+            this.$router.push(`/game/${gameId}`);
+        },
+
+        getStoreIcon(slug) {
+            const icons = {
+                'steam': 'pi-globe',
+                'playstation-store': 'pi-mobile',
+                'xbox-store': 'pi-microsoft',
+                'xbox360': 'pi-microsoft',
+                'epic-games': 'pi-bolt',
+                'gog': 'pi-star',
+                'apple-appstore': 'pi-apple',
+                'google-play': 'pi-android',
+                'itch': 'pi-heart',
+                'nintendo': 'pi-desktop',
+                'humble-store': 'pi-gift',
+            };
+            return icons[slug] ?? 'pi-shopping-cart';
         }
     }
 };

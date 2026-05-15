@@ -1,5 +1,5 @@
 from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
-from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering, get_games_filtered
+from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering, get_games_filtered, get_game_stores, get_stores_catalog, obtener_saga_del_juego
 from app.services.adapter import game_format_details, game_format_resume
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
@@ -19,6 +19,16 @@ def get_video_game_details(game_id) -> dict:
         screenshots = get_game_screenshots(game_id=game_id)
         game_details["short_screenshots"] = screenshots
         game_details["movies"] = get_game_movies(game_id=game_id)[:2]
+
+        stores = get_game_stores(game_id=game_id)
+        catalog = get_stores_catalog()
+
+        for item in stores:
+            sid = item.get("store_id")
+            if sid and sid in catalog:
+                item["store"] = catalog[sid]
+                
+        game_details["stores"] = stores
 
         if not game_exists:
             listaPlataformas = ""
@@ -161,6 +171,14 @@ def get_video_games_filtered(page, per_page, ordering=None, genres=None, platfor
         }
     except Exception as e:
         raise Exception(f"Error: {str(e)}")
+
+
+def obtener_saga_servicio(game_id) -> list:
+    try:
+        juegos = obtener_saga_del_juego(game_id=game_id)
+        return game_format_resume(juegos)
+    except Exception as e:
+        raise Exception(f"Error al obtener saga del juego: {str(e)}")
 
 
 def filter_games_by_platform_or_genres(plataforma=None, genero=None) -> list[dict] | None:

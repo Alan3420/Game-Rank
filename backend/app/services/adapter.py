@@ -131,6 +131,21 @@ def trailer_format(data):
         
         return trailer_list_dict
 
+def stores_format(data) -> list:
+    if not data:
+        return []
+    result = []
+    for item in data:
+        store_info = item.get("store", {})
+        result.append({
+            "id": item.get("id"),
+            "name": store_info.get("name"),
+            "slug": store_info.get("slug"),
+            "url": item.get("url")
+        })
+    return result
+
+
 def game_format_resume(data) -> dict:
     if type(data) != list:
         return {
@@ -190,6 +205,7 @@ def game_format_details(data) -> dict | list[dict]:
             "movies":      trailer_format(data=data.get("movies", [])),
             "platforms":   platform_format(data=data.get("platforms")),
             "developers":  developer_format(data=data.get("developers")),
+            "stores":      stores_format(data=data.get("stores", [])),
         }
     else:
         lista_game_dict = []
@@ -207,6 +223,7 @@ def game_format_details(data) -> dict | list[dict]:
                 "movies":      trailer_format(data=game.get("movies", [])),
                 "platforms":   platform_format(data=game.get("platforms")),
                 "developers":  developer_format(data=game.get("developers")),
+                "stores":      stores_format(data=game.get("stores", [])),
             }
             lista_game_dict.append(game_dict)
 

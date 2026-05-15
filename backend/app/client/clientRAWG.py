@@ -102,6 +102,23 @@ def get_games_by_ordering(ordering="-added", per_page=40):
     })
     return result.get("results", []) if result else []
 
+def obtener_saga_del_juego(game_id, page_size=8):
+    result = _request_with_cache(f"/games/{game_id}/game-series", {"page_size": page_size})
+    return result.get("results", []) if result else []
+
+
+def get_stores_catalog():
+    result = _request_with_cache("/stores", {"page_size": 50})
+    if not result:
+        return {}
+    return {s["id"]: s for s in result.get("results", [])}
+
+
+def get_game_stores(game_id):
+    result = _request_with_cache(f"/games/{game_id}/stores")
+    return result.get("results", []) if result else []
+
+
 def get_games_filtered(page=1, per_page=20, ordering=None, genres=None, platforms=None, dates=None, search=None):
     params = {"page": page, "page_size": per_page, "exclude_additions": "true"}
     if ordering:
