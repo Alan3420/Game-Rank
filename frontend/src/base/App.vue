@@ -16,7 +16,10 @@
           <i class="pi" :class="tema === 'dark' ? 'pi-sun' : 'pi-moon'"></i>
         </button>
 
-        <template v-if="estadoAutenticacion.usuario">
+        <template v-if="estadoAutenticacion.cargando">
+        </template>
+
+        <template v-else-if="estadoAutenticacion.usuario">
           <router-link to="/content/overview" class="header-catalog-link">
             <i class="pi pi-th-large"></i>
             <span>Catálogo</span>

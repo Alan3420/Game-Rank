@@ -4,6 +4,7 @@ import { getMe } from '../services/user_service';
 export const estadoAutenticacion = reactive({
 
     usuario: null,
+    cargando: !!localStorage.getItem("token"),
 
     iniciarSesion(datosRecibidos, token) {
         this.usuario = datosRecibidos;
@@ -18,6 +19,8 @@ export const estadoAutenticacion = reactive({
             this.usuario = data.user;
         } catch {
             this.cerrarSesion();
+        } finally {
+            this.cargando = false;
         }
     },
 
