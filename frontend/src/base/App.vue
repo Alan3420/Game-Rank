@@ -205,6 +205,13 @@
         </nav>
       </div>
 
+      <div class="footer-section">
+        <h4 class="footer-section-title">Legal</h4>
+        <nav class="footer-nav">
+          <RouterLink to="/terminos" class="footer-nav-link">Términos y Condiciones</RouterLink>
+        </nav>
+      </div>
+
       <div class="footer-section footer-section--right">
         <div class="footer-author">
           <span class="footer-label">Creado por</span>

@@ -53,6 +53,7 @@
 
         <div class="login-footer">
           <p>¿No tienes cuenta? <router-link to="/register" class="link">Regístrate aquí</router-link></p>
+          <p><router-link to="/terminos" class="link">Términos y Condiciones</router-link></p>
         </div>
       </form>
     </div>

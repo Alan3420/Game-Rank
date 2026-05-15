@@ -61,6 +61,14 @@
           >
         </div>
 
+        <label class="form-checkbox-label">
+          <input type="checkbox" v-model="aceptaTerminos" class="form-checkbox" />
+          <span>
+            He leído y acepto los
+            <router-link to="/terminos" target="_blank" class="link">Términos y Condiciones</router-link>
+          </span>
+        </label>
+
         <button type="submit" :disabled="loading || !isFormValid" class="btn btn-primary">
           <span :style="{ visibility: loading ? 'hidden' : 'visible' }">Crear Cuenta</span>
           <span v-if="loading" class="dots-loader">

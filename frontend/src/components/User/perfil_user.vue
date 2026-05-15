@@ -104,6 +104,15 @@
             </div>
           </div>
 
+          <!-- Legal -->
+          <div class="profile-legal">
+            <router-link to="/terminos" class="profile-legal-link">
+              <i class="pi pi-shield"></i>
+              <span>Términos y Condiciones</span>
+              <i class="pi pi-arrow-right profile-legal-arrow"></i>
+            </router-link>
+          </div>
+
           <!-- Admin Panel -->
           <div v-if="isAdmin" class="admin-panel">
             <div class="admin-header">

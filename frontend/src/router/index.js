@@ -6,6 +6,7 @@ import ContentOverview from "../components/Content/contenido.vue";
 import GameDetail from "../components/GameDetail/GameDetail.vue";
 import perfil_user from "../components/User/perfil_user.vue";
 import AdminUsers from "../components/Admin/AdminUsers.vue";
+import TerminosCondiciones from "../components/Legal/TerminosCondiciones.vue";
 
 const routes = [
     {
@@ -24,6 +25,11 @@ const routes = [
         path: "/register",
         component: Register,
         meta:{title:"Game Rank - Register"}
+    },
+    {
+        path: "/terminos",
+        component: TerminosCondiciones,
+        meta:{title:"Game Rank - Términos y Condiciones"}
     },
     {
         path: "/content/overview",
@@ -60,7 +66,7 @@ const router = createRouter({
 router.beforeEach((to) => {
     document.title = to.meta.title || 'GameRank'
 
-    const rutasPublicas = ['/login', '/register',"/"]
+    const rutasPublicas = ['/login', '/register', '/', '/terminos']
     const token = localStorage.getItem("token")
 
     if(!token && !rutasPublicas.includes(to.path)){

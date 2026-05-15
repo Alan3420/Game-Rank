@@ -9,6 +9,7 @@ export default {
       last_name: "",
       email: "",
       password: "",
+      aceptaTerminos: false,
       loading: false,
       errorMessage: ""
     };
@@ -19,7 +20,8 @@ export default {
         this.name.length >= 1 && this.name.length <= 50 &&
         this.last_name.length >= 1 && this.last_name.length <= 50 &&
         this.email.length > 0 && this.email.length <= 100 &&
-        this.password.length >= 8 && this.password.length <= 50
+        this.password.length >= 8 && this.password.length <= 50 &&
+        this.aceptaTerminos
       );
     }
   },
