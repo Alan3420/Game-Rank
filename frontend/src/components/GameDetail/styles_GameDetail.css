@@ -60,19 +60,19 @@
     background: var(--color-bg);
     border-bottom: 1px solid var(--color-border-light);
     position: sticky;
-    top: 72px;
+    top: 68px;
     z-index: 99;
 }
 
 @media (max-width: 768px) {
     .detail-topbar {
-        top: 64px;
+        top: 62px;
     }
 }
 
 @media (max-width: 640px) {
     .detail-topbar {
-        top: 114px;
+        top: 110px;
     }
 }
 
