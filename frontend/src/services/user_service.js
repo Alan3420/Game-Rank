@@ -65,3 +65,8 @@ export async function getMe() {
     const response = await api.get("/user/me");
     return response.data;
 }
+
+export async function getEstadisticasUsuario() {
+    const response = await api.get("/settings/stats");
+    return response.data;
+}

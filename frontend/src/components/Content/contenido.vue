@@ -64,7 +64,7 @@
     </div>
 
     <div v-if="showLoadMoreButton && !loading" class="load-more-container">
-      <Button label="Cargar más juegos" @click="loadMore" class="load-more-btn" />
+      <button @click="loadMore" class="load-more-btn">Cargar más juegos</button>
     </div>
 
     <Loader v-if="loading" size="small" :message="game_name ? 'Buscando juegos...' : 'Cargando más juegos...'" />

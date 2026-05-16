@@ -17,27 +17,61 @@
               {{ isAdmin ? 'Administrador' : 'Usuario' }}
             </span>
           </div>
-          <div class="banner-stats">
-            <div class="banner-stat">
-              <span class="banner-stat-value">{{ coleccion.length }}</span>
-              <span class="banner-stat-label">En colección</span>
-            </div>
-            <div class="banner-stat-divider"></div>
-            <div class="banner-stat">
-              <span class="banner-stat-value">{{ favoritos.length }}</span>
-              <span class="banner-stat-label">Favoritos</span>
-            </div>
-            <div class="banner-stat-divider"></div>
-            <div class="banner-stat">
-              <span class="banner-stat-value">{{ coleccionPorEstado.completado?.length || 0 }}</span>
-              <span class="banner-stat-label">Completados</span>
-            </div>
-            <div class="banner-stat-divider"></div>
-            <div class="banner-stat">
-              <span class="banner-stat-value">{{ coleccionPorEstado.jugando?.length || 0 }}</span>
-              <span class="banner-stat-label">Jugando ahora</span>
+        </div>
+      </div>
+
+      <!-- ── ESTADÍSTICAS ── -->
+      <div class="stats-section">
+        <div class="stats-grid">
+
+          <div class="stat-card stat-card--green">
+            <div class="stat-card__icon"><i class="pi pi-check-circle"></i></div>
+            <div class="stat-card__body">
+              <span class="stat-card__value">{{ stats?.coleccion?.completado ?? '—' }}</span>
+              <span class="stat-card__label">Completados</span>
             </div>
           </div>
+
+          <div class="stat-card stat-card--blue">
+            <div class="stat-card__icon"><i class="pi pi-play-circle"></i></div>
+            <div class="stat-card__body">
+              <span class="stat-card__value">{{ stats?.coleccion?.jugando ?? '—' }}</span>
+              <span class="stat-card__label">Jugando</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--amber">
+            <div class="stat-card__icon"><i class="pi pi-clock"></i></div>
+            <div class="stat-card__body">
+              <span class="stat-card__value">{{ stats?.coleccion?.pendiente ?? '—' }}</span>
+              <span class="stat-card__label">Pendientes</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--pink">
+            <div class="stat-card__icon"><i class="pi pi-heart-fill"></i></div>
+            <div class="stat-card__body">
+              <span class="stat-card__value">{{ stats?.favoritos ?? '—' }}</span>
+              <span class="stat-card__label">Favoritos</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--yellow">
+            <div class="stat-card__icon"><i class="pi pi-star-fill"></i></div>
+            <div class="stat-card__body">
+              <span class="stat-card__value">{{ stats?.rating_medio != null ? stats.rating_medio + ' ★' : '—' }}</span>
+              <span class="stat-card__label">Rating medio</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-card--purple">
+            <div class="stat-card__icon"><i class="pi pi-comments"></i></div>
+            <div class="stat-card__body">
+              <span class="stat-card__value">{{ stats?.comentarios ?? '—' }}</span>
+              <span class="stat-card__label">Reseñas</span>
+            </div>
+          </div>
+
         </div>
       </div>
 

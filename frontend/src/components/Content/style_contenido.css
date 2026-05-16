@@ -181,6 +181,24 @@
     cursor: not-allowed;
 }
 
+[data-theme="dark"] .load-more-btn {
+    background-color: rgba(107, 95, 224, 0.15);
+    color: #c0baff;
+    border: 1.5px solid rgba(107, 95, 224, 0.45);
+}
+
+[data-theme="dark"] .load-more-btn:hover {
+    background-color: rgba(107, 95, 224, 0.28);
+    color: #d8d4ff;
+    border-color: rgba(107, 95, 224, 0.7);
+}
+
+[data-theme="dark"] .load-more-btn:disabled {
+    background-color: transparent;
+    color: var(--color-text-light);
+    border-color: var(--color-border-light);
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .card_content {

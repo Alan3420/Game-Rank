@@ -1,7 +1,7 @@
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { list_favorites, removeTOFavorite, addTOFavorite } from "../../services/favorites_area";
 import { listGameStatuses, listGameStatusesFull } from "../../services/user_game_status";
-import { changePassword, updateUser } from "../../services/user_service";
+import { changePassword, updateUser, getEstadisticasUsuario } from "../../services/user_service";
 import { notificaciones } from '../../store/notificaciones';
 import { useRouter } from 'vue-router';
 import { onMounted, onUnmounted, ref } from 'vue';
@@ -24,6 +24,8 @@ export default {
       coleccionLoading: true,
       filtroColeccion: 'todos',
       favLoadingId: null,
+      stats: null,
+      statsLoading: true,
       mostrarModalEditar: false,
       mostrarModalCambiarContraseña: false,
       mostrarMenuEditar: false,
@@ -71,15 +73,29 @@ export default {
   },
   async mounted() {
     this.router = useRouter();
-    await this.cargarFavoritos();
-    await this.loadStatuses();
-    await this.cargarColeccion();
+    await Promise.all([
+      this.cargarFavoritos(),
+      this.loadStatuses(),
+      this.cargarColeccion(),
+      this.cargarEstadisticas()
+    ]);
     document.addEventListener('mousedown', this.handleClickOutsideMenu);
   },
   beforeUnmount() {
     document.removeEventListener('mousedown', this.handleClickOutsideMenu);
   },
   methods: {
+    async cargarEstadisticas() {
+      this.statsLoading = true;
+      try {
+        this.stats = await getEstadisticasUsuario();
+      } catch {
+        this.stats = null;
+      } finally {
+        this.statsLoading = false;
+      }
+    },
+
     abrirModalEditar() {
       this.mostrarMenuEditar = false;
       this.formularioEditar = {

@@ -3,6 +3,12 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import user_service
 from app.repositories.user_repo import get_user_by_id
 from app.autorizacion.validadores import admin_required
+from app.models.UserGameStatus import UserGameStatus
+from app.models.Favorite import Favorite
+from app.models.Rate import Rate
+from app.models.Comment import Comment
+from sqlalchemy import func
+from app.database.db import db
 
 user_option_bp = Blueprint("option_route", __name__)
 
@@ -142,3 +148,41 @@ def change_password():
 
     except Exception as error:
         return jsonify({"message": "Error al cambiar la contraseña", "error": str(error)}), 500
+
+
+@user_option_bp.route("/stats", methods=["GET"])
+@jwt_required()
+def obtener_estadisticas():
+    try:
+        id_user = get_jwt_identity()
+
+        estados = db.session.query(
+            UserGameStatus.status,
+            func.count(UserGameStatus.id_status)
+        ).filter(UserGameStatus.id_user == id_user).group_by(UserGameStatus.status).all()
+        estados_dict = {e[0]: e[1] for e in estados}
+
+        total_favs = db.session.query(func.count(Favorite.fav_id)).filter(Favorite.user_id == id_user).scalar() or 0
+
+        total_comentarios = db.session.query(func.count(Comment.id_comment)).filter(Comment.id_user == id_user).scalar() or 0
+
+        ratings = db.session.query(Rate.rating).filter(Rate.id_user == id_user).all()
+        valores = [r[0] for r in ratings]
+        rating_medio = round(sum(valores) / len(valores), 1) if valores else None
+
+        return jsonify({
+            "coleccion": {
+                "total": sum(estados_dict.values()),
+                "completado": estados_dict.get("completado", 0),
+                "jugando": estados_dict.get("jugando", 0),
+                "pendiente": estados_dict.get("pendiente", 0),
+                "pausado": estados_dict.get("pausado", 0)
+            },
+            "favoritos": total_favs,
+            "comentarios": total_comentarios,
+            "valoraciones": len(valores),
+            "rating_medio": rating_medio
+        }), 200
+
+    except Exception as error:
+        return jsonify({"message": "Error al obtener estadísticas", "error": str(error)}), 500
