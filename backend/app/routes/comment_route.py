@@ -85,6 +85,7 @@ def delete(comment_id):
 
 
 @comment_bp.route("/game/<int:game_id>", methods=["GET"])
+@jwt_required()
 def get_by_game(game_id):
     try:
         comments = get_comentarios_juego(id_game=game_id)

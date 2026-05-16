@@ -82,6 +82,7 @@ def delete():
 
 
 @rates_bp.route("/avg/<int:game_id>", methods=["GET"])
+@jwt_required()
 def get_avg(game_id):
     try:
         avg = get_media_juego(id_game=game_id)
@@ -93,6 +94,7 @@ def get_avg(game_id):
 
 
 @rates_bp.route("/game/<int:game_id>", methods=["GET"])
+@jwt_required()
 def get_by_game(game_id):
     try:
         rates = get_valoraciones_juego(id_game=game_id)
