@@ -131,7 +131,7 @@
                             <h3>Descripción</h3>
                         </div>
                         <div class="detail-description"
-                            v-html="game.description || '<em>Descripción no disponible.</em>'"></div>
+                            v-html="descripcionSanitizada || '<em>Descripción no disponible.</em>'"></div>
                     </div>
 
                     <!-- Area de fotos y videos  -->

@@ -6,6 +6,7 @@ import { saveRate, updateRate, deleteRate, getAvgRate } from '../../services/rat
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
 import { STATUS_META } from '../../utils/statusMeta.js';
+import DOMPurify from 'dompurify';
 
 export default {
     name: 'GameDetail',
@@ -37,6 +38,10 @@ export default {
     computed: {
         data_user() {
             return estadoAutenticacion.usuario;
+        },
+
+        descripcionSanitizada() {
+            return DOMPurify.sanitize(this.game?.description || '');
         },
 
         hasOwnComment() {
