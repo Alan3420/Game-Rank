@@ -10,4 +10,4 @@ def get_tendencias():
         datos = obtener_tendencias()
         return jsonify(datos), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"message": "Error interno del servidor"}), 500

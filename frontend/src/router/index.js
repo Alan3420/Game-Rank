@@ -8,6 +8,8 @@ import perfil_user from "../components/User/perfil_user.vue";
 import AdminUsers from "../components/Admin/AdminUsers.vue";
 import TerminosCondiciones from "../components/Legal/TerminosCondiciones.vue";
 import Tendencias from "../components/Tendencias/Tendencias.vue";
+import NotFound from "../components/NotFound/NotFound.vue";
+import { estadoAutenticacion } from "../store/autenticacion";
 
 const routes = [
     {
@@ -55,12 +57,18 @@ const routes = [
     {
         path: "/admin/users",
         component: AdminUsers,
-        meta:{title:"Game Rank - Gestión de Usuarios"}
+        meta:{title:"Game Rank - Gestión de Usuarios", requiresAdmin: true}
     },
     {
         path: "/tendencias",
         component: Tendencias,
         meta:{title:"Game Rank - Tendencias"}
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        name: "not-found",
+        component: NotFound,
+        meta:{title:"Game Rank - Página no encontrada"}
     }
 ];
 
@@ -77,6 +85,11 @@ router.beforeEach((to) => {
 
     if(!token && !rutasPublicas.includes(to.path)){
         return "/login"
+    }
+
+    // Si el usuario ya está cargado y no es admin, muestra 404 manteniendo la URL
+    if(to.meta.requiresAdmin && estadoAutenticacion.usuario && estadoAutenticacion.usuario.role !== 'admin'){
+        return { name: "not-found", params: { pathMatch: to.path.substring(1).split('/') } }
     }
 })
 

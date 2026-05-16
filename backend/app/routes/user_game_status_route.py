@@ -28,8 +28,7 @@ def set_status():
         return jsonify({"message": "Status actualizado",
                         "status": resultado.to_dict()}), 200
     except Exception as e:
-        return jsonify({"message": "Error al establecer el status",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al establecer el status"}), 500
 
 
 @status_bp.route("/<int:id_game>", methods=["GET"])
@@ -44,8 +43,7 @@ def get_status(id_game):
 
         return jsonify({"status": registro.to_dict()}), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener el status",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener el status"}), 500
 
 
 @status_bp.route("/list", methods=["GET"])
@@ -56,8 +54,7 @@ def list_statuses():
         registros = listar_statuses_usuario(id_user=id_user)
         return jsonify({"statuses": registros}), 200
     except Exception as e:
-        return jsonify({"message": "Error al listar los statuses",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al listar los statuses"}), 500
 
 
 @status_bp.route("/list/full", methods=["GET"])
@@ -68,8 +65,7 @@ def list_statuses_full():
         registros = listar_statuses_con_juegos(id_user=id_user)
         return jsonify({"statuses": registros}), 200
     except Exception as e:
-        return jsonify({"message": "Error al listar los statuses con juegos",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al listar los statuses con juegos"}), 500
 
 
 @status_bp.route("/<int:id_game>", methods=["DELETE"])
@@ -84,5 +80,4 @@ def delete_status(id_game):
 
         return jsonify({"message": "Status eliminado"}), 200
     except Exception as e:
-        return jsonify({"message": "Error al eliminar el status",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al eliminar el status"}), 500

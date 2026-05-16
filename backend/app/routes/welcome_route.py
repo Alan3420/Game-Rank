@@ -46,7 +46,7 @@ def register():
             return jsonify({"message": user}), 409
         
     except Exception as e:
-        return jsonify({"message": "Error al registrar el usuario", "error": str(e)}), 500
+        return jsonify({"message": "Error al registrar el usuario"}), 500
 
 @welcome_bp.route("/me", methods=["GET"])
 @jwt_required()

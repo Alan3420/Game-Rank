@@ -83,91 +83,62 @@
           <i class="pi pi-trophy"></i>
           Ranking
         </span>
-        <h2>Los mejores juegos</h2>
-        <p>Clasificados por calificación de la comunidad</p>
+        <h2>Los mejores valorados</h2>
+        <p>Clasificados por puntuación Metacritic</p>
       </div>
 
       <Loader v-if="isLoading" message="Cargando juegos destacados..." />
 
-      <div v-else-if="topGames.length > 0" class="top-podium">
+      <div v-else-if="topGames.length > 0" class="top-ranking">
 
-        <!-- Rank 2 -->
-        <div class="top-slot top-slot--2">
-          <article v-if="topGames[1]" class="top-card top-card--silver" @click="goToDetail(topGames[1].id)">
-            <div class="top-card-img-wrap">
-              <img :src="topGames[1].imge_url" :alt="topGames[1].name" />
-              <div class="top-card-img-overlay"></div>
-              <div class="top-card-medal medal--silver">
-                <span class="medal-num">2</span>
-                <i class="pi pi-trophy"></i>
+        <!-- Rank 1 - Carta principal -->
+        <article class="rank-card rank-card--first" @click="goToDetail(topGames[0].id)">
+          <img class="rank-card-bg" :src="topGames[0].imge_url" :alt="topGames[0].name" />
+          <div class="rank-card-overlay"></div>
+          <span class="rank-num">1</span>
+          <div class="rank-card-content">
+            <span class="rank-best-badge"><i class="pi pi-crown"></i> Mejor valorado</span>
+            <h3 class="rank-title">{{ topGames[0].name }}</h3>
+            <span class="rank-year">{{ topGames[0].release_date?.split('-')[0] }}</span>
+            <div class="rank-meta-wrap">
+              <div class="rank-score" :class="metacriticColorClass(topGames[0].metacritic)">
+                {{ topGames[0].metacritic ?? '—' }}
               </div>
+              <span class="rank-score-label">Metacritic</span>
             </div>
-            <div class="top-card-body">
-              <h3 class="top-card-name">{{ topGames[1].name }}</h3>
-              <span class="top-card-year">
-                <i class="pi pi-calendar"></i>
-                {{ topGames[1].release_date.split('-')[0] }}
-              </span>
-              <div class="top-card-rating">
-                <i class="pi pi-star-fill"></i>
-                <span class="top-card-score">{{ topGames[1].rating }}</span>
-                <span class="top-card-denom">/ 10</span>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <!-- Rank 1 (centro, destacado) -->
-        <div class="top-slot top-slot--1">
-          <div class="top-best-label">
-            <i class="pi pi-crown"></i>
-            Mejor valorado
           </div>
-          <article class="top-card top-card--gold" @click="goToDetail(topGames[0].id)">
-            <div class="top-card-img-wrap">
-              <img :src="topGames[0].imge_url" :alt="topGames[0].name" />
-              <div class="top-card-img-overlay"></div>
-              <div class="top-card-medal medal--gold">
-                <span class="medal-num">1</span>
-                <i class="pi pi-trophy"></i>
-              </div>
-            </div>
-            <div class="top-card-body">
-              <h3 class="top-card-name">{{ topGames[0].name }}</h3>
-              <span class="top-card-year">
-                <i class="pi pi-calendar"></i>
-                {{ topGames[0].release_date.split('-')[0] }}
-              </span>
-              <div class="top-card-rating">
-                <i class="pi pi-star-fill"></i>
-                <span class="top-card-score">{{ topGames[0].rating }}</span>
-                <span class="top-card-denom">/ 10</span>
+        </article>
+
+        <!-- Ranks 2 y 3 -->
+        <div class="rank-sub-grid">
+          <article v-if="topGames[1]" class="rank-card rank-card--sub" @click="goToDetail(topGames[1].id)">
+            <img class="rank-card-bg" :src="topGames[1].imge_url" :alt="topGames[1].name" />
+            <div class="rank-card-overlay"></div>
+            <span class="rank-num rank-num--sub">2</span>
+            <div class="rank-card-content">
+              <h3 class="rank-title">{{ topGames[1].name }}</h3>
+              <span class="rank-year">{{ topGames[1].release_date?.split('-')[0] }}</span>
+              <div class="rank-meta-wrap">
+                <div class="rank-score rank-score--sm" :class="metacriticColorClass(topGames[1].metacritic)">
+                  {{ topGames[1].metacritic ?? '—' }}
+                </div>
+                <span class="rank-score-label">Metacritic</span>
               </div>
             </div>
           </article>
-        </div>
 
-        <!-- Rank 3 -->
-        <div class="top-slot top-slot--3">
-          <article v-if="topGames[2]" class="top-card top-card--bronze" @click="goToDetail(topGames[2].id)">
-            <div class="top-card-img-wrap">
-              <img :src="topGames[2].imge_url" :alt="topGames[2].name" />
-              <div class="top-card-img-overlay"></div>
-              <div class="top-card-medal medal--bronze">
-                <span class="medal-num">3</span>
-                <i class="pi pi-trophy"></i>
-              </div>
-            </div>
-            <div class="top-card-body">
-              <h3 class="top-card-name">{{ topGames[2].name }}</h3>
-              <span class="top-card-year">
-                <i class="pi pi-calendar"></i>
-                {{ topGames[2].release_date.split('-')[0] }}
-              </span>
-              <div class="top-card-rating">
-                <i class="pi pi-star-fill"></i>
-                <span class="top-card-score">{{ topGames[2].rating }}</span>
-                <span class="top-card-denom">/ 10</span>
+          <article v-if="topGames[2]" class="rank-card rank-card--sub" @click="goToDetail(topGames[2].id)">
+            <img class="rank-card-bg" :src="topGames[2].imge_url" :alt="topGames[2].name" />
+            <div class="rank-card-overlay"></div>
+            <span class="rank-num rank-num--sub">3</span>
+            <div class="rank-card-content">
+              <h3 class="rank-title">{{ topGames[2].name }}</h3>
+              <span class="rank-year">{{ topGames[2].release_date?.split('-')[0] }}</span>
+              <div class="rank-meta-wrap">
+                <div class="rank-score rank-score--sm" :class="metacriticColorClass(topGames[2].metacritic)">
+                  {{ topGames[2].metacritic ?? '—' }}
+                </div>
+                <span class="rank-score-label">Metacritic</span>
               </div>
             </div>
           </article>

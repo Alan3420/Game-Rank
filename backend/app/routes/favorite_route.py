@@ -23,8 +23,7 @@ def add():
         return jsonify({"message": "Juego añadido a favoritos",
                         "favorite": resultado.to_dict()}), 201
     except Exception as e:
-        return jsonify({"message": "Error al añadir favorito",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al añadir favorito"}), 500
     
     
 @favorite_bp.route("/remove", methods=["DELETE"])
@@ -45,8 +44,7 @@ def remove():
 
         return jsonify({"message": "Juego eliminado de favoritos"}), 200
     except Exception as e:
-        return jsonify({"message": "Error al eliminar favorito",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al eliminar favorito"}), 500
     
 
 @favorite_bp.route("/listFav", methods=["GET"])
@@ -60,8 +58,7 @@ def list_favorites():
         return jsonify({"favorites": favorites}), 200
     
     except Exception as e:
-        return jsonify({"message": "Error al obtener favoritos",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener favoritos"}), 500
 
 @favorite_bp.route("/check/<int:game_id>", methods=["GET"])
 @jwt_required()
@@ -74,5 +71,4 @@ def check(game_id):
         return jsonify({"is_favorite": is_fav}), 200
     
     except Exception as e:
-        return jsonify({"message": "Error al comprobar favorito",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al comprobar favorito"}), 500

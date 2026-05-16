@@ -26,8 +26,7 @@ def create():
                         "rate": resultado.to_dict()}), 201
 
     except Exception as e:
-        return jsonify({"message": "Error al crear la valoración",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al crear la valoración"}), 500
 
 
 @rates_bp.route("/update", methods=["PUT"])
@@ -50,8 +49,7 @@ def update():
         return jsonify({"message": "Valoración actualizada",
                         "rate": resultado.to_dict()}), 200
     except Exception as e:
-        return jsonify({"message": "Error al actualizar la valoración",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al actualizar la valoración"}), 500
 
 @rates_bp.route("/delete", methods=["DELETE"])
 @jwt_required()
@@ -71,8 +69,7 @@ def delete():
 
         return jsonify({"message": "Valoración eliminada"}), 200
     except Exception as e:
-        return jsonify({"message": "Error al eliminar la valoración",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al eliminar la valoración"}), 500
 
 
 @rates_bp.route("/avg/<int:game_id>", methods=["GET"])
@@ -83,8 +80,7 @@ def get_avg(game_id):
         return jsonify({"game_id": game_id, "avg_rating": avg}), 200
 
     except Exception as e:
-        return jsonify({"message": "Error al obtener la media",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener la media"}), 500
 
 
 @rates_bp.route("/game/<int:game_id>", methods=["GET"])
@@ -95,8 +91,7 @@ def get_by_game(game_id):
         return jsonify({"rates": rates}), 200
 
     except Exception as e:
-        return jsonify({"message": "Error al obtener valoraciones",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener valoraciones"}), 500
 
 @rates_bp.route("/user", methods=["GET"])
 @jwt_required()
@@ -108,5 +103,4 @@ def get_by_user():
         return jsonify({"rates": rates}), 200
 
     except Exception as e:
-        return jsonify({"message": "Error al obtener valoraciones",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener valoraciones"}), 500

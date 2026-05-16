@@ -56,9 +56,9 @@ export default {
           games = response;
         }
 
-        const validGames = games.filter(game => game.rating && game.rating > 0);
+        const validGames = games.filter(game => game.metacritic && game.metacritic > 0);
 
-        const sorted = validGames.sort((a, b) => b.rating - a.rating);
+        const sorted = validGames.sort((a, b) => b.metacritic - a.metacritic);
         this.topGames = sorted.slice(0, 3);
 
         for (const game of this.topGames) {
@@ -152,6 +152,13 @@ export default {
     //   const track = this.$refs.carouselTrack;
     //   if (track) track.scrollBy({ left: dir * 300, behavior: 'smooth' });
     // },
+
+    metacriticColorClass(score) {
+      if (!score) return 'rank-score--none';
+      if (score >= 75) return 'rank-score--green';
+      if (score >= 50) return 'rank-score--yellow';
+      return 'rank-score--red';
+    },
 
     goToLogin() {
       const token = localStorage.getItem("token")

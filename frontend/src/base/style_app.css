@@ -686,10 +686,6 @@
 
 /* ── RESPONSIVE ── */
 
-/* Catálogo en dropdown solo en móvil */
-.dropdown-catalog-mobile {
-  display: none;
-}
 
 @media (max-width: 900px) {
   .header-search {
@@ -774,6 +770,7 @@
 
   .nav-menu {
     gap: 6px;
+    margin-left: auto;
   }
 
   /* Ocultar texto de los botones de login/register, dejar solo iconos */
@@ -798,10 +795,6 @@
 
   .header-catalog-link span {
     display: none;
-  }
-
-  .dropdown-catalog-mobile {
-    display: flex;
   }
 
   .footer-author-link,

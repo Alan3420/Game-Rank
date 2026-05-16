@@ -24,7 +24,7 @@ def overview():
 
         return jsonify(games), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener los juegos", "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener los juegos"}), 500
 
 @content_overview_bp.route('/search', methods=["GET"])
 @jwt_required()
@@ -40,7 +40,7 @@ def search_by_name():
 
         return jsonify(games), 200
     except Exception as e:
-        return jsonify({"message": "Error al buscar el juego", "error": str(e)}), 500
+        return jsonify({"message": "Error al buscar el juego"}), 500
     
 
 @content_overview_bp.route('/overview/<int:game_id>', methods=["GET"])
@@ -50,7 +50,7 @@ def overview_by_id(game_id):
         game_details = get_video_game_details(game_id=game_id)
         return jsonify(game_details), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener los detalles del juego", "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener los detalles del juego"}), 500
 
 
 @content_overview_bp.route("/release", methods=["GET"])
@@ -67,7 +67,7 @@ def future_release():
         return jsonify(games), 200
 
     except Exception as e:
-        return jsonify({"message": "Error al obtener los juegos", "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener los juegos"}), 500
 
 
 @content_overview_bp.route('/filtered', methods=["GET"])
@@ -95,7 +95,7 @@ def filtered_games():
 
         return jsonify(games), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener los juegos filtrados", "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener los juegos filtrados"}), 500
 
 
 @content_overview_bp.route('/overview/<int:game_id>/adicciones', methods=["GET"])
@@ -105,7 +105,7 @@ def adicciones_del_juego(game_id):
         adicciones = obtener_adicciones_servicio(game_id=game_id)
         return jsonify(adicciones), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener adicciones", "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener adicciones"}), 500
 
 
 @content_overview_bp.route('/overview/<int:game_id>/saga', methods=["GET"])
@@ -115,7 +115,7 @@ def saga_del_juego(game_id):
         juegos = obtener_saga_servicio(game_id=game_id)
         return jsonify(juegos), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener saga del juego", "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener saga del juego"}), 500
 
 
 @content_overview_bp.route('/overview/<int:game_id>/logros', methods=["GET"])
@@ -125,7 +125,7 @@ def logros_del_juego(game_id):
         logros = obtener_logros_servicio(game_id=game_id)
         return jsonify(logros), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener logros", "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener logros"}), 500
 
 
 @content_overview_bp.route("/hero-video", methods=["GET"])
@@ -139,4 +139,4 @@ def get_hero_video():
         return jsonify(video), 200
 
     except Exception as e:
-        return jsonify({"message": "Error al obtener video", "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener video"}), 500

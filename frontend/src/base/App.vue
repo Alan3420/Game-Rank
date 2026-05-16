@@ -67,7 +67,7 @@
                   </div>
                 </router-link>
 
-                <router-link to="/content/overview" class="dropdown-item dropdown-catalog-mobile" @click="menuAbierto = false">
+                <router-link to="/content/overview" class="dropdown-item" @click="menuAbierto = false">
                   <div class="dropdown-item-icon">
                     <i class="pi pi-th-large"></i>
                   </div>

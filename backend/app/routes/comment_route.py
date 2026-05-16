@@ -27,8 +27,7 @@ def create():
         return jsonify({"message": "Comentario creado",
                         "comment": resultado.to_dict()}), 201
     except Exception as e:
-        return jsonify({"message": "Error al crear el comentario",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al crear el comentario"}), 500
 
 @comment_bp.route("/update/<int:comment_id>", methods=["PUT"])
 @jwt_required()
@@ -55,8 +54,7 @@ def update(comment_id):
         return jsonify({"message": "Comentario actualizado",
                         "comment": resultado.to_dict()}), 200
     except Exception as e:
-        return jsonify({"message": "Error al actualizar el comentario",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al actualizar el comentario"}), 500
 
 @comment_bp.route("/delete/<int:comment_id>", methods=["DELETE"])
 @jwt_required()
@@ -74,7 +72,7 @@ def delete(comment_id):
         return jsonify({"msg": resultado}), 403
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"message": "Error interno del servidor"}), 500
 
 
 @comment_bp.route("/game/<int:game_id>", methods=["GET"])
@@ -83,8 +81,7 @@ def get_by_game(game_id):
         comments = get_comentarios_juego(id_game=game_id)
         return jsonify({"comments": comments}), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener comentarios",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener comentarios"}), 500
 
 @comment_bp.route("/user", methods=["GET"])
 @jwt_required()
@@ -96,6 +93,5 @@ def get_by_user():
         
         return jsonify({"comments": comments, "user": user}), 200
     except Exception as e:
-        return jsonify({"message": "Error al obtener comentarios",
-                        "error": str(e)}), 500
+        return jsonify({"message": "Error al obtener comentarios"}), 500
 

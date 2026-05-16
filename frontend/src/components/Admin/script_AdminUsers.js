@@ -1,6 +1,9 @@
 import { getListUsers, changeUserRole, deleteUser } from '../../services/user_service';
 import { notificaciones } from '../../store/notificaciones';
 import { useRouter } from 'vue-router';
+import { watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
+import { estadoAutenticacion } from '../../store/autenticacion';
 
 export default {
   name: 'AdminUsers',
@@ -29,9 +32,26 @@ export default {
     }
   },
 
-  async mounted() {
+  mounted() {
     this.router = useRouter();
-    await this.cargarUsuarios();
+    const route = useRoute();
+
+    // Reactivo al estado de sesión: muestra 404 si no es admin (sin revelar que la ruta existe)
+    const parar = watchEffect(() => {
+      if (estadoAutenticacion.cargando) return;
+
+      if (!estadoAutenticacion.usuario || estadoAutenticacion.usuario.role !== 'admin') {
+        parar();
+        this.router.replace({
+          name: 'not-found',
+          params: { pathMatch: route.path.substring(1).split('/') }
+        });
+        return;
+      }
+
+      parar();
+      this.cargarUsuarios();
+    });
   },
 
   methods: {

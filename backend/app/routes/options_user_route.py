@@ -42,7 +42,7 @@ def edit_user():
         else:
             return jsonify({"message": usuario_actualizado}), 409
     except Exception as error:
-        return jsonify({"message": "Error al actualizar el usuario", "error": str(error)}), 500
+        return jsonify({"message": "Error al actualizar el usuario"}), 500
 
 @user_option_bp.route("/options", methods=["DELETE"])
 @jwt_required()
@@ -60,7 +60,7 @@ def delete_user():
         else:
             return jsonify({"message": resultado_eliminacion}), 404
     except Exception as error:
-        return jsonify({"message": "Error al eliminar el usuario", "error": str(error)}), 500
+        return jsonify({"message": "Error al eliminar el usuario"}), 500
 
 @user_option_bp.route("/options", methods=["GET"])
 @jwt_required()
@@ -78,7 +78,7 @@ def get_list_users():
                         "users": usuarios_dict}), 200
 
     except Exception as error:
-        return jsonify({"message": "Error al obtener la lista de usuarios", "error": str(error)}), 500
+        return jsonify({"message": "Error al obtener la lista de usuarios"}), 500
 
 @user_option_bp.route("/change-role", methods=["PUT"])
 @jwt_required()
@@ -103,7 +103,7 @@ def change_role():
     except ValueError as error_validacion:
         return jsonify({"message": str(error_validacion)}), 400
     except Exception as error:
-        return jsonify({"message": "Error al actualizar el rol del usuario", "error": str(error)}), 500
+        return jsonify({"message": "Error al actualizar el rol del usuario"}), 500
 
 @user_option_bp.route("/account", methods=["DELETE"])
 @jwt_required()
@@ -118,7 +118,7 @@ def delete_own_account():
         else:
             return jsonify({"message": resultado}), 404
     except Exception as error:
-        return jsonify({"message": "Error al eliminar la cuenta", "error": str(error)}), 500
+        return jsonify({"message": "Error al eliminar la cuenta"}), 500
 
 
 @user_option_bp.route("/change-password", methods=["PUT"])
@@ -147,7 +147,7 @@ def change_password():
             return jsonify({"message": resultado}), 400
 
     except Exception as error:
-        return jsonify({"message": "Error al cambiar la contraseña", "error": str(error)}), 500
+        return jsonify({"message": "Error al cambiar la contraseña"}), 500
 
 
 @user_option_bp.route("/stats", methods=["GET"])
@@ -185,4 +185,4 @@ def obtener_estadisticas():
         }), 200
 
     except Exception as error:
-        return jsonify({"message": "Error al obtener estadísticas", "error": str(error)}), 500
+        return jsonify({"message": "Error al obtener estadísticas"}), 500
