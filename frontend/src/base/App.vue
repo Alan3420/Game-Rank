@@ -25,6 +25,11 @@
             <span>Catálogo</span>
           </router-link>
 
+          <router-link to="/tendencias" class="header-catalog-link header-trends-link">
+            <i class="pi pi-chart-line"></i>
+            <span>Tendencias</span>
+          </router-link>
+
           <div class="user-menu" ref="userMenuRef">
             <button @click="menuAbierto = !menuAbierto" class="options-user" :class="{ 'is-active': menuAbierto }">
               <div class="user-avatar-btn">
@@ -69,6 +74,16 @@
                   <div class="dropdown-item-text">
                     <span class="dropdown-item-title">Catálogo</span>
                     <span class="dropdown-item-desc">Explorar todos los juegos</span>
+                  </div>
+                </router-link>
+
+                <router-link to="/tendencias" class="dropdown-item" @click="menuAbierto = false">
+                  <div class="dropdown-item-icon">
+                    <i class="pi pi-chart-line"></i>
+                  </div>
+                  <div class="dropdown-item-text">
+                    <span class="dropdown-item-title">Tendencias</span>
+                    <span class="dropdown-item-desc">Lo más popular de la comunidad</span>
                   </div>
                 </router-link>
 
@@ -200,6 +215,7 @@
         <nav class="footer-nav">
           <RouterLink to="/" class="footer-nav-link">Inicio</RouterLink>
           <RouterLink v-if="estadoAutenticacion.usuario" to="/content/overview" class="footer-nav-link">Catálogo</RouterLink>
+          <RouterLink v-if="estadoAutenticacion.usuario" to="/tendencias" class="footer-nav-link">Tendencias</RouterLink>
           <RouterLink v-if="estadoAutenticacion.usuario" to="/user/profile" class="footer-nav-link">Mi Perfil</RouterLink>
           <RouterLink v-if="isAdmin" to="/admin/users" class="footer-nav-link">Gestión de Usuarios</RouterLink>
         </nav>

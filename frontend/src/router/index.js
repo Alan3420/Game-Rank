@@ -7,6 +7,7 @@ import GameDetail from "../components/GameDetail/GameDetail.vue";
 import perfil_user from "../components/User/perfil_user.vue";
 import AdminUsers from "../components/Admin/AdminUsers.vue";
 import TerminosCondiciones from "../components/Legal/TerminosCondiciones.vue";
+import Tendencias from "../components/Tendencias/Tendencias.vue";
 
 const routes = [
     {
@@ -55,6 +56,11 @@ const routes = [
         path: "/admin/users",
         component: AdminUsers,
         meta:{title:"Game Rank - Gestión de Usuarios"}
+    },
+    {
+        path: "/tendencias",
+        component: Tendencias,
+        meta:{title:"Game Rank - Tendencias"}
     }
 ];
 

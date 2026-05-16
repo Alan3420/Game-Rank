@@ -17,6 +17,7 @@ from app.routes.rates_route import rates_bp
 from app.routes.comment_route import comment_bp
 from app.routes.favorite_route import favorite_bp
 from app.routes.user_game_status_route import status_bp
+from app.routes.tendencias_route import tendencias_bp
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
@@ -70,6 +71,7 @@ app.register_blueprint(rates_bp, url_prefix="/rate")
 app.register_blueprint(comment_bp, url_prefix="/comment")
 app.register_blueprint(favorite_bp, url_prefix="/favorite")
 app.register_blueprint(status_bp, url_prefix="/status")
+app.register_blueprint(tendencias_bp, url_prefix="/tendencias")
 
 
 
