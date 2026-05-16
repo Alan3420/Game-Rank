@@ -1,12 +1,14 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.rate_services import crear_valoracion, actualizar_valoracion, eliminar_valoracion, get_media_juego, get_valoraciones_juego, get_valoraciones_usuario
+from app.limiter import limiter
 
 rates_bp = Blueprint("rates", __name__)
 
 
 @rates_bp.route("/create", methods=["POST"])
 @jwt_required()
+@limiter.limit("10 per minute")
 def create():
     try:
         data = request.get_json()
@@ -14,8 +16,11 @@ def create():
         id_game = data.get("id_game")
         rating = data.get("rating")
 
-        if not id_game or not rating:
+        if not id_game or rating is None:
             return jsonify({"message": "id_game y rating son obligatorios"}), 400
+
+        if not isinstance(rating, (int, float)) or not (1 <= rating <= 5):
+            return jsonify({"message": "El rating debe ser un número entre 1 y 5"}), 400
 
         resultado = crear_valoracion(id_user=id_user, id_game=id_game, rating=rating)
 
@@ -31,6 +36,7 @@ def create():
 
 @rates_bp.route("/update", methods=["PUT"])
 @jwt_required()
+@limiter.limit("10 per minute")
 def update():
     try:
         data = request.get_json()
@@ -38,8 +44,11 @@ def update():
         id_game = data.get("id_game")
         rating = data.get("rating")
 
-        if not id_game:
-            return jsonify({"message": "id_game es obligatorio"}), 400
+        if not id_game or rating is None:
+            return jsonify({"message": "id_game y rating son obligatorios"}), 400
+
+        if not isinstance(rating, (int, float)) or not (1 <= rating <= 5):
+            return jsonify({"message": "El rating debe ser un número entre 1 y 5"}), 400
 
         resultado = actualizar_valoracion(id_user=id_user, id_game=id_game, rating=rating)
 

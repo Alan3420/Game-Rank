@@ -8,6 +8,7 @@ export default {
     return {
       email: "",
       password: "",
+      mostrarPassword: false,
       loading: false,
       errorMessage: ""
     }

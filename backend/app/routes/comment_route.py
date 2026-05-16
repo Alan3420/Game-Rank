@@ -3,11 +3,13 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.comment_services import crear_comentario, actualizar_comentario, eliminar_comentario, get_comentarios_juego, get_comentarios_usuario
 from app.services import user_service
 from app.repositories.user_repo import get_user_by_id
+from app.limiter import limiter
 
 comment_bp = Blueprint("comment", __name__)
 
 @comment_bp.route("/create", methods=["POST"])
 @jwt_required()
+@limiter.limit("5 per minute")
 def create():
     try:
         data = request.get_json()
@@ -17,6 +19,9 @@ def create():
 
         if not id_game or not description:
             return jsonify({"message": "id_game y description son obligatorios"}), 400
+
+        if len(description) > 255:
+            return jsonify({"message": "El comentario no puede superar los 255 caracteres"}), 400
 
         resultado = crear_comentario(id_user=id_user, id_game=id_game,
                                       description=description)
@@ -31,6 +36,7 @@ def create():
 
 @comment_bp.route("/update/<int:comment_id>", methods=["PUT"])
 @jwt_required()
+@limiter.limit("10 per minute")
 def update(comment_id):
     try:
         data = request.get_json()
@@ -38,6 +44,9 @@ def update(comment_id):
 
         if not description:
             return jsonify({"message": "description es obligatoria"}), 400
+
+        if len(description) > 255:
+            return jsonify({"message": "El comentario no puede superar los 255 caracteres"}), 400
 
         user_id = get_jwt_identity()
         usuario = get_user_by_id(user_id)

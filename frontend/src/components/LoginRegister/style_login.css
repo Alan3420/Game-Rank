@@ -85,6 +85,35 @@
   margin-top: 0.4rem;
 }
 
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrap .form-input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+.eye-btn {
+  position: absolute;
+  right: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-placeholder);
+  font-size: 0.9rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.eye-btn:hover {
+  color: var(--color-text-secondary);
+}
+
 .form-input {
   padding: 0.875rem 1rem;
   border: 2px solid var(--color-border);

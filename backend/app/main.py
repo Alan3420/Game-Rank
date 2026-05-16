@@ -21,6 +21,7 @@ from app.routes.tendencias_route import tendencias_bp
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
+from app.limiter import limiter
 import os
 
 
@@ -76,6 +77,11 @@ app.register_blueprint(tendencias_bp, url_prefix="/tendencias")
 
 
 db.init_app(app)
+limiter.init_app(app)
+
+@app.errorhandler(429)
+def demasiadas_peticiones(_):
+    return jsonify({"message": "Demasiadas peticiones. Por favor, espera un momento."}), 429
 
 # Configurar CORS restrictivamente
 origenes_permitidos = [

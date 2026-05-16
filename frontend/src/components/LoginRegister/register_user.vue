@@ -50,15 +50,42 @@
 
         <div class="form-group">
           <label for="password" class="form-label">Contraseña</label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            placeholder="Mínimo 8 caracteres"
-            class="form-input"
-            maxlength="50"
-            required
-          >
+          <div class="input-wrap">
+            <input
+              id="password"
+              v-model="password"
+              :type="mostrarPassword ? 'text' : 'password'"
+              placeholder="Mínimo 8 caracteres"
+              class="form-input"
+              maxlength="50"
+              required
+            >
+            <button type="button" class="eye-btn" @click="mostrarPassword = !mostrarPassword" tabindex="-1">
+              <i class="pi" :class="mostrarPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+          <div class="input-wrap">
+            <input
+              id="confirmPassword"
+              v-model="confirmPassword"
+              :type="mostrarConfirmPassword ? 'text' : 'password'"
+              placeholder="Repite tu contraseña"
+              class="form-input"
+              :class="{ 'input-error': confirmPassword && password !== confirmPassword }"
+              maxlength="50"
+              required
+            >
+            <button type="button" class="eye-btn" @click="mostrarConfirmPassword = !mostrarConfirmPassword" tabindex="-1">
+              <i class="pi" :class="mostrarConfirmPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+            </button>
+          </div>
+          <span v-if="confirmPassword && password !== confirmPassword" class="error-text">
+            Las contraseñas no coinciden
+          </span>
         </div>
 
         <label class="form-checkbox-label">

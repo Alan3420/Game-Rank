@@ -26,15 +26,20 @@
           <label for="passwd" class="form-label">
             Contraseña
           </label>
-          <input
-            type="password"
-            id="passwd"
-            v-model="password"
-            placeholder="Tu contraseña"
-            class="form-input"
-            maxlength="50"
-            required
-          >
+          <div class="input-wrap">
+            <input
+              :type="mostrarPassword ? 'text' : 'password'"
+              id="passwd"
+              v-model="password"
+              placeholder="Tu contraseña"
+              class="form-input"
+              maxlength="50"
+              required
+            >
+            <button type="button" class="eye-btn" @click="mostrarPassword = !mostrarPassword" tabindex="-1">
+              <i class="pi" :class="mostrarPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+            </button>
+          </div>
         </div>
 
         <button type="submit" :disabled="loading || !isFormValid" class="btn btn-primary">

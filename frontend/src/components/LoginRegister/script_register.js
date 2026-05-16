@@ -9,6 +9,9 @@ export default {
       last_name: "",
       email: "",
       password: "",
+      confirmPassword: "",
+      mostrarPassword: false,
+      mostrarConfirmPassword: false,
       aceptaTerminos: false,
       loading: false,
       errorMessage: ""
@@ -21,6 +24,7 @@ export default {
         this.last_name.length >= 1 && this.last_name.length <= 50 &&
         this.email.length > 0 && this.email.length <= 100 &&
         this.password.length >= 8 && this.password.length <= 50 &&
+        this.password === this.confirmPassword &&
         this.aceptaTerminos
       );
     }

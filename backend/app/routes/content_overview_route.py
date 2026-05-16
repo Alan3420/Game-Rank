@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, current_app
 from flask_jwt_extended import jwt_required
 from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered, obtener_saga_servicio, obtener_adicciones_servicio, obtener_logros_servicio
+from app.limiter import limiter
 
 
 content_overview_bp = Blueprint('content_overview_route', __name__)
@@ -8,10 +9,11 @@ content_overview_bp = Blueprint('content_overview_route', __name__)
 
 @content_overview_bp.route('/overview', methods=["GET"])
 @jwt_required()
+@limiter.limit("60 per minute")
 def overview():
     try:
         page = request.args.get('page', default=1, type=int)
-        per_page = request.args.get('per_page', default=10, type=int)
+        per_page = min(request.args.get('per_page', default=10, type=int), 40)
         name = request.args.get('name', default=None, type=str)
 
         games = get_video_games_pagination(page=page, per_page=per_page)
@@ -58,7 +60,7 @@ def overview_by_id(game_id):
 def future_release():
     try:
         page = request.args.get('page', default=1, type=int)
-        per_page = request.args.get('per_page', default=10, type=int)
+        per_page = min(request.args.get('per_page', default=10, type=int), 40)
 
         games = get_upcoming_launch_games(page=page, per_page=per_page)
         save_games(games=games, app=current_app._get_current_object())
@@ -72,10 +74,11 @@ def future_release():
 
 @content_overview_bp.route('/filtered', methods=["GET"])
 @jwt_required()
+@limiter.limit("30 per minute")
 def filtered_games():
     try:
         page = request.args.get('page', default=1, type=int)
-        per_page = request.args.get('per_page', default=20, type=int)
+        per_page = min(request.args.get('per_page', default=20, type=int), 40)
         ordering = request.args.get('ordering', default=None, type=str)
         genres = request.args.get('genres', default=None, type=str)
         platforms = request.args.get('platforms', default=None, type=str)
@@ -129,6 +132,7 @@ def logros_del_juego(game_id):
 
 
 @content_overview_bp.route("/hero-video", methods=["GET"])
+@limiter.limit("30 per minute")
 def get_hero_video():
     try:
         video = get_random_game_video()

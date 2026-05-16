@@ -2,9 +2,12 @@ from app.services import user_service
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from app.repositories.user_repo import get_user_by_id
+from app.limiter import limiter
 
 welcome_bp = Blueprint('welcome_route', __name__)
+
 @welcome_bp.route("/login", methods=["POST"])
+@limiter.limit("10 per minute")
 def login():
     data_log = request.get_json()
 
@@ -23,6 +26,7 @@ def login():
         return jsonify({"message": "Correo electronico o contraseña incorrectos"}), 401
 
 @welcome_bp.route("/register", methods=["POST"])
+@limiter.limit("5 per minute")
 def register():
     try:
         register_data = request.get_json()

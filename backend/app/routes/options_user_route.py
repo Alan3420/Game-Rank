@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services import user_service
 from app.repositories.user_repo import get_user_by_id
 from app.autorizacion.validadores import admin_required
+from app.limiter import limiter
 from app.models.UserGameStatus import UserGameStatus
 from app.models.Favorite import Favorite
 from app.models.Rate import Rate
@@ -107,6 +108,7 @@ def change_role():
 
 @user_option_bp.route("/account", methods=["DELETE"])
 @jwt_required()
+@limiter.limit("3 per minute")
 def delete_own_account():
     try:
         usuario_actual_id = get_jwt_identity()
@@ -123,6 +125,7 @@ def delete_own_account():
 
 @user_option_bp.route("/change-password", methods=["PUT"])
 @jwt_required()
+@limiter.limit("5 per minute")
 def change_password():
     try:
         usuario_actual_id = get_jwt_identity()
