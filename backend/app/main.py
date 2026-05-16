@@ -112,7 +112,7 @@ def db_drop():
 @app.cli.command("db-seed")
 def db_seed():
     with app.app_context():
-        seed(app, db, User, Comment, Video_game, Rate, Favorite)
+        seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus)
         print("Los datos de prueba han sido implementados")
 
 # @app.cli.command("db-reset")
