@@ -50,9 +50,9 @@ export default {
     },
 
 
-    irAConfigAdmin() {
+    irAModeracion() {
       this.menuAbierto = false;
-      notificaciones.info("Panel de configuración en desarrollo.", { title: "Próximamente" });
+      this.$router.push('/admin/comments');
     },
 
 

@@ -6,6 +6,7 @@ import ContentOverview from "../components/Content/contenido.vue";
 import GameDetail from "../components/GameDetail/GameDetail.vue";
 import perfil_user from "../components/User/perfil_user.vue";
 import AdminUsers from "../components/Admin/AdminUsers.vue";
+import AdminComments from "../components/Admin/AdminComments.vue";
 import TerminosCondiciones from "../components/Legal/TerminosCondiciones.vue";
 import Tendencias from "../components/Tendencias/Tendencias.vue";
 import NotFound from "../components/NotFound/NotFound.vue";
@@ -58,6 +59,11 @@ const routes = [
         path: "/admin/users",
         component: AdminUsers,
         meta:{title:"Game Rank - Gestión de Usuarios", requiresAdmin: true}
+    },
+    {
+        path: "/admin/comments",
+        component: AdminComments,
+        meta:{title:"Game Rank - Moderación de Comentarios", requiresAdmin: true}
     },
     {
         path: "/tendencias",

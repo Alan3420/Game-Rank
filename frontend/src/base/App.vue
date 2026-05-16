@@ -115,13 +115,13 @@
                   </div>
                 </router-link>
 
-                <button v-if="isAdmin" class="dropdown-item" @click="irAConfigAdmin">
+                <button v-if="isAdmin" class="dropdown-item" @click="irAModeracion">
                   <div class="dropdown-item-icon">
-                    <i class="pi pi-cog"></i>
+                    <i class="pi pi-comments"></i>
                   </div>
                   <div class="dropdown-item-text">
-                    <span class="dropdown-item-title">Configuración</span>
-                    <span class="dropdown-item-desc">Ajustes del sistema</span>
+                    <span class="dropdown-item-title">Moderación</span>
+                    <span class="dropdown-item-desc">Gestionar comentarios</span>
                   </div>
                 </button>
 

@@ -28,6 +28,16 @@ export async function getCommentsByGame(game_id, limit = 10, offset = 0) {
     }
 }
 
+export async function getAllComments() {
+    try {
+        const response = await api.get('/comment/all');
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener todos los comentarios:', error);
+        throw error;
+    }
+}
+
 export async function deleteComment(comment_id) {
     try {
         const tokenUser = localStorage.getItem("token")

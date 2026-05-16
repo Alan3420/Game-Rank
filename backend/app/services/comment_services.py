@@ -1,4 +1,4 @@
-from app.repositories.comment_repo import get_comment_by_id, get_comments_by_game, get_comments_by_game_paginated, get_comments_by_user, create_comment, update_comment, delete_comment
+from app.repositories.comment_repo import get_comment_by_id, get_comments_by_game, get_comments_by_game_paginated, get_comments_by_user, get_all_comments, create_comment, update_comment, delete_comment
 from app.repositories.rate_repo import get_rates_by_game
 
 def crear_comentario(id_user, id_game, description) -> object | str:
@@ -62,6 +62,18 @@ def get_comentarios_juego(id_game, limit=10, offset=0) -> dict:
         }
     except Exception as e:
         raise Exception(f"Error al obtener comentarios: {str(e)}")
+
+def get_todos_comentarios_admin() -> list:
+    try:
+        comments = get_all_comments()
+        resultado = []
+        for c in comments:
+            data = c.to_dict()
+            data['user_last_name'] = c.users_rl.last_name if c.users_rl else ''
+            resultado.append(data)
+        return resultado
+    except Exception as e:
+        raise Exception(f"Error al obtener todos los comentarios: {str(e)}")
 
 def get_comentarios_usuario(id_user) -> list:
 

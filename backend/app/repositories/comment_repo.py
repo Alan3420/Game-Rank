@@ -4,8 +4,7 @@ from datetime import date
 from sqlalchemy import desc
 
 def get_all_comments() -> list[Comment]:
-
-    return Comment.query.all()
+    return Comment.query.order_by(desc(Comment.date_of_comment), desc(Comment.id_comment)).all()
 
 def get_comment_by_id(comment_id) -> Comment:
 

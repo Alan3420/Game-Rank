@@ -189,24 +189,25 @@
   white-space: nowrap;
 }
 
-/* Variantes de color */
-.stat-card--green  { border-color: rgba(26, 158, 98, 0.2); }
-.stat-card--green  .stat-card__icon { background: rgba(26, 158, 98, 0.12); color: #1a9e62; }
+/* Variantes unificadas — paleta neutra */
+.stat-card--green,
+.stat-card--blue,
+.stat-card--amber,
+.stat-card--pink,
+.stat-card--yellow,
+.stat-card--purple {
+  border-color: var(--color-border-light);
+}
 
-.stat-card--blue   { border-color: rgba(59, 130, 246, 0.2); }
-.stat-card--blue   .stat-card__icon { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
-
-.stat-card--amber  { border-color: rgba(201, 125, 12, 0.2); }
-.stat-card--amber  .stat-card__icon { background: rgba(201, 125, 12, 0.12); color: #c97d0c; }
-
-.stat-card--pink   { border-color: rgba(236, 72, 113, 0.2); }
-.stat-card--pink   .stat-card__icon { background: rgba(236, 72, 113, 0.12); color: #ec4871; }
-
-.stat-card--yellow { border-color: rgba(234, 179, 8, 0.2); }
-.stat-card--yellow .stat-card__icon { background: rgba(234, 179, 8, 0.12); color: #d4a00a; }
-
-.stat-card--purple { border-color: rgba(124, 111, 255, 0.2); }
-.stat-card--purple .stat-card__icon { background: rgba(124, 111, 255, 0.12); color: var(--color-secondary); }
+.stat-card--green  .stat-card__icon,
+.stat-card--blue   .stat-card__icon,
+.stat-card--amber  .stat-card__icon,
+.stat-card--pink   .stat-card__icon,
+.stat-card--yellow .stat-card__icon,
+.stat-card--purple .stat-card__icon {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
 
 /* Dark mode */
 [data-theme="dark"] .stat-card {

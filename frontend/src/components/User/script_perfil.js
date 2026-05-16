@@ -255,8 +255,8 @@ export default {
     irAPanelAdmin() {
       this.router.push('/admin/users');
     },
-    irAConfigAdmin() {
-      notificaciones.info("Panel de configuración en desarrollo.", { title: "Próximamente" });
+    irAModeracion() {
+      this.router.push('/admin/comments');
     },
     abrirModalCambiarContraseña() {
       this.mostrarMenuEditar = false;

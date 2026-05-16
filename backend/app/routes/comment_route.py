@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.services.comment_services import crear_comentario, actualizar_comentario, eliminar_comentario, get_comentarios_juego, get_comentarios_usuario
+from app.services.comment_services import crear_comentario, actualizar_comentario, eliminar_comentario, get_comentarios_juego, get_comentarios_usuario, get_todos_comentarios_admin
 from app.services import user_service
 from app.repositories.user_repo import get_user_by_id
 from app.limiter import limiter
+from app.autorizacion.validadores import admin_required
 
 comment_bp = Blueprint("comment", __name__)
 
@@ -92,6 +93,17 @@ def get_by_game(game_id):
         offset = max(request.args.get('offset', default=0, type=int), 0)
         data = get_comentarios_juego(id_game=game_id, limit=limit, offset=offset)
         return jsonify(data), 200
+    except Exception as e:
+        return jsonify({"message": "Error al obtener comentarios"}), 500
+
+@comment_bp.route("/all", methods=["GET"])
+@jwt_required()
+@admin_required
+@limiter.limit("30 per minute")
+def get_all_admin():
+    try:
+        comments = get_todos_comentarios_admin()
+        return jsonify({"comments": comments}), 200
     except Exception as e:
         return jsonify({"message": "Error al obtener comentarios"}), 500
 

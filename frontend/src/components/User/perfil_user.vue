@@ -165,11 +165,11 @@
                 </div>
                 <i class="pi pi-arrow-right"></i>
               </button>
-              <button class="admin-action-btn" @click="irAConfigAdmin">
-                <i class="pi pi-cog"></i>
+              <button class="admin-action-btn" @click="irAModeracion">
+                <i class="pi pi-comments"></i>
                 <div class="admin-btn-content">
-                  <span class="admin-btn-title">Configuración</span>
-                  <span class="admin-btn-desc">Ajustes del sistema</span>
+                  <span class="admin-btn-title">Moderación</span>
+                  <span class="admin-btn-desc">Gestionar comentarios</span>
                 </div>
                 <i class="pi pi-arrow-right"></i>
               </button>
