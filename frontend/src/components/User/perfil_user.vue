@@ -5,7 +5,6 @@
 
       <!-- ── HERO BANNER ── -->
       <div class="profile-banner">
-        <div class="banner-glow"></div>
         <div class="banner-inner">
           <div class="avatar-circle">
             {{ estadoAutenticacion.usuario.name?.charAt(0)?.toUpperCase() }}{{ estadoAutenticacion.usuario.last_name?.charAt(0)?.toUpperCase() }}
