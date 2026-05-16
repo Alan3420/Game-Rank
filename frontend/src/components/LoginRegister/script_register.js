@@ -18,11 +18,17 @@ export default {
     };
   },
   computed: {
+    emailDominioValido() {
+      const dominios = ['gmail.com','hotmail.com','hotmail.es','outlook.com','outlook.es','yahoo.com','yahoo.es','icloud.com','live.com'];
+      const partes = this.email.split('@');
+      return partes.length === 2 && dominios.includes(partes[1].toLowerCase());
+    },
     isFormValid() {
       return (
         this.name.length >= 1 && this.name.length <= 50 &&
         this.last_name.length >= 1 && this.last_name.length <= 50 &&
         this.email.length > 0 && this.email.length <= 100 &&
+        this.emailDominioValido &&
         this.password.length >= 8 && this.password.length <= 50 &&
         this.password === this.confirmPassword &&
         this.aceptaTerminos

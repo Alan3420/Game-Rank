@@ -16,10 +16,11 @@ export async function createComments(id_game, description) {
     }
 }
 
-export async function getCommentsByGame(game_id) {
+export async function getCommentsByGame(game_id, limit = 10, offset = 0) {
     try {
-        const tokenUser = localStorage.getItem("token")
-        const response = await api.get(`/comment/game/${game_id}`);
+        const response = await api.get(`/comment/game/${game_id}`, {
+            params: { limit, offset }
+        });
         return response.data;
     } catch (error) {
         console.error('Error al obtener comentarios:', error);

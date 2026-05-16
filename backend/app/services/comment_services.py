@@ -1,4 +1,4 @@
-from app.repositories.comment_repo import get_comment_by_id, get_comments_by_game,get_comments_by_user, create_comment, update_comment, delete_comment
+from app.repositories.comment_repo import get_comment_by_id, get_comments_by_game, get_comments_by_game_paginated, get_comments_by_user, create_comment, update_comment, delete_comment
 from app.repositories.rate_repo import get_rates_by_game
 
 def crear_comentario(id_user, id_game, description) -> object | str:
@@ -43,9 +43,9 @@ def eliminar_comentario(comment_id, user_id, es_admin=False) -> bool | str:
     except Exception as e:
         raise Exception(f"Error al eliminar el comentario: {str(e)}")
     
-def get_comentarios_juego(id_game) -> list:
+def get_comentarios_juego(id_game, limit=10, offset=0) -> dict:
     try:
-        comments = get_comments_by_game(id_game=id_game)
+        comments, total = get_comments_by_game_paginated(id_game=id_game, limit=limit, offset=offset)
         rates = get_rates_by_game(id_game=id_game)
         rating_by_user = {r.id_user: r.rating for r in rates}
 
@@ -55,7 +55,11 @@ def get_comentarios_juego(id_game) -> list:
             data["rating"] = rating_by_user.get(comment.id_user)
             resultado.append(data)
 
-        return resultado
+        return {
+            "comments": resultado,
+            "total": total,
+            "has_more": (offset + len(resultado)) < total
+        }
     except Exception as e:
         raise Exception(f"Error al obtener comentarios: {str(e)}")
 

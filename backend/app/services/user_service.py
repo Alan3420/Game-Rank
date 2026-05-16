@@ -1,6 +1,17 @@
 from app.repositories import user_repo
 from app.models.User import User
 
+DOMINIOS_PERMITIDOS = {
+    "gmail.com", "hotmail.com", "hotmail.es",
+    "outlook.com", "outlook.es",
+    "yahoo.com",  "yahoo.es",
+    "icloud.com", "live.com",
+}
+
+def _dominio_valido(email: str) -> bool:
+    partes = email.split("@")
+    return len(partes) == 2 and partes[1].lower() in DOMINIOS_PERMITIDOS
+
 
 def user_authentication(email, passwd) -> User |None:
 
@@ -23,6 +34,9 @@ def user_registration(name, last_name, email, passwd) -> User | str:
 
         if not email or len(email) > 100:
             return "El email debe tener un máximo de 100 caracteres"
+
+        if not _dominio_valido(email):
+            return "Solo se aceptan correos de Gmail, Hotmail, Outlook, Yahoo o iCloud"
 
         if not passwd or len(passwd) < 8:
             return "La contraseña debe tener un mínimo de 8 caracteres"
@@ -71,6 +85,8 @@ def user_update(user_id, name, last_name, email, passwd) -> User | str:
         if email:
             if len(email) > 100:
                 return "El email debe tener un máximo de 100 caracteres"
+            if not _dominio_valido(email):
+                return "Solo se aceptan correos de Gmail, Hotmail, Outlook, Yahoo o iCloud"
             if email != user.email:
                 email_exists = user_repo.get_user_by_email(email)
                 if email_exists:

@@ -88,8 +88,10 @@ def delete(comment_id):
 @jwt_required()
 def get_by_game(game_id):
     try:
-        comments = get_comentarios_juego(id_game=game_id)
-        return jsonify({"comments": comments}), 200
+        limit = min(request.args.get('limit', default=10, type=int), 40)
+        offset = max(request.args.get('offset', default=0, type=int), 0)
+        data = get_comentarios_juego(id_game=game_id, limit=limit, offset=offset)
+        return jsonify(data), 200
     except Exception as e:
         return jsonify({"message": "Error al obtener comentarios"}), 500
 

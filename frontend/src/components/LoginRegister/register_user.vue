@@ -41,11 +41,15 @@
             id="email"
             v-model="email"
             type="email"
-            placeholder="tu@email.com"
+            placeholder="tu@gmail.com"
             class="form-input"
+            :class="{ 'input-error': email && !emailDominioValido }"
             maxlength="100"
             required
           >
+          <span v-if="email && !emailDominioValido" class="error-text">
+            La terminación del correo es inválida
+          </span>
         </div>
 
         <div class="form-group">

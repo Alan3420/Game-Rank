@@ -213,7 +213,7 @@
                             <div class="cb-title">
                                 <i class="pi pi-comments"></i>
                                 <h3>Comentarios</h3>
-                                <span class="comment-count">{{ comments.length }}</span>
+                                <span class="comment-count">{{ totalComments }}</span>
                             </div>
                         </div>
 
@@ -264,6 +264,15 @@
                                     <p class="comment-body">{{ comment.description }}</p>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- CARGAR MÁS -->
+                        <div v-if="hasMoreComments || loadingMore" class="load-more-wrap">
+                            <button class="load-more-btn" @click="cargarMasComentarios" :disabled="loadingMore">
+                                <i v-if="loadingMore" class="pi pi-spin pi-spinner"></i>
+                                <i v-else class="pi pi-chevron-down"></i>
+                                {{ loadingMore ? 'Cargando...' : `Cargar más (${totalComments - comments.length} restantes)` }}
+                            </button>
                         </div>
 
                         <!-- SEPARADOR -->

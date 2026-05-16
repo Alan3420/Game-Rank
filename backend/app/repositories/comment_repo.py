@@ -1,6 +1,7 @@
 from app.models.Comment import Comment
 from app.database.db import db
 from datetime import date
+from sqlalchemy import desc
 
 def get_all_comments() -> list[Comment]:
 
@@ -12,6 +13,16 @@ def get_comment_by_id(comment_id) -> Comment:
 
 def get_comments_by_game(id_game):
     return Comment.query.filter_by(id_videogame=id_game).all()
+
+def get_comments_by_game_paginated(id_game, limit, offset):
+    total = Comment.query.filter_by(id_videogame=id_game).count()
+    comments = (Comment.query
+                .filter_by(id_videogame=id_game)
+                .order_by(desc(Comment.date_of_comment), desc(Comment.id_comment))
+                .limit(limit)
+                .offset(offset)
+                .all())
+    return comments, total
 
 def get_comments_by_user(id_user):
     return Comment.query.filter_by(id_user=id_user).all()

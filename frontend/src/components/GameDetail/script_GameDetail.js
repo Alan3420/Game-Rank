@@ -19,6 +19,9 @@ export default {
             activeShot: 0,
             errorMessage: '',
             comments: [],
+            totalComments: 0,
+            hasMoreComments: false,
+            loadingMore: false,
             newComment: '',
             editingId: null,
             editDescription: '',
@@ -94,6 +97,9 @@ export default {
             this.juegosSaga = [];
             this.adiciones = [];
             this.logros = [];
+            this.comments = [];
+            this.totalComments = 0;
+            this.hasMoreComments = false;
             this.loadGameDetail(newId).then(() => {
                 this.loadComments();
                 this.loadCommunityAvg();
@@ -143,12 +149,31 @@ export default {
         async loadComments() {
             try {
                 const gameId = this.$route.params.id;
-                const data = await getCommentsByGame(gameId);
+                const data = await getCommentsByGame(gameId, 10, 0);
                 this.comments = data.comments;
+                this.totalComments = data.total;
+                this.hasMoreComments = data.has_more;
                 this.syncFormRatingFromUserComments();
             } catch (error) {
                 console.error('Error al cargar comentarios:', error);
                 this.comments = [];
+                this.totalComments = 0;
+                this.hasMoreComments = false;
+            }
+        },
+
+        async cargarMasComentarios() {
+            if (this.loadingMore || !this.hasMoreComments) return;
+            try {
+                this.loadingMore = true;
+                const gameId = this.$route.params.id;
+                const data = await getCommentsByGame(gameId, 5, this.comments.length);
+                this.comments = [...this.comments, ...data.comments];
+                this.hasMoreComments = data.has_more;
+            } catch (error) {
+                console.error('Error al cargar más comentarios:', error);
+            } finally {
+                this.loadingMore = false;
             }
         },
 
