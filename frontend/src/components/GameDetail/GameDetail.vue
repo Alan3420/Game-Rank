@@ -239,6 +239,7 @@
                                     <div class="comment-top">
                                         <div class="comment-meta">
                                             <span class="comment-user">{{ comment.username }}</span>
+                                            <span v-if="comment.nickname" class="comment-nickname">@{{ comment.nickname }}</span>
                                             <span class="comment-dot"></span>
                                             <span class="comment-date">{{ formatDate(comment.date_of_comment) }}</span>
                                             <span v-if="comment.date_of_update" class="comment-edited">

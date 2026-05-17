@@ -10,6 +10,7 @@ class User(db.Model):
     id_user = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
+    nickname = Column(String(30), nullable=True, unique=True)
     email = Column(String(100), nullable=False, unique=True)
     password = Column(String(255), nullable=False, unique=True)
     date_of_registration = Column(Date, nullable=False, default=datetime.now)
@@ -20,9 +21,10 @@ class User(db.Model):
     rates_rl = relationship("Rate", back_populates="users_rl", overlaps="video_games_rl")
     favorites_rl = relationship("Favorite", back_populates="users_rl")
 
-    def __init__(self, name, last_name, email, password, role='user'):
+    def __init__(self, name, last_name, nickname, email, password, role='user'):
         self.name = name
         self.last_name = last_name
+        self.nickname = nickname
         self.email = email
         self.password = generate_password_hash(password)
         self.role = role
@@ -39,6 +41,7 @@ class User(db.Model):
             "id_user": self.id_user,
             "name": self.name,
             "last_name": self.last_name,
+            "nickname": self.nickname,
             "email": self.email,
             "date_of_registration": self.date_of_registration,
             "role": self.role

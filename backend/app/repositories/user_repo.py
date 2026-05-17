@@ -9,25 +9,27 @@ def get_all_users(exclude_user_id=None) -> list[User]:
 def get_user_by_id(user_id) -> User:
     return User.query.get(user_id)
 
-def get_user_by_username(username) -> User:
-    return User.query.filter_by(username=username).first()
+def get_user_by_nickname(nickname) -> User:
+    return User.query.filter(User.nickname.ilike(nickname)).first()
 
 def get_user_by_email(email) -> User:
     return User.query.filter_by(email=email).first()
 
-def create_user(username, last_name, email, password) -> User:
-    new_user = User(name=username, last_name=last_name, email=email, password=password)
+def create_user(username, last_name, nickname, email, password) -> User:
+    new_user = User(name=username, last_name=last_name, nickname=nickname, email=email, password=password)
     db.session.add(new_user)
     db.session.commit()
     return new_user
 
-def update_user(user_id, username=None, last_name=None, email=None, password=None) -> User:
+def update_user(user_id, username=None, last_name=None, nickname=None, email=None, password=None) -> User:
     user = get_user_by_id(user_id)
     if user:
         if username:
             user.name = username
         if last_name:
             user.last_name = last_name
+        if nickname:
+            user.nickname = nickname
         if email:
             user.email = email
         if password:

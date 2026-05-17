@@ -38,7 +38,8 @@ export default {
       cambiandoContraseña: false,
       formularioEditar: {
         name: '',
-        last_name: ''
+        last_name: '',
+        nickname: ''
       },
       errorEditar: '',
       guardandoEditar: false,
@@ -100,7 +101,8 @@ export default {
       this.mostrarMenuEditar = false;
       this.formularioEditar = {
         name: estadoAutenticacion.usuario?.name || '',
-        last_name: estadoAutenticacion.usuario?.last_name || ''
+        last_name: estadoAutenticacion.usuario?.last_name || '',
+        nickname: estadoAutenticacion.usuario?.nickname || ''
       };
       this.errorEditar = '';
       this.mostrarModalEditar = true;
@@ -113,6 +115,7 @@ export default {
     async guardarCambiosPerfil() {
       const name = this.formularioEditar.name?.trim();
       const last_name = this.formularioEditar.last_name?.trim();
+      const nickname = this.formularioEditar.nickname?.trim();
 
       if (!name || !last_name) {
         this.errorEditar = 'El nombre y el apellido son obligatorios.';
@@ -124,9 +127,15 @@ export default {
         return;
       }
 
+      if (nickname && !/^[a-zA-Z0-9_]{3,30}$/.test(nickname)) {
+        this.errorEditar = 'El nickname solo puede contener letras, números y _ (mín. 3, máx. 30 caracteres).';
+        return;
+      }
+
       const sinCambios =
         name === estadoAutenticacion.usuario?.name &&
-        last_name === estadoAutenticacion.usuario?.last_name;
+        last_name === estadoAutenticacion.usuario?.last_name &&
+        nickname === (estadoAutenticacion.usuario?.nickname || '');
 
       if (sinCambios) {
         this.errorEditar = 'No has hecho ningún cambio.';
@@ -138,9 +147,9 @@ export default {
 
       try {
         const id_user = estadoAutenticacion.usuario.id_user;
-        const response = await updateUser(id_user, { name, last_name });
+        await updateUser(id_user, { name, last_name, nickname: nickname || null });
 
-        estadoAutenticacion.actualizarUsuario({ name, last_name });
+        estadoAutenticacion.actualizarUsuario({ name, last_name, nickname: nickname || null });
 
         this.mostrarModalEditar = false;
         notificaciones.success("Tu información ha sido actualizada.", {

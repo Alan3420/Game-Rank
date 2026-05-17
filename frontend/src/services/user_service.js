@@ -9,10 +9,11 @@ export async function login(email, passwd) {
 
 }
 
-export async function register(name, last_name, email, passwd) {
+export async function register(name, last_name, nickname, email, passwd) {
     const response = await api.post("/user/register", {
         name: name,
         last_name: last_name,
+        nickname: nickname,
         email: email,
         password: passwd
     });

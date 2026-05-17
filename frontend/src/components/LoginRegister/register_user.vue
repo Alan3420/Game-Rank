@@ -36,6 +36,26 @@
         </div>
 
         <div class="form-group">
+          <label for="nickname" class="form-label">Nickname</label>
+          <div class="input-wrap">
+            <span class="input-prefix">@</span>
+            <input
+              id="nickname"
+              v-model="nickname"
+              type="text"
+              placeholder="tu_nickname"
+              class="form-input input-with-prefix"
+              :class="{ 'input-error': nickname && !nicknameValido }"
+              maxlength="30"
+              required
+            >
+          </div>
+          <span v-if="nickname && !nicknameValido" class="error-text">
+            3-30 caracteres: letras, números y guiones bajos (_) únicamente
+          </span>
+        </div>
+
+        <div class="form-group">
           <label for="email" class="form-label">Correo Electrónico</label>
           <input
             id="email"

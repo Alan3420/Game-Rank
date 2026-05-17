@@ -28,12 +28,14 @@ def edit_user():
 
         nombre_usuario = datos_actualizacion.get("name")
         apellido_usuario = datos_actualizacion.get("last_name")
+        nickname_usuario = datos_actualizacion.get("nickname")
         email_usuario = datos_actualizacion.get("email")
         contraseña_usuario = datos_actualizacion.get("password")
 
         usuario_actualizado = user_service.user_update(user_id=id_usuario,
                                                        name=nombre_usuario,
                                                        last_name=apellido_usuario,
+                                                       nickname=nickname_usuario,
                                                        email=email_usuario,
                                                        passwd=contraseña_usuario)
 

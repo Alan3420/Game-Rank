@@ -29,21 +29,21 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
 
         # ── Usuarios ──
         users = [
-            User("Juan",   "Pérez",     "juan@gmail.com",   "password123"),
-            User("María",  "Gómez",     "maria@gmail.com",  "password456"),
-            User("Carlos", "López",     "carlos@gmail.com", "password789"),
-            User("Ana",    "Martínez",  "ana@gmail.com",    "password321"),
-            User("Luis",   "Sánchez",   "luis@gmail.com",   "password654"),
-            User("Sofía",  "García",    "sofia@gmail.com",  "password987"),
-            User("Diego",  "Rodríguez", "diego@gmail.com",  "password147"),
-            User("Laura",  "Fernández", "laura@gmail.com",  "password258"),
-            User("Pedro",  "Jiménez",   "pedro@gmail.com",  "password369"),
-            User("Elena",  "Torres",    "elena@gmail.com",  "password741"),
-            User("Miguel", "Ruiz",      "miguel@gmail.com", "password852"),
-            User("Carmen", "Vargas",    "carmen@gmail.com", "password963"),
-            User("Raúl",   "Moreno",    "raul@gmail.com",   "password111"),
-            User("Alba",   "Castro",    "alba@gmail.com",   "password222"),
-            User("Iván",   "Molina",    "ivan@gmail.com",   "password333"),
+            User("Juan",   "Pérez",     "JuanP",     "juan@gmail.com",   "password123"),
+            User("María",  "Gómez",     "MariaG",    "maria@gmail.com",  "password456"),
+            User("Carlos", "López",     "CarlosL",   "carlos@gmail.com", "password789"),
+            User("Ana",    "Martínez",  "AnaMart",   "ana@gmail.com",    "password321"),
+            User("Luis",   "Sánchez",   "LuisS",     "luis@gmail.com",   "password654"),
+            User("Sofía",  "García",    "SofiaG",    "sofia@gmail.com",  "password987"),
+            User("Diego",  "Rodríguez", "DiegoR",    "diego@gmail.com",  "password147"),
+            User("Laura",  "Fernández", "LauraF",    "laura@gmail.com",  "password258"),
+            User("Pedro",  "Jiménez",   "PedroJ",    "pedro@gmail.com",  "password369"),
+            User("Elena",  "Torres",    "ElenaT",    "elena@gmail.com",  "password741"),
+            User("Miguel", "Ruiz",      "MiguelR",   "miguel@gmail.com", "password852"),
+            User("Carmen", "Vargas",    "CarmenV",   "carmen@gmail.com", "password963"),
+            User("Raúl",   "Moreno",    "RaulM",     "raul@gmail.com",   "password111"),
+            User("Alba",   "Castro",    "AlbaC",     "alba@gmail.com",   "password222"),
+            User("Iván",   "Molina",    "IvanMolina","ivan@gmail.com",   "password333"),
         ]
         db.session.add_all(users)
         db.session.flush()

@@ -1,7 +1,9 @@
 <template>
   <div class="profile-page">
 
-    <div v-if="estadoAutenticacion.usuario">
+    <Loader v-if="estadoAutenticacion.cargando" size="large" :fullHeight="true" message="Cargando perfil..." />
+
+    <div v-else-if="estadoAutenticacion.usuario">
 
       <!-- ── HERO BANNER ── -->
       <div class="profile-banner">
@@ -11,6 +13,7 @@
           </div>
           <div class="banner-identity">
             <h1>{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</h1>
+            <span v-if="estadoAutenticacion.usuario.nickname" class="banner-nickname">@{{ estadoAutenticacion.usuario.nickname }}</span>
             <span class="badge" :class="{ 'badge-admin': isAdmin }">
               <i :class="isAdmin ? 'pi pi-crown' : 'pi pi-shield'"></i>
               {{ isAdmin ? 'Administrador' : 'Usuario' }}
@@ -125,6 +128,15 @@
                 <div class="info-body">
                   <span class="info-label">Apellido</span>
                   <span class="info-value">{{ estadoAutenticacion.usuario.last_name }}</span>
+                </div>
+              </div>
+              <div class="info-item">
+                <div class="info-icon-wrap"><i class="pi pi-tag"></i></div>
+                <div class="info-body">
+                  <span class="info-label">Nickname</span>
+                  <span class="info-value info-nickname-value">
+                    {{ estadoAutenticacion.usuario.nickname ? '@' + estadoAutenticacion.usuario.nickname : '—' }}
+                  </span>
                 </div>
               </div>
               <div class="info-item">
@@ -372,6 +384,28 @@
 
             <div class="form-group">
               <label class="form-label">
+                <i class="pi pi-tag"></i>
+                Nickname
+              </label>
+              <div class="input-prefix-wrap">
+                <span class="input-at-prefix">@</span>
+                <input
+                  v-model="formularioEditar.nickname"
+                  type="text"
+                  class="form-input form-input--with-prefix"
+                  placeholder="tu_nickname"
+                  maxlength="30"
+                  :disabled="guardandoEditar"
+                />
+              </div>
+              <span class="form-hint">
+                <i class="pi pi-info-circle"></i>
+                3–30 caracteres: letras, números y guiones bajos (_).
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">
                 <i class="pi pi-envelope"></i>
                 Correo electrónico
                 <span class="form-badge-disabled">No editable</span>
@@ -486,20 +520,6 @@
 
     </div>
 
-    <!-- Unauthorized -->
-    <div v-else class="unauthorized-state">
-      <div class="unauthorized-card">
-        <div class="lock-icon-wrap">
-          <i class="pi pi-lock"></i>
-        </div>
-        <h2>Acceso Denegado</h2>
-        <p>Debes iniciar sesión para ver tu perfil.</p>
-        <router-link to="/login" class="login-btn">
-          <i class="pi pi-sign-in"></i>
-          Iniciar Sesión
-        </router-link>
-      </div>
-    </div>
 
   </div>
 </template>

@@ -1,6 +1,8 @@
 from app.repositories import user_repo
 from app.models.User import User
 
+import re
+
 DOMINIOS_PERMITIDOS = {
     "gmail.com", "hotmail.com", "hotmail.es",
     "outlook.com", "outlook.es",
@@ -8,9 +10,14 @@ DOMINIOS_PERMITIDOS = {
     "icloud.com", "live.com",
 }
 
+_NICKNAME_RE = re.compile(r'^[a-zA-Z0-9_]{3,30}$')
+
 def _dominio_valido(email: str) -> bool:
     partes = email.split("@")
     return len(partes) == 2 and partes[1].lower() in DOMINIOS_PERMITIDOS
+
+def _nickname_valido(nickname: str) -> bool:
+    return bool(_NICKNAME_RE.match(nickname))
 
 
 def user_authentication(email, passwd) -> User |None:
@@ -23,7 +30,7 @@ def user_authentication(email, passwd) -> User |None:
     return None
 
 
-def user_registration(name, last_name, email, passwd) -> User | str:
+def user_registration(name, last_name, nickname, email, passwd) -> User | str:
 
     try:
         if not name or len(name) < 1 or len(name) > 50:
@@ -31,6 +38,9 @@ def user_registration(name, last_name, email, passwd) -> User | str:
 
         if not last_name or len(last_name) < 1 or len(last_name) > 50:
             return "El apellido debe tener entre 1 y 50 caracteres"
+
+        if not nickname or not _nickname_valido(nickname):
+            return "El nickname debe tener entre 3 y 30 caracteres y solo puede contener letras, números y guiones bajos"
 
         if not email or len(email) > 100:
             return "El email debe tener un máximo de 100 caracteres"
@@ -41,12 +51,15 @@ def user_registration(name, last_name, email, passwd) -> User | str:
         if not passwd or len(passwd) < 8:
             return "La contraseña debe tener un mínimo de 8 caracteres"
 
+        if user_repo.get_user_by_nickname(nickname) is not None:
+            return "Ese nickname ya está en uso"
+
         user_exist = user_repo.get_user_by_email(email)
 
         if user_exist is not None:
             return "Existe un usuario registrado con ese email"
 
-        new_user = user_repo.create_user(username=name, last_name=last_name, email=email, password=passwd)
+        new_user = user_repo.create_user(username=name, last_name=last_name, nickname=nickname, email=email, password=passwd)
 
         return new_user
         
@@ -68,7 +81,7 @@ def get_list_users(exclude_user_id=None) -> list[User]:
         print("Error al obtener la lista de usuarios:", str(e))
         raise Exception("Error al obtener la lista de usuarios")
 
-def user_update(user_id, name, last_name, email, passwd) -> User | str:
+def user_update(user_id, name, last_name, nickname, email, passwd) -> User | str:
 
     try:
         user = user_repo.get_user_by_id(user_id)
@@ -81,6 +94,14 @@ def user_update(user_id, name, last_name, email, passwd) -> User | str:
 
         if last_name and (len(last_name) < 1 or len(last_name) > 50):
             return "El apellido debe tener entre 1 y 50 caracteres"
+
+        if nickname:
+            if not _nickname_valido(nickname):
+                return "El nickname debe tener entre 3 y 30 caracteres y solo puede contener letras, números y guiones bajos"
+            if nickname.lower() != (user.nickname or "").lower():
+                nick_exists = user_repo.get_user_by_nickname(nickname)
+                if nick_exists:
+                    return "Ese nickname ya está en uso"
 
         if email:
             if len(email) > 100:
@@ -95,7 +116,7 @@ def user_update(user_id, name, last_name, email, passwd) -> User | str:
         if passwd and len(passwd) < 8:
             return "La contraseña debe tener un mínimo de 8 caracteres"
 
-        updated_user = user_repo.update_user(user_id=user_id, username=name, last_name=last_name, email=email, password=passwd)
+        updated_user = user_repo.update_user(user_id=user_id, username=name, last_name=last_name, nickname=nickname, email=email, password=passwd)
 
         return updated_user
     

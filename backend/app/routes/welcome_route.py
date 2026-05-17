@@ -33,12 +33,14 @@ def register():
 
         name_user = register_data.get("name")
         last_name_user = register_data.get("last_name")
+        nickname_user = register_data.get("nickname")
         email_user = register_data.get("email")
         password_user = register_data.get("password")
 
-        user = user_service.user_registration(name=name_user, 
-                                              last_name=last_name_user, 
-                                              email=email_user, 
+        user = user_service.user_registration(name=name_user,
+                                              last_name=last_name_user,
+                                              nickname=nickname_user,
+                                              email=email_user,
                                               passwd=password_user)
 
         if type(user) != str:
