@@ -114,7 +114,6 @@ export default {
             }
             this.$router.replace({ query });
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
             try {
                 const response = this.isFiltering
                     ? await getFilteredGames(page, PER_PAGE, { ...this.filters, search: this.game_name || '' })
@@ -127,14 +126,17 @@ export default {
                     return;
                 }
 
-                this.favorites = new Set();
-                for (const game of this.games) {
-                    await this.initCheckFavorite(game.id);
+                // Mostrar juegos inmediatamente sin esperar a favoritos
+                this.loading = false;
+
+                // Comprobar favoritos en paralelo en segundo plano (solo si hay sesión)
+                if (estadoAutenticacion.usuario) {
+                    this.favorites = new Set();
+                    await Promise.all(this.games.map(g => this.initCheckFavorite(g.id)));
                 }
             } catch (error) {
                 console.error(error);
                 this.games = [];
-            } finally {
                 this.loading = false;
             }
         },

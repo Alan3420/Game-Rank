@@ -21,17 +21,12 @@ export default {
     };
   },
   async mounted() {
-    await this.loadHeroVideo();
-
-    if (!localStorage.getItem("token")) return;
-
-    if (this.topGames.length === 0) {
-      await this.loadTopGames();
+    const token = localStorage.getItem("token");
+    const tasks = [this.loadHeroVideo()];
+    if (token) {
+      tasks.push(this.loadTopGames(), this.loadFutureReleases(), this.loadStatuses());
     }
-    if (this.futureReleases.length === 0) {
-      await this.loadFutureReleases();
-    }
-    await this.loadStatuses();
+    await Promise.all(tasks);
   },
   methods: {
     async loadHeroVideo() {
@@ -56,18 +51,17 @@ export default {
           games = response;
         }
 
-        const validGames = games.filter(game => game.metacritic && game.metacritic > 0);
-
-        const sorted = validGames.sort((a, b) => b.metacritic - a.metacritic);
+        const sorted = games
+          .filter(game => game.metacritic && game.metacritic > 0)
+          .sort((a, b) => b.metacritic - a.metacritic);
         this.topGames = sorted.slice(0, 3);
+        this.isLoading = false;
 
-        for (const game of this.topGames) {
-          await this.initCheckFavorite(game.id);
+        if (estadoAutenticacion.usuario) {
+          await Promise.all(this.topGames.map(g => this.initCheckFavorite(g.id)));
         }
-
       } catch (error) {
         console.error('Error loading top games:', error);
-      } finally {
         this.isLoading = false;
       }
     },
@@ -76,13 +70,13 @@ export default {
       try {
         const response = await getFutureReleases(1, 10);
         this.futureReleases = response || [];
+        this.isFutureLoading = false;
 
-        for (const game of this.futureReleases) {
-          await this.initCheckFavorite(game.id);
+        if (estadoAutenticacion.usuario) {
+          await Promise.all(this.futureReleases.map(g => this.initCheckFavorite(g.id)));
         }
       } catch (error) {
         console.error('Error loading future releases:', error);
-      } finally {
         this.isFutureLoading = false;
       }
     },
