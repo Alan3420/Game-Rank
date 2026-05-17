@@ -1,6 +1,5 @@
 from app.repositories import user_repo
 from app.models.User import User
-
 import re
 
 DOMINIOS_PERMITIDOS = {
@@ -65,8 +64,7 @@ def user_registration(name, last_name, nickname, email, passwd) -> User | str:
         
         
     
-    except Exception as e:
-        print("Error en el registro del usuario:", str(e))
+    except Exception:
         raise Exception("Error en el registro del usuario")
     
 #Recordatorio: esta funcion solo la podrá usar el usuario con rol "ADMIN"
@@ -77,8 +75,7 @@ def get_list_users(exclude_user_id=None) -> list[User]:
 
         return list_users
 
-    except Exception as e:
-        print("Error al obtener la lista de usuarios:", str(e))
+    except Exception:
         raise Exception("Error al obtener la lista de usuarios")
 
 def user_update(user_id, name, last_name, nickname, email, passwd) -> User | str:
@@ -120,8 +117,7 @@ def user_update(user_id, name, last_name, nickname, email, passwd) -> User | str
 
         return updated_user
     
-    except Exception as e:
-        print("Error al actualizar el usuario:", str(e))
+    except Exception:
         raise Exception("Error al actualizar el usuario")
     
 def user_delete(user_id) -> bool | str:
@@ -136,8 +132,7 @@ def user_delete(user_id) -> bool | str:
 
         return resultado_bool
     
-    except Exception as e:
-        print("Error al eliminar el usuario:", str(e))
+    except Exception:
         raise Exception("Error al eliminar el usuario")
 
 #Recordatorio: lo mismo en esta funcion solo el admin puede cambiar los roles a los usuarios que quiera.
@@ -153,8 +148,7 @@ def change_role(user_id, new_role) -> User | str:
 
         return updated_user
     
-    except Exception as e:
-        print("Error al cambiar el rol del usuario:", str(e))
+    except Exception:
         raise Exception("Error al cambiar el rol del usuario")
 
 def get_user_by_id(id_user):
@@ -180,7 +174,6 @@ def change_password(user_id, contraseña_actual, contraseña_nueva) -> User | st
 
         return usuario_actualizado
 
-    except Exception as e:
-        print("Error al cambiar la contraseña:", str(e))
+    except Exception:
         raise Exception("Error al cambiar la contraseña")
 

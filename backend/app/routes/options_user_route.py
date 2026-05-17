@@ -93,8 +93,13 @@ def change_role():
         id_usuario = datos_rol.get("id_user")
         nuevo_rol = datos_rol.get("new_role")
 
+        ROLES_PERMITIDOS = {"user", "admin"}
+
         if not id_usuario or not nuevo_rol:
             return jsonify({"message": "id_user y new_role son obligatorios"}), 400
+
+        if nuevo_rol not in ROLES_PERMITIDOS:
+            return jsonify({"message": "Rol no válido"}), 400
 
         usuario_actualizado = user_service.change_role(user_id=id_usuario, new_role=nuevo_rol)
 

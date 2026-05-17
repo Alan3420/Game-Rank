@@ -114,8 +114,8 @@ def get_by_user():
         id_user  = get_jwt_identity()
         comments = get_comentarios_usuario(id_user=id_user)
         user = user_service.get_user_by_id(id_user=id_user)
-        
-        return jsonify({"comments": comments, "user": user}), 200
+
+        return jsonify({"comments": comments, "user": user.to_dict() if user else None}), 200
     except Exception as e:
         return jsonify({"message": "Error al obtener comentarios"}), 500
 
