@@ -33,8 +33,11 @@
           </div>
         </div>
 
+        <!-- Loader -->
+        <Loader v-if="loading" message="Loading users..." />
+
         <!-- Tabla de usuarios -->
-        <div v-if="usuarios.length > 0" class="users-table-wrap">
+        <div v-else-if="usuarios.length > 0" class="users-table-wrap">
           <table class="users-table">
             <thead>
               <tr>
@@ -53,6 +56,7 @@
                   </div>
                   <div class="user-info">
                     <span class="user-fullname">{{ usuario.name }} {{ usuario.last_name }}</span>
+                    <span class="user-nickname">@{{ usuario.nickname }}</span>
                   </div>
                 </td>
                 <td class="user-email">{{ usuario.email }}</td>
@@ -93,7 +97,7 @@
         </div>
 
         <!-- Estado vacío -->
-        <div v-else class="users-empty">
+        <div v-else-if="!loading" class="users-empty">
           <div class="empty-icon">
             <i class="pi pi-users"></i>
           </div>
@@ -106,9 +110,11 @@
 
 <script>
 import jsAdminUsers from "./script_AdminUsers.js";
+import Loader from "../Loader/Loader.vue";
 
 export default {
   name: 'AdminUsers',
+  components: { Loader },
   mixins: [jsAdminUsers]
 };
 </script>

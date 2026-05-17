@@ -34,10 +34,7 @@
         </div>
 
         <!-- Loader -->
-        <div v-if="loading" class="users-empty">
-          <div class="empty-icon"><i class="pi pi-spin pi-spinner"></i></div>
-          <p>Loading comments...</p>
-        </div>
+        <Loader v-if="loading" message="Loading comments..." />
 
         <!-- Tabla -->
         <div v-else-if="comentariosFiltrados.length > 0" class="users-table-wrap">
@@ -59,6 +56,7 @@
                   </div>
                   <div class="user-info">
                     <span class="user-fullname">{{ c.username }} {{ c.user_last_name }}</span>
+                    <span class="user-nickname">@{{ c.nickname }}</span>
                   </div>
                 </td>
                 <td>
@@ -97,9 +95,11 @@
 
 <script>
 import jsAdminComments from "./script_AdminComments.js";
+import Loader from "../Loader/Loader.vue";
 
 export default {
   name: 'AdminComments',
+  components: { Loader },
   mixins: [jsAdminComments]
 };
 </script>

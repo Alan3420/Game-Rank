@@ -33,15 +33,17 @@ export default {
   },
 
   mounted() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.router = useRouter();
     const route = useRoute();
 
     // Reactivo al estado de sesión: muestra 404 si no es admin (sin revelar que la ruta existe)
-    const parar = watchEffect(() => {
+    let parar = null;
+    parar = watchEffect(() => {
       if (estadoAutenticacion.cargando) return;
 
       if (!estadoAutenticacion.usuario || estadoAutenticacion.usuario.role !== 'admin') {
-        parar();
+        parar?.();
         this.router.replace({
           name: 'not-found',
           params: { pathMatch: route.path.substring(1).split('/') }
@@ -49,7 +51,7 @@ export default {
         return;
       }
 
-      parar();
+      parar?.();
       this.cargarUsuarios();
     });
   },

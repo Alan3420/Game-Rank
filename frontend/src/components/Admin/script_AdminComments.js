@@ -27,14 +27,16 @@ export default {
     }
   },
   mounted() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     this.router = useRouter();
     const route = useRoute();
 
-    const parar = watchEffect(() => {
+    let parar = null;
+    parar = watchEffect(() => {
       if (estadoAutenticacion.cargando) return;
 
       if (!estadoAutenticacion.usuario || estadoAutenticacion.usuario.role !== 'admin') {
-        parar();
+        parar?.();
         this.router.replace({
           name: 'not-found',
           params: { pathMatch: route.path.substring(1).split('/') }
@@ -42,7 +44,7 @@ export default {
         return;
       }
 
-      parar();
+      parar?.();
       this.cargarComentarios();
     });
   },

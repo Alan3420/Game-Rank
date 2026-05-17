@@ -238,6 +238,13 @@
   color: var(--color-text);
 }
 
+.user-nickname {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
 .user-email {
   color: var(--color-text-medium);
   font-size: 0.9rem;
