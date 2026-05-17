@@ -8,8 +8,8 @@
           <i class="pi pi-shield"></i>
           Legal
         </span>
-        <h1>Términos y Condiciones</h1>
-        <p>Última actualización: 15 de mayo de 2026</p>
+        <h1>Terms and Conditions</h1>
+        <p>Last updated: May 15, 2026</p>
       </div>
     </div>
 
@@ -17,7 +17,7 @@
 
       <!-- TOC lateral -->
       <aside class="terminos-toc">
-        <p class="toc-title">Contenido</p>
+        <p class="toc-title">Contents</p>
         <nav>
           <a
             v-for="seccion in secciones"
@@ -38,205 +38,205 @@
 
         <section id="aceptacion" class="terminos-section">
           <div class="section-num">01</div>
-          <h2>Aceptación de los Términos</h2>
+          <h2>Acceptance of Terms</h2>
           <p>
-            Al acceder o utilizar Game Rank (en adelante, "la Plataforma"), aceptas quedar vinculado por los presentes
-            Términos y Condiciones, así como por nuestra Política de Privacidad. Si no estás de acuerdo con alguna
-            de estas disposiciones, te rogamos que no hagas uso de la Plataforma.
+            By accessing or using Game Rank (hereinafter, "the Platform"), you agree to be bound by these
+            Terms and Conditions, as well as our Privacy Policy. If you disagree with any
+            of these provisions, please do not use the Platform.
           </p>
           <p>
-            Estos términos se aplican a todos los visitantes, usuarios registrados y cualquier persona que acceda
-            o utilice los servicios ofrecidos por Game Rank.
+            These terms apply to all visitors, registered users and any person who accesses
+            or uses the services offered by Game Rank.
           </p>
         </section>
 
         <section id="descripcion" class="terminos-section">
           <div class="section-num">02</div>
-          <h2>Descripción del Servicio</h2>
+          <h2>Description of Service</h2>
           <p>
-            Game Rank es una plataforma dedicada a la catalogación, valoración y descubrimiento de videojuegos.
-            Los servicios que ofrecemos incluyen, entre otros:
+            Game Rank is a platform dedicated to cataloguing, rating and discovering video games.
+            The services we offer include, among others:
           </p>
           <ul class="terminos-list">
-            <li>Exploración de un catálogo extenso de videojuegos con información detallada.</li>
-            <li>Sistema de puntuaciones y reseñas elaboradas por la comunidad de usuarios.</li>
-            <li>Gestión de colecciones personales y listas de favoritos.</li>
-            <li>Seguimiento del estado de juego (jugando, completado, pendiente, abandonado, deseado).</li>
-            <li>Información sobre próximos lanzamientos de la industria.</li>
+            <li>Exploration of an extensive video game catalogue with detailed information.</li>
+            <li>Community-driven scoring and review system.</li>
+            <li>Management of personal collections and favorites lists.</li>
+            <li>Game status tracking (playing, completed, pending, abandoned, wishlist).</li>
+            <li>Information on upcoming industry releases.</li>
           </ul>
           <p>
-            La información sobre videojuegos es obtenida a través de la API de RAWG (rawg.io), un servicio
-            externo sobre el cual Game Rank no tiene control editorial. Nos reservamos el derecho de ampliar,
-            modificar o descontinuar cualquiera de estos servicios en cualquier momento.
+            Video game information is obtained through the RAWG API (rawg.io), an
+            external service over which Game Rank has no editorial control. We reserve the right to expand,
+            modify or discontinue any of these services at any time.
           </p>
         </section>
 
         <section id="cuenta" class="terminos-section">
           <div class="section-num">03</div>
-          <h2>Registro y Cuenta de Usuario</h2>
+          <h2>Registration and User Account</h2>
           <p>
-            Para acceder a las funcionalidades completas de Game Rank es necesario crear una cuenta. Al hacerlo,
-            te comprometes a:
+            To access the full features of Game Rank, creating an account is required. By doing so,
+            you agree to:
           </p>
           <ul class="terminos-list">
-            <li>Proporcionar información veraz, completa y actualizada durante el registro.</li>
-            <li>Mantener la confidencialidad de tus credenciales de acceso (correo electrónico y contraseña).</li>
-            <li>Notificarnos inmediatamente ante cualquier uso no autorizado de tu cuenta.</li>
-            <li>Ser el único responsable de todas las actividades realizadas bajo tu cuenta.</li>
-            <li>No ceder, transferir ni compartir el acceso a tu cuenta con terceros.</li>
+            <li>Provide truthful, complete and up-to-date information during registration.</li>
+            <li>Maintain the confidentiality of your access credentials (email address and password).</li>
+            <li>Notify us immediately of any unauthorized use of your account.</li>
+            <li>Be solely responsible for all activities carried out under your account.</li>
+            <li>Not transfer, assign or share access to your account with third parties.</li>
           </ul>
           <p>
-            Game Rank se reserva el derecho de suspender o eliminar cuentas que infrinjan estos términos,
-            sin previo aviso y sin obligación de reembolso de ningún tipo.
+            Game Rank reserves the right to suspend or delete accounts that violate these terms,
+            without prior notice and without any obligation to refund.
           </p>
         </section>
 
         <section id="uso-aceptable" class="terminos-section">
           <div class="section-num">04</div>
-          <h2>Uso Aceptable</h2>
+          <h2>Acceptable Use</h2>
           <p>
-            Al utilizar Game Rank, te comprometes a no llevar a cabo ninguna de las siguientes conductas:
+            By using Game Rank, you agree not to engage in any of the following conduct:
           </p>
           <ul class="terminos-list">
-            <li>Publicar contenido falso, engañoso, difamatorio, obsceno, ofensivo o que infrinja derechos de terceros.</li>
-            <li>Acosar, amenazar o intimidar a otros usuarios de la Plataforma.</li>
-            <li>Intentar acceder de forma no autorizada a sistemas, cuentas o datos de la Plataforma.</li>
-            <li>Utilizar bots, scrapers u otras herramientas automatizadas para extraer contenido de Game Rank.</li>
-            <li>Interferir o interrumpir la integridad o el rendimiento de la Plataforma.</li>
-            <li>Publicar spam, publicidad no solicitada o contenido repetitivo de forma masiva.</li>
-            <li>Suplantar la identidad de otra persona o entidad.</li>
-            <li>Realizar cualquier actividad que infrinja la legislación aplicable.</li>
+            <li>Post false, misleading, defamatory, obscene, offensive content or content that infringes third-party rights.</li>
+            <li>Harass, threaten or intimidate other users of the Platform.</li>
+            <li>Attempt to gain unauthorized access to systems, accounts or data of the Platform.</li>
+            <li>Use bots, scrapers or other automated tools to extract content from Game Rank.</li>
+            <li>Interfere with or disrupt the integrity or performance of the Platform.</li>
+            <li>Post spam, unsolicited advertising or repetitive content in bulk.</li>
+            <li>Impersonate another person or entity.</li>
+            <li>Carry out any activity that violates applicable law.</li>
           </ul>
         </section>
 
         <section id="contenido" class="terminos-section">
           <div class="section-num">05</div>
-          <h2>Contenido del Usuario</h2>
+          <h2>User Content</h2>
           <p>
-            Game Rank permite a los usuarios publicar reseñas, puntuaciones y otros contenidos (colectivamente,
-            "Contenido del Usuario"). Al publicar dicho contenido, declaras y garantizas que:
+            Game Rank allows users to post reviews, ratings and other content (collectively,
+            "User Content"). By posting such content, you represent and warrant that:
           </p>
           <ul class="terminos-list">
-            <li>Eres el propietario o tienes los derechos necesarios para publicar dicho contenido.</li>
-            <li>El contenido no infringe derechos de propiedad intelectual, privacidad o cualquier otro derecho de terceros.</li>
-            <li>El contenido es auténtico, refleja tu opinión personal y no ha sido fabricado o incentivado artificialmente.</li>
+            <li>You own or have the necessary rights to post such content.</li>
+            <li>The content does not infringe intellectual property rights, privacy or any other third-party rights.</li>
+            <li>The content is authentic, reflects your personal opinion and has not been fabricated or artificially incentivized.</li>
           </ul>
           <p>
-            Al publicar contenido en Game Rank, nos otorgas una licencia no exclusiva, gratuita, mundial
-            y sublicenciable para usar, reproducir, modificar, distribuir y mostrar dicho contenido en el
-            contexto de la Plataforma. Nos reservamos el derecho de eliminar cualquier contenido que
-            consideremos inapropiado o que infrinja estos términos, sin necesidad de justificación previa.
+            By posting content on Game Rank, you grant us a non-exclusive, royalty-free, worldwide
+            and sublicensable license to use, reproduce, modify, distribute and display such content in the
+            context of the Platform. We reserve the right to remove any content we
+            deem inappropriate or that violates these terms, without prior justification.
           </p>
         </section>
 
         <section id="propiedad" class="terminos-section">
           <div class="section-num">06</div>
-          <h2>Propiedad Intelectual y Atribución de Contenido</h2>
+          <h2>Intellectual Property and Content Attribution</h2>
           <p>
-            Todo el contenido relativo a videojuegos mostrado en Game Rank —incluyendo títulos, descripciones,
-            imágenes de portada, fechas de lanzamiento, géneros, plataformas y demás metadatos— es
-            proporcionado íntegramente por <strong>RAWG Video Games Database</strong>
+            All video game content displayed on Game Rank — including titles, descriptions,
+            cover images, release dates, genres, platforms and other metadata — is
+            provided entirely by <strong>RAWG Video Games Database</strong>
             (<a href="https://rawg.io" target="_blank" rel="noopener noreferrer" class="terminos-inline-link">rawg.io</a>),
-            un servicio externo de terceros.
+            a third-party external service.
           </p>
           <p>
-            Game Rank actúa exclusivamente como plataforma de visualización y organización de dicha información.
-            No generamos, verificamos ni somos responsables de la exactitud, integridad o actualización del
-            contenido de videojuegos. Todos los derechos sobre esos datos pertenecen a RAWG y a los
-            respectivos titulares de cada propiedad intelectual (desarrolladoras y distribuidoras de videojuegos).
+            Game Rank acts solely as a platform for displaying and organizing this information.
+            We do not generate, verify or take responsibility for the accuracy, completeness or currency of
+            video game content. All rights to such data belong to RAWG and the
+            respective intellectual property holders (video game developers and publishers).
           </p>
           <p>
-            Los elementos propios de Game Rank —diseño de la interfaz, código fuente, logotipo y textos
-            editoriales elaborados por el equipo— están protegidos por las leyes de propiedad intelectual
-            aplicables y no pueden ser reproducidos ni distribuidos sin autorización expresa.
+            Elements owned by Game Rank — interface design, source code, logo and editorial texts
+            produced by the team — are protected by applicable intellectual property laws
+            and may not be reproduced or distributed without express authorization.
           </p>
           <div class="terminos-attribution-note">
             <i class="pi pi-database"></i>
             <div>
-              <strong>Datos de videojuegos proporcionados por RAWG</strong>
-              <span>Game Rank utiliza la API de RAWG para obtener información sobre videojuegos. RAWG es el propietario
-              de dicha base de datos y su uso está sujeto a los términos de servicio de RAWG.</span>
+              <strong>Video game data provided by RAWG</strong>
+              <span>Game Rank uses the RAWG API to obtain information about video games. RAWG is the owner
+              of said database and its use is subject to RAWG's terms of service.</span>
             </div>
           </div>
         </section>
 
         <section id="privacidad" class="terminos-section">
           <div class="section-num">07</div>
-          <h2>Privacidad y Datos Personales</h2>
+          <h2>Privacy and Personal Data</h2>
           <p>
-            Game Rank recopila y trata datos personales necesarios para la prestación del servicio, como
-            nombre, apellidos y dirección de correo electrónico proporcionados durante el registro.
+            Game Rank collects and processes personal data necessary to provide the service, such as
+            first name, last name and email address provided during registration.
           </p>
           <p>
-            Nos comprometemos a:
+            We commit to:
           </p>
           <ul class="terminos-list">
-            <li>No vender, alquilar ni ceder tus datos personales a terceros con fines comerciales.</li>
-            <li>Aplicar medidas de seguridad técnicas y organizativas adecuadas para proteger tu información.</li>
-            <li>Almacenar únicamente los datos necesarios para la prestación del servicio.</li>
-            <li>Respetar tu derecho de acceso, rectificación y supresión de tus datos mediante la eliminación de cuenta disponible en tu perfil.</li>
+            <li>Not selling, renting or transferring your personal data to third parties for commercial purposes.</li>
+            <li>Applying adequate technical and organizational security measures to protect your information.</li>
+            <li>Storing only the data necessary to provide the service.</li>
+            <li>Respecting your right of access, rectification and deletion of your data through the account deletion available in your profile.</li>
           </ul>
           <p>
-            Las contraseñas se almacenan cifradas y nunca son accesibles en texto plano. Game Rank no almacena
-            información de pago, ya que la Plataforma es completamente gratuita.
+            Passwords are stored encrypted and are never accessible in plain text. Game Rank does not store
+            payment information, as the Platform is completely free.
           </p>
         </section>
 
         <section id="responsabilidad" class="terminos-section">
           <div class="section-num">08</div>
-          <h2>Limitación de Responsabilidad</h2>
+          <h2>Limitation of Liability</h2>
           <p>
-            Game Rank se proporciona "tal cual" y "según disponibilidad". No garantizamos que la Plataforma
-            esté libre de errores, interrupciones o que los datos mostrados sean siempre precisos o actualizados.
+            Game Rank is provided "as is" and "as available". We do not guarantee that the Platform
+            will be error-free, uninterrupted, or that the data displayed will always be accurate or up to date.
           </p>
           <p>
-            En la máxima medida permitida por la ley aplicable, Game Rank no será responsable de:
+            To the fullest extent permitted by applicable law, Game Rank shall not be liable for:
           </p>
           <ul class="terminos-list">
-            <li>Pérdidas indirectas, incidentales o consecuentes derivadas del uso o imposibilidad de uso de la Plataforma.</li>
-            <li>Inexactitudes en la información de videojuegos obtenida a través de servicios de terceros.</li>
-            <li>Contenido publicado por otros usuarios de la Plataforma.</li>
-            <li>Interrupciones temporales del servicio por mantenimiento, actualizaciones o causas de fuerza mayor.</li>
+            <li>Indirect, incidental or consequential losses arising from the use or inability to use the Platform.</li>
+            <li>Inaccuracies in video game information obtained through third-party services.</li>
+            <li>Content posted by other users of the Platform.</li>
+            <li>Temporary service interruptions due to maintenance, updates or force majeure events.</li>
           </ul>
         </section>
 
         <section id="modificaciones" class="terminos-section">
           <div class="section-num">09</div>
-          <h2>Modificaciones del Servicio y los Términos</h2>
+          <h2>Modifications to the Service and Terms</h2>
           <p>
-            Game Rank se reserva el derecho de modificar estos Términos y Condiciones en cualquier momento.
-            Los cambios entrarán en vigor desde el momento de su publicación en la Plataforma. Te notificaremos
-            de cambios significativos mediante un aviso visible en la Plataforma o a través del correo
-            electrónico asociado a tu cuenta.
+            Game Rank reserves the right to modify these Terms and Conditions at any time.
+            Changes will take effect from the moment they are published on the Platform. We will notify you
+            of significant changes through a visible notice on the Platform or via the email address
+            associated with your account.
           </p>
           <p>
-            El uso continuado de Game Rank tras la publicación de cambios implica la aceptación de los
-            nuevos términos. Si no estás de acuerdo con los cambios, debes dejar de usar la Plataforma
-            y puedes solicitar la eliminación de tu cuenta desde tu perfil.
+            Continued use of Game Rank after the publication of changes implies acceptance of the
+            new terms. If you disagree with the changes, you must stop using the Platform
+            and may request deletion of your account from your profile.
           </p>
         </section>
 
         <section id="terminacion" class="terminos-section">
           <div class="section-num">10</div>
-          <h2>Terminación de la Cuenta</h2>
+          <h2>Account Termination</h2>
           <p>
-            Puedes eliminar tu cuenta en cualquier momento desde la sección de perfil de usuario. La eliminación
-            de la cuenta conllevará la supresión permanente de todos tus datos asociados, incluyendo
-            reseñas, puntuaciones, colecciones y favoritos. Esta acción es irreversible.
+            You may delete your account at any time from the user profile section. Deleting
+            your account will result in the permanent deletion of all associated data, including
+            reviews, ratings, collections and favorites. This action is irreversible.
           </p>
           <p>
-            Game Rank podrá suspender o cancelar tu cuenta sin previo aviso si determina que has infringido
-            estos Términos y Condiciones o si tu comportamiento resulta perjudicial para la comunidad
-            o para el correcto funcionamiento de la Plataforma.
+            Game Rank may suspend or cancel your account without prior notice if it determines that you have violated
+            these Terms and Conditions or if your behavior is harmful to the community
+            or to the proper functioning of the Platform.
           </p>
         </section>
 
         <section id="contacto" class="terminos-section">
           <div class="section-num">11</div>
-          <h2>Contacto</h2>
+          <h2>Contact</h2>
           <p>
-            Si tienes preguntas, dudas o sugerencias relacionadas con estos Términos y Condiciones,
-            puedes ponerte en contacto con nosotros a través del repositorio del proyecto en GitHub:
+            If you have questions, doubts or suggestions related to these Terms and Conditions,
+            you can contact us through the project repository on GitHub:
           </p>
           <a href="https://github.com/Alan3420" target="_blank" rel="noopener noreferrer" class="terminos-contact-link">
             <i class="pi pi-github"></i>
@@ -246,8 +246,8 @@
 
         <div class="terminos-footer-note">
           <i class="pi pi-info-circle"></i>
-          Estos términos fueron redactados el 15 de mayo de 2026 y son aplicables a todos los usuarios de Game Rank
-          a partir de dicha fecha.
+          These terms were drafted on May 15, 2026 and apply to all Game Rank users
+          from that date.
         </div>
 
       </article>
@@ -262,17 +262,17 @@ export default {
     return {
       seccionActiva: '',
       secciones: [
-        { id: 'aceptacion',     num: '01', titulo: 'Aceptación' },
-        { id: 'descripcion',    num: '02', titulo: 'Descripción del Servicio' },
-        { id: 'cuenta',         num: '03', titulo: 'Registro y Cuenta' },
-        { id: 'uso-aceptable',  num: '04', titulo: 'Uso Aceptable' },
-        { id: 'contenido',      num: '05', titulo: 'Contenido del Usuario' },
-        { id: 'propiedad',      num: '06', titulo: 'Propiedad Intelectual' },
-        { id: 'privacidad',     num: '07', titulo: 'Privacidad y Datos' },
-        { id: 'responsabilidad',num: '08', titulo: 'Limitación de Responsabilidad' },
-        { id: 'modificaciones', num: '09', titulo: 'Modificaciones' },
-        { id: 'terminacion',    num: '10', titulo: 'Terminación de Cuenta' },
-        { id: 'contacto',       num: '11', titulo: 'Contacto' },
+        { id: 'aceptacion',     num: '01', titulo: 'Acceptance' },
+        { id: 'descripcion',    num: '02', titulo: 'Description of Service' },
+        { id: 'cuenta',         num: '03', titulo: 'Registration & Account' },
+        { id: 'uso-aceptable',  num: '04', titulo: 'Acceptable Use' },
+        { id: 'contenido',      num: '05', titulo: 'User Content' },
+        { id: 'propiedad',      num: '06', titulo: 'Intellectual Property' },
+        { id: 'privacidad',     num: '07', titulo: 'Privacy & Data' },
+        { id: 'responsabilidad',num: '08', titulo: 'Limitation of Liability' },
+        { id: 'modificaciones', num: '09', titulo: 'Modifications' },
+        { id: 'terminacion',    num: '10', titulo: 'Account Termination' },
+        { id: 'contacto',       num: '11', titulo: 'Contact' },
       ]
     };
   },

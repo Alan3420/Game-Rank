@@ -14,31 +14,31 @@ export default {
             return [
                 {
                     key: 'mas_favoritos',
-                    titulo: 'Más Favoritos',
-                    subtitulo: 'Los juegos con más me gusta de la comunidad',
+                    titulo: 'Most Favorited',
+                    subtitulo: 'Games with the most likes from the community',
                     icono: 'pi-heart-fill',
-                    label: 'Favoritos',
+                    label: 'Favorited',
                 },
                 {
                     key: 'mejor_valorados',
-                    titulo: 'Mejor Valorados',
-                    subtitulo: 'Los títulos mejor puntuados por la comunidad',
+                    titulo: 'Top Rated',
+                    subtitulo: 'The highest rated titles by the community',
                     icono: 'pi-star-fill',
-                    label: 'Valorados',
+                    label: 'Rated',
                 },
                 {
                     key: 'mas_comentados',
-                    titulo: 'Más Comentados',
-                    subtitulo: 'Los juegos con más debate y reseñas',
+                    titulo: 'Most Commented',
+                    subtitulo: 'Games with the most discussion and reviews',
                     icono: 'pi-comments',
-                    label: 'Comentados',
+                    label: 'Commented',
                 },
                 {
                     key: 'mas_coleccion',
-                    titulo: 'Más en Colección',
-                    subtitulo: 'Los títulos más añadidos a colecciones de usuarios',
+                    titulo: 'Most Collected',
+                    subtitulo: 'Titles most added to user collections',
                     icono: 'pi-bookmark-fill',
-                    label: 'Colección',
+                    label: 'Collection',
                 },
             ];
         },
@@ -53,7 +53,7 @@ export default {
         try {
             this.tendencias = await getTendencias();
         } catch {
-            this.error = 'No se pudieron cargar las tendencias. Inténtalo de nuevo más tarde.';
+            this.error = 'We couldn\'t load the trends. Please try again later.';
         } finally {
             this.loading = false;
         }

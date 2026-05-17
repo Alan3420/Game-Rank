@@ -8,30 +8,30 @@
       <div class="hero-overlay-dark"></div>
       <div class="hero-content">
         <div class="hero-text">
-          <h1 class="hero-title">Descubre, valora y comparte tus juegos favoritos</h1>
+          <h1 class="hero-title">Discover, rate and share your favorite games</h1>
           <p class="hero-description">
-            Explora miles de juegos, descubre valoraciones y opiniones de la comunidad, puntúa tus títulos favoritos y conecta con otros jugadores apasionados.
+            Explore thousands of games, discover community ratings and reviews, score your favorite titles and connect with passionate players.
           </p>
 
           <div class="hero-features">
             <div class="feature-item">
               <i class="pi pi-star-fill"></i>
-              <span>Reseñas de la comunidad</span>
+              <span>Community reviews</span>
             </div>
             <div class="feature-item">
               <i class="pi pi-users"></i>
-              <span>Jugadores que comparten opiniones</span>
+              <span>Players sharing opinions</span>
             </div>
           </div>
 
           <div class="hero-cta">
             <button class="btn btn-primary" @click="goToRegister">
               <i class="pi pi-user-plus"></i>
-              Comenzar gratis
+              Get started for free
             </button>
             <button class="btn btn-secondary" @click="goToLogin">
               <i class="pi pi-sign-in"></i>
-              Iniciar sesión
+              Sign in
             </button>
           </div>
         </div>
@@ -46,30 +46,30 @@
       <div class="hero-overlay-dark"></div>
       <div class="hero-content">
         <div class="hero-text">
-          <h1 class="hero-title">¿Qué quieres explorar hoy?</h1>
+          <h1 class="hero-title">What do you want to explore today?</h1>
           <p class="hero-description">
-            Continúa descubriendo nuevos juegos, actualiza tus valoraciones y mantén tu colección de favoritos al día.
+            Keep discovering new games, update your ratings and keep your favorites collection up to date.
           </p>
 
           <div class="hero-quick-actions">
             <router-link to="/content/overview" class="quick-action-btn">
               <i class="pi pi-search"></i>
-              <span>Explorar catálogo</span>
+              <span>Explore catalog</span>
             </router-link>
             <router-link to="/user/profile" class="quick-action-btn">
               <i class="pi pi-heart"></i>
-              <span>Mis favoritos</span>
+              <span>My favorites</span>
             </router-link>
             <button class="quick-action-btn" @click="scrollToReleases">
               <i class="pi pi-calendar"></i>
-              <span>Próximos lanzamientos</span>
+              <span>Upcoming releases</span>
             </button>
           </div>
 
           <div class="hero-cta">
             <button class="btn btn-primary" @click="goToExplore">
               <i class="pi pi-arrow-right"></i>
-              Comenzar a explorar
+              Start exploring
             </button>
           </div>
         </div>
@@ -83,11 +83,11 @@
           <i class="pi pi-trophy"></i>
           Ranking
         </span>
-        <h2>Los mejores valorados</h2>
-        <p>Clasificados por puntuación Metacritic</p>
+        <h2>Top Rated</h2>
+        <p>Ranked by Metacritic score</p>
       </div>
 
-      <Loader v-if="isLoading" message="Cargando juegos destacados..." />
+      <Loader v-if="isLoading" message="Loading featured games..." />
 
       <div v-else-if="topGames.length > 0" class="top-ranking">
 
@@ -97,7 +97,7 @@
           <div class="rank-card-overlay"></div>
           <span class="rank-num">1</span>
           <div class="rank-card-content">
-            <span class="rank-best-badge"><i class="pi pi-crown"></i> Mejor valorado</span>
+            <span class="rank-best-badge"><i class="pi pi-crown"></i> Best rated</span>
             <h3 class="rank-title">{{ topGames[0].name }}</h3>
             <span class="rank-year">{{ topGames[0].release_date?.split('-')[0] }}</span>
             <div class="rank-meta-wrap">
@@ -148,7 +148,7 @@
 
       <div v-else class="estado-vacio">
         <i class="pi pi-inbox"></i>
-        <p>No hay juegos disponibles.</p>
+        <p>No games available.</p>
       </div>
     </section>
 
@@ -157,13 +157,13 @@
     <div class="section-header">
         <span class="section-eyebrow">
             <i class="pi pi-clock"></i>
-            Próximamente
+            Coming Soon
         </span>
-        <h2>Próximos lanzamientos</h2>
-        <p>Juegos que llegarán pronto</p>
+        <h2>Upcoming Releases</h2>
+        <p>Games coming soon</p>
     </div>
 
-    <Loader v-if="isFutureLoading" message="Cargando próximos lanzamientos..." />
+    <Loader v-if="isFutureLoading" message="Loading upcoming releases..." />
 
     <div v-else-if="futureReleases.length > 0" class="proximos-grid">
         <GameCard
@@ -181,18 +181,18 @@
 
     <div v-else class="estado-vacio">
         <i class="pi pi-inbox"></i>
-        <p>No hay próximos lanzamientos disponibles.</p>
+        <p>No upcoming releases available.</p>
     </div>
 </section>
 
     <!-- Crea una cuenta nueva-->
     <section v-if="estadoAutenticacion.usuario === null" class="cta-section">
       <div class="cta-content">
-        <h2>Únete a la comunidad</h2>
-        <p>Explora miles de juegos, comparte tu opinión y descubre títulos que se adapten a tus preferencias.</p>
+        <h2>Join the community</h2>
+        <p>Explore thousands of games, share your opinion and discover titles that match your preferences.</p>
         <button class="btn btn-accent" @click="goToRegister">
           <i class="pi pi-check"></i>
-          Comenzar ahora
+          Get started now
         </button>
       </div>
     </section>

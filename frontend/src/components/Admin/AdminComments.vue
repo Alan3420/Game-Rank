@@ -6,14 +6,14 @@
       <div class="topbar-content">
         <button class="back-btn" @click="goBack">
           <i class="pi pi-arrow-left"></i>
-          Volver
+          Back
         </button>
         <div class="topbar-title">
           <i class="pi pi-comments"></i>
-          <h1>Moderación de Comentarios</h1>
+          <h1>Comment Moderation</h1>
         </div>
         <div class="topbar-stats">
-          <span class="stat-badge">{{ comentarios.length }} comentarios</span>
+          <span class="stat-badge">{{ comentarios.length }} comments</span>
         </div>
       </div>
     </div>
@@ -22,12 +22,12 @@
     <div class="admin-container">
       <div class="users-section">
         <div class="section-header">
-          <h2>Todos los comentarios</h2>
+          <h2>All Comments</h2>
           <div class="filter-group">
             <input
               v-model="filtro"
               type="text"
-              placeholder="Buscar por usuario o juego..."
+              placeholder="Search by user or game..."
               class="search-input"
             />
           </div>
@@ -36,7 +36,7 @@
         <!-- Loader -->
         <div v-if="loading" class="users-empty">
           <div class="empty-icon"><i class="pi pi-spin pi-spinner"></i></div>
-          <p>Cargando comentarios...</p>
+          <p>Loading comments...</p>
         </div>
 
         <!-- Tabla -->
@@ -44,10 +44,10 @@
           <table class="users-table">
             <thead>
               <tr>
-                <th>Usuario</th>
-                <th>Juego</th>
-                <th>Comentario</th>
-                <th>Fecha</th>
+                <th>User</th>
+                <th>Game</th>
+                <th>Comment</th>
+                <th>Date</th>
                 <th></th>
               </tr>
             </thead>
@@ -63,7 +63,7 @@
                 </td>
                 <td>
                   <router-link :to="'/game/' + c.id_videogame" class="game-link" target="_blank">
-                    Ver juego
+                    View game
                     <i class="pi pi-external-link" style="font-size:0.75rem"></i>
                   </router-link>
                 </td>
@@ -75,7 +75,7 @@
                   <button
                     class="action-btn delete-btn"
                     @click="eliminarComentario(c)"
-                    title="Eliminar comentario"
+                    title="Delete comment"
                   >
                     <i class="pi pi-trash"></i>
                   </button>
@@ -88,7 +88,7 @@
         <!-- Vacío -->
         <div v-else class="users-empty">
           <div class="empty-icon"><i class="pi pi-comments"></i></div>
-          <p>No hay comentarios que coincidan</p>
+          <p>No matching comments</p>
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ const push = (type, message, options = {}) => {
         id,
         type,
         message,
-        title: options.title || (type === 'success' ? 'Listo' : 'Algo salió mal')
+        title: options.title || (type === 'success' ? 'Done' : 'Something went wrong')
     });
 
     if (duration > 0) {

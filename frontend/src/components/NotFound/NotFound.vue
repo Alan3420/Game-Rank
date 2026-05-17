@@ -5,20 +5,20 @@
       <div class="notfound-icon">
         <i class="pi pi-map"></i>
       </div>
-      <h1 class="notfound-title">Página no encontrada</h1>
+      <h1 class="notfound-title">Page Not Found</h1>
       <p class="notfound-description">
-        La ruta que buscas no existe o no está disponible.<br>
-        Comprueba la URL o vuelve a un lugar seguro.
+        The route you're looking for doesn't exist or is unavailable.<br>
+        Check the URL or return to a safe place.
       </p>
       <span class="notfound-path">{{ ruta }}</span>
       <div class="notfound-actions">
         <button class="notfound-btn notfound-btn--primary" @click="irAlInicio">
           <i class="pi pi-home"></i>
-          Ir al inicio
+          Go home
         </button>
         <button class="notfound-btn notfound-btn--secondary" @click="volver">
           <i class="pi pi-arrow-left"></i>
-          Volver
+          Go back
         </button>
       </div>
     </div>

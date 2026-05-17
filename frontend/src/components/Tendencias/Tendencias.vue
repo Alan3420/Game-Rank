@@ -5,16 +5,16 @@
     <div class="tendencias-header">
       <span class="tendencias-eyebrow">
         <i class="pi pi-chart-line"></i>
-        Comunidad
+        Community
       </span>
-      <h1>Tendencias</h1>
-      <p>Descubre los juegos más populares según lo que vota, comenta y colecciona la comunidad.</p>
+      <h1>Trends</h1>
+      <p>Discover the most popular games based on what the community votes, comments and collects.</p>
     </div>
 
     <!-- Cargando -->
     <div v-if="loading" class="tendencias-loading">
       <i class="pi pi-spin pi-spinner" style="color: var(--color-primary);"></i>
-      <span>Calculando tendencias...</span>
+      <span>Calculating trends...</span>
     </div>
 
     <!-- Error -->
@@ -43,7 +43,7 @@
 
       <!-- Sin datos -->
       <div v-if="juegosActivos.length === 0" class="seccion-vacia">
-        Sin datos suficientes aún. ¡Sé el primero en participar!
+        Not enough data yet. Be the first to participate!
       </div>
 
       <!-- Grid bento -->

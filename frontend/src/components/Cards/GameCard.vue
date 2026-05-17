@@ -23,7 +23,7 @@
           class="card-action-btn"
           :class="{ 'is-fav': isFavorite }"
           @click.stop="$emit('action', game.id)"
-          :title="isFavorite ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+          :title="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
         >
           <i :class="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
         </button>
@@ -33,7 +33,7 @@
           v-else
           class="card-action-btn card-action-btn--danger"
           @click.stop="$emit('action', game.id)"
-          title="Quitar de favoritos"
+          title="Remove from favorites"
         >
           <i :class="isLoading ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
         </button>
@@ -44,7 +44,7 @@
           :class="{ 'has-status': status }"
           :style="status ? { color: statusMeta?.color } : {}"
           @click.stop="showDropdown = !showDropdown"
-          title="Cambiar estado del juego"
+          title="Change game status"
         >
           <i :class="'pi ' + (status ? statusMeta?.icon : 'pi-bookmark')"></i>
         </button>
@@ -74,7 +74,7 @@
 
       <!-- FOOTER -->
       <div class="card-footer">
-        <span class="view-detail">Ver detalles</span>
+        <span class="view-detail">View details</span>
         <i class="pi pi-arrow-right"></i>
       </div>
     </div>

@@ -23,7 +23,7 @@
             :disabled="loading"
         >
             <i v-if="loading" class="pi pi-spin pi-spinner"></i>
-            <span v-else>Quitar estado</span>
+            <span v-else>Remove status</span>
         </button>
     </div>
 </template>
@@ -67,10 +67,10 @@ async function handleSelect(status) {
     try {
         await setGameStatus(props.gameId, status);
         emit('update:status', { gameId: props.gameId, status });
-        notificaciones.success(`Estado actualizado a "${STATUS_META[status].label}".`, { title: 'Estado guardado' });
+        notificaciones.success(`Status updated to "${STATUS_META[status].label}".`, { title: 'Status saved' });
         emit('close');
     } catch {
-        notificaciones.error('No pudimos guardar el estado.', { title: 'Error' });
+        notificaciones.error('We couldn\'t save the status.', { title: 'Error' });
     } finally {
         loading.value = false;
     }
@@ -82,10 +82,10 @@ async function handleRemove() {
     try {
         await removeGameStatus(props.gameId);
         emit('update:status', { gameId: props.gameId, status: null });
-        notificaciones.success('Estado eliminado.', { title: 'Estado eliminado' });
+        notificaciones.success('Status removed.', { title: 'Status removed' });
         emit('close');
     } catch {
-        notificaciones.error('No pudimos eliminar el estado.', { title: 'Error' });
+        notificaciones.error('We couldn\'t remove the status.', { title: 'Error' });
     } finally {
         loading.value = false;
     }

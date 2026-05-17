@@ -3,7 +3,7 @@
     <div v-if="open" class="filter-panel">
 
       <div class="filter-section">
-        <p class="filter-section-title">Ordenar por</p>
+        <p class="filter-section-title">Sort by</p>
         <div class="filter-chips">
           <button
             v-for="opt in orderingOptions"
@@ -19,7 +19,7 @@
       </div>
 
       <div class="filter-section">
-        <p class="filter-section-title">Géneros</p>
+        <p class="filter-section-title">Genres</p>
         <div class="filter-chips">
           <button
             v-for="genre in genreOptions"
@@ -34,7 +34,7 @@
       </div>
 
       <div class="filter-section">
-        <p class="filter-section-title">Plataformas</p>
+        <p class="filter-section-title">Platforms</p>
         <div class="filter-chips">
           <button
             v-for="plat in platformOptions"
@@ -50,10 +50,10 @@
       </div>
 
       <div class="filter-section">
-        <p class="filter-section-title">Año de lanzamiento</p>
+        <p class="filter-section-title">Release Year</p>
         <div class="filter-year-range">
           <div class="filter-year-input">
-            <label>Desde</label>
+            <label>From</label>
             <input
               type="number"
               v-model.number="localDateFrom"
@@ -64,7 +64,7 @@
           </div>
           <div class="filter-year-sep">—</div>
           <div class="filter-year-input">
-            <label>Hasta</label>
+            <label>To</label>
             <input
               type="number"
               v-model.number="localDateTo"
@@ -79,11 +79,11 @@
       <div class="filter-actions">
         <button class="filter-btn-clear" @click="handleClear">
           <i class="pi pi-times"></i>
-          Limpiar filtros
+          Clear filters
         </button>
         <button class="filter-btn-apply" @click="handleApply">
           <i class="pi pi-check"></i>
-          Aplicar filtros
+          Apply filters
         </button>
       </div>
 
@@ -110,28 +110,28 @@ export default {
       localDateTo: '',
       currentYear: new Date().getFullYear(),
       orderingOptions: [
-        { value: '-rating', label: 'Mejor valorados', icon: 'pi-star-fill' },
-        { value: '-released', label: 'Más recientes', icon: 'pi-calendar' },
-        { value: 'released', label: 'Más antiguos', icon: 'pi-history' },
+        { value: '-rating', label: 'Top Rated', icon: 'pi-star-fill' },
+        { value: '-released', label: 'Newest', icon: 'pi-calendar' },
+        { value: 'released', label: 'Oldest', icon: 'pi-history' },
         { value: '-metacritic', label: 'Metacritic', icon: 'pi-chart-bar' },
         { value: 'name', label: 'A–Z', icon: 'pi-sort-alpha-down' },
-        { value: '-added', label: 'Populares', icon: 'pi-bolt' }
+        { value: '-added', label: 'Popular', icon: 'pi-bolt' }
       ],
       genreOptions: [
-        { value: 'action', label: 'Acción' },
-        { value: 'adventure', label: 'Aventura' },
+        { value: 'action', label: 'Action' },
+        { value: 'adventure', label: 'Adventure' },
         { value: 'role-playing-games-rpg', label: 'RPG' },
         { value: 'shooter', label: 'Shooter' },
-        { value: 'strategy', label: 'Estrategia' },
-        { value: 'simulation', label: 'Simulación' },
+        { value: 'strategy', label: 'Strategy' },
+        { value: 'simulation', label: 'Simulation' },
         { value: 'puzzle', label: 'Puzzle' },
-        { value: 'sports', label: 'Deportes' },
-        { value: 'racing', label: 'Carreras' },
+        { value: 'sports', label: 'Sports' },
+        { value: 'racing', label: 'Racing' },
         { value: 'indie', label: 'Indie' },
         { value: 'casual', label: 'Casual' },
         { value: 'arcade', label: 'Arcade' },
-        { value: 'fighting', label: 'Lucha' },
-        { value: 'platformer', label: 'Plataformas' }
+        { value: 'fighting', label: 'Fighting' },
+        { value: 'platformer', label: 'Platformer' }
       ],
       platformOptions: [
         { value: '4', label: 'PC', icon: 'pi-desktop' },

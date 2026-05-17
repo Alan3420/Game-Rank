@@ -118,17 +118,17 @@ export default {
       const nickname = this.formularioEditar.nickname?.trim();
 
       if (!name || !last_name) {
-        this.errorEditar = 'El nombre y el apellido son obligatorios.';
+        this.errorEditar = 'First name and last name are required.';
         return;
       }
 
       if (name.length > 50 || last_name.length > 50) {
-        this.errorEditar = 'Cada campo debe tener máximo 50 caracteres.';
+        this.errorEditar = 'Each field must have a maximum of 50 characters.';
         return;
       }
 
       if (nickname && !/^[a-zA-Z0-9_]{3,30}$/.test(nickname)) {
-        this.errorEditar = 'El nickname solo puede contener letras, números y _ (mín. 3, máx. 30 caracteres).';
+        this.errorEditar = 'Nickname can only contain letters, numbers and _ (min. 3, max. 30 characters).';
         return;
       }
 
@@ -138,7 +138,7 @@ export default {
         nickname === (estadoAutenticacion.usuario?.nickname || '');
 
       if (sinCambios) {
-        this.errorEditar = 'No has hecho ningún cambio.';
+        this.errorEditar = 'No changes were made.';
         return;
       }
 
@@ -152,12 +152,12 @@ export default {
         estadoAutenticacion.actualizarUsuario({ name, last_name, nickname: nickname || null });
 
         this.mostrarModalEditar = false;
-        notificaciones.success("Tu información ha sido actualizada.", {
-          title: "Perfil actualizado"
+        notificaciones.success("Your information has been updated.", {
+          title: "Profile updated"
         });
       } catch (error) {
         console.error('Error al actualizar perfil:', error);
-        let mensaje = "No pudimos actualizar tu información.";
+        let mensaje = "We couldn't update your information.";
         if (error.response?.data?.message) {
           mensaje = error.response.data.message;
         }
@@ -229,15 +229,15 @@ export default {
           await removeTOFavorite(gameId);
           this.favoritos = this.favoritos.filter(f => f.id !== gameId);
           if (this.paginaFavoritos > this.totalPaginasFavoritos) this.paginaFavoritos = this.totalPaginasFavoritos;
-          notificaciones.success("Juego eliminado de tus favoritos.", { title: "Favorito eliminado" });
+          notificaciones.success("Game removed from your favorites.", { title: "Favorite removed" });
         } else {
           await addTOFavorite(gameId);
           const gameData = this.coleccion.find(c => c.game.id === gameId)?.game;
           if (gameData) this.favoritos.push(gameData);
-          notificaciones.success("Juego añadido a tus favoritos.", { title: "Favorito añadido" });
+          notificaciones.success("Game added to your favorites.", { title: "Favorite added" });
         }
       } catch (error) {
-        notificaciones.error("No pudimos actualizar favoritos.", { title: "Error" });
+        notificaciones.error("We couldn't update favorites.", { title: "Error" });
       } finally {
         this.favLoadingId = null;
       }
@@ -248,11 +248,11 @@ export default {
         await removeTOFavorite(idGame);
         this.favoritos = this.favoritos.filter(f => f.id !== idGame);
         if (this.paginaFavoritos > this.totalPaginasFavoritos) this.paginaFavoritos = this.totalPaginasFavoritos;
-        notificaciones.success("Juego eliminado de tus favoritos.", { title: "Favorito eliminado" });
+        notificaciones.success("Game removed from your favorites.", { title: "Favorite removed" });
       } catch (error) {
         console.error("Error al quitar favorito:", error);
-        notificaciones.error("No pudimos eliminar el juego de favoritos.", {
-          title: "Error en favoritos"
+        notificaciones.error("We couldn't remove the game from favorites.", {
+          title: "Favorites error"
         });
       } finally {
         this.remover = null;
@@ -288,17 +288,17 @@ export default {
       const { actual, nueva, confirmar } = this.formularioCambiarContraseña;
 
       if (!actual || !nueva || !confirmar) {
-        this.errorCambiarContraseña = 'Todos los campos son obligatorios.';
+        this.errorCambiarContraseña = 'All fields are required.';
         return;
       }
 
       if (nueva.length < 8) {
-        this.errorCambiarContraseña = 'La nueva contraseña debe tener al menos 8 caracteres.';
+        this.errorCambiarContraseña = 'New password must be at least 8 characters.';
         return;
       }
 
       if (nueva !== confirmar) {
-        this.errorCambiarContraseña = 'Las contraseñas no coinciden.';
+        this.errorCambiarContraseña = 'Passwords do not match.';
         return;
       }
 
@@ -308,12 +308,12 @@ export default {
       try {
         await changePassword(actual, nueva);
         this.cerrarModalCambiarContraseña();
-        notificaciones.success("Tu contraseña ha sido actualizada correctamente.", {
-          title: "Contraseña cambio exitoso"
+        notificaciones.success("Your password has been updated successfully.", {
+          title: "Password changed"
         });
       } catch (error) {
         console.error('Error al cambiar contraseña:', error);
-        let mensaje = "No pudimos cambiar tu contraseña.";
+        let mensaje = "We couldn't change your password.";
         if (error.response?.data?.message) {
           mensaje = error.response.data.message;
         }

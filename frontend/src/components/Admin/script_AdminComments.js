@@ -54,31 +54,31 @@ export default {
         this.comentarios = data.comments;
       } catch (error) {
         console.error('Error al cargar comentarios:', error);
-        notificaciones.error("No pudimos cargar los comentarios.", { title: "Error al cargar" });
+        notificaciones.error("We couldn't load the comments.", { title: "Loading error" });
       } finally {
         this.loading = false;
       }
     },
 
     async eliminarComentario(comentario) {
-      const confirmar = confirm(`¿Eliminar el comentario de ${comentario.username}?`);
+      const confirmar = confirm(`Delete comment by ${comentario.username}?`);
       if (!confirmar) return;
 
       try {
         await deleteComment(comentario.id_comment);
         this.comentarios = this.comentarios.filter(c => c.id_comment !== comentario.id_comment);
-        notificaciones.success("Comentario eliminado.", { title: "Comentario eliminado" });
+        notificaciones.success("Comment deleted.", { title: "Comment deleted" });
       } catch (error) {
         console.error('Error al eliminar comentario:', error);
-        notificaciones.error("No pudimos eliminar el comentario.", { title: "Error" });
+        notificaciones.error("We couldn't delete the comment.", { title: "Error" });
       }
     },
 
     formatDate(value) {
       if (!value) return '—';
       const d = new Date(value);
-      const meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-      return `${d.getDate()} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
     },
 
     goBack() {

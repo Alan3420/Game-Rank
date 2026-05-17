@@ -2,19 +2,19 @@
   <div class="register-page">
     <div class="register-container">
       <div class="register-header">
-        <h1 class="register-title">Únete a Game Rank</h1>
-        <p class="register-subtitle">Crea tu cuenta para acceder a reseñas, favoritos y mucho más</p>
+        <h1 class="register-title">Join Game Rank</h1>
+        <p class="register-subtitle">Create your account to access reviews, favorites and much more</p>
       </div>
 
       <form @submit.prevent="handleRegister" class="register-form">
         <div class="form-row">
           <div class="form-group">
-            <label for="name" class="form-label">Nombre</label>
+            <label for="name" class="form-label">First Name</label>
             <input
               id="name"
               v-model="name"
               type="text"
-              placeholder="Tu nombre"
+              placeholder="Your first name"
               class="form-input"
               maxlength="50"
               required
@@ -22,12 +22,12 @@
           </div>
 
           <div class="form-group">
-            <label for="last_name" class="form-label">Apellidos</label>
+            <label for="last_name" class="form-label">Last Name</label>
             <input
               id="last_name"
               v-model="last_name"
               type="text"
-              placeholder="Tus apellidos"
+              placeholder="Your last name"
               class="form-input"
               maxlength="50"
               required
@@ -43,7 +43,7 @@
               id="nickname"
               v-model="nickname"
               type="text"
-              placeholder="tu_nickname"
+              placeholder="your_nickname"
               class="form-input input-with-prefix"
               :class="{ 'input-error': nickname && !nicknameValido }"
               maxlength="30"
@@ -51,12 +51,12 @@
             >
           </div>
           <span v-if="nickname && !nicknameValido" class="error-text">
-            3-30 caracteres: letras, números y guiones bajos (_) únicamente
+            3-30 characters: letters, numbers and underscores (_) only
           </span>
         </div>
 
         <div class="form-group">
-          <label for="email" class="form-label">Correo Electrónico</label>
+          <label for="email" class="form-label">Email Address</label>
           <input
             id="email"
             v-model="email"
@@ -68,18 +68,18 @@
             required
           >
           <span v-if="email && !emailDominioValido" class="error-text">
-            La terminación del correo es inválida
+            Invalid email domain
           </span>
         </div>
 
         <div class="form-group">
-          <label for="password" class="form-label">Contraseña</label>
+          <label for="password" class="form-label">Password</label>
           <div class="input-wrap">
             <input
               id="password"
               v-model="password"
               :type="mostrarPassword ? 'text' : 'password'"
-              placeholder="Mínimo 8 caracteres"
+              placeholder="Minimum 8 characters"
               class="form-input"
               maxlength="50"
               required
@@ -91,13 +91,13 @@
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+          <label for="confirmPassword" class="form-label">Confirm password</label>
           <div class="input-wrap">
             <input
               id="confirmPassword"
               v-model="confirmPassword"
               :type="mostrarConfirmPassword ? 'text' : 'password'"
-              placeholder="Repite tu contraseña"
+              placeholder="Repeat your password"
               class="form-input"
               :class="{ 'input-error': confirmPassword && password !== confirmPassword }"
               maxlength="50"
@@ -108,20 +108,20 @@
             </button>
           </div>
           <span v-if="confirmPassword && password !== confirmPassword" class="error-text">
-            Las contraseñas no coinciden
+            Passwords do not match
           </span>
         </div>
 
         <label class="form-checkbox-label">
           <input type="checkbox" v-model="aceptaTerminos" class="form-checkbox" />
           <span>
-            He leído y acepto los
-            <router-link to="/terminos" target="_blank" class="link">Términos y Condiciones</router-link>
+            I have read and accept the
+            <router-link to="/terminos" target="_blank" class="link">Terms and Conditions</router-link>
           </span>
         </label>
 
         <button type="submit" :disabled="loading || !isFormValid" class="btn btn-primary">
-          <span :style="{ visibility: loading ? 'hidden' : 'visible' }">Crear Cuenta</span>
+          <span :style="{ visibility: loading ? 'hidden' : 'visible' }">Create Account</span>
           <span v-if="loading" class="dots-loader">
             <span></span>
             <span></span>
@@ -135,7 +135,7 @@
         </div>
 
         <div class="register-footer">
-          <p>¿Ya tienes cuenta? <router-link to="/login" class="link">Inicia sesión</router-link></p>
+          <p>Already have an account? <router-link to="/login" class="link">Sign in</router-link></p>
         </div>
       </form>
     </div>

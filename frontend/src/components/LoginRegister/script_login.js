@@ -30,8 +30,8 @@ export default {
 
         estadoAutenticacion.iniciarSesion(response.user, response.token);
 
-        notificaciones.success(`Bienvenido ${response.user.name}, sesión iniciada correctamente.`, {
-          title: "¡Hola de nuevo!"
+        notificaciones.success(`Welcome ${response.user.name}, you've signed in successfully.`, {
+          title: "Welcome back!"
         });
 
         this.$router.push('/');
@@ -41,11 +41,11 @@ export default {
           await new Promise(resolve => setTimeout(resolve, 2000));
           this.errorMessage = error.response.data.message;
           notificaciones.error(error.response.data.message, {
-            title: "Credenciales incorrectas"
+            title: "Incorrect credentials"
           });
         } else {
-          notificaciones.error("No pudimos conectar con el servidor. Inténtalo de nuevo más tarde.", {
-            title: "Error de conexión"
+          notificaciones.error("We couldn't connect to the server. Please try again later.", {
+            title: "Connection error"
           });
         }
       } finally {

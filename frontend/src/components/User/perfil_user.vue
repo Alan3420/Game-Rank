@@ -1,7 +1,7 @@
 <template>
   <div class="profile-page">
 
-    <Loader v-if="estadoAutenticacion.cargando" size="large" :fullHeight="true" message="Cargando perfil..." />
+    <Loader v-if="estadoAutenticacion.cargando" size="large" :fullHeight="true" message="Loading profile..." />
 
     <div v-else-if="estadoAutenticacion.usuario">
 
@@ -16,7 +16,7 @@
             <span v-if="estadoAutenticacion.usuario.nickname" class="banner-nickname">@{{ estadoAutenticacion.usuario.nickname }}</span>
             <span class="badge" :class="{ 'badge-admin': isAdmin }">
               <i :class="isAdmin ? 'pi pi-crown' : 'pi pi-shield'"></i>
-              {{ isAdmin ? 'Administrador' : 'Usuario' }}
+              {{ isAdmin ? 'Administrator' : 'User' }}
             </span>
           </div>
         </div>
@@ -30,7 +30,7 @@
             <div class="stat-card__icon"><i class="pi pi-check-circle"></i></div>
             <div class="stat-card__body">
               <span class="stat-card__value">{{ stats?.coleccion?.completado ?? '—' }}</span>
-              <span class="stat-card__label">Completados</span>
+              <span class="stat-card__label">Completed</span>
             </div>
           </div>
 
@@ -38,7 +38,7 @@
             <div class="stat-card__icon"><i class="pi pi-play-circle"></i></div>
             <div class="stat-card__body">
               <span class="stat-card__value">{{ stats?.coleccion?.jugando ?? '—' }}</span>
-              <span class="stat-card__label">Jugando</span>
+              <span class="stat-card__label">Playing</span>
             </div>
           </div>
 
@@ -46,7 +46,7 @@
             <div class="stat-card__icon"><i class="pi pi-clock"></i></div>
             <div class="stat-card__body">
               <span class="stat-card__value">{{ stats?.coleccion?.pendiente ?? '—' }}</span>
-              <span class="stat-card__label">Pendientes</span>
+              <span class="stat-card__label">Pending</span>
             </div>
           </div>
 
@@ -54,7 +54,7 @@
             <div class="stat-card__icon"><i class="pi pi-heart-fill"></i></div>
             <div class="stat-card__body">
               <span class="stat-card__value">{{ stats?.favoritos ?? '—' }}</span>
-              <span class="stat-card__label">Favoritos</span>
+              <span class="stat-card__label">Favorites</span>
             </div>
           </div>
 
@@ -62,7 +62,7 @@
             <div class="stat-card__icon"><i class="pi pi-star-fill"></i></div>
             <div class="stat-card__body">
               <span class="stat-card__value">{{ stats?.rating_medio != null ? stats.rating_medio + ' ★' : '—' }}</span>
-              <span class="stat-card__label">Rating medio</span>
+              <span class="stat-card__label">Average rating</span>
             </div>
           </div>
 
@@ -70,7 +70,7 @@
             <div class="stat-card__icon"><i class="pi pi-comments"></i></div>
             <div class="stat-card__body">
               <span class="stat-card__value">{{ stats?.comentarios ?? '—' }}</span>
-              <span class="stat-card__label">Reseñas</span>
+              <span class="stat-card__label">Reviews</span>
             </div>
           </div>
 
@@ -88,7 +88,7 @@
             <div class="card-header">
               <div class="card-header-title">
                 <i class="pi pi-user"></i>
-                <span>Información</span>
+                <span>Information</span>
               </div>
               <div class="btn-group" ref="menuEditarRef">
                 <button class="btn-edit btn-edit-primary" @click="mostrarMenuEditar = !mostrarMenuEditar">
@@ -100,15 +100,15 @@
                     <button class="edit-menu-item" @click="abrirModalEditar">
                       <i class="pi pi-pencil"></i>
                       <div class="edit-menu-text">
-                        <span class="edit-menu-title">Editar Información</span>
-                        <span class="edit-menu-desc">Nombre y apellidos</span>
+                        <span class="edit-menu-title">Edit Information</span>
+                        <span class="edit-menu-desc">Name and last name</span>
                       </div>
                     </button>
                     <button class="edit-menu-item" @click="abrirModalCambiarContraseña">
                       <i class="pi pi-lock"></i>
                       <div class="edit-menu-text">
-                        <span class="edit-menu-title">Cambiar Contraseña</span>
-                        <span class="edit-menu-desc">Seguridad de tu cuenta</span>
+                        <span class="edit-menu-title">Change Password</span>
+                        <span class="edit-menu-desc">Account security</span>
                       </div>
                     </button>
                   </div>
@@ -119,14 +119,14 @@
               <div class="info-item">
                 <div class="info-icon-wrap"><i class="pi pi-id-card"></i></div>
                 <div class="info-body">
-                  <span class="info-label">Nombre</span>
+                  <span class="info-label">First name</span>
                   <span class="info-value">{{ estadoAutenticacion.usuario.name }}</span>
                 </div>
               </div>
               <div class="info-item">
                 <div class="info-icon-wrap"><i class="pi pi-id-card"></i></div>
                 <div class="info-body">
-                  <span class="info-label">Apellido</span>
+                  <span class="info-label">Last name</span>
                   <span class="info-value">{{ estadoAutenticacion.usuario.last_name }}</span>
                 </div>
               </div>
@@ -142,8 +142,8 @@
               <div class="info-item">
                 <div class="info-icon-wrap"><i class="pi pi-envelope"></i></div>
                 <div class="info-body">
-                  <span class="info-label">Correo electrónico</span>
-                  <span class="info-value info-value--small">{{ estadoAutenticacion.usuario.email || 'No proporcionado' }}</span>
+                  <span class="info-label">Email address</span>
+                  <span class="info-value info-value--small">{{ estadoAutenticacion.usuario.email || 'Not provided' }}</span>
                 </div>
               </div>
             </div>
@@ -153,7 +153,7 @@
           <div class="profile-legal">
             <router-link to="/terminos" class="profile-legal-link">
               <i class="pi pi-shield"></i>
-              <span>Términos y Condiciones</span>
+              <span>Terms and Conditions</span>
               <i class="pi pi-arrow-right profile-legal-arrow"></i>
             </router-link>
           </div>
@@ -163,7 +163,7 @@
             <div class="admin-header">
               <div class="admin-title-group">
                 <i class="pi pi-sliders-v"></i>
-                <h2>Panel Admin</h2>
+                <h2>Admin Panel</h2>
                 <span class="admin-badge">Admin</span>
               </div>
             </div>
@@ -171,16 +171,16 @@
               <button class="admin-action-btn" @click="irAPanelAdmin">
                 <i class="pi pi-users"></i>
                 <div class="admin-btn-content">
-                  <span class="admin-btn-title">Gestionar Usuarios</span>
-                  <span class="admin-btn-desc">Ver, editar y eliminar usuarios</span>
+                  <span class="admin-btn-title">Manage Users</span>
+                  <span class="admin-btn-desc">View, edit and delete users</span>
                 </div>
                 <i class="pi pi-arrow-right"></i>
               </button>
               <button class="admin-action-btn" @click="irAModeracion">
                 <i class="pi pi-comments"></i>
                 <div class="admin-btn-content">
-                  <span class="admin-btn-title">Moderación</span>
-                  <span class="admin-btn-desc">Gestionar comentarios</span>
+                  <span class="admin-btn-title">Moderation</span>
+                  <span class="admin-btn-desc">Manage comments</span>
                 </div>
                 <i class="pi pi-arrow-right"></i>
               </button>
@@ -197,7 +197,7 @@
             <div class="coleccion-header">
               <div class="coleccion-title-group">
                 <i class="pi pi-bookmark-fill"></i>
-                <h2>Mi Colección</h2>
+                <h2>My Collection</h2>
                 <span class="coleccion-count">{{ coleccion.length }}</span>
               </div>
               <div class="coleccion-tabs">
@@ -205,7 +205,7 @@
                   class="coleccion-tab"
                   :class="{ 'is-active': filtroColeccion === 'todos' }"
                   @click="filtroColeccion = 'todos'"
-                >Todos</button>
+                >All</button>
                 <button
                   v-for="key in STATUS_LIST"
                   :key="key"
@@ -217,17 +217,17 @@
               </div>
             </div>
 
-            <Loader v-if="coleccionLoading" message="Cargando..." />
+            <Loader v-if="coleccionLoading" message="Loading..." />
 
             <div v-else-if="coleccion.length === 0" class="coleccion-empty-small">
               <i class="pi pi-bookmark"></i>
-              <span>Tu colección está vacía. Marca el estado de un juego desde el catálogo.</span>
-              <router-link to="/content/overview" class="coleccion-explore-link">Explorar</router-link>
+              <span>Your collection is empty. Set the status of a game from the catalog.</span>
+              <router-link to="/content/overview" class="coleccion-explore-link">Explore</router-link>
             </div>
 
             <div v-else-if="coleccionFiltrada.length === 0" class="coleccion-empty-small">
               <i :class="'pi ' + STATUS_META[filtroColeccion]?.icon"></i>
-              <span>Sin juegos en "{{ STATUS_META[filtroColeccion]?.label }}"</span>
+              <span>No games in "{{ STATUS_META[filtroColeccion]?.label }}"</span>
             </div>
 
             <div v-else class="coleccion-grid">
@@ -253,7 +253,7 @@
                   class="coleccion-item-fav"
                   :class="{ 'is-fav': favoritosIds.has(item.game.id), 'is-loading': favLoadingId === item.game.id }"
                   @click.stop="toggleFavoritoColeccion(item.game.id)"
-                  :title="favoritosIds.has(item.game.id) ? 'Quitar de favoritos' : 'Añadir a favoritos'"
+                  :title="favoritosIds.has(item.game.id) ? 'Remove from favorites' : 'Add to favorites'"
                 >
                   <i v-if="favLoadingId === item.game.id" class="pi pi-spin pi-spinner"></i>
                   <i v-else :class="favoritosIds.has(item.game.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
@@ -267,22 +267,22 @@
             <div class="favorites-header">
               <div class="fav-title-group">
                 <i class="pi pi-heart-fill"></i>
-                <h2>Mis Favoritos</h2>
+                <h2>My Favorites</h2>
                 <span class="fav-count">{{ favoritos.length }}</span>
               </div>
             </div>
 
-            <Loader v-if="favoritosLoading" message="Cargando tus favoritos..." />
+            <Loader v-if="favoritosLoading" message="Loading your favorites..." />
 
             <div v-else-if="favoritos.length === 0" class="fav-empty">
               <div class="fav-empty-icon">
                 <i class="pi pi-star"></i>
               </div>
-              <p>Aún no tienes favoritos</p>
-              <span>Explora el catálogo y empieza a guardar tus juegos favoritos.</span>
+              <p>You have no favorites yet</p>
+              <span>Explore the catalog and start saving your favorite games.</span>
               <router-link to="/content/overview" class="fav-explore-btn">
                 <i class="pi pi-compass"></i>
-                Explorar juegos
+                Explore games
               </router-link>
             </div>
 
@@ -306,7 +306,7 @@
                 class="fav-page-btn fav-page-nav"
                 :disabled="paginaFavoritos === 1"
                 @click="paginaFavoritos--"
-                aria-label="Página anterior"
+                aria-label="Previous page"
               >
                 <i class="pi pi-chevron-left"></i>
               </button>
@@ -323,7 +323,7 @@
                 class="fav-page-btn fav-page-nav"
                 :disabled="paginaFavoritos === totalPaginasFavoritos"
                 @click="paginaFavoritos++"
-                aria-label="Página siguiente"
+                aria-label="Next page"
               >
                 <i class="pi pi-chevron-right"></i>
               </button>
@@ -342,8 +342,8 @@
                 <i class="pi pi-user-edit"></i>
               </div>
               <div>
-                <h3>Editar Perfil</h3>
-                <span>Actualiza tu información personal</span>
+                <h3>Edit Profile</h3>
+                <span>Update your personal information</span>
               </div>
             </div>
             <button class="edit-modal-close" @click="cerrarModalEditar">
@@ -355,13 +355,13 @@
             <div class="form-group">
               <label class="form-label">
                 <i class="pi pi-id-card"></i>
-                Nombre
+                First Name
               </label>
               <input
                 v-model="formularioEditar.name"
                 type="text"
                 class="form-input"
-                placeholder="Ingresa tu nombre"
+                placeholder="Enter your first name"
                 maxlength="50"
                 :disabled="guardandoEditar"
               />
@@ -370,13 +370,13 @@
             <div class="form-group">
               <label class="form-label">
                 <i class="pi pi-id-card"></i>
-                Apellido
+                Last Name
               </label>
               <input
                 v-model="formularioEditar.last_name"
                 type="text"
                 class="form-input"
-                placeholder="Ingresa tu apellido"
+                placeholder="Enter your last name"
                 maxlength="50"
                 :disabled="guardandoEditar"
               />
@@ -400,25 +400,25 @@
               </div>
               <span class="form-hint">
                 <i class="pi pi-info-circle"></i>
-                3–30 caracteres: letras, números y guiones bajos (_).
+                3–30 characters: letters, numbers and underscores (_).
               </span>
             </div>
 
             <div class="form-group">
               <label class="form-label">
                 <i class="pi pi-envelope"></i>
-                Correo electrónico
-                <span class="form-badge-disabled">No editable</span>
+                Email address
+                <span class="form-badge-disabled">Not editable</span>
               </label>
               <input
                 type="email"
                 class="form-input is-disabled"
-                :value="estadoAutenticacion.usuario?.email || 'No proporcionado'"
+                :value="estadoAutenticacion.usuario?.email || 'Not provided'"
                 disabled
               />
               <span class="form-hint">
                 <i class="pi pi-info-circle"></i>
-                El correo electrónico no se puede modificar.
+                Email address cannot be modified.
               </span>
             </div>
 
@@ -430,12 +430,12 @@
 
           <div class="edit-modal-footer">
             <button class="btn-cancel" @click="cerrarModalEditar" :disabled="guardandoEditar">
-              Cancelar
+              Cancel
             </button>
             <button class="btn-save" @click="guardarCambiosPerfil" :disabled="guardandoEditar">
               <i v-if="!guardandoEditar" class="pi pi-check"></i>
               <i v-else class="pi pi-spin pi-spinner"></i>
-              {{ guardandoEditar ? 'Guardando...' : 'Guardar cambios' }}
+              {{ guardandoEditar ? 'Saving...' : 'Save changes' }}
             </button>
           </div>
         </div>
@@ -450,8 +450,8 @@
                 <i class="pi pi-lock"></i>
               </div>
               <div>
-                <h3>Cambiar Contraseña</h3>
-                <span>Actualiza tu contraseña para mantener tu cuenta segura</span>
+                <h3>Change Password</h3>
+                <span>Update your password to keep your account secure</span>
               </div>
             </div>
             <button class="edit-modal-close" @click="cerrarModalCambiarContraseña">
@@ -463,39 +463,39 @@
             <div class="form-group">
               <label class="form-label">
                 <i class="pi pi-lock"></i>
-                Contraseña Actual
+                Current Password
               </label>
               <input
                 v-model="formularioCambiarContraseña.actual"
                 type="password"
                 class="form-input"
-                placeholder="Ingresa tu contraseña actual"
+                placeholder="Enter your current password"
               />
             </div>
 
             <div class="form-group">
               <label class="form-label">
                 <i class="pi pi-lock"></i>
-                Nueva Contraseña
+                New Password
               </label>
               <input
                 v-model="formularioCambiarContraseña.nueva"
                 type="password"
                 class="form-input"
-                placeholder="Ingresa tu nueva contraseña (mín. 8 caracteres)"
+                placeholder="Enter your new password (min. 8 characters)"
               />
             </div>
 
             <div class="form-group">
               <label class="form-label">
                 <i class="pi pi-lock"></i>
-                Confirmar Contraseña
+                Confirm Password
               </label>
               <input
                 v-model="formularioCambiarContraseña.confirmar"
                 type="password"
                 class="form-input"
-                placeholder="Confirma tu nueva contraseña"
+                placeholder="Confirm your new password"
               />
             </div>
 
@@ -507,12 +507,12 @@
 
           <div class="edit-modal-footer">
             <button class="btn-cancel" @click="cerrarModalCambiarContraseña">
-              Cancelar
+              Cancel
             </button>
             <button class="btn-save" @click="guardarCambioContraseña" :disabled="cambiandoContraseña">
               <i v-if="!cambiandoContraseña" class="pi pi-check"></i>
               <i v-else class="pi pi-spin pi-spinner"></i>
-              {{ cambiandoContraseña ? 'Actualizando...' : 'Cambiar Contraseña' }}
+              {{ cambiandoContraseña ? 'Updating...' : 'Change Password' }}
             </button>
           </div>
         </div>

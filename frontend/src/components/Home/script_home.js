@@ -121,19 +121,19 @@ export default {
         if (wasFavorite) {
           await removeTOFavorite(gameId);
           this.favorites.delete(gameId);
-          notificaciones.success("Juego eliminado de tus favoritos.", { title: "Favorito eliminado" });
+          notificaciones.success("Game removed from your favorites.", { title: "Favorite removed" });
         } else {
           await addTOFavorite(gameId);
           this.favorites.add(gameId);
-          notificaciones.success("Juego añadido a tus favoritos.", { title: "Favorito agregado" });
+          notificaciones.success("Game added to your favorites.", { title: "Favorite added" });
         }
       } catch (error) {
         console.error("Error al cambiar favorito:", error);
         notificaciones.error(
           wasFavorite
-            ? "No pudimos eliminar el juego de favoritos."
-            : "No pudimos añadir el juego a favoritos.",
-          { title: "Error en favoritos" }
+            ? "We couldn't remove the game from favorites."
+            : "We couldn't add the game to favorites.",
+          { title: "Favorites error" }
         );
       }
     },

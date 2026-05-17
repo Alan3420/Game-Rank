@@ -11,7 +11,7 @@
             <p class="toast-title">{{ item.title }}</p>
             <p class="toast-message">{{ item.message }}</p>
           </div>
-          <button class="toast-close" @click="notificaciones.remove(item.id)" aria-label="Cerrar notificación">
+          <button class="toast-close" @click="notificaciones.remove(item.id)" aria-label="Close notification">
             <i class="pi pi-times"></i>
           </button>
           <span class="toast-progress"></span>

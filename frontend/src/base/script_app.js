@@ -46,7 +46,7 @@ export default {
       this.menuAbierto = false;
       estadoAutenticacion.cerrarSesion();
       this.$router.push("/login");
-      notificaciones.success("Has cerrado sesión correctamente.", { title: "Hasta luego" });
+      notificaciones.success("You've signed out successfully.", { title: "Goodbye" });
     },
 
 
@@ -72,7 +72,7 @@ export default {
 
     async confirmarEliminarCuenta() {
 
-      if (this.confirmTexto !== 'ELIMINAR' || this.eliminandoCuenta) return;
+      if (this.confirmTexto !== 'DELETE' || this.eliminandoCuenta) return;
       this.eliminandoCuenta = true;
 
       try {
@@ -83,13 +83,13 @@ export default {
         estadoAutenticacion.cerrarSesion();
 
         this.$router.push("/login");
-        notificaciones.success("Tu cuenta ha sido eliminada permanentemente.", { title: "Cuenta eliminada" });
+        notificaciones.success("Your account has been permanently deleted.", { title: "Account deleted" });
 
       } catch (error) {
 
         console.error('Error al eliminar la cuenta:', error);
         notificaciones.error(
-          error.response?.data?.message || "No pudimos eliminar tu cuenta. Inténtalo de nuevo.",
+          error.response?.data?.message || "We couldn't delete your account. Please try again.",
           { title: "Error" }
         );
       } finally {

@@ -66,8 +66,8 @@ export default {
       } catch (error) {
         
         console.error('Error al cargar usuarios:', error);
-        notificaciones.error("No pudimos cargar la lista de usuarios.", {
-          title: "Error al cargar"
+        notificaciones.error("We couldn't load the user list.", {
+          title: "Loading error"
         });
 
       } finally {
@@ -82,14 +82,14 @@ export default {
         await changeUserRole(usuario.id_user, 'admin');
 
         usuario.role = 'admin';
-        notificaciones.success(`${usuario.name} ha sido promovido a administrador.`, {
-          title: "Usuario promovido"
+        notificaciones.success(`${usuario.name} has been promoted to administrator.`, {
+          title: "User promoted"
         });
 
       } catch (error) {
 
         console.error('Error al promover usuario:', error);
-        notificaciones.error("No pudimos promover al usuario.", {
+        notificaciones.error("We couldn't promote the user.", {
           title: "Error"
         });
 
@@ -103,14 +103,14 @@ export default {
 
         await changeUserRole(usuario.id_user, 'user');
         usuario.role = 'user';
-        notificaciones.success(`${usuario.name} ha sido degradado a usuario.`, {
-          title: "Usuario degradado"
+        notificaciones.success(`${usuario.name} has been demoted to user.`, {
+          title: "User demoted"
         });
 
       } catch (error) {
 
         console.error('Error al degradar usuario:', error);
-        notificaciones.error("No pudimos degradar al usuario.", {
+        notificaciones.error("We couldn't demote the user.", {
           title: "Error"
         });
 
@@ -119,21 +119,21 @@ export default {
 
     async eliminarUsuario(usuario) {
 
-      const confirmar = confirm(`¿Estás seguro de que deseas eliminar a ${usuario.name}?`);
+      const confirmar = confirm(`Are you sure you want to delete ${usuario.name}?`);
       if (!confirmar) return;
 
       try {
 
         await deleteUser(usuario.id_user);
         this.usuarios = this.usuarios.filter(u => u.id_user !== usuario.id_user);
-        notificaciones.success(`${usuario.name} ha sido eliminado.`, {
-          title: "Usuario eliminado"
+        notificaciones.success(`${usuario.name} has been deleted.`, {
+          title: "User deleted"
         });
 
       } catch (error) {
 
         console.error('Error al eliminar usuario:', error);
-        notificaciones.error("No pudimos eliminar al usuario.", {
+        notificaciones.error("We couldn't delete the user.", {
           title: "Error"
         });
 
@@ -145,10 +145,10 @@ export default {
     },
     
     formatDate(date) {
-      if (!date) return 'No disponible';
+      if (!date) return 'Not available';
       const d = new Date(date);
-      const meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-      return `${d.getDate()} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
     }
   }
 };

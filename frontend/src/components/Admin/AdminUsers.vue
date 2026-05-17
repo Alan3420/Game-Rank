@@ -5,14 +5,14 @@
       <div class="topbar-content">
         <button class="back-btn" @click="goBack">
           <i class="pi pi-arrow-left"></i>
-          Volver
+          Back
         </button>
         <div class="topbar-title">
           <i class="pi pi-users"></i>
-          <h1>Gestión de Usuarios</h1>
+          <h1>User Management</h1>
         </div>
         <div class="topbar-stats">
-          <span class="stat-badge">{{ usuarios.length }} usuarios registrados</span>
+          <span class="stat-badge">{{ usuarios.length }} registered users</span>
         </div>
       </div>
     </div>
@@ -22,12 +22,12 @@
       <!-- Header de tabla -->
       <div class="users-section">
         <div class="section-header">
-          <h2>Lista de Usuarios</h2>
+          <h2>User List</h2>
           <div class="filter-group">
             <input
               v-model="filtro"
               type="text"
-              placeholder="Buscar por nombre o email..."
+              placeholder="Search by name or email..."
               class="search-input"
             />
           </div>
@@ -38,11 +38,11 @@
           <table class="users-table">
             <thead>
               <tr>
-                <th>Nombre</th>
+                <th>Name</th>
                 <th>Email</th>
-                <th>Rol</th>
-                <th>Fecha de Registro</th>
-                <th>Acciones</th>
+                <th>Role</th>
+                <th>Registration Date</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -58,7 +58,7 @@
                 <td class="user-email">{{ usuario.email }}</td>
                 <td class="user-role">
                   <span class="role-badge" :class="{ 'role-admin': usuario.role === 'admin' }">
-                    {{ usuario.role === 'admin' ? 'Administrador' : 'Usuario' }}
+                    {{ usuario.role === 'admin' ? 'Administrator' : 'User' }}
                   </span>
                 </td>
                 <td class="user-date">{{ formatDate(usuario.date_of_registration) }}</td>
@@ -67,7 +67,7 @@
                     v-if="usuario.role !== 'admin'"
                     class="action-btn promote-btn"
                     @click="promoverAdmin(usuario)"
-                    title="Promover a admin"
+                    title="Promote to admin"
                   >
                     <i class="pi pi-arrow-up"></i>
                   </button>
@@ -75,14 +75,14 @@
                     v-else
                     class="action-btn demote-btn"
                     @click="degradarAdmin(usuario)"
-                    title="Degradar a usuario"
+                    title="Demote to user"
                   >
                     <i class="pi pi-arrow-down"></i>
                   </button>
                   <button
                     class="action-btn delete-btn"
                     @click="eliminarUsuario(usuario)"
-                    title="Eliminar usuario"
+                    title="Delete user"
                   >
                     <i class="pi pi-trash"></i>
                   </button>
@@ -97,7 +97,7 @@
           <div class="empty-icon">
             <i class="pi pi-users"></i>
           </div>
-          <p>No hay usuarios que coincidan con la búsqueda</p>
+          <p>No users match the search</p>
         </div>
       </div>
     </div>

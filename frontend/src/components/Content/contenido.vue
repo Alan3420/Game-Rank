@@ -4,19 +4,19 @@
       <div class="catalogo-header-texto">
         <span class="catalogo-eyebrow">
           <i class="pi pi-th-large"></i>
-          Catálogo de juegos
+          Game Catalog
         </span>
         <h1>
-          <template v-if="game_name && hasActiveFilters">Resultados filtrados para "{{ game_name }}"</template>
-          <template v-else-if="game_name">Resultados para "{{ game_name }}"</template>
-          <template v-else-if="hasActiveFilters">Catálogo filtrado</template>
-          <template v-else>Explora nuestra colección</template>
+          <template v-if="game_name && hasActiveFilters">Filtered results for "{{ game_name }}"</template>
+          <template v-else-if="game_name">Results for "{{ game_name }}"</template>
+          <template v-else-if="hasActiveFilters">Filtered Catalog</template>
+          <template v-else>Explore Our Collection</template>
         </h1>
         <p>
-          <template v-if="game_name && hasActiveFilters">Búsqueda con {{ activeFiltersCount }} filtro{{ activeFiltersCount !== 1 ? 's' : '' }} aplicado{{ activeFiltersCount !== 1 ? 's' : '' }}</template>
-          <template v-else-if="game_name">Mostrando resultados de búsqueda</template>
-          <template v-else-if="hasActiveFilters">{{ activeFiltersCount }} filtro{{ activeFiltersCount !== 1 ? 's' : '' }} aplicado{{ activeFiltersCount !== 1 ? 's' : '' }}</template>
-          <template v-else>Encuentra tu próximo juego favorito entre cientos de títulos</template>
+          <template v-if="game_name && hasActiveFilters">Search with {{ activeFiltersCount }} filter{{ activeFiltersCount !== 1 ? 's' : '' }} applied</template>
+          <template v-else-if="game_name">Showing search results</template>
+          <template v-else-if="hasActiveFilters">{{ activeFiltersCount }} filter{{ activeFiltersCount !== 1 ? 's' : '' }} applied</template>
+          <template v-else>Find your next favorite game among hundreds of titles</template>
         </p>
       </div>
 
@@ -27,7 +27,7 @@
           @click="filterPanelOpen = !filterPanelOpen"
         >
           <i class="pi pi-sliders-h"></i>
-          <span>Filtros</span>
+          <span>Filters</span>
           <span v-if="activeFiltersCount > 0" class="filter-badge">{{ activeFiltersCount }}</span>
           <i class="pi" :class="filterPanelOpen ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
         </button>
@@ -43,13 +43,13 @@
       <div class="search-empty-icon">
         <i class="pi pi-search"></i>
       </div>
-      <h2>Sin resultados</h2>
-      <p v-if="game_name">No encontramos juegos que coincidan con "{{ game_name }}"{{ hasActiveFilters ? ' con los filtros aplicados' : '' }}.</p>
-      <p v-else>No encontramos juegos con los filtros aplicados.</p>
+      <h2>No Results</h2>
+      <p v-if="game_name">No games found matching "{{ game_name }}"{{ hasActiveFilters ? ' with the applied filters' : '' }}.</p>
+      <p v-else>No games found with the applied filters.</p>
     </div>
 
     <!-- Cards -->
-    <Loader v-if="loading" size="small" :message="game_name ? 'Buscando juegos...' : 'Cargando juegos...'" />
+    <Loader v-if="loading" size="small" :message="game_name ? 'Searching games...' : 'Loading games...'" />
 
     <div v-else-if="!isFiltering || games.length > 0" class="card_content">
       <GameCard
@@ -71,7 +71,7 @@
         class="cat-page-btn cat-page-nav"
         :disabled="currentPage === 1"
         @click="fetchPage(currentPage - 1)"
-        aria-label="Página anterior"
+        aria-label="Previous page"
       >
         <i class="pi pi-chevron-left"></i>
       </button>
@@ -90,7 +90,7 @@
         class="cat-page-btn cat-page-nav"
         :disabled="currentPage === totalPages"
         @click="fetchPage(currentPage + 1)"
-        aria-label="Página siguiente"
+        aria-label="Next page"
       >
         <i class="pi pi-chevron-right"></i>
       </button>

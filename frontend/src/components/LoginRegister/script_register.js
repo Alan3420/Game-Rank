@@ -47,8 +47,8 @@ export default {
         this.errorMessage = "";
         await register(this.name, this.last_name, this.nickname, this.email, this.password);
 
-        notificaciones.success("Tu cuenta fue creada correctamente. Ya puedes iniciar sesión.", {
-          title: "Cuenta creada"
+        notificaciones.success("Your account was created successfully. You can now sign in.", {
+          title: "Account created"
         });
 
         this.$router.push('/login');
@@ -61,12 +61,12 @@ export default {
 
           this.errorMessage = error.response.data.message;
           notificaciones.error(error.response.data.message, {
-            title: "No pudimos registrarte"
+            title: "Registration failed"
           });
 
         } else {
-          notificaciones.error("Ocurrió un problema al crear la cuenta. Inténtalo de nuevo más tarde.", {
-            title: "Error en el registro"
+          notificaciones.error("There was a problem creating your account. Please try again later.", {
+            title: "Registration error"
           });
         }
       } finally {
