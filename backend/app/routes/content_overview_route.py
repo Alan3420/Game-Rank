@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app
 from flask_jwt_extended import jwt_required
-from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_catalog_games, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered, obtener_saga_servicio, obtener_adicciones_servicio, obtener_logros_servicio
+from app.services.game_services import get_video_game_details, get_catalog_games, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered, obtener_saga_servicio, obtener_adicciones_servicio, obtener_logros_servicio
 from app.limiter import limiter
 
 
@@ -8,22 +8,6 @@ content_overview_bp = Blueprint('content_overview_route', __name__)
 
 
 
-@content_overview_bp.route('/search', methods=["GET"])
-@jwt_required()
-def search_by_name():
-    try:
-        name = request.args.get('name', default=None, type=str)
-
-        if not name:
-            return jsonify({"message": "Nombre requerido"}), 400
-
-        games = get_video_game_by_name_details(game_name=name)
-        save_games(games=games, app=current_app._get_current_object())
-
-        return jsonify(games), 200
-    except Exception as e:
-        return jsonify({"message": "Error al buscar el juego"}), 500
-    
 
 @content_overview_bp.route('/overview/<int:game_id>', methods=["GET"])
 @jwt_required()

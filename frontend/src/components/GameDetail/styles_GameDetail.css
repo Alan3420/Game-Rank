@@ -1460,6 +1460,9 @@
     font-size: 0.88rem;
     font-weight: 600;
     text-decoration: none;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
     transition: background 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
 }
 
@@ -2124,3 +2127,4 @@
         text-align: center;
     }
 }
+

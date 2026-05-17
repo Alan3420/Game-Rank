@@ -181,3 +181,127 @@ main {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-border-dark);
 }
+
+/* ── MODAL ENLACE EXTERNO ── */
+.ext-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 30, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+    animation: extOverlayIn 0.2s ease;
+}
+
+@keyframes extOverlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.ext-modal {
+    background: var(--color-surface);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+    box-shadow: 0 25px 60px rgba(20, 21, 63, 0.25);
+    border: 1px solid var(--color-border-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    animation: extModalUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes extModalUp {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.ext-modal__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--color-primary-light, rgba(124, 111, 255, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    color: var(--color-primary);
+}
+
+.ext-modal__title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.ext-modal__body {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.ext-modal__body strong {
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.ext-modal__actions {
+    display: flex;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.ext-modal__btn {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.ext-modal__btn--cancel {
+    background: var(--color-surface-hover, #f0f0f8);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+}
+
+.ext-modal__btn--cancel:hover {
+    background: var(--color-border);
+}
+
+.ext-modal__btn--confirm {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.ext-modal__btn--confirm:hover {
+    filter: brightness(1.1);
+}
+
+[data-theme="dark"] .ext-modal__btn--cancel {
+    background: var(--color-surface-alt);
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
+}
+
+[data-theme="dark"] .ext-modal__btn--cancel:hover {
+    background: var(--color-surface-hover);
+}

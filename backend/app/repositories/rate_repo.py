@@ -1,9 +1,6 @@
 from app.database.db import db
 from app.models.Rate import Rate
 
-def get_rate_by_id(id_rate):
-    return Rate.query.filter_by(id_rate=id_rate).first()
-
 def get_rate_by_user_and_game(id_user, id_game):
     return Rate.query.filter_by(id_user=id_user, id_game_api=id_game).first()
 

@@ -1,4 +1,4 @@
-import { getContentOverview, getHeroVideo } from '../../services/resume_cards.js';
+import { getCatalogGames, getHeroVideo } from '../../services/resume_cards.js';
 import { getFutureReleases } from '../../services/clasif_content.js';
 import { estadoAutenticacion } from '../../store/autenticacion.js';
 import { checkFavorite, addTOFavorite, removeTOFavorite } from '../../services/favorites_area.js';
@@ -47,7 +47,7 @@ export default {
     async loadTopGames() {
       this.isLoading = true;
       try {
-        const response = await getContentOverview(1);
+        const response = await getCatalogGames(1);
 
         let games = [];
         if (response && response.games && Array.isArray(response.games)) {

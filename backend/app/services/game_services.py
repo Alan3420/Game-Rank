@@ -1,5 +1,5 @@
 from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
-from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering, get_games_filtered, get_game_stores, get_stores_catalog, obtener_saga_del_juego, obtener_equipo_desarrollo, obtener_adicciones_juego, obtener_logros_juego
+from app.client.clientRAWG import get_game_by_id_api, get_all_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering, get_games_filtered, get_game_stores, get_stores_catalog, obtener_saga_del_juego, obtener_equipo_desarrollo, obtener_adicciones_juego, obtener_logros_juego
 from app.services.adapter import game_format_details, game_format_resume, logros_format
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
@@ -57,14 +57,6 @@ def get_video_game_details(game_id) -> dict:
 
         raise Exception(f"Error al obtener los detalles del juego: {str(e)}")
 
-
-def get_video_game_by_name_details(game_name) -> list:
-    name_game_details = get_game_by_name(game_name=game_name)
-
-    if not name_game_details.get("results"):
-        return []
-
-    return game_format_resume(name_game_details["results"])
 
 
 def get_upcoming_launch_games(page, per_page):

@@ -474,18 +474,16 @@
                             <h3>Dónde comprar</h3>
                         </div>
                         <div class="store-list">
-                            <a
+                            <button
                                 v-for="store in game.stores"
                                 :key="store.id"
-                                :href="store.url"
-                                target="_blank"
-                                rel="noopener noreferrer"
                                 class="store-btn"
+                                @click="openExternalLink(store.url, store.name)"
                             >
                                 <i :class="'pi ' + getStoreIcon(store.slug)"></i>
                                 <span>{{ store.name }}</span>
                                 <i class="pi pi-external-link store-btn__ext"></i>
-                            </a>
+                            </button>
                         </div>
                     </div>
 
@@ -493,6 +491,30 @@
                 </aside>
             </section>
 
+        </div>
+    </div>
+
+    <!-- Modal aviso enlace externo -->
+    <div v-if="externalLink.open" class="ext-modal-overlay" @click.self="cancelExternalLink">
+        <div class="ext-modal" role="dialog" aria-modal="true">
+            <div class="ext-modal__icon">
+                <i class="pi pi-external-link"></i>
+            </div>
+            <h2 class="ext-modal__title">Saliendo de GameRank</h2>
+            <p class="ext-modal__body">
+                Estás a punto de ir a <strong>{{ externalLink.storeName }}</strong>,
+                un sitio externo que no está controlado por GameRank.
+                ¿Deseas continuar?
+            </p>
+            <div class="ext-modal__actions">
+                <button class="ext-modal__btn ext-modal__btn--cancel" @click="cancelExternalLink">
+                    Cancelar
+                </button>
+                <button class="ext-modal__btn ext-modal__btn--confirm" @click="confirmExternalLink">
+                    <i class="pi pi-external-link"></i>
+                    Continuar
+                </button>
+            </div>
         </div>
     </div>
 </template>

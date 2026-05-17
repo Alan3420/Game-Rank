@@ -3,10 +3,6 @@ from app.database.db import db
 from sqlalchemy.exc import IntegrityError
 
 
-def get_all_video_games_bd() -> list[Video_game]:
-    return Video_game.query.all()
-
-
 def get_game_by_id_bd(game_id) -> Video_game | None:
     return Video_game.query.filter_by(id_game_api=game_id).first()
 
@@ -29,10 +25,3 @@ def create_video_game(id_game_api, name=None, date_release=None,
         return get_game_by_id_bd(id_game_api)
 
 
-def delete_video_game(game_id) -> bool:
-    video_game = get_game_by_id_bd(game_id)
-    if video_game:
-        db.session.delete(video_game)
-        db.session.commit()
-        return True
-    return False

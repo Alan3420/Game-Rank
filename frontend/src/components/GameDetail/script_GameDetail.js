@@ -35,7 +35,8 @@ export default {
             STATUS_META,
             juegosSaga: [],
             adiciones: [],
-            logros: []
+            logros: [],
+            externalLink: { open: false, url: '', storeName: '' }
         };
     },
     computed: {
@@ -455,6 +456,21 @@ export default {
             if (score >= 80) return 'mc-green';
             if (score >= 50) return 'mc-yellow';
             return 'mc-red';
+        },
+
+        openExternalLink(url, storeName) {
+            this.externalLink.url = url;
+            this.externalLink.storeName = storeName;
+            this.externalLink.open = true;
+        },
+
+        confirmExternalLink() {
+            window.open(this.externalLink.url, '_blank', 'noopener,noreferrer');
+            this.externalLink.open = false;
+        },
+
+        cancelExternalLink() {
+            this.externalLink.open = false;
         },
 
         getStoreIcon(slug) {

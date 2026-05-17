@@ -74,10 +74,6 @@ def get_game_screenshots(game_id):
     result = _request_with_cache(f"/games/{game_id}/screenshots")
     return result.get("results", []) if result else []
 
-def get_game_by_name(game_name) -> dict:
-    result = _request_with_cache("/games", {"search": game_name, "exclude_additions": "true"})
-    return result or {}
-
 
 def get_game_movies(game_id):
     result = _request_with_cache(f"/games/{game_id}/movies")
