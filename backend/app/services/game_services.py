@@ -1,5 +1,5 @@
 from app.repositories.vGame_repo import create_video_game, get_game_by_id_bd
-from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_video_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering, get_games_filtered, get_game_stores, get_stores_catalog, obtener_saga_del_juego, obtener_equipo_desarrollo, obtener_adicciones_juego, obtener_logros_juego
+from app.client.clientRAWG import get_game_by_id_api, get_game_by_name, get_all_games, get_game_screenshots, get_game_movies, get_future_releases, get_games_by_ordering, get_games_filtered, get_game_stores, get_stores_catalog, obtener_saga_del_juego, obtener_equipo_desarrollo, obtener_adicciones_juego, obtener_logros_juego
 from app.services.adapter import game_format_details, game_format_resume, logros_format
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
@@ -83,20 +83,6 @@ def get_upcoming_launch_games(page, per_page):
         raise Exception(f"Error:{str(e)}")
 
 
-def get_video_games_pagination(page: int, per_page: int):
-
-    try:
-        games = get_all_video_games(page=page, per_page=per_page)
-
-        return {
-            "games": game_format_resume(games.get("results", [])),
-            "next": games.get("next"),
-            "previous": games.get("previous")
-        }
-
-    except Exception as e:
-        raise Exception(f"Error: {str(e)}")
-
 
 def _guardar_juego_si_no_existe(id_juego, app):
     with app.app_context():
@@ -154,6 +140,19 @@ def get_random_game_video() -> dict | None:
         raise Exception(f"Error al obtener video aleatorio: {str(e)}")
 
 
+def get_catalog_games(page: int, per_page: int):
+    try:
+        result = get_all_games(page=page, per_page=per_page)
+        return {
+            "games": game_format_resume(result.get("results", [])),
+            "next": result.get("next"),
+            "previous": result.get("previous"),
+            "count": result.get("count", 0)
+        }
+    except Exception as e:
+        raise Exception(f"Error: {str(e)}")
+
+
 def get_video_games_filtered(page, per_page, ordering=None, genres=None, platforms=None, dates=None, search=None):
     try:
         result = get_games_filtered(
@@ -168,7 +167,8 @@ def get_video_games_filtered(page, per_page, ordering=None, genres=None, platfor
         return {
             "games": game_format_resume(result.get("results", [])),
             "next": result.get("next"),
-            "previous": result.get("previous")
+            "previous": result.get("previous"),
+            "count": result.get("count", 0)
         }
     except Exception as e:
         raise Exception(f"Error: {str(e)}")
@@ -198,32 +198,3 @@ def obtener_logros_servicio(game_id) -> list:
         raise Exception(f"Error al obtener logros del juego: {str(e)}")
 
 
-def filter_games_by_platform_or_genres(plataforma=None, genero=None) -> list[dict] | None:
-
-    try:
-        if plataforma:
-
-            games = get_all_video_games()
-
-            games_by_platforms = []
-
-            for game in games["results"]["parent_platforms"]:
-
-                if game["platform"]["name"] == plataforma:
-                    games_by_platforms.append(game)
-
-            return game_format_resume(games_by_platforms)
-
-        if genero:
-            games = get_all_video_games()
-            games_by_genres = []
-
-            for game in games["results"]["genres"]:
-                if game["name"] == genero:
-                    games_by_genres.append(game)
-
-            return game_format_resume(games_by_genres)
-
-    except Exception as e:
-        raise Exception(
-            f"Error al obtener los juegos por plataforma/género: {str(e)}")

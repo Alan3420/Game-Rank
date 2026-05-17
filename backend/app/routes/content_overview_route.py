@@ -1,32 +1,12 @@
 from flask import Blueprint, jsonify, request, current_app
 from flask_jwt_extended import jwt_required
-from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_video_games_pagination, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered, obtener_saga_servicio, obtener_adicciones_servicio, obtener_logros_servicio
+from app.services.game_services import get_video_game_details, get_video_game_by_name_details, get_catalog_games, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered, obtener_saga_servicio, obtener_adicciones_servicio, obtener_logros_servicio
 from app.limiter import limiter
 
 
 content_overview_bp = Blueprint('content_overview_route', __name__)
 
 
-@content_overview_bp.route('/overview', methods=["GET"])
-@jwt_required()
-@limiter.limit("60 per minute")
-def overview():
-    try:
-        page = request.args.get('page', default=1, type=int)
-        per_page = min(request.args.get('per_page', default=10, type=int), 40)
-        name = request.args.get('name', default=None, type=str)
-
-        games = get_video_games_pagination(page=page, per_page=per_page)
-
-        save_games(games=games.get("games", []), app=current_app._get_current_object())
-        
-
-        if name:
-            games = [g for g in games if name.lower() in g["name"].lower()]
-
-        return jsonify(games), 200
-    except Exception as e:
-        return jsonify({"message": "Error al obtener los juegos"}), 500
 
 @content_overview_bp.route('/search', methods=["GET"])
 @jwt_required()
@@ -70,6 +50,22 @@ def future_release():
 
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos"}), 500
+
+
+@content_overview_bp.route('/catalog', methods=["GET"])
+@jwt_required()
+@limiter.limit("60 per minute")
+def catalog_games():
+    try:
+        page = request.args.get('page', default=1, type=int)
+        per_page = min(request.args.get('per_page', default=20, type=int), 40)
+
+        games = get_catalog_games(page=page, per_page=per_page)
+        save_games(games=games.get("games", []), app=current_app._get_current_object())
+
+        return jsonify(games), 200
+    except Exception as e:
+        return jsonify({"message": "Error al obtener el catálogo"}), 500
 
 
 @content_overview_bp.route('/filtered', methods=["GET"])

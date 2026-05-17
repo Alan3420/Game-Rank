@@ -1,9 +1,11 @@
-import { getContentOverview } from "../../services/resume_cards";
 import { getFilteredGames } from "../../services/catalog_filters";
+import { getCatalogGames } from "../../services/resume_cards";
 import { addTOFavorite, checkFavorite, removeTOFavorite } from "../../services/favorites_area";
 import { listGameStatuses } from "../../services/user_game_status";
 import { notificaciones } from "../../store/notificaciones";
 import { estadoAutenticacion } from "../../store/autenticacion";
+
+const PER_PAGE = 20;
 
 export default {
     name: "contenido",
@@ -13,13 +15,9 @@ export default {
             favorites: new Set(),
             statuses: new Map(),
             game_name: null,
-            page: 1,
-            per_page: 20,
+            currentPage: 1,
+            totalCount: 0,
             loading: false,
-            hasNext: true,
-            maxGames: 200,
-            showLoadMoreButton: false,
-            apiCallCount: 0,
             filterPanelOpen: false,
             filters: {
                 ordering: '',
@@ -46,58 +44,99 @@ export default {
         },
         isFiltering() {
             return this.hasActiveFilters || !!this.game_name;
+        },
+        totalPages() {
+            if (!this.totalCount) return 0;
+            // RAWG stops serving results past ~500 pages regardless of count
+            return Math.min(Math.ceil(this.totalCount / PER_PAGE), 500);
+        },
+        paginasVisibles() {
+            const total = this.totalPages;
+            const current = this.currentPage;
+
+            if (total <= 7) {
+                return Array.from({ length: total }, (_, i) => i + 1);
+            }
+
+            const pages = new Set([1, total]);
+            for (let i = Math.max(2, current - 2); i <= Math.min(total - 1, current + 2); i++) {
+                pages.add(i);
+            }
+
+            const sorted = [...pages].sort((a, b) => a - b);
+            const result = [];
+            for (let i = 0; i < sorted.length; i++) {
+                if (i > 0 && sorted[i] - sorted[i - 1] > 1) {
+                    result.push('...');
+                }
+                result.push(sorted[i]);
+            }
+            return result;
         }
     },
     async mounted() {
         if (this.$route.query.q) {
             this.game_name = this.$route.query.q;
         }
-        if (this.isFiltering) {
-            this.getFilteredContent();
-        } else {
-            this.getContent();
-            this.debouncedScroll = this.debounce(this.handleScroll, 500);
-            window.addEventListener("scroll", this.debouncedScroll);
-        }
+        const initialPage = Math.min(parseInt(this.$route.query.page) || 1, 500);
+        await this.fetchPage(initialPage);
         document.addEventListener('mousedown', this.handleFilterClickOutside);
         if (estadoAutenticacion.usuario) {
             await this.loadStatuses();
         }
     },
     beforeUnmount() {
-        if (this.debouncedScroll) {
-            window.removeEventListener("scroll", this.debouncedScroll);
-        }
         document.removeEventListener('mousedown', this.handleFilterClickOutside);
     },
     watch: {
-        '$route.query.q'(newVal) {
+        '$route.query.page'(newVal) {
+            const page = Math.min(parseInt(newVal) || 1, 500);
+            if (page !== this.currentPage) {
+                this.fetchPage(page);
+            }
+        },
+        async '$route.query.q'(newVal) {
             this.game_name = newVal || null;
-            this.resetCatalog();
-
-            if (this.debouncedScroll) {
-                window.removeEventListener("scroll", this.debouncedScroll);
-                this.debouncedScroll = null;
-            }
-
-            if (this.isFiltering) {
-                this.getFilteredContent();
-            } else {
-                this.debouncedScroll = this.debounce(this.handleScroll, 500);
-                window.addEventListener("scroll", this.debouncedScroll);
-                this.getContent();
-            }
+            await this.fetchPage(1);
         }
     },
 
     methods: {
-        resetCatalog() {
-            this.games = [];
-            this.page = 1;
-            this.hasNext = true;
-            this.apiCallCount = 0;
-            this.showLoadMoreButton = false;
-            this.favorites = new Set();
+        async fetchPage(page) {
+            this.loading = true;
+            this.currentPage = page;
+
+            const query = { ...this.$route.query };
+            if (page > 1) {
+                query.page = page;
+            } else {
+                delete query.page;
+            }
+            this.$router.replace({ query });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            try {
+                const response = this.isFiltering
+                    ? await getFilteredGames(page, PER_PAGE, { ...this.filters, search: this.game_name || '' })
+                    : await getCatalogGames(page, PER_PAGE);
+                this.games = response.games ?? [];
+                this.totalCount = response.count ?? 0;
+
+                if (this.totalPages > 0 && page > this.totalPages) {
+                    await this.fetchPage(this.totalPages);
+                    return;
+                }
+
+                this.favorites = new Set();
+                for (const game of this.games) {
+                    await this.initCheckFavorite(game.id);
+                }
+            } catch (error) {
+                console.error(error);
+                this.games = [];
+            } finally {
+                this.loading = false;
+            }
         },
 
         async loadStatuses() {
@@ -109,7 +148,7 @@ export default {
                 }
                 this.statuses = map;
             } catch {
-                // fallo silencioso, no crítico
+                // fallo silencioso
             }
         },
 
@@ -123,84 +162,16 @@ export default {
             this.statuses = map;
         },
 
-        async getContent() {
-            if (this.loading || !this.hasNext || this.games.length >= this.maxGames) return;
-            this.loading = true;
-            try {
-                const response = await getContentOverview(this.page, null);
-                this.games = [...this.games, ...response.games];
-                for (const game of response.games) {
-                    await this.initCheckFavorite(game.id);
-                }
-                this.hasNext = !!response.next;
-                this.page++;
-                this.apiCallCount++;
-                if (this.apiCallCount >= 2) {
-                    this.showLoadMoreButton = true;
-                    window.removeEventListener("scroll", this.debouncedScroll);
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                this.loading = false;
-            }
-        },
-
-        async getFilteredContent() {
-            if (this.loading || !this.hasNext) return;
-            this.loading = true;
-            try {
-                const response = await getFilteredGames(this.page, this.per_page, {
-                    ...this.filters,
-                    search: this.game_name || ''
-                });
-                this.games = [...this.games, ...response.games];
-                for (const game of response.games) {
-                    await this.initCheckFavorite(game.id);
-                }
-                this.hasNext = !!response.next;
-                this.page++;
-                this.showLoadMoreButton = this.hasNext;
-            } catch (error) {
-                console.error("Error en catálogo filtrado:", error);
-                this.games = [];
-            } finally {
-                this.loading = false;
-            }
-        },
-
         applyFilters(newFilters) {
             this.filters = { ...newFilters };
             this.filterPanelOpen = false;
-            this.resetCatalog();
-            if (this.debouncedScroll) {
-                window.removeEventListener("scroll", this.debouncedScroll);
-                this.debouncedScroll = null;
-            }
-            if (this.isFiltering) {
-                this.getFilteredContent();
-            } else {
-                this.debouncedScroll = this.debounce(this.handleScroll, 500);
-                window.addEventListener("scroll", this.debouncedScroll);
-                this.getContent();
-            }
+            this.fetchPage(1);
         },
 
         clearFilters() {
             this.filters = { ordering: '', genres: [], platforms: [], dateFrom: '', dateTo: '' };
             this.filterPanelOpen = false;
-            this.resetCatalog();
-            if (this.debouncedScroll) {
-                window.removeEventListener("scroll", this.debouncedScroll);
-                this.debouncedScroll = null;
-            }
-            if (this.game_name) {
-                this.getFilteredContent();
-            } else {
-                this.debouncedScroll = this.debounce(this.handleScroll, 500);
-                window.addEventListener("scroll", this.debouncedScroll);
-                this.getContent();
-            }
+            this.fetchPage(1);
         },
 
         async initCheckFavorite(gameId) {
@@ -243,33 +214,8 @@ export default {
             this.filterPanelOpen = false;
         },
 
-        handleScroll() {
-            const scrollTop = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const fullHeight = document.documentElement.scrollHeight;
-            if (this.apiCallCount < 2 && scrollTop + windowHeight >= fullHeight - 1000) {
-                this.getContent();
-            }
-        },
-
-        loadMore() {
-            if (this.isFiltering) {
-                this.getFilteredContent();
-            } else {
-                this.getContent();
-            }
-        },
-
         goToDetail(gameId) {
             this.$router.push(`/game/${gameId}`);
-        },
-
-        debounce(fn, delay) {
-            let timer = null;
-            return function (...args) {
-                clearTimeout(timer);
-                timer = setTimeout(() => fn.apply(this, args), delay);
-            }
         }
     }
 }

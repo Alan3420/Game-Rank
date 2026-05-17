@@ -62,8 +62,8 @@ def _request_with_cache(endpoint, params=None):
     return result
 
 
-def get_all_video_games(page=1, per_page=10):
-    result = _request_with_cache("/games/lists/popular", {"page": page, "page_size": per_page})
+def get_all_games(page=1, per_page=20):
+    result = _request_with_cache("/games", {"page": page, "page_size": per_page, "exclude_additions": "true"})
     return result or {}
 
 def get_game_by_id_api(game_id) -> dict:

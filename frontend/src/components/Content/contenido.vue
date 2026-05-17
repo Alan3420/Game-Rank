@@ -49,7 +49,9 @@
     </div>
 
     <!-- Cards -->
-    <div v-else class="card_content">
+    <Loader v-if="loading" size="small" :message="game_name ? 'Buscando juegos...' : 'Cargando juegos...'" />
+
+    <div v-else-if="!isFiltering || games.length > 0" class="card_content">
       <GameCard
         v-for="(game, index) in games"
         :key="game.id"
@@ -63,11 +65,36 @@
       />
     </div>
 
-    <div v-if="showLoadMoreButton && !loading" class="load-more-container">
-      <button @click="loadMore" class="load-more-btn">Cargar más juegos</button>
-    </div>
+    <!-- Paginación -->
+    <div v-if="!loading && totalPages > 1" class="catalogo-pagination">
+      <button
+        class="cat-page-btn cat-page-nav"
+        :disabled="currentPage === 1"
+        @click="fetchPage(currentPage - 1)"
+        aria-label="Página anterior"
+      >
+        <i class="pi pi-chevron-left"></i>
+      </button>
 
-    <Loader v-if="loading" size="small" :message="game_name ? 'Buscando juegos...' : 'Cargando más juegos...'" />
+      <template v-for="(item, i) in paginasVisibles" :key="i">
+        <span v-if="item === '...'" class="cat-page-ellipsis">…</span>
+        <button
+          v-else
+          class="cat-page-btn"
+          :class="{ 'is-active': currentPage === item }"
+          @click="fetchPage(item)"
+        >{{ item }}</button>
+      </template>
+
+      <button
+        class="cat-page-btn cat-page-nav"
+        :disabled="currentPage === totalPages"
+        @click="fetchPage(currentPage + 1)"
+        aria-label="Página siguiente"
+      >
+        <i class="pi pi-chevron-right"></i>
+      </button>
+    </div>
   </div>
 </template>
 
