@@ -87,7 +87,7 @@ def agregar_cabeceras_seguridad(response):
 
 # Configurar CORS restrictivamente
 origenes_permitidos = [
-    "https://gamerk.netlify.app/"
+    "https://gamerk.netlify.app"
 ]
 
 origen_produccion = os.getenv("FRONTEND_ORIGIN")
