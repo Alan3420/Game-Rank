@@ -1,131 +1,258 @@
+# Game Rank
 
-# Organización del proyecto
+Plataforma web para descubrir, valorar y organizar videojuegos. Los usuarios pueden explorar un catálogo extenso de juegos obtenido desde la API de RAWG, añadir juegos a favoritos, escribir comentarios, asignar valoraciones y gestionar su colección personal mediante estados de juego. El proyecto incluye un panel de administración para la gestión de usuarios y moderación de comentarios.
 
-        PROYECTO GAME-RANK/
-        ├── README.md
-        ├── backend/
-        │   ├── app/
-        │   │   ├── autorizacion/
-        │   │   ├── client/
-        │   │   ├── database/
-        │   │   ├── models/
-        │   │   ├── repositories/
-        │   │   ├── routes/
-        │   │   └── services/
-        │   ├── migrations/
-        │   └── requirements.txt
-        └── frontend/
-            ├── public/
-            ├── src/
-            │   ├── assets/
-            │   ├── components/
-            │   │   ├── Admin/
-            │   │   ├── Cards/
-            │   │   ├── Content/
-            │   │   ├── GameDetail/
-            │   │   ├── Home/
-            │   │   ├── LoginRegister/
-            │   │   ├── Notifications/
-            │   │   └── User/
-            │   ├── router/
-            │   ├── services/
-            │   └── store/
-            └── package.json
+---
 
-## Funcionalidades Principales
+## Tecnologías
 
-### Sistema de Caché Inteligente
-El backend implementa un sistema centralizado de caché con TTL (Time To Live) para todas las llamadas a la API de RAWG. Esto reduce significativamente el número de solicitudes externas y mejora la velocidad de respuesta de la aplicación. La caché almacena un máximo de 150 entradas con una duración de 3600 segundos (1 hora).
+### Backend
+| Tecnología | Versión |
+|---|---|
+| Python | 3.x |
+| Flask | 3.1.3 |
+| Flask-SQLAlchemy | 3.1.1 |
+| Flask-JWT-Extended | 4.7.1 |
+| Flask-Migrate | 4.1.0 |
+| Flask-Limiter | 4.1.1 |
+| Flask-CORS | 6.0.2 |
+| PyMySQL | 1.1.2 |
+| pytest | 9.0.3 |
+| python-dotenv | 1.2.2 |
 
-### Videos de Fondo Dinámicos
-El home page presenta videos de juegos como fondo en la sección hero, cargados aleatoriamente desde la API de RAWG. Los videos se seleccionan de juegos populares, bien valorados o con puntuación alta en Metacritic, garantizando contenido de calidad. Los videos se reproducen en máxima resolución disponible (480p o superior).
+### Frontend
+| Tecnología | Versión |
+|---|---|
+| Vue | 3.5.30 |
+| Vite | 8.0 |
+| Vue Router | 5.0.4 |
+| PrimeVue | 4.5.5 |
+| Axios | 1.15.2 |
+| DOMPurify | 3.4.3 |
 
-### Gestión de Usuarios Administrativa
-El panel de administración permite gestionar usuarios del sistema. Los administradores pueden:
-- Ver lista de todos los usuarios y otros admins (exceptuando su propio perfil)
-- Cambiar roles de usuarios entre 'user' y 'admin'
-- Eliminar usuarios (con eliminación cascada de sus favoritos, comentarios y valoraciones)
-- Editar información de usuarios
+### Base de datos
+- MySQL
 
-### Accesibilidad de Contenido
-El video del hero section en la página de inicio es accesible tanto para usuarios autenticados como anónimos, permitiendo que todos los visitantes vean la presentación visual de la plataforma.
+### API externa
+- [RAWG Video Games Database](https://rawg.io/apidocs)
 
-                
-## Información adicional
-* Extensiones extras en vsCode utilizadas:
-    1. Mysql (Database Client)
-    2. Docker
-    3. Live Server 
+---
 
-* Comandos para instalar dependencias:
-    1. Para el back: `pip install -r requirements.txt`
-    2. Para el front: `npm install`
+## Organización del proyecto
 
-* Comandos para hacer migraciones:
-    1. Inicializar el sistema de migraciones: `flask --app app.main db init`
-    2. Crear una nueva migración: `flask --app app.main db migrate -m "Mensaje de la migración"`
-    3. Aplicar las migraciones a la base de datos: `flask --app app.main db upgrade`
-
-### Actualmente en desuso
 ```
-    ### Comandos que se utilizan siempre en docker
-    * Comando para crear y conectarse a la base de datos en docker:
-        
-        docker run -d --name game_rank_db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=game_rank -p 3306:3306 mysql:8.0
+Game-Rank/
+├── README.md
+├── docker-compose.yml
+├── backend/
+│   ├── pytest.ini
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── limiter.py
+│   │   ├── autorizacion/
+│   │   │   └── validadores.py
+│   │   ├── client/
+│   │   │   └── clientRAWG.py
+│   │   ├── database/
+│   │   │   ├── db.py
+│   │   │   └── seed.py
+│   │   ├── models/
+│   │   │   ├── Comment.py
+│   │   │   ├── Favorite.py
+│   │   │   ├── Rate.py
+│   │   │   ├── User.py
+│   │   │   ├── UserGameStatus.py
+│   │   │   └── Video_game.py
+│   │   ├── repositories/
+│   │   │   ├── comment_repo.py
+│   │   │   ├── favorite_repo.py
+│   │   │   ├── rate_repo.py
+│   │   │   ├── user_game_status_repo.py
+│   │   │   ├── user_repo.py
+│   │   │   └── vGame_repo.py
+│   │   ├── routes/
+│   │   │   ├── comment_route.py
+│   │   │   ├── content_overview_route.py
+│   │   │   ├── favorite_route.py
+│   │   │   ├── options_user_route.py
+│   │   │   ├── rates_route.py
+│   │   │   ├── tendencias_route.py
+│   │   │   ├── user_game_status_route.py
+│   │   │   └── welcome_route.py
+│   │   └── services/
+│   │       ├── adapter.py
+│   │       ├── comment_services.py
+│   │       ├── favorite_services.py
+│   │       ├── game_services.py
+│   │       ├── rate_services.py
+│   │       ├── tendencias_service.py
+│   │       ├── user_game_status_service.py
+│   │       └── user_service.py
+│   └── tests/
+│       ├── conftest.py
+│       ├── test_comment_services.py
+│       ├── test_favorite_services.py
+│       ├── test_rate_services.py
+│       ├── test_user_game_status_service.py
+│       └── test_user_service.py
+└── frontend/
+    ├── index.html
+    ├── package.json
+    ├── vite.config.js
+    └── src/
+        ├── main.js
+        ├── style.css
+        ├── assets/
+        ├── base/
+        │   ├── App.vue
+        │   ├── script_app.js
+        │   └── style_app.css
+        ├── components/
+        │   ├── Admin/
+        │   ├── Cards/
+        │   ├── Content/
+        │   ├── Filters/
+        │   ├── GameDetail/
+        │   ├── Home/
+        │   ├── Image/
+        │   ├── Legal/
+        │   ├── Loader/
+        │   ├── LoginRegister/
+        │   ├── NotFound/
+        │   ├── Notifications/
+        │   ├── Tendencias/
+        │   └── User/
+        ├── router/
+        │   └── index.js
+        ├── services/
+        ├── store/
+        │   ├── autenticacion.js
+        │   └── notificaciones.js
+        └── utils/
+            └── statusMeta.js
 ```
 
-* Comando para arrancar Vue
-    1. npm run dev
+---
 
-    2. Si suceden problemas a la hora de arrancar el proyecto: 
-        1. npm cache clean --force
-        2. npm install
-        3. npm run dev
+## Variables de entorno
 
-### Como arrancar el proyecto
+Crea un archivo `.env` dentro de `backend/app/` con las siguientes variables:
 
-Antes de iniciar el proyecto, asegúrate de tener instaladas las dependencias necesarias. El proyecto puede ejecutarse de dos formas: utilizando Docker (recomendado) o de forma manual.
+```env
+DB_URI=mysql+pymysql://usuario:contraseña@host:3306/game_rank
+SECRET_KEY=tu_clave_secreta
+RAWG_API_KEY=tu_api_key_de_rawg
+FRONTEND_ORIGIN=http://localhost:5173
+FLASK_DEBUG=true
+```
 
-#### Prerrequisitos
-- **Docker y Docker Compose**: Para ejecutar con contenedores (versión recomendada).
-- **Python 3.x**: Para el backend (si se ejecuta manualmente).
-- **Node.js y npm**: Para el frontend.
-- **MySQL**: Base de datos (si se ejecuta manualmente, o se puede usar el contenedor de Docker).
+| Variable | Descripción | Requerida |
+|---|---|---|
+| `DB_URI` | URI de conexión a MySQL | Sí |
+| `SECRET_KEY` | Clave para JWT y sesiones Flask | Sí |
+| `RAWG_API_KEY` | API key de RAWG para obtener datos de juegos | Sí |
+| `FRONTEND_ORIGIN` | URL del frontend en producción | No |
+| `FLASK_DEBUG` | Activa el modo debug de Flask (`true`/`false`) | No |
 
-#### Opción 1: Usando Docker (No se esta utilizando actualmente, pero se recomienda para evitar problemas de configuración)
-Esta opción configura automáticamente el backend, frontend y la base de datos MySQL en contenedores.
+---
 
-1. Asegúrate de tener Docker y Docker Compose instalados.
-2. Desde la raíz del proyecto, ejecuta:
-   ```
-   docker-compose up --build
-   ```
-3. El backend estará disponible en `http://localhost:8080` y el frontend en el puerto configurado por Vite (generalmente `http://localhost:5173`).
+## Instalación y ejecución
 
-#### Opción 2: Ejecución Manual
-Si prefieres ejecutar los servicios manualmente:
+### Prerrequisitos
+- Python 3.x
+- Node.js y npm
+- MySQL corriendo con una base de datos llamada `game_rank`
 
-1. **Instalar dependencias**:
-   - Para el backend (desde la carpeta `/backend`): `pip install -r requirements.txt`
-   - Para el frontend (desde la carpeta `/frontend`): `npm install`
+### Backend
 
-2. **Configurar la base de datos**:
-   - Asegúrate de tener MySQL corriendo. Crea una base de datos llamada `game_rank` con usuario `root` y contraseña `root`.
-   - O usa el comando Docker deprecated mencionado abajo para crear un contenedor MySQL.
+```bash
+# Desde la carpeta backend/
+pip install -r requirements.txt
+```
 
-3. **Iniciar el backend**:
-   - Ve a la carpeta `/backend`.
-   - Si la base de datos no está creada, ejecuta: `flask --app app.main db upgrade` para aplicar las migraciones.
-   - Luego inicia el servidor: `python -m app.main`
-   - El backend correrá en `http://localhost:8080`.
+Aplica las migraciones antes del primer arranque:
+```bash
+flask --app app.main db upgrade
+```
 
-4. **Iniciar el frontend**:
-   - Ve a la carpeta `/frontend`.
-   - Ejecuta: `npm run dev`
-   - El frontend estará disponible en `http://localhost:5173` (o el puerto que indique Vite).
+Arranca el servidor:
+```bash
+python app/main.py
+```
 
-Si encuentras problemas al iniciar el frontend, intenta:
-- `npm cache clean --force`
-- `npm install`
-- `npm run dev`
+El backend queda disponible en `http://localhost:5000`.
 
+### Frontend
+
+```bash
+# Desde la carpeta frontend/
+npm install
+npm run dev
+```
+
+El frontend queda disponible en `http://localhost:5173`.
+
+Si encuentras problemas al arrancar:
+```bash
+npm cache clean --force
+npm install
+npm run dev
+```
+
+---
+
+## Tests unitarios
+
+Ejecuta los tests antes de arrancar el backend para verificar que todo funciona correctamente:
+
+```bash
+# Desde la carpeta backend/
+
+# Ejecutar solo los tests
+python -m pytest tests/ -v
+
+# Ejecutar con cobertura (recomendado)
+python -m coverage run --source=app -m pytest
+
+# Ver reporte de cobertura en consola
+python -m coverage report
+
+# Generar reporte HTML detallado (se crea en backend/htmlcov/index.html)
+python -m coverage html
+```
+
+Los tests cubren los servicios principales: comentarios, valoraciones, favoritos, usuarios y estados de juego (43 tests en total).
+
+---
+
+## Migraciones de base de datos
+
+```bash
+# Inicializar el sistema de migraciones (solo la primera vez)
+flask --app app.main db init
+
+# Crear una nueva migración
+flask --app app.main db migrate -m "Descripción del cambio"
+
+# Aplicar migraciones pendientes
+flask --app app.main db upgrade
+```
+
+---
+
+## Páginas disponibles
+
+| Ruta | Acceso | Descripción |
+|---|---|---|
+| `/` | Público | Home con video de fondo dinámico |
+| `/login` | Público | Inicio de sesión |
+| `/register` | Público | Registro de usuario |
+| `/terminos` | Público | Términos y condiciones |
+| `/content/overview` | Autenticado | Catálogo de juegos con filtros |
+| `/game/:id` | Autenticado | Detalle de juego |
+| `/profile` | Autenticado | Perfil del usuario |
+| `/tendencias` | Autenticado | Juegos en tendencia |
+| `/admin/users` | Admin | Gestión de usuarios |
+| `/admin/comments` | Admin | Moderación de comentarios |
