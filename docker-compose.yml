@@ -1,29 +1,40 @@
 version: "3.9"
 
 services:
-  backend:
-    build: ./backend
-    container_name: game_rank_backend
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=mysql+pymysql://root:root@db:3306/game_rank
-    volumes:
-      - ./backend:/app
 
-  db:
+  mysql:
     image: mysql:8.0
-    container_name: game_rank_mysql
-    restart: always
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
       MYSQL_DATABASE: game_rank
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: alan307/game-rank-backend:1.0.0
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      DB_URI: mysql+pymysql://root:${DB_ROOT_PASSWORD:-rootpassword}@mysql:3306/game_rank
+      SECRET_KEY: ${SECRET_KEY}
+      RAWG_API_KEY: ${RAWG_API_KEY}
+      FLASK_DEBUG: "false"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
 
 volumes:
   mysql_data:

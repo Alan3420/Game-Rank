@@ -2,8 +2,7 @@ import axios from 'axios';
 import { estadoAutenticacion } from '../store/autenticacion';
 
 const api = axios.create({
-    // Para pruebas en mobil 192.168.1.XXX, pruebas generales localhost, para identificar la ip local CMD ipconfig
-    baseURL: 'http://localhost:5000'
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000'
 });
 
 api.interceptors.request.use(config => {
