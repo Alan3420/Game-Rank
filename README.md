@@ -45,70 +45,19 @@ Game-Rank/
 ├── README.md
 ├── docker-compose.yml
 ├── backend/
-│   ├── pytest.ini
-│   ├── requirements.txt
-│   ├── Dockerfile
 │   ├── app/
-│   │   ├── main.py
-│   │   ├── limiter.py
 │   │   ├── autorizacion/
-│   │   │   └── validadores.py
 │   │   ├── client/
-│   │   │   └── clientRAWG.py
 │   │   ├── database/
-│   │   │   ├── db.py
-│   │   │   └── seed.py
 │   │   ├── models/
-│   │   │   ├── Comment.py
-│   │   │   ├── Favorite.py
-│   │   │   ├── Rate.py
-│   │   │   ├── User.py
-│   │   │   ├── UserGameStatus.py
-│   │   │   └── Video_game.py
 │   │   ├── repositories/
-│   │   │   ├── comment_repo.py
-│   │   │   ├── favorite_repo.py
-│   │   │   ├── rate_repo.py
-│   │   │   ├── user_game_status_repo.py
-│   │   │   ├── user_repo.py
-│   │   │   └── vGame_repo.py
 │   │   ├── routes/
-│   │   │   ├── comment_route.py
-│   │   │   ├── content_overview_route.py
-│   │   │   ├── favorite_route.py
-│   │   │   ├── options_user_route.py
-│   │   │   ├── rates_route.py
-│   │   │   ├── tendencias_route.py
-│   │   │   ├── user_game_status_route.py
-│   │   │   └── welcome_route.py
 │   │   └── services/
-│   │       ├── adapter.py
-│   │       ├── comment_services.py
-│   │       ├── favorite_services.py
-│   │       ├── game_services.py
-│   │       ├── rate_services.py
-│   │       ├── tendencias_service.py
-│   │       ├── user_game_status_service.py
-│   │       └── user_service.py
 │   └── tests/
-│       ├── conftest.py
-│       ├── test_comment_services.py
-│       ├── test_favorite_services.py
-│       ├── test_rate_services.py
-│       ├── test_user_game_status_service.py
-│       └── test_user_service.py
 └── frontend/
-    ├── index.html
-    ├── package.json
-    ├── vite.config.js
     └── src/
-        ├── main.js
-        ├── style.css
         ├── assets/
         ├── base/
-        │   ├── App.vue
-        │   ├── script_app.js
-        │   └── style_app.css
         ├── components/
         │   ├── Admin/
         │   ├── Cards/
@@ -125,13 +74,9 @@ Game-Rank/
         │   ├── Tendencias/
         │   └── User/
         ├── router/
-        │   └── index.js
         ├── services/
         ├── store/
-        │   ├── autenticacion.js
-        │   └── notificaciones.js
         └── utils/
-            └── statusMeta.js
 ```
 
 ---
