@@ -1,5 +1,9 @@
-from datetime import timedelta
+import os
+from dotenv import load_dotenv
 
+load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+
+from datetime import timedelta
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from app.database.db import db
@@ -20,12 +24,7 @@ from app.routes.user_game_status_route import status_bp
 from app.routes.tendencias_route import tendencias_bp
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from dotenv import load_dotenv
 from app.limiter import limiter
-import os
-
-
-load_dotenv()
 
 
 app = Flask(__name__)

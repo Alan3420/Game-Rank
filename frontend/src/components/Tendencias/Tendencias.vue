@@ -25,58 +25,69 @@
 
     <template v-else>
 
-      <!-- Tabs -->
+      <!-- Nav de scroll -->
       <div class="tendencias-tabs">
         <button
           v-for="seccion in secciones"
           :key="seccion.key"
           class="tab-btn"
-          :class="{ 'is-active': activeTab === seccion.key }"
-          @click="activeTab = seccion.key"
+          @click="scrollToSection(seccion.key)"
         >
           <i class="pi" :class="seccion.icono"></i>
           {{ seccion.label }}
         </button>
       </div>
 
-      <p class="seccion-subtitulo">{{ seccionActiva.subtitulo }}</p>
-
-      <!-- Sin datos -->
-      <div v-if="juegosActivos.length === 0" class="seccion-vacia">
-        Not enough data yet. Be the first to participate!
-      </div>
-
-      <!-- Grid bento -->
-      <div v-else class="trend-grid">
-        <div
-          v-for="game in juegosActivos"
-          :key="game.id"
-          class="trend-card"
-          @click="goToGame(game.id)"
-        >
-          <img
-            v-if="game.imge_url"
-            class="trend-card__img"
-            :src="game.imge_url"
-            :alt="game.name"
-            loading="lazy"
-          />
-          <div v-else class="trend-card__placeholder">
-            <i class="pi pi-image"></i>
+      <!-- Secciones -->
+      <div
+        v-for="seccion in secciones"
+        :key="seccion.key"
+        :id="seccion.key"
+        class="tendencias-seccion"
+      >
+        <div class="seccion-header">
+          <i class="pi seccion-header__icono" :class="seccion.icono"></i>
+          <div>
+            <h2 class="seccion-header__titulo">{{ seccion.titulo }}</h2>
+            <p class="seccion-subtitulo">{{ seccion.subtitulo }}</p>
           </div>
+        </div>
 
-          <div class="trend-card__overlay"></div>
+        <div v-if="!tendencias[seccion.key] || tendencias[seccion.key].length === 0" class="seccion-vacia">
+          Not enough data yet. Be the first to participate!
+        </div>
 
-          <div class="trend-card__body">
-            <h3 class="trend-card__name">{{ game.name }}</h3>
-            <div class="trend-card__meta">
-              <span
-                class="mc-badge"
-                :class="game.metacritic ? metacriticClass(game.metacritic) : 'mc-na'"
-              >
-                {{ game.metacritic ?? '—' }}
-              </span>
-              <span class="trend-card__stat">{{ game.stat_label }}</span>
+        <div v-else class="trend-grid">
+          <div
+            v-for="game in tendencias[seccion.key]"
+            :key="game.id"
+            class="trend-card"
+            @click="goToGame(game.id)"
+          >
+            <img
+              v-if="game.imge_url"
+              class="trend-card__img"
+              :src="game.imge_url"
+              :alt="game.name"
+              loading="lazy"
+            />
+            <div v-else class="trend-card__placeholder">
+              <i class="pi pi-image"></i>
+            </div>
+
+            <div class="trend-card__overlay"></div>
+
+            <div class="trend-card__body">
+              <h3 class="trend-card__name">{{ game.name }}</h3>
+              <div class="trend-card__meta">
+                <span
+                  class="mc-badge"
+                  :class="game.metacritic ? metacriticClass(game.metacritic) : 'mc-na'"
+                >
+                  {{ game.metacritic ?? '—' }}
+                </span>
+                <span class="trend-card__stat">{{ game.stat_label }}</span>
+              </div>
             </div>
           </div>
         </div>

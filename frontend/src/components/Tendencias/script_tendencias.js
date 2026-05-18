@@ -6,7 +6,6 @@ export default {
             tendencias: null,
             loading: true,
             error: null,
-            activeTab: 'mas_favoritos',
         };
     },
     computed: {
@@ -42,12 +41,6 @@ export default {
                 },
             ];
         },
-        seccionActiva() {
-            return this.secciones.find(s => s.key === this.activeTab) ?? this.secciones[0];
-        },
-        juegosActivos() {
-            return this.tendencias?.[this.activeTab] ?? [];
-        },
     },
     async mounted() {
         try {
@@ -59,6 +52,10 @@ export default {
         }
     },
     methods: {
+        scrollToSection(key) {
+            const el = document.getElementById(key);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        },
         metacriticClass(score) {
             if (!score) return 'mc-na';
             if (score >= 80) return 'mc-green';

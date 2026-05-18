@@ -6,6 +6,7 @@ from app.database.db import db
 from sqlalchemy import func
 from app.client.clientRAWG import get_game_by_id_api
 from app.services.adapter import game_format_resume
+from concurrent.futures import ThreadPoolExecutor
 
 LIMIT = 8
 
@@ -21,6 +22,25 @@ def _enriquecer(game_id, stat_value, stat_label):
         return None
 
 
+def _enriquecer_lista(tareas):
+    """
+    Recibe una lista de tuplas (game_id, stat_value, stat_label).
+    Llama a la API de RAWG para cada juego en paralelo usando hilos,
+    en vez de esperar uno por uno. Los resultados mantienen el orden original.
+    """
+    if not tareas:
+        return []
+
+    def procesar(tarea):
+        game_id, stat_value, stat_label = tarea
+        return _enriquecer(game_id, stat_value, stat_label)
+
+    with ThreadPoolExecutor(max_workers=len(tareas)) as executor:
+        resultados = list(executor.map(procesar, tareas))
+
+    return [juego for juego in resultados if juego is not None]
+
+
 def obtener_tendencias():
     top_favs = db.session.query(
         Favorite.id_game_api,
@@ -32,7 +52,7 @@ def obtener_tendencias():
         func.round(func.avg(Rate.rating), 1).label("avg_rating"),
         func.count(Rate.id_rate).label("votes")
     ).group_by(Rate.id_game_api).having(
-        func.count(Rate.id_rate) >= 1
+        func.count(Rate.id_user) >= 1
     ).order_by(func.avg(Rate.rating).desc()).limit(LIMIT).all()
 
     top_comments = db.session.query(
@@ -45,19 +65,38 @@ def obtener_tendencias():
         func.count(UserGameStatus.id_status).label("total")
     ).group_by(UserGameStatus.id_game_api).order_by(func.count(UserGameStatus.id_status).desc()).limit(LIMIT).all()
 
-    def build(items, label_fn):
-        resultado = []
-        for row in items:
-            game_id = row[0]
-            raw_val = row[1]
-            juego = _enriquecer(game_id, float(raw_val) if raw_val else 0, label_fn(raw_val))
-            if juego:
-                resultado.append(juego)
-        return resultado
+    # Construir listas de tareas con el label ya calculado antes de llamar a la API
+    tareas_favs = []
+    for row in top_favs:
+        game_id = row[0]
+        total   = row[1]
+        label   = f"{total} {'favorito' if total == 1 else 'favoritos'}"
+        tareas_favs.append((game_id, float(total), label))
+
+    tareas_rated = []
+    for row in top_rated:
+        game_id  = row[0]
+        promedio = float(row[1]) if row[1] else 0.0
+        label    = f"{round(promedio, 1)} / 5 ★"
+        tareas_rated.append((game_id, promedio, label))
+
+    tareas_comments = []
+    for row in top_comments:
+        game_id = row[0]
+        total   = row[1]
+        label   = f"{total} {'reseña' if total == 1 else 'reseñas'}"
+        tareas_comments.append((game_id, float(total), label))
+
+    tareas_coleccion = []
+    for row in top_coleccion:
+        game_id = row[0]
+        total   = row[1]
+        label   = f"{total} {'usuario' if total == 1 else 'usuarios'}"
+        tareas_coleccion.append((game_id, float(total), label))
 
     return {
-        "mas_favoritos":  build(top_favs,     lambda v: f"{v} {'favorito' if v == 1 else 'favoritos'}"),
-        "mejor_valorados": build(top_rated,   lambda v: f"{round(float(v), 1)} / 5 ★"),
-        "mas_comentados": build(top_comments, lambda v: f"{v} {'reseña' if v == 1 else 'reseñas'}"),
-        "mas_coleccion":  build(top_coleccion,lambda v: f"{v} {'usuario' if v == 1 else 'usuarios'}"),
+        "mas_favoritos":   _enriquecer_lista(tareas_favs),
+        "mejor_valorados": _enriquecer_lista(tareas_rated),
+        "mas_comentados":  _enriquecer_lista(tareas_comments),
+        "mas_coleccion":   _enriquecer_lista(tareas_coleccion),
     }
