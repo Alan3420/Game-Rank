@@ -110,10 +110,9 @@ export default {
       localDateTo: '',
       currentYear: new Date().getFullYear(),
       orderingOptions: [
-        { value: '-rating', label: 'Top Rated', icon: 'pi-star-fill' },
+        { value: '-metacritic', label: 'Top Rated', icon: 'pi-star-fill' },
         { value: '-released', label: 'Newest', icon: 'pi-calendar' },
         { value: 'released', label: 'Oldest', icon: 'pi-history' },
-        { value: '-metacritic', label: 'Metacritic', icon: 'pi-chart-bar' },
         { value: 'name', label: 'A–Z', icon: 'pi-sort-alpha-down' },
         { value: '-added', label: 'Popular', icon: 'pi-bolt' }
       ],

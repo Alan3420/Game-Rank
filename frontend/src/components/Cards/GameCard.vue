@@ -40,6 +40,7 @@
 
         <!-- Botón de estado -->
         <button
+          v-if="canHaveStatus"
           class="card-action-btn card-action-btn--status"
           :class="{ 'has-status': status }"
           :style="status ? { color: statusMeta?.color } : {}"
@@ -80,7 +81,7 @@
     </div>
 
     <!-- Dropdown de estado (fuera de card-image para no ser clipeado) -->
-    <div v-if="showDropdown" class="card-status-dropdown-wrap">
+    <div v-if="showDropdown && canHaveStatus" class="card-status-dropdown-wrap">
       <GameStatusDropdown
         :game-id="game.id"
         :current-status="status"
@@ -111,6 +112,29 @@ const props = defineProps({
 const showDropdown = ref(false);
 
 const statusMeta = computed(() => props.status ? STATUS_META[props.status] : null);
+
+const canHaveStatus = computed(function () {
+  var fechaTexto = props.game.release_date;
+
+  if (!fechaTexto) {
+    return false;
+  }
+
+  var fechaLanzamiento = new Date(fechaTexto);
+
+  if (isNaN(fechaLanzamiento.getTime())) {
+    return false;
+  }
+
+  var hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  if (fechaLanzamiento <= hoy) {
+    return true;
+  }
+
+  return false;
+});
 
 function metacriticClass(score) {
   if (score >= 80) return 'mc-green';
