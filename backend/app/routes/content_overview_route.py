@@ -112,7 +112,6 @@ def logros_del_juego(game_id):
 
 
 @content_overview_bp.route("/hero-video", methods=["GET"])
-@limiter.limit("30 per minute")
 def get_hero_video():
     try:
         video = get_random_game_video()
