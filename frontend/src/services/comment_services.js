@@ -1,64 +1,74 @@
 import api from './api';
 
-export async function createComments(id_game, description) {
+// Crea un comentario del usuario para el juego indicado.
+export async function crearComentario(idJuego, descripcion) {
     try {
-        const tokenUser = localStorage.getItem("token")
-        const response = await api.post(`/comment/create`, {
-            id_game: id_game,
-            description: description
-        },
-        );
-
-        return response.data;
+        const respuesta = await api.post('/comment/create', {
+            id_game: idJuego,
+            description: descripcion
+        });
+        return respuesta.data;
     } catch (error) {
-        console.error('Error al crear el comentario::', error);
+        console.error('Error al crear el comentario:', error);
         throw error;
     }
 }
 
-export async function getCommentsByGame(game_id, limit = 10, offset = 0) {
+// Devuelve los comentarios del juego paginados.
+// limit y offset se mandan al backend para no bajar todos de golpe.
+export async function obtenerComentariosDelJuego(idJuego, limite, desplazamiento) {
+    if (!limite) {
+        limite = 10;
+    }
+    if (!desplazamiento) {
+        desplazamiento = 0;
+    }
+
     try {
-        const response = await api.get(`/comment/game/${game_id}`, {
-            params: { limit, offset }
+        const respuesta = await api.get(`/comment/game/${idJuego}`, {
+            params: {
+                limit: limite,
+                offset: desplazamiento
+            }
         });
-        return response.data;
+        return respuesta.data;
     } catch (error) {
         console.error('Error al obtener comentarios:', error);
         throw error;
     }
 }
 
-export async function getAllComments() {
+// Trae todos los comentarios del sistema. Lo usa solo el panel de admin
+// para moderar contenido.
+export async function obtenerTodosLosComentarios() {
     try {
-        const response = await api.get('/comment/all');
-        return response.data;
+        const respuesta = await api.get('/comment/all');
+        return respuesta.data;
     } catch (error) {
         console.error('Error al obtener todos los comentarios:', error);
         throw error;
     }
 }
 
-export async function deleteComment(comment_id) {
+// Borra un comentario por id. Puede usarlo el autor del comentario
+// o un administrador.
+export async function eliminarComentario(idComentario) {
     try {
-        const tokenUser = localStorage.getItem("token")
-        const response = await api.delete(`/comment/delete/${comment_id}`);
-
-        return response.data;
+        const respuesta = await api.delete(`/comment/delete/${idComentario}`);
+        return respuesta.data;
     } catch (error) {
         console.error('Error al eliminar el comentario:', error);
         throw error;
     }
 }
 
-export async function updateComment(comment_id, description) {
+// Actualiza el texto de un comentario ya existente.
+export async function actualizarComentario(idComentario, descripcion) {
     try {
-
-        const tokenUser = localStorage.getItem("token")
-        const response = await api.put(`/comment/update/${comment_id}`, {
-            description: description
+        const respuesta = await api.put(`/comment/update/${idComentario}`, {
+            description: descripcion
         });
-        
-        return response.data;
+        return respuesta.data;
     } catch (error) {
         console.error('Error al actualizar el comentario:', error);
         throw error;

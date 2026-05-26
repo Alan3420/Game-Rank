@@ -1,161 +1,239 @@
-import { getCatalogGames, getHeroVideo } from '../../services/resume_cards.js';
-import { getFutureReleases } from '../../services/clasif_content.js';
+import { obtenerJuegosDelCatalogo, obtenerVideoDestacado } from '../../services/resume_cards.js';
+import { obtenerProximosLanzamientos } from '../../services/clasif_content.js';
 import { estadoAutenticacion } from '../../store/autenticacion.js';
-import { checkFavorite, addTOFavorite, removeTOFavorite } from '../../services/favorites_area.js';
-import { listGameStatuses } from '../../services/user_game_status.js';
+import { consultarSiEsFavorito, agregarAFavoritos, quitarDeFavoritos } from '../../services/favorites_area.js';
+import { listarEstadosDeJuego } from '../../services/user_game_status.js';
 import { notificaciones } from '../../store/notificaciones.js';
-import { computed } from 'vue';
 
+// Componente de la pagina principal (Home). Tiene dos modos: cuando no hay
+// sesion muestra solo el hero + CTA de registro; cuando hay sesion muestra
+// ademas los 3 juegos mejor valorados y la lista de proximos lanzamientos.
 export default {
   name: "home",
+
   data() {
     return {
       topGames: [],
       futureReleases: [],
+      // Set para acceso rapido O(1) cuando preguntamos si un juego es favorito.
       favorites: new Set(),
+      // Map id_juego -> estado, para pintar el badge de la card.
       statuses: new Map(),
-      carouselTrack: null,
       isLoading: true,
       isFutureLoading: true,
       heroVideo: null
     };
   },
+
   async mounted() {
-    const token = localStorage.getItem("token");
-    const tasks = [this.loadHeroVideo()];
+
+    var token = localStorage.getItem("token");
+    var tareas = [];
+
+    // El video del hero se carga siempre, este logueado o no.
+    tareas.push(this.cargarVideoDestacado());
+
+    // El resto solo tiene sentido si hay sesion: si no, no podemos
+    // pedir favoritos ni estados de coleccion.
     if (token) {
-      tasks.push(this.loadTopGames(), this.loadFutureReleases(), this.loadStatuses());
+      tareas.push(this.cargarMejoresJuegos());
+      tareas.push(this.cargarProximosLanzamientos());
+      tareas.push(this.cargarEstadosDeColeccion());
     }
-    await Promise.all(tasks);
+
+    await Promise.all(tareas);
   },
+
   methods: {
-    async loadHeroVideo() {
+
+    // Pide el video destacado al backend. Si no hay video (404) o falla,
+    // dejamos heroVideo en null y el template oculta el bloque del video.
+    async cargarVideoDestacado() {
       try {
-        const video = await getHeroVideo();
-        this.heroVideo = video || null;
+        var video = await obtenerVideoDestacado();
+        if (video) {
+          this.heroVideo = video;
+        } else {
+          this.heroVideo = null;
+        }
       } catch (error) {
         console.error('Error al cargar video del hero:', error);
         this.heroVideo = null;
       }
     },
 
-    async loadTopGames() {
+    // Pide la primera pagina del catalogo, filtra los que tienen nota de
+    // Metacritic y se queda con los 3 mejores para mostrarlos como
+    // "Top Rated" en la pagina principal.
+    async cargarMejoresJuegos() {
+
       this.isLoading = true;
-      try {
-        const response = await getCatalogGames(1);
 
-        let games = [];
-        if (response && response.games && Array.isArray(response.games)) {
-          games = response.games;
-        } else if (Array.isArray(response)) {
-          games = response;
+      try {
+        var respuesta = await obtenerJuegosDelCatalogo(1);
+
+        var juegos = [];
+        if (respuesta && respuesta.games && Array.isArray(respuesta.games)) {
+          juegos = respuesta.games;
+        } else if (Array.isArray(respuesta)) {
+          juegos = respuesta;
         }
 
-        const sorted = games
-          .filter(game => game.metacritic && game.metacritic > 0)
-          .sort((a, b) => b.metacritic - a.metacritic);
-        this.topGames = sorted.slice(0, 3);
+        // Nos quedamos solo con los que tienen nota de Metacritic > 0.
+        var juegosConNota = [];
+        for (var i = 0; i < juegos.length; i++) {
+          if (juegos[i].metacritic && juegos[i].metacritic > 0) {
+            juegosConNota.push(juegos[i]);
+          }
+        }
+
+        // Ordenamos de mayor a menor nota y cogemos los 3 primeros.
+        juegosConNota.sort(function (a, b) {
+          return b.metacritic - a.metacritic;
+        });
+        this.topGames = juegosConNota.slice(0, 3);
         this.isLoading = false;
 
+        // Si hay sesion comprobamos cuales son favoritos para pintar
+        // el corazon en su estado correcto.
         if (estadoAutenticacion.usuario) {
-          await Promise.all(this.topGames.map(g => this.initCheckFavorite(g.id)));
+          var tareas = [];
+          for (var j = 0; j < this.topGames.length; j++) {
+            tareas.push(this.comprobarFavoritoInicial(this.topGames[j].id));
+          }
+          await Promise.all(tareas);
         }
+
       } catch (error) {
-        console.error('Error loading top games:', error);
+        console.error('Error cargando mejores juegos:', error);
         this.isLoading = false;
       }
     },
 
-    async loadFutureReleases() {
+    // Pide los proximos lanzamientos al backend y revisa favoritos en paralelo.
+    async cargarProximosLanzamientos() {
+
       try {
-        const response = await getFutureReleases(1, 10);
-        this.futureReleases = response || [];
+        var respuesta = await obtenerProximosLanzamientos(1, 10);
+
+        if (respuesta) {
+          this.futureReleases = respuesta;
+        } else {
+          this.futureReleases = [];
+        }
         this.isFutureLoading = false;
 
         if (estadoAutenticacion.usuario) {
-          await Promise.all(this.futureReleases.map(g => this.initCheckFavorite(g.id)));
+          var tareas = [];
+          for (var i = 0; i < this.futureReleases.length; i++) {
+            tareas.push(this.comprobarFavoritoInicial(this.futureReleases[i].id));
+          }
+          await Promise.all(tareas);
         }
+
       } catch (error) {
-        console.error('Error loading future releases:', error);
+        console.error('Error cargando proximos lanzamientos:', error);
         this.isFutureLoading = false;
       }
     },
 
-    async loadStatuses() {
+    // Pide al backend la lista corta de estados (id_juego + status) y los
+    // mete en un Map para acceso rapido. Lo usamos solo para pintar el
+    // badge de estado en las cards.
+    async cargarEstadosDeColeccion() {
       try {
-        const data = await listGameStatuses();
-        const map = new Map();
-        for (const s of data.statuses) {
-          map.set(s.id_game_api, s.status);
+        var data = await listarEstadosDeJuego();
+        var mapa = new Map();
+        for (var i = 0; i < data.statuses.length; i++) {
+          mapa.set(data.statuses[i].id_game_api, data.statuses[i].status);
         }
-        this.statuses = map;
-      } catch {
-        // fallo silencioso, no crítico
+        this.statuses = mapa;
+      } catch (error) {
+        // Fallo silencioso: no es critico. Si falla, las cards no muestran
+        // el badge de estado pero todo lo demas funciona igual.
       }
     },
 
-    handleStatusUpdate({ gameId, status }) {
-      const map = new Map(this.statuses);
+    // Se dispara cuando una card cambia de estado (via emit @update:status).
+    // Reemplazamos el Map entero para que Vue detecte el cambio y repinte.
+    manejarActualizacionEstado(datos) {
+      var gameId = datos.gameId;
+      var status = datos.status;
+
+      var mapa = new Map(this.statuses);
       if (status) {
-        map.set(gameId, status);
+        mapa.set(gameId, status);
       } else {
-        map.delete(gameId);
+        mapa.delete(gameId);
       }
-      this.statuses = map;
+      this.statuses = mapa;
     },
 
-    async initCheckFavorite(gameId) {
+    // Al cargar la lista de juegos pregunta uno a uno si ya son favoritos
+    // del usuario actual. Si lo es, lo metemos en el Set para que la card
+    // muestre el corazon lleno.
+    async comprobarFavoritoInicial(gameId) {
       try {
-        const data = await checkFavorite(gameId);
+        var data = await consultarSiEsFavorito(gameId);
         if (data.is_favorite) {
           this.favorites.add(gameId);
         }
       } catch (error) {
-        console.error(`Error verificando favorito ${gameId}:`, error);
+        console.error('Error verificando favorito ' + gameId + ':', error);
       }
     },
 
-    async toggleFavorite(gameId) {
-      const wasFavorite = this.favorites.has(gameId);
+    // Alterna el estado favorito de un juego. Optimista: cambia el Set
+    // antes de saber si el backend acepto el cambio, y muestra notificacion.
+    async alternarFavorito(gameId) {
+
+      var eraFavorito = this.favorites.has(gameId);
+
       try {
-        if (wasFavorite) {
-          await removeTOFavorite(gameId);
+        if (eraFavorito) {
+          await quitarDeFavoritos(gameId);
           this.favorites.delete(gameId);
           notificaciones.success("Game removed from your favorites.", { title: "Favorite removed" });
         } else {
-          await addTOFavorite(gameId);
+          await agregarAFavoritos(gameId);
           this.favorites.add(gameId);
           notificaciones.success("Game added to your favorites.", { title: "Favorite added" });
         }
       } catch (error) {
-        console.error("Error al cambiar favorito:", error);
-        notificaciones.error(
-          wasFavorite
-            ? "We couldn't remove the game from favorites."
-            : "We couldn't add the game to favorites.",
-          { title: "Favorites error" }
-        );
+        console.error('Error al cambiar favorito:', error);
+
+        var mensaje = "We couldn't add the game to favorites.";
+        if (eraFavorito) {
+          mensaje = "We couldn't remove the game from favorites.";
+        }
+        notificaciones.error(mensaje, { title: "Favorites error" });
       }
     },
 
-    goToDetail(gameId) {
-      this.$router.push(`/game/${gameId}`);
+    // Navega a la pagina de detalle del juego.
+    irADetalle(gameId) {
+      this.$router.push('/game/' + gameId);
     },
 
-    // scrollCarousel(dir) {
-    //   const track = this.$refs.carouselTrack;
-    //   if (track) track.scrollBy({ left: dir * 300, behavior: 'smooth' });
-    // },
-
-    metacriticColorClass(score) {
-      if (!score) return 'rank-score--none';
-      if (score >= 75) return 'rank-score--green';
-      if (score >= 50) return 'rank-score--yellow';
+    // Devuelve la clase CSS de color para la nota de Metacritic.
+    // Verde = 75+, amarillo = 50-74, rojo = menor, gris = sin nota.
+    claseColorMetacritic(score) {
+      if (!score) {
+        return 'rank-score--none';
+      }
+      if (score >= 75) {
+        return 'rank-score--green';
+      }
+      if (score >= 50) {
+        return 'rank-score--yellow';
+      }
       return 'rank-score--red';
     },
 
-    goToLogin() {
-      const token = localStorage.getItem("token")
+    // Boton del hero para usuarios no logueados: si por algun motivo ya
+    // tienen token guardado los llevamos al catalogo; si no, al login.
+    irALogin() {
+      var token = localStorage.getItem("token");
       if (token) {
         this.$router.push('/content/overview');
       } else {
@@ -163,26 +241,28 @@ export default {
       }
     },
 
-
-    goToRegister() {
+    irARegistro() {
       this.$router.push("/register");
     },
 
-    goToExplore() {
+    irAExplorar() {
       this.$router.push('/content/overview');
     },
 
-    scrollToReleases() {
-      const element = document.getElementById('proximos-section');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+    // Boton "Upcoming releases" del hero: hace scroll a la seccion
+    // correspondiente sin recargar la pagina.
+    desplazarALanzamientos() {
+      var elemento = document.getElementById('proximos-section');
+      if (elemento) {
+        elemento.scrollIntoView({ behavior: 'smooth' });
       }
     }
   },
+
   computed: {
+    // Lo exponemos como computed para usarlo dentro del template.
     estadoAutenticacion() {
       return estadoAutenticacion;
     }
   }
-}
-
+};

@@ -1,15 +1,20 @@
-import { createApp } from "vue"
-import App from "./base/App.vue"
-import router from "./router/index.js"
-import 'primeicons/primeicons.css'
-import "./style.css"
+// Punto de entrada de la app Vue.
+// Aqui se monta el componente raiz, se registra el router y los plugins
+// que necesita la app antes de pintar nada en el navegador.
 
-import PrimeVue from "primevue/config"
+import { createApp } from "vue";
+import App from "./base/App.vue";
+import router from "./router/index.js";
+import PrimeVue from "primevue/config";
 
-const app = createApp(App)
+// Estilos globales: iconos de PrimeIcons y nuestra hoja de estilos base.
+import 'primeicons/primeicons.css';
+import "./style.css";
 
-app.use(router)
 
-app.use(PrimeVue)
+const app = createApp(App);
 
-app.mount("#app")
+app.use(router);
+app.use(PrimeVue);
+
+app.mount("#app");

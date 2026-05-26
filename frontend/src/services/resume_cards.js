@@ -1,19 +1,34 @@
 import api from './api';
 
-export async function getCatalogGames(page = 1, perPage = 20) {
-    const response = await api.get('/content/catalog', {
-        params: { page, per_page: perPage }
+// Pide al backend la pagina del catalogo general de juegos.
+// Se usa para llenar las cards del listado principal.
+export async function obtenerJuegosDelCatalogo(pagina, porPagina) {
+    if (!pagina) {
+        pagina = 1;
+    }
+    if (!porPagina) {
+        porPagina = 20;
+    }
+
+    const respuesta = await api.get('/content/catalog', {
+        params: {
+            page: pagina,
+            per_page: porPagina
+        }
     });
-    return response.data;
+    return respuesta.data;
 }
 
 
-export async function getHeroVideo() {
+// Pide al backend el video destacado que se muestra en el hero del Home.
+// Si el backend responde 404 (todavia no hay video) devolvemos null
+// para que el componente sepa que debe ocultar la seccion.
+export async function obtenerVideoDestacado() {
     try {
-        const response = await api.get('/content/hero-video');
-        return response.data;
+        const respuesta = await api.get('/content/hero-video');
+        return respuesta.data;
     } catch (error) {
-        if (error.response?.status === 404) {
+        if (error.response && error.response.status === 404) {
             return null;
         }
         console.error('Error obteniendo video del hero:', error);

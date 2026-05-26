@@ -235,7 +235,7 @@
                 v-for="item in coleccionFiltrada"
                 :key="item.id_status"
                 class="coleccion-item"
-                @click="goToDetail(item.game.id)"
+                @click="irADetalle(item.game.id)"
               >
                 <div class="coleccion-item-thumb">
                   <img v-if="item.game.imge_url" :src="item.game.imge_url" :alt="item.game.name" />
@@ -252,7 +252,7 @@
                 <button
                   class="coleccion-item-fav"
                   :class="{ 'is-fav': favoritosIds.has(item.game.id), 'is-loading': favLoadingId === item.game.id }"
-                  @click.stop="toggleFavoritoColeccion(item.game.id)"
+                  @click.stop="alternarFavoritoColeccion(item.game.id)"
                   :title="favoritosIds.has(item.game.id) ? 'Remove from favorites' : 'Add to favorites'"
                 >
                   <i v-if="favLoadingId === item.game.id" class="pi pi-spin pi-spinner"></i>
@@ -295,9 +295,9 @@
                 removable
                 :is-loading="remover === fav.id"
                 :status="statuses.get(fav.id) || null"
-                @click="goToDetail(fav.id)"
+                @click="irADetalle(fav.id)"
                 @action="quitarFavorito"
-                @update:status="handleStatusUpdate"
+                @update:status="manejarActualizacionEstado"
               />
             </div>
 

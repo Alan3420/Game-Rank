@@ -1,22 +1,32 @@
 import api from "./api";
 
-export const addTOFavorite = async (gameID) => {
+// Marca el juego indicado como favorito del usuario actual.
+// Si no hay token en localStorage abortamos sin pegarle al backend.
+export const agregarAFavoritos = async (idJuego) => {
     try {
         const token = localStorage.getItem("token");
         if (!token) {
             console.error("No se encontró el token de autenticación.");
             return;
         }
-        const response = await api.post(`/favorite/add`, { id_game: gameID })
 
-        return response.data;
-    }
-    catch (error) {
-        console.error(error.response.data.message);
+        const respuesta = await api.post('/favorite/add', {
+            id_game: idJuego
+        });
+
+        return respuesta.data;
+    } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+            console.error(error.response.data.message);
+        } else {
+            console.error(error);
+        }
     }
 }
 
-export const removeTOFavorite = async (gameID) => {
+// Quita el juego de la lista de favoritos del usuario.
+// Relanzamos el error para que la pantalla pueda revertir el icono si falla.
+export const quitarDeFavoritos = async (idJuego) => {
     try {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -24,20 +34,26 @@ export const removeTOFavorite = async (gameID) => {
             return;
         }
 
-        const response = await api.delete('/favorite/remove',
-            {
-                data: { id_game: gameID }
-            }
-        );
+        const respuesta = await api.delete('/favorite/remove', {
+            data: { id_game: idJuego }
+        });
 
-        return response.data;
+        return respuesta.data;
     } catch (error) {
-        console.error("Error al eliminar favorito:", error.response?.data?.message || error.message);
+        var mensaje = "";
+        if (error.response && error.response.data && error.response.data.message) {
+            mensaje = error.response.data.message;
+        } else {
+            mensaje = error.message;
+        }
+        console.error("Error al eliminar favorito:", mensaje);
         throw error;
     }
 }
 
-export const checkFavorite = async (gameID) => {
+// Pregunta al backend si el juego ya esta marcado como favorito por el usuario.
+// El componente usa este dato para pintar el corazon lleno o vacio.
+export const consultarSiEsFavorito = async (idJuego) => {
     try {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -45,28 +61,34 @@ export const checkFavorite = async (gameID) => {
             return;
         }
 
-        const response = await api.get(`/favorite/check/${gameID}`);
-        return response.data;
-    }
-    catch (error) {
-        console.error(error.response.data.message);
+        const respuesta = await api.get(`/favorite/check/${idJuego}`);
+        return respuesta.data;
+    } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+            console.error(error.response.data.message);
+        } else {
+            console.error(error);
+        }
     }
 }
 
-export const list_favorites = async () => {
-
+// Devuelve la lista completa de favoritos del usuario para pintarlos
+// en la pantalla de perfil.
+export const obtenerListaDeFavoritos = async () => {
     try {
         const token = localStorage.getItem("token");
-        
         if (!token) {
             console.error("No se encontró el token de autenticación.");
             return;
         }
 
-        const response = await api.get(`/favorite/listFav`);
-        return response.data;
-    }
-    catch (error) {
-        console.error(error.response.data.message);
+        const respuesta = await api.get('/favorite/listFav');
+        return respuesta.data;
+    } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+            console.error(error.response.data.message);
+        } else {
+            console.error(error);
+        }
     }
 }

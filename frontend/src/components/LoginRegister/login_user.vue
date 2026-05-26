@@ -6,7 +6,7 @@
         <p class="login-subtitle">Sign in to access your account and explore the best games</p>
       </div>
 
-      <form @submit.prevent="handleLogin" class="login-form">
+      <form @submit.prevent="manejarInicioSesion" class="login-form">
         <div class="form-group">
           <label for="email" class="form-label">
             Email Address
@@ -42,7 +42,7 @@
           </div>
         </div>
 
-        <button type="submit" :disabled="loading || !isFormValid" class="btn btn-primary">
+        <button type="submit" :disabled="loading || !formularioValido" class="btn btn-primary">
           <span :style="{ visibility: loading ? 'hidden' : 'visible' }">Sign In</span>
           <span v-if="loading" class="dots-loader">
             <span></span>

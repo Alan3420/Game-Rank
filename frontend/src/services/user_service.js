@@ -1,73 +1,94 @@
 import api from "./api";
 
-export async function login(email, passwd) {
-    const response = await api.post("/user/login", {
+// Manda credenciales al backend y devuelve los datos del usuario + token.
+// Usamos el nombre "autenticarUsuario" para no chocar con el metodo
+// "iniciarSesion" que vive dentro del store de autenticacion.
+export async function autenticarUsuario(email, contrasena) {
+    const respuesta = await api.post("/user/login", {
         email: email,
-        password: passwd
+        password: contrasena
     });
-    return response.data;
-
+    return respuesta.data;
 }
 
-export async function register(name, last_name, nickname, email, passwd) {
-    const response = await api.post("/user/register", {
-        name: name,
-        last_name: last_name,
+// Crea una cuenta nueva con los datos del formulario de registro.
+export async function registrarUsuario(nombre, apellido, nickname, email, contrasena) {
+    const respuesta = await api.post("/user/register", {
+        name: nombre,
+        last_name: apellido,
         nickname: nickname,
         email: email,
-        password: passwd
+        password: contrasena
     });
-
-    return response.data;
+    return respuesta.data;
 }
 
-export async function getListUsers() {
-    const response = await api.get("/settings/options");
-    return response.data;
+// Devuelve la lista de usuarios para el panel de admin.
+export async function obtenerListaDeUsuarios() {
+    const respuesta = await api.get("/settings/options");
+    return respuesta.data;
 }
 
-export async function changePassword(contraseña_actual, contraseña_nueva) {
-    const response = await api.put("/settings/change-password", {
-        current_password: contraseña_actual,
-        new_password: contraseña_nueva
+// Cambia la contrasena del usuario actual. Manda la actual + la nueva,
+// el backend valida que la actual sea correcta.
+export async function cambiarContrasena(contrasenaActual, contrasenaNueva) {
+    const respuesta = await api.put("/settings/change-password", {
+        current_password: contrasenaActual,
+        new_password: contrasenaNueva
     });
-    return response.data;
+    return respuesta.data;
 }
 
-export async function changeUserRole(id_user, new_role) {
-    const response = await api.put("/settings/change-role", {
-        id_user: id_user,
-        new_role: new_role
+// Cambia el rol (user / admin) de un usuario concreto. Solo admin puede usarlo.
+export async function cambiarRolDeUsuario(idUsuario, nuevoRol) {
+    const respuesta = await api.put("/settings/change-role", {
+        id_user: idUsuario,
+        new_role: nuevoRol
     });
-    return response.data;
+    return respuesta.data;
 }
 
-export async function updateUser(id_user, datos) {
-    const response = await api.put("/settings/options", {
-        id_user: id_user,
-        ...datos
+// Actualiza los datos editables de un usuario (nombre, nickname, etc.).
+// "datos" es un objeto plano con los campos a modificar.
+export async function actualizarUsuario(idUsuario, datos) {
+    var cuerpo = { id_user: idUsuario };
+
+    // Copiamos campo por campo en vez de hacer spread, para que se vea
+    // claramente que el id va aparte y los demas campos se mandan tal cual.
+    for (var clave in datos) {
+        if (Object.prototype.hasOwnProperty.call(datos, clave)) {
+            cuerpo[clave] = datos[clave];
+        }
+    }
+
+    const respuesta = await api.put("/settings/options", cuerpo);
+    return respuesta.data;
+}
+
+// Borra la cuenta de un usuario por id. Lo usa el admin.
+export async function eliminarUsuario(idUsuario) {
+    const respuesta = await api.delete("/settings/options", {
+        data: { id_user: idUsuario }
     });
-    return response.data;
+    return respuesta.data;
 }
 
-export async function deleteUser(id_user) {
-    const response = await api.delete("/settings/options", {
-        data: { id_user: id_user }
-    });
-    return response.data;
+// El usuario actual pide borrar su propia cuenta.
+export async function eliminarMiCuenta() {
+    const respuesta = await api.delete("/settings/account");
+    return respuesta.data;
 }
 
-export async function deleteOwnAccount() {
-    const response = await api.delete("/settings/account");
-    return response.data;
+// Devuelve los datos del usuario actual usando el token guardado.
+// Se llama al iniciar la app para restaurar la sesion.
+export async function obtenerMiUsuario() {
+    const respuesta = await api.get("/user/me");
+    return respuesta.data;
 }
 
-export async function getMe() {
-    const response = await api.get("/user/me");
-    return response.data;
-}
-
-export async function getEstadisticasUsuario() {
-    const response = await api.get("/settings/stats");
-    return response.data;
+// Devuelve las estadisticas del usuario (juegos calificados, favoritos, etc.)
+// para mostrarlas en el perfil.
+export async function obtenerEstadisticasUsuario() {
+    const respuesta = await api.get("/settings/stats");
+    return respuesta.data;
 }

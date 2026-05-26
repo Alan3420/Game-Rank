@@ -1,13 +1,25 @@
 import api from './api';
 
-export async function getFutureReleases(page = 1, per_page = 10) {
+// Trae desde el backend la lista paginada de juegos cuyo lanzamiento todavia
+// no ha ocurrido, para mostrarlos en la seccion de proximos lanzamientos.
+export async function obtenerProximosLanzamientos(pagina, porPagina) {
+    if (!pagina) {
+        pagina = 1;
+    }
+    if (!porPagina) {
+        porPagina = 10;
+    }
+
     try {
-        const response = await api.get('/content/release', {
-            params: { page, per_page }
-        })
-        return response.data
+        const respuesta = await api.get('/content/release', {
+            params: {
+                page: pagina,
+                per_page: porPagina
+            }
+        });
+        return respuesta.data;
     } catch (error) {
-        console.error(error)
-        throw error
+        console.error(error);
+        throw error;
     }
 }

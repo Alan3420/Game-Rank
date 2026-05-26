@@ -31,7 +31,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
-import { setGameStatus, removeGameStatus } from '../../services/user_game_status.js';
+import { establecerEstadoDeJuego, eliminarEstadoDeJuego } from '../../services/user_game_status.js';
 import { notificaciones } from '../../store/notificaciones.js';
 
 const props = defineProps({
@@ -65,7 +65,7 @@ async function handleSelect(status) {
     }
     loading.value = true;
     try {
-        await setGameStatus(props.gameId, status);
+        await establecerEstadoDeJuego(props.gameId, status);
         emit('update:status', { gameId: props.gameId, status });
         notificaciones.success(`Status updated to "${STATUS_META[status].label}".`, { title: 'Status saved' });
         emit('close');
@@ -80,7 +80,7 @@ async function handleRemove() {
     if (loading.value) return;
     loading.value = true;
     try {
-        await removeGameStatus(props.gameId);
+        await eliminarEstadoDeJuego(props.gameId);
         emit('update:status', { gameId: props.gameId, status: null });
         notificaciones.success('Status removed.', { title: 'Status removed' });
         emit('close');
