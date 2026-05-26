@@ -2,6 +2,13 @@ from app.repositories import user_repo
 from app.models.User import User
 import re
 
+
+# Servicio que centraliza las validaciones y la logica de negocio de los
+# usuarios. Las queries a la BD viven en user_repo.
+
+
+# Lista blanca de dominios de correo aceptados. La replicamos en el frontend
+# para que el usuario tenga el mismo aviso, pero la validacion seria vive aqui.
 DOMINIOS_PERMITIDOS = {
     "gmail.com", "hotmail.com", "hotmail.es",
     "outlook.com", "outlook.es",
@@ -9,171 +16,190 @@ DOMINIOS_PERMITIDOS = {
     "icloud.com", "live.com",
 }
 
-_NICKNAME_RE = re.compile(r'^[a-zA-Z0-9_]{3,30}$')
+# Expresion regular para nicknames: 3 a 30 caracteres, letras, numeros y
+# guion bajo. Misma regla que el frontend.
+_PATRON_NICKNAME = re.compile(r'^[a-zA-Z0-9_]{3,30}$')
+
 
 def _dominio_valido(email: str) -> bool:
+    # Comprueba que el email tenga formato "algo@dominio" y que el dominio
+    # este en la lista blanca.
     partes = email.split("@")
-    return len(partes) == 2 and partes[1].lower() in DOMINIOS_PERMITIDOS
+    if len(partes) != 2:
+        return False
+    if partes[1].lower() in DOMINIOS_PERMITIDOS:
+        return True
+    return False
+
 
 def _nickname_valido(nickname: str) -> bool:
-    return bool(_NICKNAME_RE.match(nickname))
+    if _PATRON_NICKNAME.match(nickname):
+        return True
+    return False
 
 
-def user_authentication(email, passwd) -> User |None:
+def autenticar_usuario(email, contrasena) -> User | None:
+    # Busca al usuario por email y comprueba la contrasena con bcrypt.
+    # Devuelve el usuario si las credenciales son correctas, None si no.
+    usuario = user_repo.obtener_usuario_por_email(email)
 
-    user = user_repo.get_user_by_email(email)
+    if usuario and usuario.check_password(password=contrasena):
+        return usuario
 
-    if user and user.check_password(password=passwd):
-        return user
-    
     return None
 
 
-def user_registration(name, last_name, nickname, email, passwd) -> User | str:
+def registrar_usuario(nombre, apellido, nickname, email, contrasena) -> User | str:
+    # Valida todos los campos uno a uno y, si todo es correcto, crea el
+    # usuario. Si algo falla devuelve un string con el mensaje de error
+    # (para que el route lo traduzca a una respuesta 409).
 
-    try:
-        if not name or len(name) < 1 or len(name) > 50:
-            return "El nombre debe tener entre 1 y 50 caracteres"
+    if not nombre or len(nombre) < 1 or len(nombre) > 50:
+        return "El nombre debe tener entre 1 y 50 caracteres"
 
-        if not last_name or len(last_name) < 1 or len(last_name) > 50:
-            return "El apellido debe tener entre 1 y 50 caracteres"
+    if not apellido or len(apellido) < 1 or len(apellido) > 50:
+        return "El apellido debe tener entre 1 y 50 caracteres"
 
-        if not nickname or not _nickname_valido(nickname):
+    if not nickname or not _nickname_valido(nickname):
+        return "El nickname debe tener entre 3 y 30 caracteres y solo puede contener letras, números y guiones bajos"
+
+    if not email or len(email) > 100:
+        return "El email debe tener un máximo de 100 caracteres"
+
+    if not _dominio_valido(email):
+        return "Solo se aceptan correos de Gmail, Hotmail, Outlook, Yahoo o iCloud"
+
+    if not contrasena or len(contrasena) < 8:
+        return "La contraseña debe tener un mínimo de 8 caracteres"
+
+    # Comprobamos unicidad de nickname y email antes de crear.
+    if user_repo.obtener_usuario_por_nickname(nickname) is not None:
+        return "Ese nickname ya está en uso"
+
+    if user_repo.obtener_usuario_por_email(email) is not None:
+        return "Existe un usuario registrado con ese email"
+
+    nuevo_usuario = user_repo.crear_usuario(
+        nombre=nombre,
+        apellido=apellido,
+        nickname=nickname,
+        email=email,
+        contrasena=contrasena
+    )
+
+    return nuevo_usuario
+
+
+def obtener_lista_de_usuarios(excluir_id_usuario=None) -> list[User]:
+    # Solo el admin la usa. Recibe el id del propio admin para que no
+    # aparezca en la lista (por convencion del panel).
+    return user_repo.obtener_todos_los_usuarios(excluir_id_usuario=excluir_id_usuario)
+
+
+def actualizar_usuario(id_usuario, nombre, apellido, nickname, email, contrasena) -> User | str:
+    # Reaplicamos las mismas reglas de validacion del registro, pero
+    # adaptadas: aqui los campos son opcionales (solo se valida lo que
+    # llega con valor).
+
+    usuario = user_repo.obtener_usuario_por_id(id_usuario)
+
+    if not usuario:
+        return "Usuario no encontrado"
+
+    if nombre and (len(nombre) < 1 or len(nombre) > 50):
+        return "El nombre debe tener entre 1 y 50 caracteres"
+
+    if apellido and (len(apellido) < 1 or len(apellido) > 50):
+        return "El apellido debe tener entre 1 y 50 caracteres"
+
+    if nickname:
+        if not _nickname_valido(nickname):
             return "El nickname debe tener entre 3 y 30 caracteres y solo puede contener letras, números y guiones bajos"
+        # Solo comprobamos unicidad si el nickname cambia (en mayus/minus
+        # del usuario actual no cuenta como "cambio").
+        nickname_actual = ""
+        if usuario.nickname:
+            nickname_actual = usuario.nickname.lower()
+        if nickname.lower() != nickname_actual:
+            if user_repo.obtener_usuario_por_nickname(nickname):
+                return "Ese nickname ya está en uso"
 
-        if not email or len(email) > 100:
+    if email:
+        if len(email) > 100:
             return "El email debe tener un máximo de 100 caracteres"
-
         if not _dominio_valido(email):
             return "Solo se aceptan correos de Gmail, Hotmail, Outlook, Yahoo o iCloud"
+        if email != usuario.email:
+            if user_repo.obtener_usuario_por_email(email):
+                return "El correo electrónico ya está en uso por otro usuario"
 
-        if not passwd or len(passwd) < 8:
-            return "La contraseña debe tener un mínimo de 8 caracteres"
+    if contrasena and len(contrasena) < 8:
+        return "La contraseña debe tener un mínimo de 8 caracteres"
 
-        if user_repo.get_user_by_nickname(nickname) is not None:
-            return "Ese nickname ya está en uso"
+    usuario_actualizado = user_repo.actualizar_usuario(
+        id_usuario=id_usuario,
+        nombre=nombre,
+        apellido=apellido,
+        nickname=nickname,
+        email=email,
+        contrasena=contrasena
+    )
 
-        user_exist = user_repo.get_user_by_email(email)
+    return usuario_actualizado
 
-        if user_exist is not None:
-            return "Existe un usuario registrado con ese email"
 
-        new_user = user_repo.create_user(username=name, last_name=last_name, nickname=nickname, email=email, password=passwd)
+def eliminar_usuario(id_usuario) -> bool | str:
+    usuario = user_repo.obtener_usuario_por_id(id_usuario)
 
-        return new_user
-        
-        
-    
-    except Exception:
-        raise Exception("Error en el registro del usuario")
-    
-#Recordatorio: esta funcion solo la podrá usar el usuario con rol "ADMIN"
-def get_list_users(exclude_user_id=None) -> list[User]:
+    if not usuario:
+        return "Usuario no encontrado"
 
-    try:
-        list_users = user_repo.get_all_users(exclude_user_id=exclude_user_id)
+    resultado = user_repo.eliminar_usuario(id_usuario)
+    return resultado
 
-        return list_users
 
-    except Exception:
-        raise Exception("Error al obtener la lista de usuarios")
+def cambiar_rol(id_usuario, nuevo_rol) -> User | str:
+    # Solo el admin invoca esta funcion (lo refuerza el decorador
+    # @admin_required de la ruta).
+    usuario = user_repo.obtener_usuario_por_id(id_usuario)
 
-def user_update(user_id, name, last_name, nickname, email, passwd) -> User | str:
+    if not usuario:
+        return "Usuario no encontrado"
 
-    try:
-        user = user_repo.get_user_by_id(user_id)
+    usuario_actualizado = user_repo.actualizar_rol_de_usuario(
+        id_usuario=id_usuario,
+        nuevo_rol=nuevo_rol
+    )
 
-        if not user:
-            return "Usuario no encontrado"
+    return usuario_actualizado
 
-        if name and (len(name) < 1 or len(name) > 50):
-            return "El nombre debe tener entre 1 y 50 caracteres"
 
-        if last_name and (len(last_name) < 1 or len(last_name) > 50):
-            return "El apellido debe tener entre 1 y 50 caracteres"
+def obtener_usuario_por_id(id_usuario):
+    # Wrapper para que las rutas no tengan que importar el repo directamente.
+    return user_repo.obtener_usuario_por_id(id_usuario=id_usuario)
 
-        if nickname:
-            if not _nickname_valido(nickname):
-                return "El nickname debe tener entre 3 y 30 caracteres y solo puede contener letras, números y guiones bajos"
-            if nickname.lower() != (user.nickname or "").lower():
-                nick_exists = user_repo.get_user_by_nickname(nickname)
-                if nick_exists:
-                    return "Ese nickname ya está en uso"
 
-        if email:
-            if len(email) > 100:
-                return "El email debe tener un máximo de 100 caracteres"
-            if not _dominio_valido(email):
-                return "Solo se aceptan correos de Gmail, Hotmail, Outlook, Yahoo o iCloud"
-            if email != user.email:
-                email_exists = user_repo.get_user_by_email(email)
-                if email_exists:
-                    return "El correo electrónico ya está en uso por otro usuario"
+def cambiar_contrasena(id_usuario, contrasena_actual, contrasena_nueva) -> User | str:
+    usuario = user_repo.obtener_usuario_por_id(id_usuario)
 
-        if passwd and len(passwd) < 8:
-            return "La contraseña debe tener un mínimo de 8 caracteres"
+    if not usuario:
+        return "Usuario no encontrado"
 
-        updated_user = user_repo.update_user(user_id=user_id, username=name, last_name=last_name, nickname=nickname, email=email, password=passwd)
+    # Comprobamos que la contrasena actual sea la correcta antes de cambiar.
+    # Si no, podria pasar que alguien con la sesion abierta cambiara la
+    # contrasena sin conocer la original.
+    if not usuario.check_password(contrasena_actual):
+        return "La contraseña actual es incorrecta"
 
-        return updated_user
-    
-    except Exception:
-        raise Exception("Error al actualizar el usuario")
-    
-def user_delete(user_id) -> bool | str:
+    if len(contrasena_nueva) < 8:
+        return "La contraseña debe tener un mínimo de 8 caracteres"
 
-    try:
-        user = user_repo.get_user_by_id(user_id)
+    if contrasena_actual == contrasena_nueva:
+        return "La nueva contraseña debe ser diferente a la actual"
 
-        if not user:
-            return "Usuario no encontrado"
+    usuario_actualizado = user_repo.actualizar_usuario(
+        id_usuario=id_usuario,
+        contrasena=contrasena_nueva
+    )
 
-        resultado_bool = user_repo.delete_user(user_id)
-
-        return resultado_bool
-    
-    except Exception:
-        raise Exception("Error al eliminar el usuario")
-
-#Recordatorio: lo mismo en esta funcion solo el admin puede cambiar los roles a los usuarios que quiera.
-def change_role(user_id, new_role) -> User | str:
-
-    try:
-        user = user_repo.get_user_by_id(user_id)
-
-        if not user:
-            return "Usuario no encontrado"
-
-        updated_user = user_repo.update_user_role(user_id=user_id, new_role=new_role)
-
-        return updated_user
-    
-    except Exception:
-        raise Exception("Error al cambiar el rol del usuario")
-
-def get_user_by_id(id_user):
-    return user_repo.get_user_by_id(user_id=id_user)
-
-def change_password(user_id, contraseña_actual, contraseña_nueva) -> User | str:
-    try:
-        user = user_repo.get_user_by_id(user_id)
-
-        if not user:
-            return "Usuario no encontrado"
-
-        if not user.check_password(contraseña_actual):
-            return "La contraseña actual es incorrecta"
-
-        if len(contraseña_nueva) < 8:
-            return "La contraseña debe tener un mínimo de 8 caracteres"
-
-        if contraseña_actual == contraseña_nueva:
-            return "La nueva contraseña debe ser diferente a la actual"
-
-        usuario_actualizado = user_repo.update_user(user_id=user_id, password=contraseña_nueva)
-
-        return usuario_actualizado
-
-    except Exception:
-        raise Exception("Error al cambiar la contraseña")
-
+    return usuario_actualizado

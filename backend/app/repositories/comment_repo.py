@@ -3,68 +3,102 @@ from app.database.db import db
 from datetime import date
 from sqlalchemy import desc
 
-def get_all_comments() -> list[Comment]:
-    return Comment.query.order_by(desc(Comment.date_of_comment), desc(Comment.id_comment)).all()
 
-def get_comment_by_id(comment_id) -> Comment:
+# Capa de acceso a datos para la tabla "comments".
+# Devuelve modelos sin transformar; los servicios deciden que campos
+# exponer al exterior.
 
-    return Comment.query.filter_by(id_comment = comment_id).first()
 
-def get_comments_by_game(id_game):
-    return Comment.query.filter_by(id_videogame=id_game).all()
+def obtener_todos_los_comentarios() -> list[Comment]:
+    # Ordenamos primero por fecha y luego por id para que los empates
+    # de fecha (mismo dia) salgan en orden de creacion, mas reciente primero.
+    return Comment.query.order_by(
+        desc(Comment.date_of_comment),
+        desc(Comment.id_comment)
+    ).all()
 
-def get_comments_by_game_paginated(id_game, limit, offset):
-    total = Comment.query.filter_by(id_videogame=id_game).count()
-    comments = (Comment.query
-                .filter_by(id_videogame=id_game)
-                .order_by(desc(Comment.date_of_comment), desc(Comment.id_comment))
-                .limit(limit)
-                .offset(offset)
-                .all())
-    return comments, total
 
-def get_comments_by_user(id_user):
-    return Comment.query.filter_by(id_user=id_user).all()
+def obtener_comentario_por_id(id_comentario) -> Comment:
+    return Comment.query.filter_by(id_comment=id_comentario).first()
 
-def create_comment(description, id_user, id_game):
-    comment = Comment(description=description, id_user=id_user, id_videogame=id_game)
-    db.session.add(comment)
+
+def obtener_comentarios_por_juego(id_juego):
+    return Comment.query.filter_by(id_videogame=id_juego).all()
+
+
+def obtener_comentarios_por_juego_paginados(id_juego, limite, desplazamiento):
+    # Devuelve la pagina de comentarios + el total para que el frontend
+    # pueda decidir si mostrar el boton "Load more".
+    total = Comment.query.filter_by(id_videogame=id_juego).count()
+
+    comentarios = (Comment.query
+                   .filter_by(id_videogame=id_juego)
+                   .order_by(desc(Comment.date_of_comment), desc(Comment.id_comment))
+                   .limit(limite)
+                   .offset(desplazamiento)
+                   .all())
+
+    return comentarios, total
+
+
+def obtener_comentarios_por_usuario(id_usuario):
+    return Comment.query.filter_by(id_user=id_usuario).all()
+
+
+def crear_comentario(descripcion, id_usuario, id_juego):
+    nuevo_comentario = Comment(
+        description=descripcion,
+        id_user=id_usuario,
+        id_videogame=id_juego
+    )
+    db.session.add(nuevo_comentario)
     db.session.commit()
-    return comment
+    return nuevo_comentario
 
-def update_comment(comment_id, description, user_id, es_admin=False) -> Comment:
+
+def actualizar_comentario(id_comentario, descripcion, id_usuario, es_admin=False) -> Comment:
+    # Si el que pide la actualizacion es admin, le permitimos editar
+    # cualquier comentario. Si no, solo puede editar el suyo (filtramos
+    # tambien por id_user para que la query no devuelva nada si intenta
+    # tocar uno ajeno).
     if es_admin:
-        comment = Comment.query.filter_by(id_comment=comment_id).first()
+        comentario = Comment.query.filter_by(id_comment=id_comentario).first()
     else:
-        comment = Comment.query.filter_by(
-            id_comment=comment_id,
-            id_user=user_id
+        comentario = Comment.query.filter_by(
+            id_comment=id_comentario,
+            id_user=id_usuario
         ).first()
 
-    if comment:
-        comment.description = description
-        comment.date_of_update = date.today()
+    if comentario:
+        comentario.description = descripcion
+        comentario.date_of_update = date.today()
         db.session.commit()
 
-    return comment
+    return comentario
 
-def delete_comment(comment_id, user_id, es_admin=False) -> bool:
+
+def eliminar_comentario(id_comentario, id_usuario, es_admin=False) -> bool:
+    # Misma logica de permisos que actualizar: admin puede borrar cualquiera,
+    # el usuario normal solo puede borrar el suyo.
     try:
         if es_admin:
-            comment = Comment.query.filter_by(id_comment=comment_id).first()
+            comentario = Comment.query.filter_by(id_comment=id_comentario).first()
         else:
-            comment = Comment.query.filter_by(
-                id_comment=comment_id,
-                id_user=user_id
+            comentario = Comment.query.filter_by(
+                id_comment=id_comentario,
+                id_user=id_usuario
             ).first()
 
-        if comment:
-            db.session.delete(comment)
+        if comentario:
+            db.session.delete(comentario)
             db.session.commit()
             return True
 
         return False
+
     except Exception as e:
+        # Hacemos rollback explicito para no dejar la sesion en un estado
+        # corrupto que afecte a la siguiente request.
         db.session.rollback()
-        print(f"Error en delete_comment: {e}")
+        print(f"Error en eliminar_comentario: {e}")
         raise e

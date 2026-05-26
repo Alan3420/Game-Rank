@@ -1,5 +1,18 @@
 from datetime import date
 
+
+# Script de carga de datos de prueba. Se ejecuta con "flask db-seed" y
+# llena la BD con 15 usuarios, 10 juegos populares y un conjunto de
+# favoritos, comentarios, calificaciones y estados de coleccion para
+# poder ver la app funcionando con datos realistas desde el primer minuto.
+#
+# El script primero LIMPIA los datos previos del seed (por email/id_juego),
+# asi se puede ejecutar varias veces sin acumular duplicados.
+
+
+# Lista de emails que pertenecen al seed. Se usan para identificar y
+# borrar los usuarios de prueba sin tocar usuarios reales que se hayan
+# registrado por la app.
 SEED_EMAILS = [
     "juan@gmail.com",   "maria@gmail.com",  "carlos@gmail.com", "ana@gmail.com",
     "luis@gmail.com",   "sofia@gmail.com",  "diego@gmail.com",  "laura@gmail.com",
@@ -7,10 +20,16 @@ SEED_EMAILS = [
     "raul@gmail.com",   "alba@gmail.com",   "ivan@gmail.com",
 ]
 
+# IDs de RAWG de los juegos que cargamos. Son juegos populares con datos
+# completos en la API para que el seed funcione sin depender de juegos
+# obscuros que RAWG podria haber quitado.
 SEED_GAME_IDS = [3328, 3498, 4062, 5679, 13536, 28, 41494, 58175, 326243, 27789]
 
 
 def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
+    # Recibimos las clases de modelo como parametros para evitar imports
+    # circulares en el momento del arranque. Se invoca desde main.py
+    # dentro del comando "db-seed".
     with app.app_context():
 
         # ── Limpiar datos previos del seed ──
