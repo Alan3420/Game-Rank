@@ -44,7 +44,7 @@
         <i class="pi pi-search"></i>
       </div>
       <h2>No Results</h2>
-      <p v-if="game_name">No games found matching "{{ game_name }}"{{ hasActiveFilters ? ' with the applied filters' : '' }}.</p>
+      <p v-if="game_name">No games found matching "{{ game_name }}"{{ tieneFiltrosActivos ? ' with the applied filters' : '' }}.</p>
       <p v-else>No games found with the applied filters.</p>
     </div>
 

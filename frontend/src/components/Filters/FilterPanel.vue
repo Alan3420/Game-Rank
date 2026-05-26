@@ -6,11 +6,11 @@
         <p class="filter-section-title">Sort by</p>
         <div class="filter-chips">
           <button
-            v-for="opt in orderingOptions"
+            v-for="opt in opcionesDeOrden"
             :key="opt.value"
             class="filter-chip"
-            :class="{ 'is-active': localOrdering === opt.value }"
-            @click="toggleOrdering(opt.value)"
+            :class="{ 'is-active': ordenLocal === opt.value }"
+            @click="alternarOrden(opt.value)"
           >
             <i class="pi" :class="opt.icon"></i>
             {{ opt.label }}
@@ -22,11 +22,11 @@
         <p class="filter-section-title">Genres</p>
         <div class="filter-chips">
           <button
-            v-for="genre in genreOptions"
+            v-for="genre in opcionesDeGenero"
             :key="genre.value"
             class="filter-chip"
-            :class="{ 'is-active': localGenres.includes(genre.value) }"
-            @click="toggleGenre(genre.value)"
+            :class="{ 'is-active': generosLocales.includes(genre.value) }"
+            @click="alternarGenero(genre.value)"
           >
             {{ genre.label }}
           </button>
@@ -37,11 +37,11 @@
         <p class="filter-section-title">Platforms</p>
         <div class="filter-chips">
           <button
-            v-for="plat in platformOptions"
+            v-for="plat in opcionesDePlataforma"
             :key="plat.value"
             class="filter-chip"
-            :class="{ 'is-active': localPlatforms.includes(plat.value) }"
-            @click="togglePlatform(plat.value)"
+            :class="{ 'is-active': plataformasLocales.includes(plat.value) }"
+            @click="alternarPlataforma(plat.value)"
           >
             <i v-if="plat.icon" class="pi" :class="plat.icon"></i>
             {{ plat.label }}
@@ -56,9 +56,9 @@
             <label>From</label>
             <input
               type="number"
-              v-model.number="localDateFrom"
+              v-model.number="fechaDesdeLocal"
               min="1980"
-              :max="currentYear"
+              :max="anioActual"
               placeholder="1980"
             />
           </div>
@@ -67,21 +67,21 @@
             <label>To</label>
             <input
               type="number"
-              v-model.number="localDateTo"
+              v-model.number="fechaHastaLocal"
               min="1980"
-              :max="currentYear"
-              :placeholder="String(currentYear)"
+              :max="anioActual"
+              :placeholder="String(anioActual)"
             />
           </div>
         </div>
       </div>
 
       <div class="filter-actions">
-        <button class="filter-btn-clear" @click="handleClear">
+        <button class="filter-btn-clear" @click="manejarLimpiar">
           <i class="pi pi-times"></i>
           Clear filters
         </button>
-        <button class="filter-btn-apply" @click="handleApply">
+        <button class="filter-btn-apply" @click="manejarAplicar">
           <i class="pi pi-check"></i>
           Apply filters
         </button>
@@ -92,24 +92,41 @@
 </template>
 
 <script>
+// Panel lateral con los filtros del catalogo (orden, generos, plataformas,
+// rango de anios). El componente solo mantiene el estado LOCAL mientras
+// el usuario va marcando opciones; cuando pulsa "Apply" emite el objeto
+// completo al padre con @apply, y este decide cuando recargar la lista.
+//
+// El panel no se cierra solo: el padre (contenido.vue) lo controla via
+// la prop "open".
 export default {
   name: 'FilterPanel',
+
   props: {
     open: {
       type: Boolean,
       default: false
     }
   },
+
   emits: ['apply', 'clear'],
+
   data() {
     return {
-      localOrdering: '',
-      localGenres: [],
-      localPlatforms: [],
-      localDateFrom: '',
-      localDateTo: '',
-      currentYear: new Date().getFullYear(),
-      orderingOptions: [
+      // Estado interno mientras el usuario configura los filtros.
+      // No se sincroniza al padre hasta pulsar "Apply".
+      ordenLocal: '',
+      generosLocales: [],
+      plataformasLocales: [],
+      fechaDesdeLocal: '',
+      fechaHastaLocal: '',
+
+      // Anio actual para limitar el input "To" y usarlo como placeholder.
+      anioActual: new Date().getFullYear(),
+
+      // Opciones disponibles del select de ordenacion (mapeadas al param
+      // que espera RAWG en su API).
+      opcionesDeOrden: [
         { value: '-rating', label: 'Top Rated', icon: 'pi-star-fill' },
         { value: '-released', label: 'Newest', icon: 'pi-calendar' },
         { value: 'released', label: 'Oldest', icon: 'pi-history' },
@@ -117,7 +134,10 @@ export default {
         { value: 'name', label: 'A–Z', icon: 'pi-sort-alpha-down' },
         { value: '-added', label: 'Popular', icon: 'pi-bolt' }
       ],
-      genreOptions: [
+
+      // Lista de generos disponibles. Los "value" son los slugs que usa
+      // RAWG; los "label" son los textos que ve el usuario en ingles.
+      opcionesDeGenero: [
         { value: 'action', label: 'Action' },
         { value: 'adventure', label: 'Adventure' },
         { value: 'role-playing-games-rpg', label: 'RPG' },
@@ -133,7 +153,9 @@ export default {
         { value: 'fighting', label: 'Fighting' },
         { value: 'platformer', label: 'Platformer' }
       ],
-      platformOptions: [
+
+      // Plataformas mas comunes. El "value" es el id numerico de RAWG.
+      opcionesDePlataforma: [
         { value: '4', label: 'PC', icon: 'pi-desktop' },
         { value: '187', label: 'PS5', icon: null },
         { value: '18', label: 'PS4', icon: null },
@@ -145,41 +167,79 @@ export default {
       ]
     };
   },
+
   methods: {
-    toggleOrdering(value) {
-      this.localOrdering = this.localOrdering === value ? '' : value;
-    },
-    toggleGenre(value) {
-      const idx = this.localGenres.indexOf(value);
-      if (idx === -1) {
-        this.localGenres.push(value);
+
+    // Selecciona el orden indicado. Si el usuario hace click en el orden
+    // que ya estaba activo, lo desactiva (toggle).
+    alternarOrden(valor) {
+      if (this.ordenLocal === valor) {
+        this.ordenLocal = '';
       } else {
-        this.localGenres.splice(idx, 1);
+        this.ordenLocal = valor;
       }
     },
-    togglePlatform(value) {
-      const idx = this.localPlatforms.indexOf(value);
-      if (idx === -1) {
-        this.localPlatforms.push(value);
+
+    // Anade o quita un genero de la seleccion local segun si ya estaba.
+    alternarGenero(valor) {
+      var indice = this.generosLocales.indexOf(valor);
+      if (indice === -1) {
+        this.generosLocales.push(valor);
       } else {
-        this.localPlatforms.splice(idx, 1);
+        this.generosLocales.splice(indice, 1);
       }
     },
-    handleApply() {
+
+    // Mismo patron que generos pero para plataformas.
+    alternarPlataforma(valor) {
+      var indice = this.plataformasLocales.indexOf(valor);
+      if (indice === -1) {
+        this.plataformasLocales.push(valor);
+      } else {
+        this.plataformasLocales.splice(indice, 1);
+      }
+    },
+
+    // Construye el objeto de filtros y lo emite al padre.
+    // Copiamos los arrays para que el padre no quede atado a nuestro estado interno.
+    manejarAplicar() {
+
+      var copiaGeneros = [];
+      for (var i = 0; i < this.generosLocales.length; i++) {
+        copiaGeneros.push(this.generosLocales[i]);
+      }
+
+      var copiaPlataformas = [];
+      for (var j = 0; j < this.plataformasLocales.length; j++) {
+        copiaPlataformas.push(this.plataformasLocales[j]);
+      }
+
+      var fechaDesde = '';
+      if (this.fechaDesdeLocal) {
+        fechaDesde = this.fechaDesdeLocal;
+      }
+
+      var fechaHasta = '';
+      if (this.fechaHastaLocal) {
+        fechaHasta = this.fechaHastaLocal;
+      }
+
       this.$emit('apply', {
-        ordering: this.localOrdering,
-        genres: [...this.localGenres],
-        platforms: [...this.localPlatforms],
-        dateFrom: this.localDateFrom || '',
-        dateTo: this.localDateTo || ''
+        ordering: this.ordenLocal,
+        genres: copiaGeneros,
+        platforms: copiaPlataformas,
+        dateFrom: fechaDesde,
+        dateTo: fechaHasta
       });
     },
-    handleClear() {
-      this.localOrdering = '';
-      this.localGenres = [];
-      this.localPlatforms = [];
-      this.localDateFrom = '';
-      this.localDateTo = '';
+
+    // Resetea el estado local y avisa al padre con @clear.
+    manejarLimpiar() {
+      this.ordenLocal = '';
+      this.generosLocales = [];
+      this.plataformasLocales = [];
+      this.fechaDesdeLocal = '';
+      this.fechaHastaLocal = '';
       this.$emit('clear');
     }
   }

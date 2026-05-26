@@ -1,9 +1,9 @@
 <template>
   <div
     class="game-card"
-    :class="{ 'has-dropdown': showDropdown }"
+    :class="{ 'has-dropdown': mostrarDropdown }"
     :style="{ '--card-index': index }"
-    @click="handleCardClick"
+    @click="manejarClicEnCard"
   >
     <!-- IMAGEN -->
     <div class="card-image">
@@ -11,7 +11,7 @@
       <div class="image-overlay"></div>
 
       <!-- Metacritic Badge -->
-      <div class="rating-badge" :class="game.metacritic ? metacriticClass(game.metacritic) : 'mc-na'">
+      <div class="rating-badge" :class="game.metacritic ? claseMetacritic(game.metacritic) : 'mc-na'">
         {{ game.metacritic ?? '—' }}
       </div>
 
@@ -38,15 +38,15 @@
           <i :class="isLoading ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
         </button>
 
-        <!-- Botón de estado -->
+        <!-- Boton de estado -->
         <button
           class="card-action-btn card-action-btn--status"
           :class="{ 'has-status': status }"
-          :style="status ? { color: statusMeta?.color } : {}"
-          @click.stop="showDropdown = !showDropdown"
+          :style="status ? { color: metaDelEstado?.color } : {}"
+          @click.stop="mostrarDropdown = !mostrarDropdown"
           title="Change game status"
         >
-          <i :class="'pi ' + (status ? statusMeta?.icon : 'pi-bookmark')"></i>
+          <i :class="'pi ' + (status ? metaDelEstado?.icon : 'pi-bookmark')"></i>
         </button>
       </div>
 
@@ -54,10 +54,10 @@
       <div
         v-if="status"
         class="status-badge"
-        :style="{ background: statusMeta?.solidBg, color: statusMeta?.solidText }"
+        :style="{ background: metaDelEstado?.solidBg, color: metaDelEstado?.solidText }"
       >
-        <i :class="'pi ' + statusMeta?.icon"></i>
-        <span>{{ statusMeta?.label }}</span>
+        <i :class="'pi ' + metaDelEstado?.icon"></i>
+        <span>{{ metaDelEstado?.label }}</span>
       </div>
     </div>
 
@@ -80,12 +80,12 @@
     </div>
 
     <!-- Dropdown de estado (fuera de card-image para no ser clipeado) -->
-    <div v-if="showDropdown" class="card-status-dropdown-wrap">
+    <div v-if="mostrarDropdown" class="card-status-dropdown-wrap">
       <GameStatusDropdown
         :game-id="game.id"
         :current-status="status"
-        @close="showDropdown = false"
-        @update:status="onStatusUpdate"
+        @close="mostrarDropdown = false"
+        @update:status="reenviarActualizacionEstado"
       />
     </div>
   </div>
@@ -96,6 +96,14 @@ import { ref, computed } from 'vue';
 import GameImage from '../Image/GameImage.vue';
 import GameStatusDropdown from './GameStatusDropdown.vue';
 import { STATUS_META } from '../../utils/statusMeta.js';
+
+// Card reutilizable que pinta un juego. La uso en el catalogo, en proximos
+// lanzamientos, en favoritos del perfil, en saga del detalle, etc.
+//
+// Emite tres eventos al padre:
+//   - "action": click en el boton de favorito (o de eliminar si removable).
+//   - "click":  click en cualquier parte de la card (para navegar al detalle).
+//   - "update:status": cuando se cambia el estado desde el dropdown interno.
 
 const emit = defineEmits(['action', 'click', 'update:status']);
 
@@ -108,25 +116,41 @@ const props = defineProps({
   status: { type: String, default: null }
 });
 
-const showDropdown = ref(false);
+// Estado local para abrir/cerrar el dropdown de estado.
+const mostrarDropdown = ref(false);
 
-const statusMeta = computed(() => props.status ? STATUS_META[props.status] : null);
+// Devuelve la meta (color, icono, etc.) del estado actual o null si no hay.
+const metaDelEstado = computed(function () {
+  if (props.status) {
+    return STATUS_META[props.status];
+  }
+  return null;
+});
 
-function metacriticClass(score) {
-  if (score >= 80) return 'mc-green';
-  if (score >= 50) return 'mc-yellow';
+// Devuelve la clase CSS del badge de Metacritic segun la nota.
+// Verde >=80, amarillo 50-79, rojo el resto.
+function claseMetacritic(score) {
+  if (score >= 80) {
+    return 'mc-green';
+  }
+  if (score >= 50) {
+    return 'mc-yellow';
+  }
   return 'mc-red';
 }
 
-function handleCardClick() {
-  if (showDropdown.value) {
-    showDropdown.value = false;
+// Si el dropdown estaba abierto cerramos sin navegar; si no, emitimos
+// "click" para que el componente padre navegue al detalle del juego.
+function manejarClicEnCard() {
+  if (mostrarDropdown.value) {
+    mostrarDropdown.value = false;
     return;
   }
   emit('click');
 }
 
-function onStatusUpdate(payload) {
+// Reenvia al padre el evento del dropdown de estado.
+function reenviarActualizacionEstado(payload) {
   emit('update:status', payload);
 }
 </script>

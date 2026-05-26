@@ -14,9 +14,9 @@
           <div class="banner-identity">
             <h1>{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</h1>
             <span v-if="estadoAutenticacion.usuario.nickname" class="banner-nickname">@{{ estadoAutenticacion.usuario.nickname }}</span>
-            <span class="badge" :class="{ 'badge-admin': isAdmin }">
-              <i :class="isAdmin ? 'pi pi-crown' : 'pi pi-shield'"></i>
-              {{ isAdmin ? 'Administrator' : 'User' }}
+            <span class="badge" :class="{ 'badge-admin': esAdministrador }">
+              <i :class="esAdministrador ? 'pi pi-crown' : 'pi pi-shield'"></i>
+              {{ esAdministrador ? 'Administrator' : 'User' }}
             </span>
           </div>
         </div>
@@ -159,7 +159,7 @@
           </div>
 
           <!-- Admin Panel -->
-          <div v-if="isAdmin" class="admin-panel">
+          <div v-if="esAdministrador" class="admin-panel">
             <div class="admin-header">
               <div class="admin-title-group">
                 <i class="pi pi-sliders-v"></i>

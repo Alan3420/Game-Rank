@@ -64,7 +64,7 @@ export default {
   computed: {
 
     // Marca al usuario actual como admin para mostrar/ocultar opciones.
-    isAdmin() {
+    esAdministrador() {
       if (!estadoAutenticacion.usuario) {
         return false;
       }
