@@ -172,10 +172,9 @@
             :game="game"
             :index="index"
             :is-favorite="favorites.has(game.id)"
-            :status="statuses.get(game.id) || null"
+            :can-change-status="false"
             @click="irADetalle(game.id)"
             @action="alternarFavorito"
-            @update:status="manejarActualizacionEstado"
         />
     </div>
 
@@ -183,6 +182,14 @@
         <i class="pi pi-inbox"></i>
         <p>No upcoming releases available.</p>
     </div>
+
+    <!-- Paginacion de proximos lanzamientos -->
+    <Pagination
+      v-if="!isFutureLoading"
+      :current-page="currentPageProximos"
+      :total-pages="totalPaginasProximos"
+      @update:current-page="cargarPaginaProximos"
+    />
 </section>
 
     <!-- Crea una cuenta nueva-->
@@ -205,10 +212,11 @@ import jsHome from "./script_home.js";
 import { estadoAutenticacion } from "../../store/autenticacion.js";
 import GameCard from "../Cards/GameCard.vue";
 import Loader from "../Loader/Loader.vue";
+import Pagination from "../Pagination/Pagination.vue";
 
 export default {
   name: 'GameDetail',
-  components: { GameCard, Loader },
+  components: { GameCard, Loader, Pagination },
   mixins: [jsHome]
 };
 </script>

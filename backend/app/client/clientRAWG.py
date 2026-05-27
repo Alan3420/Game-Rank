@@ -135,6 +135,8 @@ def get_game_movies(game_id):
 def get_future_releases(init_date, final_date, page=1, per_page=10):
     # Juegos con fecha de lanzamiento entre init_date y final_date,
     # ordenados por fecha de lanzamiento ascendente (los mas cercanos primero).
+    # Se devuelve el objeto completo (con count/next/previous) para que el
+    # caller pueda paginar igual que el catalogo.
     resultado = _peticion_con_cache("/games", {
         "dates": f"{init_date},{final_date}",
         "ordering": "released",
@@ -142,9 +144,7 @@ def get_future_releases(init_date, final_date, page=1, per_page=10):
         "page_size": per_page,
         "exclude_additions": "true"
     })
-    if resultado:
-        return resultado.get("results", [])
-    return []
+    return resultado or {}
 
 
 def get_games_by_ordering(ordering="-added", per_page=40):

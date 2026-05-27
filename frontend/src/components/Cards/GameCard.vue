@@ -40,6 +40,7 @@
 
         <!-- Boton de estado -->
         <button
+          v-if="canChangeStatus"
           class="card-action-btn card-action-btn--status"
           :class="{ 'has-status': status }"
           :style="status ? { color: metaDelEstado?.color } : {}"
@@ -52,7 +53,7 @@
 
       <!-- Badge de estado (siempre visible si existe) -->
       <div
-        v-if="status"
+        v-if="status && canChangeStatus"
         class="status-badge"
         :style="{ background: metaDelEstado?.solidBg, color: metaDelEstado?.solidText }"
       >
@@ -80,7 +81,7 @@
     </div>
 
     <!-- Dropdown de estado (fuera de card-image para no ser clipeado) -->
-    <div v-if="mostrarDropdown" class="card-status-dropdown-wrap">
+    <div v-if="mostrarDropdown && canChangeStatus" class="card-status-dropdown-wrap">
       <GameStatusDropdown
         :game-id="game.id"
         :current-status="status"
@@ -113,7 +114,12 @@ const props = defineProps({
   removable: { type: Boolean, default: false },
   isLoading: { type: Boolean, default: false },
   index: { type: Number, default: 0 },
-  status: { type: String, default: null }
+  status: { type: String, default: null },
+  // Permite ocultar el boton/dropdown de estado y el badge en escenarios
+  // donde no tiene sentido (por ejemplo, juegos que aun no han salido:
+  // no se puede marcar como "jugando" o "completado" un juego que no
+  // existe todavia).
+  canChangeStatus: { type: Boolean, default: true }
 });
 
 // Estado local para abrir/cerrar el dropdown de estado.

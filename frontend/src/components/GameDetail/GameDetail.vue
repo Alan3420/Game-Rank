@@ -92,8 +92,11 @@
                         <i v-else :class="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
                     </button>
 
-                    <!-- Status button + dropdown wrapper -->
-                    <div class="hero-status-wrap">
+                    <!-- Status button + dropdown wrapper.
+                         Solo se muestra si el juego ya salio: no se puede
+                         marcar como "jugando" o "completado" un juego que
+                         todavia no esta a la venta. -->
+                    <div v-if="juegoYaSalio" class="hero-status-wrap">
                         <button
                             class="hero-status-btn"
                             :class="{ 'has-status': gameStatus }"

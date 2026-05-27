@@ -2,7 +2,12 @@
   <header class="main-header">
     <div class="header-container">
       <router-link to="/" class="logo-link">
-        <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank Logo" />
+        <picture>
+          <source media="(max-width: 599px)" srcset="/src/assets/logo_GR.png" />
+          <source media="(min-width: 600px) and (max-width: 640px)" srcset="/src/assets/game_rank_logo.png" />
+          <source media="(max-width: 840px)" srcset="/src/assets/logo_GR.png" />
+          <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank Logo" />
+        </picture>
       </router-link>
 
       <div v-if="estadoAutenticacion.usuario" class="header-search">

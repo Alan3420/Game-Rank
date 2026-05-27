@@ -93,19 +93,26 @@ def obtener_detalle_del_videojuego(id_juego) -> dict:
 
 def obtener_proximos_lanzamientos(pagina, por_pagina):
     # Pedimos a RAWG juegos cuya fecha de lanzamiento este entre HOY y el
-    # 31 de diciembre del anio actual.
+    # 31 de diciembre del anio actual. Solo los que aun no han salido.
     ahora = datetime.now()
     fecha_inicio = ahora.strftime("%Y-%m-%d")
     fecha_fin = datetime(ahora.year, 12, 31).strftime("%Y-%m-%d")
 
-    resultados = get_future_releases(
+    resultado = get_future_releases(
         init_date=fecha_inicio,
         final_date=fecha_fin,
         page=pagina,
         per_page=por_pagina
     )
 
-    return formatear_resumen_juego(resultados)
+    # Mismo contrato que el catalogo: games + metadatos de paginacion.
+    # El frontend lo usa para pintar los botones de pagina.
+    return {
+        "games": formatear_resumen_juego(resultado.get("results", [])),
+        "next": resultado.get("next"),
+        "previous": resultado.get("previous"),
+        "count": resultado.get("count", 0)
+    }
 
 
 def _guardar_juego_si_no_existe(id_juego, app):

@@ -702,55 +702,6 @@
 }
 
 
-/* ── FAVORITES PAGINATION ── */
-.fav-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 20px 0 4px;
-}
-
-.fav-page-btn {
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
-  border-radius: 10px;
-  border: 1.5px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text-medium);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Sora', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fav-page-btn:hover:not(:disabled) {
-  border-color: var(--color-secondary);
-  color: var(--color-secondary);
-  background: var(--color-secondary-light);
-}
-
-.fav-page-btn.is-active {
-  background: var(--color-secondary);
-  border-color: var(--color-secondary);
-  color: #fff;
-}
-
-.fav-page-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.fav-page-nav {
-  min-width: 36px;
-  padding: 0;
-}
-
 /* ── EDIT MODAL ── */
 .edit-modal-overlay {
   position: fixed;
@@ -1519,7 +1470,7 @@
   .profile-content {
     grid-template-columns: 1fr;
     padding: 0 16px 44px;
-    margin-top: -36px;
+    margin-top: 0;
   }
 
   .profile-sidebar {

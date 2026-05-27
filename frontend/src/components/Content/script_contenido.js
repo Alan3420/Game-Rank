@@ -98,57 +98,6 @@ export default {
                 return 500;
             }
             return calculado;
-        },
-
-        // Genera la lista de paginas que se ven en la barra de paginacion.
-        // Cuando hay pocas paginas las mostramos todas; cuando hay muchas
-        // mostramos 1, los vecinos de la pagina actual y la ultima, con
-        // "..." de separador.
-        paginasVisibles() {
-
-            var total = this.totalPaginas;
-            var actual = this.currentPage;
-
-            if (total <= 7) {
-                var todas = [];
-                for (var i = 1; i <= total; i++) {
-                    todas.push(i);
-                }
-                return todas;
-            }
-
-            // Construimos un conjunto con la primera, la ultima y las
-            // paginas vecinas a la actual.
-            var conjunto = new Set();
-            conjunto.add(1);
-            conjunto.add(total);
-
-            var inicio = actual - 2;
-            if (inicio < 2) {
-                inicio = 2;
-            }
-            var fin = actual + 2;
-            if (fin > total - 1) {
-                fin = total - 1;
-            }
-            for (var k = inicio; k <= fin; k++) {
-                conjunto.add(k);
-            }
-
-            // Ordenamos y metemos "..." entre paginas no consecutivas para
-            // que se vea claro que hay un salto.
-            var ordenado = Array.from(conjunto).sort(function (a, b) {
-                return a - b;
-            });
-
-            var resultado = [];
-            for (var j = 0; j < ordenado.length; j++) {
-                if (j > 0 && ordenado[j] - ordenado[j - 1] > 1) {
-                    resultado.push('...');
-                }
-                resultado.push(ordenado[j]);
-            }
-            return resultado;
         }
     },
 

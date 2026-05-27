@@ -39,13 +39,16 @@ def proximos_lanzamientos():
         pagina = request.args.get('page', default=1, type=int)
         por_pagina = min(request.args.get('per_page', default=10, type=int), 40)
 
-        juegos = obtener_proximos_lanzamientos(pagina=pagina, por_pagina=por_pagina)
+        resultado = obtener_proximos_lanzamientos(pagina=pagina, por_pagina=por_pagina)
 
         # Guardamos los juegos en BD en segundo plano para poder enlazarlos
         # con favoritos/comentarios/etc. cuando el usuario interactue.
-        guardar_juegos(juegos=juegos, app=current_app._get_current_object())
+        guardar_juegos(
+            juegos=resultado.get("games", []),
+            app=current_app._get_current_object()
+        )
 
-        return jsonify(juegos), 200
+        return jsonify(resultado), 200
 
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos"}), 500

@@ -167,6 +167,38 @@ export default {
       }
     },
 
+    // True si el juego ya esta a la venta. Lo usamos para ocultar el
+    // boton de estado en las cards de favoritos cuando el juego aun no
+    // ha salido.
+    juegoYaSalio(juego) {
+
+      if (!juego || !juego.release_date) {
+        return false;
+      }
+
+      var hoy = new Date();
+      var anio = hoy.getFullYear();
+      var mes = hoy.getMonth() + 1;
+      var dia = hoy.getDate();
+
+      var mesTexto = '';
+      if (mes < 10) {
+        mesTexto = '0' + mes;
+      } else {
+        mesTexto = '' + mes;
+      }
+
+      var diaTexto = '';
+      if (dia < 10) {
+        diaTexto = '0' + dia;
+      } else {
+        diaTexto = '' + dia;
+      }
+
+      var hoyIso = anio + '-' + mesTexto + '-' + diaTexto;
+      return juego.release_date <= hoyIso;
+    },
+
     // Abre el modal de edicion de perfil. Antes de abrirlo precargamos el
     // formulario con los datos actuales del usuario para que vea los
     // valores que esta a punto de cambiar.

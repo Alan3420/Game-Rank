@@ -5,6 +5,11 @@ import { consultarSiEsFavorito, agregarAFavoritos, quitarDeFavoritos } from '../
 import { listarEstadosDeJuego } from '../../services/user_game_status.js';
 import { notificaciones } from '../../store/notificaciones.js';
 
+// Numero de juegos por pagina en la seccion de proximos lanzamientos.
+// Se usa 10 por pagina (a diferencia del catalogo que usa 20) para que
+// la seccion no domine la altura del Home.
+const POR_PAGINA_PROXIMOS = 10;
+
 // Componente de la pagina principal (Home). Tiene dos modos: cuando no hay
 // sesion muestra solo el hero + CTA de registro; cuando hay sesion muestra
 // ademas los 3 juegos mejor valorados y la lista de proximos lanzamientos.
@@ -21,7 +26,12 @@ export default {
       statuses: new Map(),
       isLoading: true,
       isFutureLoading: true,
-      heroVideo: null
+      heroVideo: null,
+      // Estado de paginacion de "Upcoming Releases". RAWG no devuelve
+      // un total fiable cuando hay muchos resultados, pero usamos count
+      // para calcular totalPaginasProximos.
+      currentPageProximos: 1,
+      totalCountProximos: 0
     };
   },
 
@@ -110,18 +120,50 @@ export default {
       }
     },
 
-    // Pide los proximos lanzamientos al backend y revisa favoritos en paralelo.
+    // Pide la primera pagina de proximos lanzamientos al cargar el Home.
     async cargarProximosLanzamientos() {
+      await this.cargarPaginaProximos(1);
+    },
+
+    // Carga la pagina indicada de la seccion "Upcoming Releases".
+    // Replica el patron del catalogo: usa games + count para paginar.
+    async cargarPaginaProximos(pagina) {
+
+      this.isFutureLoading = true;
+      this.currentPageProximos = pagina;
 
       try {
-        var respuesta = await obtenerProximosLanzamientos(1, 10);
+        var respuesta = await obtenerProximosLanzamientos(pagina, POR_PAGINA_PROXIMOS);
 
-        if (respuesta) {
-          this.futureReleases = respuesta;
+        if (respuesta && respuesta.games) {
+          this.futureReleases = respuesta.games;
         } else {
           this.futureReleases = [];
         }
+
+        if (respuesta && respuesta.count) {
+          this.totalCountProximos = respuesta.count;
+        } else {
+          this.totalCountProximos = 0;
+        }
+
+        // Si pedimos una pagina mas alla del total, volvemos a la ultima
+        // pagina valida para no mostrar lista vacia.
+        if (this.totalPaginasProximos > 0 && pagina > this.totalPaginasProximos) {
+          await this.cargarPaginaProximos(this.totalPaginasProximos);
+          return;
+        }
+
         this.isFutureLoading = false;
+
+        // Hacemos scroll a la seccion para que el usuario vea el cambio
+        // de pagina (salvo en la carga inicial, donde estamos en la 1).
+        if (pagina > 1) {
+          var elemento = document.getElementById('proximos-section');
+          if (elemento) {
+            elemento.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
 
         if (estadoAutenticacion.usuario) {
           var tareas = [];
@@ -133,6 +175,7 @@ export default {
 
       } catch (error) {
         console.error('Error cargando proximos lanzamientos:', error);
+        this.futureReleases = [];
         this.isFutureLoading = false;
       }
     },
@@ -263,6 +306,19 @@ export default {
     // Lo exponemos como computed para usarlo dentro del template.
     estadoAutenticacion() {
       return estadoAutenticacion;
+    },
+
+    // Total de paginas de proximos lanzamientos a partir del count.
+    // Tope de 500 igual que el catalogo porque RAWG corta en esa pagina.
+    totalPaginasProximos() {
+      if (!this.totalCountProximos) {
+        return 0;
+      }
+      var calculado = Math.ceil(this.totalCountProximos / POR_PAGINA_PROXIMOS);
+      if (calculado > 500) {
+        return 500;
+      }
+      return calculado;
     }
   }
 };

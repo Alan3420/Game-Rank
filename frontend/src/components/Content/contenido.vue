@@ -66,35 +66,12 @@
     </div>
 
     <!-- Paginación -->
-    <div v-if="!loading && totalPaginas > 1" class="catalogo-pagination">
-      <button
-        class="cat-page-btn cat-page-nav"
-        :disabled="currentPage === 1"
-        @click="cargarPagina(currentPage - 1)"
-        aria-label="Previous page"
-      >
-        <i class="pi pi-chevron-left"></i>
-      </button>
-
-      <template v-for="(item, i) in paginasVisibles" :key="i">
-        <span v-if="item === '...'" class="cat-page-ellipsis">…</span>
-        <button
-          v-else
-          class="cat-page-btn"
-          :class="{ 'is-active': currentPage === item }"
-          @click="cargarPagina(item)"
-        >{{ item }}</button>
-      </template>
-
-      <button
-        class="cat-page-btn cat-page-nav"
-        :disabled="currentPage === totalPaginas"
-        @click="cargarPagina(currentPage + 1)"
-        aria-label="Next page"
-      >
-        <i class="pi pi-chevron-right"></i>
-      </button>
-    </div>
+    <Pagination
+      v-if="!loading"
+      :current-page="currentPage"
+      :total-pages="totalPaginas"
+      @update:current-page="cargarPagina"
+    />
   </div>
 </template>
 
@@ -104,10 +81,11 @@ import Button from "primevue/button"
 import GameCard from "../Cards/GameCard.vue"
 import Loader from "../Loader/Loader.vue"
 import FilterPanel from "../Filters/FilterPanel.vue"
+import Pagination from "../Pagination/Pagination.vue"
 
 export default {
     name: 'contenido',
-    components: { Button, GameCard, Loader, FilterPanel },
+    components: { Button, GameCard, Loader, FilterPanel, Pagination },
     ...contenido
 };
 </script>

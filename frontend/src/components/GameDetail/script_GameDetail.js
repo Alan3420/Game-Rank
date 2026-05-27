@@ -70,6 +70,39 @@ export default {
             return DOMPurify.sanitize(html);
         },
 
+        // Indica si el juego ya esta a la venta (release_date hoy o anterior).
+        // Lo usamos para ocultar el boton de estado: no tiene sentido marcar
+        // como "jugando" o "completado" un juego que todavia no ha salido.
+        juegoYaSalio() {
+            if (!this.game || !this.game.release_date) {
+                return false;
+            }
+            // release_date viene en formato ISO "YYYY-MM-DD". La comparacion
+            // de strings ISO coincide con la cronologica, asi que no hace
+            // falta parsear a Date.
+            var hoy = new Date();
+            var anio = hoy.getFullYear();
+            var mes = hoy.getMonth() + 1;
+            var dia = hoy.getDate();
+
+            var mesTexto = '';
+            if (mes < 10) {
+                mesTexto = '0' + mes;
+            } else {
+                mesTexto = '' + mes;
+            }
+
+            var diaTexto = '';
+            if (dia < 10) {
+                diaTexto = '0' + dia;
+            } else {
+                diaTexto = '' + dia;
+            }
+
+            var hoyIso = anio + '-' + mesTexto + '-' + diaTexto;
+            return this.game.release_date <= hoyIso;
+        },
+
         // Comprueba si el usuario actual ya dejo un comentario en este juego.
         // Lo usamos para deshabilitar el formulario y forzar que use "Edit".
         hasOwnComment() {
@@ -86,7 +119,7 @@ export default {
 
         // El formulario se deshabilita si el usuario ya comento y NO esta
         // editando. Si esta editando, debe poder escribir.
-        formDisabled() {
+        formularioDeshabilitado() {
             if (this.hasOwnComment && !this.editingId) {
                 return true;
             }
