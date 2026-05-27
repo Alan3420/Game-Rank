@@ -355,28 +355,28 @@ export default {
         async publicarComentario() {
 
             if (!this.newComment || !this.newComment.trim()) {
-                notificaciones.error("Comment cannot be empty.", {
+                notificaciones.warning("Comment cannot be empty.", {
                     title: "Comment required"
                 });
                 return;
             }
 
             if (this.newComment.length > 255) {
-                notificaciones.error("Comment cannot exceed 255 characters.", {
+                notificaciones.warning("Comment cannot exceed 255 characters.", {
                     title: "Comment too long"
                 });
                 return;
             }
 
             if (!this.formRating) {
-                notificaciones.error("Select a rating before publishing.", {
+                notificaciones.warning("Select a rating before publishing.", {
                     title: "Rating required"
                 });
                 return;
             }
 
             if (this.formRating < 0 || this.formRating > 5) {
-                notificaciones.error("Rating must be between 0 and 5.", {
+                notificaciones.warning("Rating must be between 0 and 5.", {
                     title: "Invalid rating"
                 });
                 return;
@@ -432,28 +432,28 @@ export default {
         async actualizarMiComentario() {
 
             if (!this.newComment || !this.newComment.trim()) {
-                notificaciones.error("Comment cannot be empty.", {
+                notificaciones.warning("Comment cannot be empty.", {
                     title: "Comment required"
                 });
                 return;
             }
 
             if (this.newComment.length > 255) {
-                notificaciones.error("Comment cannot exceed 255 characters.", {
+                notificaciones.warning("Comment cannot exceed 255 characters.", {
                     title: "Comment too long"
                 });
                 return;
             }
 
             if (!this.formRating) {
-                notificaciones.error("Select a rating before updating.", {
+                notificaciones.warning("Select a rating before updating.", {
                     title: "Rating required"
                 });
                 return;
             }
 
             if (this.formRating < 0 || this.formRating > 5) {
-                notificaciones.error("Rating must be between 0 and 5.", {
+                notificaciones.warning("Rating must be between 0 and 5.", {
                     title: "Invalid rating"
                 });
                 return;
@@ -585,8 +585,8 @@ export default {
         async alternarFavorito() {
 
             if (!estadoAutenticacion.usuario) {
-                notificaciones.error("Sign in to add games to favorites.", {
-                    title: "Access required"
+                notificaciones.info("Sign in to add games to favorites.", {
+                    title: "Sign in required"
                 });
                 return;
             }

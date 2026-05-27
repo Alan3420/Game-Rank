@@ -30,8 +30,36 @@ function eliminarNotificacion(id) {
 }
 
 
+// Devuelve el icono de PrimeIcons que corresponde a cada tipo de notificacion.
+function iconoPorTipo(tipo) {
+    if (tipo === 'success') {
+        return 'pi-check-circle';
+    } else if (tipo === 'error') {
+        return 'pi-times-circle';
+    } else if (tipo === 'warning') {
+        return 'pi-exclamation-triangle';
+    } else {
+        return 'pi-info-circle';
+    }
+}
+
+
+// Titulo por defecto que se muestra cuando no se pasa uno propio.
+function tituloPorDefecto(tipo) {
+    if (tipo === 'success') {
+        return 'Done';
+    } else if (tipo === 'error') {
+        return 'Something went wrong';
+    } else if (tipo === 'warning') {
+        return 'Warning';
+    } else {
+        return 'Info';
+    }
+}
+
+
 // Agrega una notificacion nueva al estado y programa su auto-cierre.
-// tipo: "success" o "error".
+// tipo: "success", "error", "warning" o "info".
 // mensaje: texto que se muestra en el cuerpo.
 // opciones: objeto opcional con duracion y titulo personalizados.
 function agregarNotificacion(tipo, mensaje, opciones) {
@@ -44,15 +72,11 @@ function agregarNotificacion(tipo, mensaje, opciones) {
         duracion = opciones.duration;
     }
 
-    // Si la notificacion no trae titulo personalizado, ponemos uno generico
-    // segun el tipo para que el toast no se vea vacio.
     var titulo = "";
     if (opciones.title) {
         titulo = opciones.title;
-    } else if (tipo === 'success') {
-        titulo = 'Done';
     } else {
-        titulo = 'Something went wrong';
+        titulo = tituloPorDefecto(tipo);
     }
 
     var id = siguienteId;
@@ -62,7 +86,8 @@ function agregarNotificacion(tipo, mensaje, opciones) {
         id: id,
         type: tipo,
         message: mensaje,
-        title: titulo
+        title: titulo,
+        icon: iconoPorTipo(tipo)
     });
 
     // Cuando duracion es 0 o negativa el aviso queda fijo hasta que el
@@ -77,8 +102,8 @@ function agregarNotificacion(tipo, mensaje, opciones) {
 }
 
 
-// Objeto que se importa desde los componentes. Expone solo lo que necesita
-// la UI: success(), error(), remove() y el estado reactivo "state".
+// Objeto que se importa desde los componentes. Expone success(), error(),
+// warning(), info(), remove() y el estado reactivo "state".
 export const notificaciones = {
     state: estado,
     success: function (mensaje, opciones) {
@@ -86,6 +111,12 @@ export const notificaciones = {
     },
     error: function (mensaje, opciones) {
         return agregarNotificacion('error', mensaje, opciones);
+    },
+    warning: function (mensaje, opciones) {
+        return agregarNotificacion('warning', mensaje, opciones);
+    },
+    info: function (mensaje, opciones) {
+        return agregarNotificacion('info', mensaje, opciones);
     },
     remove: eliminarNotificacion
 };
