@@ -7,12 +7,7 @@ from app.models.User import User
 import re
 
 
-# Servicio que centraliza las validaciones y la logica de negocio de los
-# usuarios. Las queries a la BD viven en user_repo.
-
-
-# Lista blanca de dominios de correo aceptados. La replicamos en el frontend
-# para que el usuario tenga el mismo aviso, pero la validacion seria vive aqui.
+# Lista blanca de dominios de correo permitidos, replicada en el frontend
 DOMINIOS_PERMITIDOS = {
     "gmail.com", "hotmail.com", "hotmail.es",
     "outlook.com", "outlook.es",
@@ -20,14 +15,10 @@ DOMINIOS_PERMITIDOS = {
     "icloud.com", "live.com",
 }
 
-# Expresion regular para nicknames: 3 a 30 caracteres, letras, numeros y
-# guion bajo. Misma regla que el frontend.
 _PATRON_NICKNAME = re.compile(r'^[a-zA-Z0-9_]{3,30}$')
 
 
 def _dominio_valido(email: str) -> bool:
-    # Comprueba que el email tenga formato "algo@dominio" y que el dominio
-    # este en la lista blanca.
     partes = email.split("@")
     if len(partes) != 2:
         return False
@@ -43,8 +34,6 @@ def _nickname_valido(nickname: str) -> bool:
 
 
 def autenticar_usuario(email, contrasena) -> User | None:
-    # Busca al usuario por email y comprueba la contrasena con bcrypt.
-    # Devuelve el usuario si las credenciales son correctas, None si no.
     usuario = user_repo.obtener_usuario_por_email(email)
 
     if usuario and usuario.check_password(password=contrasena):
@@ -54,10 +43,6 @@ def autenticar_usuario(email, contrasena) -> User | None:
 
 
 def registrar_usuario(nombre, apellido, nickname, email, contrasena) -> User | str:
-    # Valida todos los campos uno a uno y, si todo es correcto, crea el
-    # usuario. Si algo falla devuelve un string con el mensaje de error
-    # (para que el route lo traduzca a una respuesta 409).
-
     if not nombre or len(nombre) < 1 or len(nombre) > 50:
         return "El nombre debe tener entre 1 y 50 caracteres"
 
@@ -76,7 +61,6 @@ def registrar_usuario(nombre, apellido, nickname, email, contrasena) -> User | s
     if not contrasena or len(contrasena) < 8:
         return "La contraseña debe tener un mínimo de 8 caracteres"
 
-    # Comprobamos unicidad de nickname y email antes de crear.
     if user_repo.obtener_usuario_por_nickname(nickname) is not None:
         return "Ese nickname ya está en uso"
 
@@ -95,16 +79,10 @@ def registrar_usuario(nombre, apellido, nickname, email, contrasena) -> User | s
 
 
 def obtener_lista_de_usuarios(excluir_id_usuario=None) -> list[User]:
-    # Solo el admin la usa. Recibe el id del propio admin para que no
-    # aparezca en la lista (por convencion del panel).
     return user_repo.obtener_todos_los_usuarios(excluir_id_usuario=excluir_id_usuario)
 
 
 def actualizar_usuario(id_usuario, nombre, apellido, nickname, email, contrasena) -> User | str:
-    # Reaplicamos las mismas reglas de validacion del registro, pero
-    # adaptadas: aqui los campos son opcionales (solo se valida lo que
-    # llega con valor).
-
     usuario = user_repo.obtener_usuario_por_id(id_usuario)
 
     if not usuario:
@@ -119,8 +97,8 @@ def actualizar_usuario(id_usuario, nombre, apellido, nickname, email, contrasena
     if nickname:
         if not _nickname_valido(nickname):
             return "El nickname debe tener entre 3 y 30 caracteres y solo puede contener letras, números y guiones bajos"
-        # Solo comprobamos unicidad si el nickname cambia (en mayus/minus
-        # del usuario actual no cuenta como "cambio").
+        # Solo comprobamos unicidad si el nickname cambia de verdad, cambiar
+        # mayus o minus del propio nick no cuenta
         nickname_actual = ""
         if usuario.nickname:
             nickname_actual = usuario.nickname.lower()
@@ -163,8 +141,6 @@ def eliminar_usuario(id_usuario) -> bool | str:
 
 
 def cambiar_rol(id_usuario, nuevo_rol) -> User | str:
-    # Solo el admin invoca esta funcion (lo refuerza el decorador
-    # @admin_required de la ruta).
     usuario = user_repo.obtener_usuario_por_id(id_usuario)
 
     if not usuario:
@@ -179,7 +155,6 @@ def cambiar_rol(id_usuario, nuevo_rol) -> User | str:
 
 
 def obtener_usuario_por_id(id_usuario):
-    # Wrapper para que las rutas no tengan que importar el repo directamente.
     return user_repo.obtener_usuario_por_id(id_usuario=id_usuario)
 
 
@@ -189,9 +164,8 @@ def cambiar_contrasena(id_usuario, contrasena_actual, contrasena_nueva) -> User 
     if not usuario:
         return "Usuario no encontrado"
 
-    # Comprobamos que la contrasena actual sea la correcta antes de cambiar.
-    # Si no, podria pasar que alguien con la sesion abierta cambiara la
-    # contrasena sin conocer la original.
+    # Pedimos la contrasena actual para que alguien con la sesion abierta
+    # no pueda cambiarla sin saber la original
     if not usuario.check_password(contrasena_actual):
         return "La contraseña actual es incorrecta"
 
@@ -210,10 +184,6 @@ def cambiar_contrasena(id_usuario, contrasena_actual, contrasena_nueva) -> User 
 
 
 def obtener_estadisticas_usuario(id_usuario):
-    # Estadisticas que pinta el perfil del usuario actual. Pedimos cada
-    # pieza a su repo y armamos el dict final con la forma que espera
-    # el frontend (no cambia respecto a la version anterior).
-
     estados = obtener_conteo_estados_por_usuario(id_usuario)
     estados_dict = {}
     for fila in estados:
@@ -222,8 +192,6 @@ def obtener_estadisticas_usuario(id_usuario):
     total_favoritos = contar_favoritos_por_usuario(id_usuario)
     total_comentarios = contar_comentarios_por_usuario(id_usuario)
 
-    # Para la media nos basta con los valores de "rating". Pedimos la
-    # lista entera al repo (devuelve modelos Rate) y la promediamos aqui.
     calificaciones = obtener_calificaciones_por_usuario(id_usuario)
     valores = []
     for calificacion in calificaciones:

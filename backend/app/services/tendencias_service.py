@@ -7,21 +7,10 @@ from app.services.adapter import formatear_resumen_juego
 from concurrent.futures import ThreadPoolExecutor
 
 
-# Servicio que calcula las tendencias de la comunidad: los juegos con
-# mas favoritos, mejor valorados, mas comentados y mas anadidos a
-# colecciones. Cada lista se devuelve con los datos del juego (nombre,
-# imagen, etc.) listos para pintar en cards.
-
-
-# Numero maximo de juegos por seccion. 8 es un buen compromiso entre
-# variedad y peso de la respuesta (cada juego implica una llamada a RAWG).
 LIMITE_POR_SECCION = 8
 
 
 def _enriquecer_juego(id_juego, valor_estadistico, etiqueta_estadistica):
-    # Pide a RAWG los datos del juego y los devuelve junto con el valor
-    # numerico de la estadistica (y su etiqueta en espanol, aunque el
-    # frontend la ignora y construye la suya en ingles a partir del valor).
     try:
         datos = get_game_by_id_api(id_juego)
         resultado = formatear_resumen_juego(datos)
@@ -33,9 +22,8 @@ def _enriquecer_juego(id_juego, valor_estadistico, etiqueta_estadistica):
 
 
 def _enriquecer_lista(tareas):
-    # Recibe una lista de tuplas (id_juego, valor, etiqueta) y llama a
-    # RAWG por cada juego en paralelo con hilos. Mantenemos el orden
-    # original (los mas populares primero) gracias a executor.map.
+    # Lanzamos las llamadas a RAWG en hilos para no esperar una detras de otra,
+    # executor.map respeta el orden de la lista asi que el ranking se conserva
     if not tareas:
         return []
 
@@ -46,7 +34,6 @@ def _enriquecer_lista(tareas):
     with ThreadPoolExecutor(max_workers=len(tareas)) as executor:
         resultados = list(executor.map(procesar, tareas))
 
-    # Filtramos los que fallaron (None) para no devolver huecos al frontend.
     juegos_validos = []
     for juego in resultados:
         if juego is not None:
@@ -55,16 +42,11 @@ def _enriquecer_lista(tareas):
 
 
 def obtener_tendencias():
-    # Pedimos los cuatro rankings a los repos. Cada uno hace su propia
-    # query de agregacion contra la BD; aqui solo orquestamos.
     top_favoritos  = obtener_top_favoritos(LIMITE_POR_SECCION)
     top_valorados  = obtener_top_valorados(LIMITE_POR_SECCION)
     top_comentados = obtener_top_comentados(LIMITE_POR_SECCION)
     top_coleccion  = obtener_top_coleccion(LIMITE_POR_SECCION)
 
-    # Para cada lista construimos las "tareas" (id_juego, valor, etiqueta)
-    # que el helper usara para hacer las llamadas a RAWG en paralelo.
-    # Las etiquetas van en espanol pero el frontend las regenera en ingles.
     tareas_favs = []
     for fila in top_favoritos:
         id_juego = fila[0]

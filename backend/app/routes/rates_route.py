@@ -11,15 +11,10 @@ from app.services.rate_services import (
 from app.limiter import limiter
 
 
-# Endpoints de calificaciones (1-5 estrellas). Un usuario solo puede tener
-# una calificacion por juego.
-
 rates_bp = Blueprint("rates", __name__)
 
 
 def _validar_valor_rating(rating):
-    # Helper: devuelve None si el valor es valido, o un mensaje de error.
-    # Lo usan crear y actualizar para no duplicar la misma validacion.
     if not isinstance(rating, (int, float)) or not (1 <= rating <= 5):
         return "El rating debe ser un número entre 1 y 5"
     return None

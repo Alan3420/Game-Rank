@@ -20,17 +20,8 @@ from concurrent.futures import ThreadPoolExecutor
 import random
 
 
-# Servicio que actua de fachada para todo lo relacionado con juegos:
-# detalles, catalogo, proximos lanzamientos, busqueda filtrada, saga,
-# DLC, logros y video aleatorio del hero.
-#
-# Mucha de la informacion se obtiene de la API de RAWG. Lo que guardamos
-# en nuestra BD es solo el "esqueleto" del juego (id + nombre + fecha)
-# para poder enlazar comentarios/calificaciones/favoritos con FK.
-
-
-# Pool de hilos que se usa para guardar juegos en segundo plano cuando se
-# pinta el catalogo, sin bloquear la respuesta al usuario.
+# Pool para ir guardando juegos en segundo plano mientras se pinta el
+# catalogo, asi la respuesta sale al usuario antes de tocar la BD
 pool_guardado_segundo_plano = ThreadPoolExecutor(
     max_workers=5,
     thread_name_prefix="guardar_juego"
@@ -38,21 +29,15 @@ pool_guardado_segundo_plano = ThreadPoolExecutor(
 
 
 def obtener_detalle_del_videojuego(id_juego) -> dict:
-    # Pide a RAWG todos los datos del juego, los completa con capturas,
-    # videos, tiendas y equipo de desarrollo (cada cosa va a un endpoint
-    # distinto), y si es la primera vez que vemos este juego lo guardamos
-    # en la BD local con un resumen de plataformas/devs.
     detalle_juego = get_game_by_id_api(game_id=id_juego)
 
     juego_existe = vGame_repo.obtener_juego_por_id_bd(id_juego=id_juego)
 
     detalle_juego["short_screenshots"] = get_game_screenshots(game_id=id_juego)
-    # Limitamos a 2 trailers para no inflar la respuesta.
     detalle_juego["movies"] = get_game_movies(game_id=id_juego)[:2]
 
-    # Para las tiendas pedimos el catalogo completo de RAWG una sola vez y
-    # lo cruzamos con las tiendas del juego. Asi obtenemos nombre + slug
-    # de cada tienda con un solo round-trip.
+    # Pedimos el catalogo entero de tiendas de RAWG una vez y lo cruzamos
+    # con las tiendas del juego, asi nos ahorramos llamadas extra
     tiendas = get_game_stores(game_id=id_juego)
     catalogo_tiendas = get_stores_catalog()
 
@@ -65,8 +50,6 @@ def obtener_detalle_del_videojuego(id_juego) -> dict:
     detalle_juego["team"] = obtener_equipo_desarrollo(game_id=id_juego)
 
     if not juego_existe:
-        # Construimos los strings "PC, PS5, Xbox" y "Rockstar, Naughty Dog"
-        # para guardarlos planos en la BD local (la columna es VARCHAR).
         lista_plataformas = ""
         lista_desarrolladoras = ""
 
@@ -92,8 +75,6 @@ def obtener_detalle_del_videojuego(id_juego) -> dict:
 
 
 def obtener_proximos_lanzamientos(pagina, por_pagina):
-    # Pedimos a RAWG juegos cuya fecha de lanzamiento este entre HOY y el
-    # 31 de diciembre del anio actual. Solo los que aun no han salido.
     ahora = datetime.now()
     fecha_inicio = ahora.strftime("%Y-%m-%d")
     fecha_fin = datetime(ahora.year, 12, 31).strftime("%Y-%m-%d")
@@ -105,8 +86,6 @@ def obtener_proximos_lanzamientos(pagina, por_pagina):
         per_page=por_pagina
     )
 
-    # Mismo contrato que el catalogo: games + metadatos de paginacion.
-    # El frontend lo usa para pintar los botones de pagina.
     return {
         "games": formatear_resumen_juego(resultado.get("results", [])),
         "next": resultado.get("next"),
@@ -116,8 +95,7 @@ def obtener_proximos_lanzamientos(pagina, por_pagina):
 
 
 def _guardar_juego_si_no_existe(id_juego, app):
-    # Funcion auxiliar para el pool de hilos. Necesita app_context propio
-    # porque vive en otro hilo distinto al de la request.
+    # Como esto corre en otro hilo necesita su propio app_context
     with app.app_context():
         try:
             if vGame_repo.obtener_juego_por_id_bd(id_juego):
@@ -128,9 +106,6 @@ def _guardar_juego_si_no_existe(id_juego, app):
 
 
 def guardar_juegos(juegos: list[dict] | None, app):
-    # Encola cada juego del listado para guardarse en segundo plano.
-    # La respuesta al usuario sale de inmediato; el guardado en BD se hace
-    # cuando los hilos lo procesan.
     if not juegos:
         return
     for juego in juegos:
@@ -138,9 +113,8 @@ def guardar_juegos(juegos: list[dict] | None, app):
 
 
 def obtener_video_aleatorio() -> dict | None:
-    # Recorre varias listas ordenadas (mas anadidos, mejor valorados, etc.)
-    # y por cada lista mira los juegos en orden aleatorio buscando uno que
-    # tenga al menos un trailer. Devuelve la URL del primer trailer encontrado.
+    # Vamos probando varias listas ordenadas hasta encontrar un juego con
+    # trailer, asi siempre tenemos algo que mostrar en el hero
     ordenes = ["-added", "-rating", "-metacritic", "-relevance"]
 
     for orden in ordenes:
@@ -168,8 +142,6 @@ def obtener_video_aleatorio() -> dict | None:
                         return {"video_url": url_video}
 
             except Exception:
-                # Si falla con un juego concreto, seguimos con el siguiente
-                # en vez de abortar el endpoint entero.
                 continue
 
     return None
@@ -187,8 +159,6 @@ def obtener_juegos_del_catalogo(pagina: int, por_pagina: int):
 
 def obtener_juegos_filtrados(pagina, por_pagina, ordering=None, genres=None,
                               platforms=None, dates=None, search=None):
-    # Pasamos los filtros tal cual a RAWG. Esta funcion es solo el wrapper
-    # para que el route no tenga que tocar el client directamente.
     resultado = get_games_filtered(
         page=pagina,
         per_page=por_pagina,

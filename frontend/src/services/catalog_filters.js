@@ -1,7 +1,5 @@
 import api from './api';
 
-// Pide al backend la lista de juegos aplicando los filtros que eligio el
-// usuario (orden, generos, plataformas, rango de anios y busqueda por texto).
 export async function obtenerJuegosFiltrados(pagina, porPagina, filtros) {
     if (!pagina) {
         pagina = 1;
@@ -34,9 +32,9 @@ export async function obtenerJuegosFiltrados(pagina, porPagina, filtros) {
         parametros.search = filtros.search;
     }
 
-    // El backend espera el rango de fechas como "AAAA-MM-DD,AAAA-MM-DD".
-    // Si el usuario no marco una fecha de inicio, usamos 1980 como minimo.
-    // Si no marco fecha de fin, usamos el 31 de diciembre del anio actual.
+    // El backend quiere el rango como "AAAA-MM-DD,AAAA-MM-DD", asi que si
+    // el usuario solo marca un extremo del rango rellenamos el otro con
+    // 1980 (minimo) o el 31 de diciembre del anio actual (maximo)
     if (filtros.dateFrom || filtros.dateTo) {
         var anioActual = new Date().getFullYear();
         var fechaInicio = '';

@@ -2,14 +2,7 @@ from app.database.db import db
 from app.models.User import User
 
 
-# Capa de acceso a datos para la tabla "users".
-# Solo contiene queries; toda la logica de negocio y validaciones vive
-# en app/services/user_service.py.
-
-
 def obtener_todos_los_usuarios(excluir_id_usuario=None) -> list[User]:
-    # Si recibimos un id a excluir, devolvemos todos los usuarios MENOS ese.
-    # Lo usamos en el panel de admin para no mostrar al propio admin en la lista.
     if excluir_id_usuario:
         return User.query.filter(User.id_user != excluir_id_usuario).all()
     return User.query.all()
@@ -20,8 +13,7 @@ def obtener_usuario_por_id(id_usuario) -> User:
 
 
 def obtener_usuario_por_nickname(nickname) -> User:
-    # ilike = case-insensitive, asi "JuanP" y "juanp" se consideran iguales
-    # para que no se puedan registrar nicknames que solo difieran en mayusculas.
+    # ilike es case-insensitive, asi "JuanP" y "juanp" cuentan como el mismo
     return User.query.filter(User.nickname.ilike(nickname)).first()
 
 
@@ -44,8 +36,6 @@ def crear_usuario(nombre, apellido, nickname, email, contrasena) -> User:
 
 def actualizar_usuario(id_usuario, nombre=None, apellido=None, nickname=None,
                        email=None, contrasena=None) -> User:
-    # Todos los campos son opcionales. Solo actualizamos los que vengan
-    # con valor; los demas se quedan como estaban.
     usuario = obtener_usuario_por_id(id_usuario)
 
     if usuario:
@@ -58,7 +48,6 @@ def actualizar_usuario(id_usuario, nombre=None, apellido=None, nickname=None,
         if email:
             usuario.email = email
         if contrasena:
-            # set_password hashea la contrasena antes de guardarla.
             usuario.set_password(contrasena)
         db.session.commit()
 
@@ -66,10 +55,8 @@ def actualizar_usuario(id_usuario, nombre=None, apellido=None, nickname=None,
 
 
 def eliminar_usuario(id_usuario) -> bool:
-    # Antes de borrar el usuario quitamos sus datos relacionados.
-    # Aunque las FK estan declaradas con ON DELETE CASCADE, lo hacemos
-    # tambien aqui para asegurar la limpieza si el motor no respeta la
-    # cascada (algunos drivers de MySQL en Flask-SQLAlchemy no la aplican).
+    # Borramos a mano los datos relacionados porque algunos drivers de MySQL
+    # con Flask-SQLAlchemy no aplican el ON DELETE CASCADE de las FK
     usuario = obtener_usuario_por_id(id_usuario)
 
     if usuario:
@@ -89,8 +76,6 @@ def eliminar_usuario(id_usuario) -> bool:
 
 
 def actualizar_rol_de_usuario(id_usuario, nuevo_rol) -> User:
-    # Solo aceptamos roles dentro de la lista blanca. Cualquier otro
-    # valor se considera un intento invalido y lanza ValueError.
     ROLES_PERMITIDOS = ['user', 'admin']
 
     usuario = obtener_usuario_por_id(id_usuario)

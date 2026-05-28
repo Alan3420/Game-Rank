@@ -1,19 +1,12 @@
 import { reactive } from 'vue';
 
-// Estado reactivo que comparte la lista de notificaciones activas con
-// el componente NotificationToast. Vue se encarga de re-renderizar cuando
-// se modifica la lista "items".
 const estado = reactive({
     items: []
 });
 
-// Contador simple para asignar un id unico a cada notificacion.
-// No usamos UUID porque la app solo necesita distinguirlas dentro de la sesion.
 var siguienteId = 1;
 
 
-// Quita una notificacion concreta del listado activo.
-// Se llama tanto desde el temporizador interno como desde el boton de cerrar.
 function eliminarNotificacion(id) {
     var indice = -1;
 
@@ -30,7 +23,6 @@ function eliminarNotificacion(id) {
 }
 
 
-// Devuelve el icono de PrimeIcons que corresponde a cada tipo de notificacion.
 function iconoPorTipo(tipo) {
     if (tipo === 'success') {
         return 'pi-check-circle';
@@ -44,7 +36,6 @@ function iconoPorTipo(tipo) {
 }
 
 
-// Titulo por defecto que se muestra cuando no se pasa uno propio.
 function tituloPorDefecto(tipo) {
     if (tipo === 'success') {
         return 'Done';
@@ -58,10 +49,6 @@ function tituloPorDefecto(tipo) {
 }
 
 
-// Agrega una notificacion nueva al estado y programa su auto-cierre.
-// tipo: "success", "error", "warning" o "info".
-// mensaje: texto que se muestra en el cuerpo.
-// opciones: objeto opcional con duracion y titulo personalizados.
 function agregarNotificacion(tipo, mensaje, opciones) {
     if (!opciones) {
         opciones = {};
@@ -90,8 +77,8 @@ function agregarNotificacion(tipo, mensaje, opciones) {
         icon: iconoPorTipo(tipo)
     });
 
-    // Cuando duracion es 0 o negativa el aviso queda fijo hasta que el
-    // usuario lo cierre manualmente.
+    // Si la duracion es 0 o menos dejamos el aviso fijo hasta que el
+    // usuario lo cierre con la X
     if (duracion > 0) {
         setTimeout(function () {
             eliminarNotificacion(id);
@@ -102,8 +89,6 @@ function agregarNotificacion(tipo, mensaje, opciones) {
 }
 
 
-// Objeto que se importa desde los componentes. Expone success(), error(),
-// warning(), info(), remove() y el estado reactivo "state".
 export const notificaciones = {
     state: estado,
     success: function (mensaje, opciones) {

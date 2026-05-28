@@ -2,18 +2,13 @@ import { estadoAutenticacion } from '../store/autenticacion';
 import { notificaciones } from '../store/notificaciones';
 import { eliminarMiCuenta } from '../services/user_service';
 
-// Logica del componente raiz App.vue. Se encarga del header (busqueda,
-// boton de tema, menu de usuario), del footer y del modal de confirmacion
-// para borrar la cuenta. Al montarse, intenta restaurar la sesion del
-// usuario a partir del token guardado en localStorage.
+
 export default {
 
   data() {
     return {
       headerSearch: '',
       menuAbierto: false,
-      // Tema guardado en localStorage. Si no hay nada guardado arrancamos
-      // en modo claro porque es lo mas comun.
       tema: localStorage.getItem('tema') || 'light',
       confirmEliminarAbierto: false,
       confirmTexto: '',
@@ -23,8 +18,6 @@ export default {
 
   computed: {
 
-    // Devuelve true si el usuario logueado tiene rol admin. Se usa para
-    // mostrar/ocultar opciones del menu como "Manage Users" y "Moderation".
     esAdministrador() {
       if (!estadoAutenticacion.usuario) {
         return false;
@@ -35,8 +28,6 @@ export default {
       return false;
     },
 
-    // Lo exponemos como computed para poder usar "estadoAutenticacion.x"
-    // dentro del template del App.vue.
     estadoAutenticacion() {
       return estadoAutenticacion;
     }
@@ -44,9 +35,6 @@ export default {
 
   methods: {
 
-    // Alterna entre tema claro y oscuro, lo persiste en localStorage y
-    // aplica el atributo data-theme al elemento raiz del HTML para que
-    // las variables CSS cambien.
     cambiarTema() {
       if (this.tema === 'light') {
         this.tema = 'dark';
@@ -58,8 +46,6 @@ export default {
       localStorage.setItem('tema', this.tema);
     },
 
-    // Se dispara con Enter en el input del header. Si hay texto navega al
-    // catalogo con la query "q", si no, navega al catalogo sin filtros.
     enviarBusquedaCabecera() {
 
       var termino = this.headerSearch.trim();
@@ -75,7 +61,6 @@ export default {
       });
     },
 
-    // Cierra sesion, redirige al login y muestra notificacion de despedida.
     manejarCierreSesion() {
       this.menuAbierto = false;
       estadoAutenticacion.cerrarSesion();
@@ -83,21 +68,17 @@ export default {
       notificaciones.success("You've signed out successfully.", { title: "Goodbye" });
     },
 
-    // Acceso directo a la pagina de moderacion desde el dropdown del menu.
     irAModeracion() {
       this.menuAbierto = false;
       this.$router.push('/admin/comments');
     },
 
-    // Abre el modal que pide confirmar la eliminacion definitiva de la cuenta.
     abrirConfirmEliminar() {
       this.menuAbierto = false;
       this.confirmTexto = '';
       this.confirmEliminarAbierto = true;
     },
 
-    // Cierra el modal. Si estamos en mitad de la peticion lo bloqueamos
-    // para evitar que el usuario lo cierre por error.
     cerrarConfirmEliminar() {
       if (this.eliminandoCuenta) {
         return;
@@ -106,8 +87,6 @@ export default {
       this.confirmTexto = '';
     },
 
-    // Llama al backend para borrar la cuenta. Solo se ejecuta si el usuario
-    // ha escrito exactamente "DELETE" en el input de confirmacion.
     async confirmarEliminarCuenta() {
 
       if (this.confirmTexto !== 'DELETE' || this.eliminandoCuenta) {
@@ -144,8 +123,6 @@ export default {
       }
     },
 
-    // Cierra el menu desplegable del usuario cuando se hace click fuera de el.
-    // Lo registramos como listener global del documento en mounted().
     manejarClicFuera(e) {
       if (this.$refs.userMenuRef && !this.$refs.userMenuRef.contains(e.target)) {
         this.menuAbierto = false;
@@ -155,9 +132,6 @@ export default {
 
   watch: {
 
-    // Cuando el usuario navega al catalogo desde otra parte y la URL tiene
-    // ?q=algo, sincronizamos el input del header con ese valor para que
-    // refleje la busqueda activa.
     '$route.query.q'(valor) {
       if (valor) {
         this.headerSearch = valor;
@@ -169,18 +143,16 @@ export default {
 
   mounted() {
 
-    // Aplicamos el tema inmediatamente para evitar el "flash" de tema
-    // claro al cargar la pagina cuando el usuario tenia tema oscuro.
+    // Aplicamos el tema enseguida para no tener un flashazo de tema claro
+    // si el usuario tenia el oscuro guardado
     document.documentElement.setAttribute('data-theme', this.tema);
 
     document.addEventListener('mousedown', this.manejarClicFuera);
 
-    // Intentamos restaurar la sesion del usuario a partir del token.
     estadoAutenticacion.restaurarSesion();
 
-    // Si en la peticion anterior dejamos un aviso "flash" (por ejemplo,
-    // "sesion expirada" tras un 401), lo recogemos aqui y lo mostramos
-    // como notificacion en la primera carga.
+    // Si en una peticion anterior guardamos un aviso flash (por ejemplo
+    // "sesion expirada" tras un 401) lo recogemos y lo mostramos ahora
     var flash = localStorage.getItem('flashNotificacion');
     if (flash) {
       localStorage.removeItem('flashNotificacion');
@@ -195,7 +167,6 @@ export default {
         }
         fn(datos.message, { title: datos.title });
       } catch (error) {
-        // Si el JSON estaba corrupto, lo ignoramos.
       }
     }
   },

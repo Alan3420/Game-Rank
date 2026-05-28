@@ -14,11 +14,6 @@ from app.limiter import limiter
 from app.autorizacion.validadores import admin_required
 
 
-# Endpoints relacionados con comentarios. Reglas principales:
-#   - Un usuario solo puede tener UN comentario por juego.
-#   - Solo el autor (o el admin) puede editar o borrar un comentario.
-#   - El listado por juego va paginado.
-
 comment_bp = Blueprint("comment", __name__)
 
 
@@ -45,7 +40,6 @@ def crear():
         )
 
         if type(resultado) == str:
-            # El servicio nos devolvio un string -> error de validacion o duplicado.
             return jsonify({"message": resultado}), 409
 
         return jsonify({
@@ -74,8 +68,6 @@ def actualizar(comment_id):
         id_usuario = get_jwt_identity()
         usuario = obtener_usuario_por_id(id_usuario)
 
-        # Marcamos si el usuario es admin para permitir editar comentarios
-        # ajenos desde el panel de moderacion.
         es_admin = False
         if usuario and usuario.role == 'admin':
             es_admin = True
@@ -129,8 +121,7 @@ def eliminar(comment_id):
 @jwt_required()
 def obtener_por_juego(game_id):
     try:
-        # Limites: como mucho 40 por pagina, offset minimo 0. Asi evitamos
-        # peticiones absurdas que devolverian todo el historial del juego.
+        # Topes para que nadie pida 5000 comentarios de golpe
         limite = min(request.args.get('limit', default=10, type=int), 40)
         desplazamiento = max(request.args.get('offset', default=0, type=int), 0)
 
@@ -150,7 +141,6 @@ def obtener_por_juego(game_id):
 @admin_required
 @limiter.limit("30 per minute")
 def obtener_todos_admin():
-    # Solo admin: lista TODOS los comentarios del sistema para moderar.
     try:
         comentarios = obtener_todos_los_comentarios()
         return jsonify({"comments": comentarios}), 200

@@ -8,10 +8,6 @@ from app.services.favorite_services import (
 )
 
 
-# Endpoints de favoritos. Marcar y desmarcar un juego como favorito,
-# listar los favoritos del usuario y comprobar si un juego concreto lo es
-# (para pintar el corazon en la card).
-
 favorite_bp = Blueprint("favorite", __name__)
 
 
@@ -29,7 +25,6 @@ def agregar():
         resultado = agregar_favorito(id_usuario=id_usuario, id_juego=id_juego)
 
         if type(resultado) == str:
-            # El servicio devolvio un mensaje -> el juego ya estaba en favoritos.
             return jsonify({"message": resultado}), 409
 
         return jsonify({
@@ -78,8 +73,6 @@ def listar_favoritos():
 @favorite_bp.route("/check/<int:game_id>", methods=["GET"])
 @jwt_required()
 def comprobar(game_id):
-    # Devuelve true/false segun si el juego esta o no en favoritos del
-    # usuario actual. Lo usa el frontend para pintar el corazon lleno o vacio.
     try:
         id_usuario = get_jwt_identity()
         es_fav = es_favorito(id_usuario=id_usuario, id_juego=game_id)

@@ -1,9 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { estadoAutenticacion } from "../store/autenticacion";
 
-// Importacion de los componentes asociados a cada ruta de la SPA.
-// Se importan de forma directa (sin lazy) porque la app es pequena y asi
-// evitamos el flash de carga entre pantallas.
 import Login from "../components/LoginRegister/login_user.vue";
 import Register from "../components/LoginRegister/register_user.vue";
 import Home from "../components/Home/home.vue";
@@ -17,9 +14,6 @@ import Tendencias from "../components/Tendencias/Tendencias.vue";
 import NotFound from "../components/NotFound/NotFound.vue";
 
 
-// Definicion centralizada de rutas. Cada ruta declara su componente y el
-// titulo de pestana que tendra el navegador. Las rutas con requiresAdmin
-// solo pueden visitarse si el usuario logueado tiene rol "admin".
 const routes = [
     {
         path: "/",
@@ -77,8 +71,6 @@ const routes = [
         meta: { title: "Game Rank - Tendencias" }
     },
     {
-        // Catch-all: cualquier ruta no declarada arriba cae aqui y se muestra
-        // la pagina 404 conservando la URL original.
         path: "/:pathMatch(.*)*",
         name: "not-found",
         component: NotFound,
@@ -91,20 +83,12 @@ const router = createRouter({
     history: createWebHistory(),
     routes: routes,
 
-    // Por defecto cada cambio de ruta vuelve al inicio de la pagina.
-    // Sin esto el navegador conservaria el scroll de la pantalla anterior
-    // y se veria raro al abrir el detalle de un juego.
     scrollBehavior: function () {
         return { top: 0, behavior: 'smooth' };
     }
 });
 
 
-// Guardia de navegacion global. Se ejecuta antes de entrar a cualquier ruta.
-// Se encarga de:
-//   1. Actualizar el titulo de la pestana del navegador.
-//   2. Redirigir al login si la ruta requiere sesion y no hay token.
-//   3. Mostrar 404 si la ruta es de admin y el usuario actual no lo es.
 router.beforeEach(function (to) {
 
     if (to.meta && to.meta.title) {
@@ -116,15 +100,13 @@ router.beforeEach(function (to) {
     var rutasPublicas = ['/login', '/register', '/', '/terminos'];
     var token = localStorage.getItem("token");
 
-    // Sin token y ruta privada -> mandamos al login.
     if (!token && rutasPublicas.indexOf(to.path) === -1) {
         return "/login";
     }
 
-    // Si ya cargamos el usuario y la ruta requiere admin, validamos el rol.
-    // Si el usuario no es admin devolvemos 404 manteniendo la URL para no
-    // revelar que la ruta existe.
     if (to.meta && to.meta.requiresAdmin) {
+        // Si no es admin sacamos un 404 en vez de un 403 para no
+        // delatar que la ruta de admin existe
         if (estadoAutenticacion.usuario && estadoAutenticacion.usuario.role !== 'admin') {
             var partesRuta = to.path.substring(1).split('/');
             return {

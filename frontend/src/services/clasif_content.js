@@ -1,7 +1,5 @@
 import api from './api';
 
-// Trae desde el backend la lista paginada de juegos cuyo lanzamiento todavia
-// no ha ocurrido, para mostrarlos en la seccion de proximos lanzamientos.
 export async function obtenerProximosLanzamientos(pagina, porPagina) {
     if (!pagina) {
         pagina = 1;

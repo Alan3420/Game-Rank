@@ -1,14 +1,8 @@
 from app.repositories import rate_repo
 
 
-# Servicio de calificaciones (1-5 estrellas) de los usuarios sobre juegos.
-# Solo se permite una calificacion por usuario y juego. La restriccion la
-# garantiza la PK compuesta de la tabla rates ademas de esta validacion.
-
-
 def crear_calificacion(id_usuario, id_juego, valor) -> object | str:
-    # Validacion del valor. Aceptamos 0 a 5 para que tambien se pueda
-    # "limpiar" una calificacion poniendola a 0 desde el formulario.
+    # El 0 sirve para que el usuario pueda "limpiar" su nota desde el form
     if not isinstance(valor, int) or valor < 0 or valor > 5:
         return "La valoración debe ser un número entero entre 0 y 5"
 
@@ -19,8 +13,6 @@ def crear_calificacion(id_usuario, id_juego, valor) -> object | str:
 
 
 def actualizar_calificacion(id_usuario, id_juego, valor=None) -> object | str:
-    # Mismo rango de validacion que en crear. El valor es opcional para
-    # poder usar este metodo solo para "tocar" el registro en el futuro.
     if valor is not None:
         if not isinstance(valor, int) or valor < 0 or valor > 5:
             return "La valoración debe ser un número entero entre 0 y 5"
@@ -43,8 +35,6 @@ def eliminar_calificacion(id_usuario, id_juego) -> bool | str:
 
 
 def obtener_promedio_del_juego(id_juego) -> float:
-    # Devuelve la media de todas las calificaciones que tiene el juego.
-    # Si no hay ninguna devolvemos 0.0 para que el frontend pinte un "—".
     calificaciones = rate_repo.obtener_calificaciones_por_juego(id_juego=id_juego)
 
     if not calificaciones:

@@ -9,9 +9,6 @@ from app.services.user_game_status_service import (
 )
 
 
-# Endpoints para los estados de coleccion (pendiente, jugando, pausado,
-# completado) que cada usuario asigna a sus juegos.
-
 status_bp = Blueprint("status", __name__)
 
 
@@ -48,8 +45,6 @@ def establecer():
 @status_bp.route("/<int:id_game>", methods=["GET"])
 @jwt_required()
 def obtener(id_game):
-    # Devuelve el estado que el usuario tiene asignado a ese juego, o null
-    # si no le ha asignado ninguno todavia.
     try:
         id_usuario = int(get_jwt_identity())
         registro = obtener_estado_del_juego(id_usuario=id_usuario, id_juego=id_game)
@@ -66,8 +61,6 @@ def obtener(id_game):
 @status_bp.route("/list", methods=["GET"])
 @jwt_required()
 def listar():
-    # Lista corta (id_juego + estado) para pintar badges en las cards
-    # del catalogo sin cargar mas datos.
     try:
         id_usuario = int(get_jwt_identity())
         registros = listar_estados_del_usuario(id_usuario=id_usuario)
@@ -80,8 +73,6 @@ def listar():
 @status_bp.route("/list/full", methods=["GET"])
 @jwt_required()
 def listar_completos():
-    # Variante con datos del juego (nombre, imagen, etc.) que necesita la
-    # pantalla de perfil para mostrar la coleccion entera.
     try:
         id_usuario = int(get_jwt_identity())
         registros = listar_estados_con_juegos(id_usuario=id_usuario)

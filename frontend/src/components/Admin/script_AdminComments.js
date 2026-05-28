@@ -7,9 +7,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { watchEffect } from 'vue';
 import { estadoAutenticacion } from '../../store/autenticacion';
 
-// Panel de moderacion donde el admin ve TODOS los comentarios del sistema
-// y puede borrarlos. La proteccion de acceso funciona igual que en
-// AdminUsers: si entras y no eres admin, 404 sin revelar la ruta.
+
 export default {
   name: 'AdminComments',
 
@@ -24,8 +22,6 @@ export default {
 
   computed: {
 
-    // Filtra la lista por nombre de usuario, apellido o descripcion del
-    // comentario. La busqueda es case-insensitive.
     comentariosFiltrados() {
 
       if (!this.filtro.trim()) {
@@ -69,6 +65,7 @@ export default {
     var route = useRoute();
     var self = this;
 
+    // Misma proteccion que AdminUsers: si no es admin, 404 sin delatar
     var parar = null;
     parar = watchEffect(function () {
 
@@ -101,7 +98,6 @@ export default {
 
   methods: {
 
-    // Pide al backend todos los comentarios del sistema.
     async cargarComentarios() {
 
       try {
@@ -116,7 +112,6 @@ export default {
       }
     },
 
-    // Confirma con el admin y borra el comentario seleccionado.
     async eliminarComentario(comentario) {
 
       var confirmar = confirm('Delete comment by ' + comentario.username + '?');
@@ -127,7 +122,6 @@ export default {
       try {
         await eliminarComentarioEnBackend(comentario.id_comment);
 
-        // Quitamos el comentario de la lista local sin recargar todo.
         var nuevaLista = [];
         for (var i = 0; i < this.comentarios.length; i++) {
           if (this.comentarios[i].id_comment !== comentario.id_comment) {
@@ -144,8 +138,6 @@ export default {
       }
     },
 
-    // Formatea una fecha ISO al formato "12 Mar 2026" para mostrarla en
-    // la tabla. Las abreviaciones de mes en ingles porque la UI esta en ingles.
     formatearFecha(valor) {
 
       if (!valor) {
@@ -158,7 +150,6 @@ export default {
       return d.getDate() + ' ' + meses[d.getMonth()] + ' ' + d.getFullYear();
     },
 
-    // Boton "Back": vuelve al perfil.
     volver() {
       this.router.push('/profile');
     }

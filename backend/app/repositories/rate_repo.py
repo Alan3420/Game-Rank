@@ -3,11 +3,6 @@ from app.models.Rate import Rate
 from sqlalchemy import func
 
 
-# Capa de acceso a datos para la tabla "rates" (calificaciones de juegos
-# por usuario). La tabla tiene PK compuesta (id_user + id_game_api), asi
-# que un usuario solo puede tener una calificacion por juego.
-
-
 def obtener_calificacion_por_usuario_y_juego(id_usuario, id_juego):
     return Rate.query.filter_by(id_user=id_usuario, id_game_api=id_juego).first()
 
@@ -36,9 +31,6 @@ def actualizar_calificacion(id_usuario, id_juego, valor=None):
     if not calificacion:
         return None
 
-    # Solo cambiamos la nota si nos pasaron una. Asi este metodo sirve
-    # tambien para "tocar" el registro sin modificar el valor (por si en
-    # el futuro se anaden campos editables).
     if valor:
         calificacion.rating = valor
 
@@ -61,8 +53,6 @@ def eliminar_calificacion(id_usuario, id_juego):
 
 
 def obtener_top_valorados(limite):
-    # Ranking por media de calificacion. Excluimos juegos sin votos con
-    # el having; devolvemos (id_game_api, promedio, votos).
     promedio = func.round(func.avg(Rate.rating), 1).label("avg_rating")
     votos = func.count(Rate.id_rate).label("votes")
     return (db.session.query(Rate.id_game_api, promedio, votos)

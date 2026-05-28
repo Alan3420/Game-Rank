@@ -3,11 +3,6 @@ from app.models.UserGameStatus import UserGameStatus
 from sqlalchemy import func
 
 
-# Capa de acceso a datos para la tabla "user_game_status".
-# Guarda en que estado tiene cada usuario sus juegos (pendiente, jugando,
-# pausado, completado). Es lo que pinta la pestana "My Collection" del perfil.
-
-
 def obtener_estado(id_usuario, id_juego):
     return UserGameStatus.query.filter_by(id_user=id_usuario, id_game_api=id_juego).first()
 
@@ -50,8 +45,6 @@ def eliminar_estado(id_usuario, id_juego) -> bool:
 
 
 def obtener_top_coleccion(limite):
-    # Ranking de juegos mas anadidos a colecciones (sin importar el estado).
-    # Devuelve (id_game_api, total).
     total = func.count(UserGameStatus.id_status).label("total")
     return (db.session.query(UserGameStatus.id_game_api, total)
             .group_by(UserGameStatus.id_game_api)
@@ -61,8 +54,6 @@ def obtener_top_coleccion(limite):
 
 
 def obtener_conteo_estados_por_usuario(id_usuario):
-    # Cuantas filas tiene el usuario por cada estado (pendiente, jugando,
-    # pausado, completado). Devuelve (estado, total).
     return (db.session.query(UserGameStatus.status, func.count(UserGameStatus.id_status))
             .filter(UserGameStatus.id_user == id_usuario)
             .group_by(UserGameStatus.status)

@@ -8,9 +8,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { watchEffect } from 'vue';
 import { estadoAutenticacion } from '../../store/autenticacion';
 
-// Panel de administracion para gestionar los usuarios registrados.
-// Solo accesible para usuarios con rol "admin". Si el usuario no es admin
-// devolvemos 404 conservando la URL para no revelar que la pagina existe.
+
 export default {
   name: 'AdminUsers',
 
@@ -25,9 +23,6 @@ export default {
 
   computed: {
 
-    // Devuelve la lista filtrada por el texto que escribio el admin.
-    // Sin texto devolvemos la lista completa. Con texto buscamos en nombre,
-    // apellido y email (case-insensitive).
     usuariosFiltrados() {
 
       if (!this.filtro.trim()) {
@@ -71,11 +66,9 @@ export default {
     var route = useRoute();
     var self = this;
 
-    // Usamos watchEffect para reaccionar al estado de la sesion. Cuando
-    // termina de cargar comprobamos el rol: si no es admin, redirigimos a
-    // 404 sin revelar la existencia de la ruta. Si es admin, cargamos
-    // los usuarios. En cualquier caso cortamos el watcher despues para
-    // que no vuelva a dispararse.
+    // Esperamos a que la sesion termine de cargar para validar el rol.
+    // Si no es admin sacamos un 404 (sin delatar que la ruta existe) y
+    // si lo es cargamos los usuarios. En cualquier caso cortamos el watcher
     var parar = null;
     parar = watchEffect(function () {
 
@@ -108,7 +101,6 @@ export default {
 
   methods: {
 
-    // Pide al backend la lista completa de usuarios.
     async cargarUsuarios() {
 
       try {
@@ -125,7 +117,6 @@ export default {
       }
     },
 
-    // Sube al usuario indicado al rol de administrador.
     async promoverAdmin(usuario) {
 
       try {
@@ -142,7 +133,6 @@ export default {
       }
     },
 
-    // Baja al usuario del rol de administrador al rol normal.
     async degradarAdmin(usuario) {
 
       try {
@@ -159,7 +149,6 @@ export default {
       }
     },
 
-    // Confirma con el admin y borra el usuario del sistema.
     async eliminarUsuario(usuario) {
 
       var confirmar = confirm('Are you sure you want to delete ' + usuario.name + '?');
@@ -170,8 +159,6 @@ export default {
       try {
         await eliminarUsuarioEnBackend(usuario.id_user);
 
-        // Reconstruimos la lista local sin el usuario eliminado para
-        // que la tabla se actualice sin recargar todo.
         var nuevaLista = [];
         for (var i = 0; i < this.usuarios.length; i++) {
           if (this.usuarios[i].id_user !== usuario.id_user) {
@@ -192,14 +179,10 @@ export default {
       }
     },
 
-    // Boton "Back": vuelve al perfil del propio admin.
     volver() {
       this.router.push('/profile');
     },
 
-    // Formatea una fecha ISO al formato "12 Mar 2026" para mostrarla en
-    // la tabla. Las abreviaciones de mes estan en ingles porque la UI
-    // completa esta en ingles.
     formatearFecha(fecha) {
 
       if (!fecha) {

@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { estadoAutenticacion } from '../store/autenticacion';
 
-// Instancia central de axios que usan todos los servicios para hablar con
-// el backend. Se configura la URL base segun el entorno: en desarrollo
-// apunta a localhost y en produccion la define VITE_API_URL.
 var urlBase = 'http://localhost:5000';
 if (import.meta.env.VITE_API_URL) {
     urlBase = import.meta.env.VITE_API_URL;
@@ -14,9 +11,6 @@ const api = axios.create({
 });
 
 
-// Interceptor de peticiones: antes de mandar cualquier request, si el
-// usuario tiene token guardado en localStorage lo adjuntamos al header
-// Authorization para que el backend pueda identificarlo.
 api.interceptors.request.use(function (config) {
     var token = localStorage.getItem('token');
     if (token) {
@@ -26,15 +20,11 @@ api.interceptors.request.use(function (config) {
 });
 
 
-// Bandera para evitar que se dispare el cierre de sesion mas de una vez
-// cuando llegan varias respuestas 401 a la vez (por ejemplo si la pantalla
-// estaba haciendo varias peticiones en paralelo y el token caduco).
+// Flag para no disparar el cierre de sesion varias veces si hay multiples
+// peticiones en paralelo que reciben 401 a la vez
 var sesionExpirada = false;
 
 
-// Interceptor de respuestas: si el backend devuelve 401 quiere decir que
-// el token ya no es valido. En ese caso cerramos sesion, guardamos un
-// aviso para mostrarlo en la pantalla de login y redirigimos al usuario.
 api.interceptors.response.use(
     function (response) {
         return response;
@@ -53,10 +43,9 @@ api.interceptors.response.use(
                 url = error.config.url;
             }
 
-            // Los endpoints de login y register tambien devuelven 401 cuando
-            // las credenciales son incorrectas; en esos casos NO queremos
-            // forzar la redireccion al login, dejamos que la propia pantalla
-            // muestre el error.
+            // Login y register tambien tiran 401 si las credenciales son malas,
+            // en esos casos no forzamos la redireccion al login porque ya
+            // estamos ahi y la pantalla pinta el error por su cuenta
             var esRutaAuth = false;
             if (url.indexOf('/login') !== -1 || url.indexOf('/register') !== -1) {
                 esRutaAuth = true;
@@ -69,8 +58,8 @@ api.interceptors.response.use(
 
                 estadoAutenticacion.cerrarSesion();
 
-                // Guardamos un aviso "flash" en localStorage para que la
-                // pantalla de login lo lea al cargar y muestre la notificacion.
+                // Dejamos un aviso en localStorage para que la pantalla
+                // de login lo lea al cargar y avise al usuario
                 var avisoFlash = {
                     type: 'error',
                     title: 'Sesión expirada',

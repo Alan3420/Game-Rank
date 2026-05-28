@@ -1,9 +1,7 @@
 import { registrarUsuario } from "../../services/user_service";
 import { notificaciones } from '../../store/notificaciones';
 
-// Componente del formulario de registro de nuevos usuarios.
-// Tiene mas validaciones que el de login porque aqui hay que comprobar
-// nickname, dominio de email, longitud y confirmacion de contrasena, etc.
+
 export default {
   name: "register",
 
@@ -25,8 +23,6 @@ export default {
 
   computed: {
 
-    // El nickname acepta letras, numeros y guion bajo, entre 3 y 30 caracteres.
-    // Lo validamos con una expresion regular sencilla.
     nicknameValido() {
       var patron = /^[a-zA-Z0-9_]{3,30}$/;
       if (patron.test(this.nickname)) {
@@ -35,8 +31,8 @@ export default {
       return false;
     },
 
-    // Limitamos los dominios de correo aceptados a los mas comunes para
-    // evitar registros con emails de un solo uso.
+    // Filtramos dominios para que no se registre cualquier email tonto
+    // de un solo uso, pegamos los mas comunes y ya
     emailDominioValido() {
 
       var dominiosPermitidos = [
@@ -65,7 +61,6 @@ export default {
       return false;
     },
 
-    // El boton de submit solo se activa cuando TODAS las reglas se cumplen.
     formularioValido() {
 
       if (this.name.length < 1 || this.name.length > 50) {
@@ -106,8 +101,6 @@ export default {
 
   methods: {
 
-    // Maneja el submit del formulario. Si el backend responde 409 quiere
-    // decir que el email o nickname ya estaba registrado.
     async manejarRegistro() {
 
       try {
@@ -132,8 +125,8 @@ export default {
 
         if (error.response && error.response.status === 409) {
 
-          // Pequena espera para que no se pueda spamear el endpoint
-          // probando combinaciones de email/nickname.
+          // Espera de 2s para que cueste mas probar nicknames/emails
+          // a base de spamear el endpoint
           await new Promise(function (resolve) {
             setTimeout(resolve, 2000);
           });

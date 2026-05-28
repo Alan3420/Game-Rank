@@ -1,14 +1,8 @@
 import re
 
 
-# Capa "adaptador" entre la respuesta de RAWG y el formato que espera el
-# frontend. La API de RAWG devuelve muchos datos que no usamos (y muchos
-# anidados); aqui nos quedamos solo con lo que pinta cada componente.
-
-
-# Lista de tags y palabras clave que marcan contenido NSFW. Los usamos
-# para filtrar juegos adultos del catalogo, ya que la app no tiene control
-# parental ni verificacion de edad.
+# Listas para filtrar juegos adultos del catalogo, la app no tiene control
+# parental ni verificacion de edad asi que toca cortarlo por aqui
 TAGS_NSFW = {
     "adult", "nsfw", "hentai", "eroge", "nudity",
     "sexual-content", "adults-only", "pornographic",
@@ -24,9 +18,8 @@ PALABRAS_NSFW = {
 
 
 def nombre_es_nsfw(nombre) -> bool:
-    # Tokeniza el nombre con \b\w+\b y comprueba palabra a palabra.
-    # Asi evitamos falsos positivos por substrings (p. ej. "scuba" no
-    # deberia activar "cuba" si lo metieramos en la lista).
+    # Vamos palabra a palabra con \b\w+\b para no tener falsos positivos
+    # del tipo "scuba" activando "cuba"
     if not nombre:
         return False
 
@@ -38,8 +31,6 @@ def nombre_es_nsfw(nombre) -> bool:
 
 
 def es_contenido_adulto(datos_juego) -> bool:
-    # Tres criterios: ESRB rating "Adults Only" (id=5), nombre con palabras
-    # NSFW, o tags NSFW si no hay ESRB. Si alguno se cumple, lo filtramos.
     if not datos_juego:
         return False
 
@@ -63,9 +54,6 @@ def es_contenido_adulto(datos_juego) -> bool:
 
 
 def formatear_plataformas(datos) -> dict | list[dict]:
-    # Acepta una plataforma suelta o una lista. Si llega lista devolvemos
-    # una lista de diccionarios planos con id y name. Reducimos el JSON
-    # anidado original a lo minimo.
     if not datos:
         return None
 
@@ -85,8 +73,6 @@ def formatear_plataformas(datos) -> dict | list[dict]:
 
 
 def formatear_desarrolladoras(datos) -> dict | list[dict]:
-    # Igual que plataformas: dejamos solo id, nombre y la imagen de fondo
-    # que usamos como logo en el sidebar del detalle.
     if not datos:
         return None
 
@@ -108,7 +94,6 @@ def formatear_desarrolladoras(datos) -> dict | list[dict]:
 
 
 def formatear_capturas(datos) -> list:
-    # Capturas de pantalla del juego para la galeria del detalle.
     if not datos:
         return []
 
@@ -122,8 +107,6 @@ def formatear_capturas(datos) -> list:
 
 
 def formatear_trailers(datos):
-    # Por cada trailer guardamos el "preview" (imagen fija que se muestra
-    # antes de reproducir) y la URL de mayor calidad disponible.
     if not datos:
         return None
 
@@ -147,8 +130,6 @@ def formatear_trailers(datos):
 
 
 def formatear_equipo(datos) -> list:
-    # Equipo creativo del juego (directores, guionistas, etc.). Sus roles
-    # vienen como lista de "positions" y los capitalizamos para la UI.
     if not datos:
         return []
 
@@ -169,9 +150,6 @@ def formatear_equipo(datos) -> list:
 
 
 def formatear_tiendas(datos) -> list:
-    # Tiendas donde se puede comprar el juego (Steam, Epic, etc.).
-    # Devolvemos slug + url para que el frontend pueda pintar el icono
-    # de la tienda y construir el enlace de "Where to buy".
     if not datos:
         return []
 
@@ -188,8 +166,6 @@ def formatear_tiendas(datos) -> list:
 
 
 def formatear_logros(datos) -> list:
-    # Logros del juego con su porcentaje de obtencion. Convertimos el
-    # percent a float defensivamente (a veces RAWG manda string).
     if not datos:
         return []
 
@@ -197,8 +173,7 @@ def formatear_logros(datos) -> list:
     for logro in datos:
         porcentaje = logro.get("percent")
 
-        # Si viene como string lo convertimos. Si no se puede, lo dejamos
-        # como None y el frontend decide si lo pinta o no.
+        # A veces el percent viene como string desde RAWG, lo pasamos a float
         try:
             if porcentaje is not None:
                 porcentaje = float(porcentaje)
@@ -218,12 +193,6 @@ def formatear_logros(datos) -> list:
 
 
 def formatear_resumen_juego(datos) -> dict:
-    # Formato "card" del juego: lo minimo para pintar una tarjeta del
-    # catalogo (id, nombre, fecha, imagen, rating y metacritic).
-    #
-    # Acepta tanto un dict individual (juego suelto) como una lista (catalogo).
-    # En el caso de lista, ademas filtra los juegos NSFW para que no salgan
-    # nunca en el catalogo publico.
     if type(datos) != list:
         return {
             "id": datos.get("id"),
@@ -265,11 +234,6 @@ def formatear_generos(datos) -> list[dict]:
 
 
 def formatear_detalle_juego(datos) -> dict | list[dict]:
-    # Formato "detalle completo" del juego: el de la pantalla GameDetail.
-    # Incluye todo lo del resumen + descripcion, generos, capturas, trailers,
-    # plataformas, desarrolladoras, tiendas y equipo.
-    #
-    # Como en el resumen, acepta dict individual o lista.
     if type(datos) != list:
         return {
             "id": datos.get("id"),
@@ -308,5 +272,3 @@ def formatear_detalle_juego(datos) -> dict | list[dict]:
         })
 
     return resultado
-
-

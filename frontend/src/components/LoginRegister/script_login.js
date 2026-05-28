@@ -2,9 +2,7 @@ import { autenticarUsuario } from "../../services/user_service";
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
 
-// Componente del formulario de inicio de sesion.
-// Maneja los dos inputs (email y password), el toggle de "ver contrasena"
-// y la llamada al backend cuando se envia el formulario.
+
 export default {
   name: "login",
 
@@ -20,8 +18,6 @@ export default {
 
   computed: {
 
-    // Devuelve true solo cuando los campos cumplen las reglas minimas.
-    // El boton de submit usa esto para activarse o quedar deshabilitado.
     formularioValido() {
 
       var emailValido = false;
@@ -43,9 +39,6 @@ export default {
 
   methods: {
 
-    // Maneja el submit del formulario. Pide al backend autenticar las
-    // credenciales y, si todo va bien, guarda el usuario y token en el
-    // store global y redirige al home.
     async manejarInicioSesion() {
 
       try {
@@ -65,8 +58,8 @@ export default {
 
       } catch (error) {
 
-        // 401 = credenciales incorrectas. Esperamos 2s antes de mostrar el
-        // mensaje para frenar intentos masivos (ataque de fuerza bruta basico).
+        // Si las credenciales son malas esperamos 2s antes de mostrar el
+        // error, asi cuesta mas hacer fuerza bruta desde fuera
         if (error.response && error.response.status === 401) {
 
           await new Promise(function (resolve) {

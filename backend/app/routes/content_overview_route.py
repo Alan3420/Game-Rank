@@ -14,10 +14,6 @@ from app.services.game_services import (
 from app.limiter import limiter
 
 
-# Endpoints que devuelven datos de juegos (catalogo, detalles, busqueda
-# con filtros, proximos lanzamientos, video del hero, saga, DLC, logros).
-# La mayoria pegan contra la API de RAWG por debajo.
-
 content_overview_bp = Blueprint('content_overview_route', __name__)
 
 
@@ -41,8 +37,8 @@ def proximos_lanzamientos():
 
         resultado = obtener_proximos_lanzamientos(pagina=pagina, por_pagina=por_pagina)
 
-        # Guardamos los juegos en BD en segundo plano para poder enlazarlos
-        # con favoritos/comentarios/etc. cuando el usuario interactue.
+        # Guardamos en BD en segundo plano para tener referencia local del
+        # juego cuando el usuario lo marque como favorito, comentado, etc.
         guardar_juegos(
             juegos=resultado.get("games", []),
             app=current_app._get_current_object()
@@ -145,8 +141,8 @@ def logros_del_juego(game_id):
 @content_overview_bp.route("/hero-video", methods=["GET"])
 @limiter.limit("30 per minute")
 def video_destacado():
-    # Endpoint publico (sin jwt_required). El video se muestra en el hero
-    # del Home antes de que el usuario inicie sesion.
+    # Ojo, este endpoint no lleva jwt_required porque el video se muestra
+    # en el hero del Home antes de que el usuario inicie sesion
     try:
         video = obtener_video_aleatorio()
 

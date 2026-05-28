@@ -4,10 +4,6 @@ from app.services.tendencias_service import obtener_tendencias
 from app.limiter import limiter
 
 
-# Endpoint unico que devuelve las cuatro listas de tendencias de la
-# comunidad. Como el calculo implica varias consultas + llamadas a RAWG,
-# aplicamos rate-limit para evitar abuso.
-
 tendencias_bp = Blueprint("tendencias_bp", __name__)
 
 

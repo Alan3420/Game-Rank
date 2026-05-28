@@ -5,14 +5,9 @@ import { consultarSiEsFavorito, agregarAFavoritos, quitarDeFavoritos } from '../
 import { listarEstadosDeJuego } from '../../services/user_game_status.js';
 import { notificaciones } from '../../store/notificaciones.js';
 
-// Numero de juegos por pagina en la seccion de proximos lanzamientos.
-// Se usa 10 por pagina (a diferencia del catalogo que usa 20) para que
-// la seccion no domine la altura del Home.
 const POR_PAGINA_PROXIMOS = 10;
 
-// Componente de la pagina principal (Home). Tiene dos modos: cuando no hay
-// sesion muestra solo el hero + CTA de registro; cuando hay sesion muestra
-// ademas los 3 juegos mejor valorados y la lista de proximos lanzamientos.
+
 export default {
   name: "home",
 
@@ -20,16 +15,11 @@ export default {
     return {
       topGames: [],
       futureReleases: [],
-      // Set para acceso rapido O(1) cuando preguntamos si un juego es favorito.
       favorites: new Set(),
-      // Map id_juego -> estado, para pintar el badge de la card.
       statuses: new Map(),
       isLoading: true,
       isFutureLoading: true,
       heroVideo: null,
-      // Estado de paginacion de "Upcoming Releases". RAWG no devuelve
-      // un total fiable cuando hay muchos resultados, pero usamos count
-      // para calcular totalPaginasProximos.
       currentPageProximos: 1,
       totalCountProximos: 0
     };
@@ -40,11 +30,9 @@ export default {
     var token = localStorage.getItem("token");
     var tareas = [];
 
-    // El video del hero se carga siempre, este logueado o no.
     tareas.push(this.cargarVideoDestacado());
 
-    // El resto solo tiene sentido si hay sesion: si no, no podemos
-    // pedir favoritos ni estados de coleccion.
+    // Sin sesion no tiene sentido pedir favoritos ni estados de coleccion
     if (token) {
       tareas.push(this.cargarMejoresJuegos());
       tareas.push(this.cargarProximosLanzamientos());
@@ -56,8 +44,6 @@ export default {
 
   methods: {
 
-    // Pide el video destacado al backend. Si no hay video (404) o falla,
-    // dejamos heroVideo en null y el template oculta el bloque del video.
     async cargarVideoDestacado() {
       try {
         var video = await obtenerVideoDestacado();
@@ -72,9 +58,6 @@ export default {
       }
     },
 
-    // Pide la primera pagina del catalogo, filtra los que tienen nota de
-    // Metacritic y se queda con los 3 mejores para mostrarlos como
-    // "Top Rated" en la pagina principal.
     async cargarMejoresJuegos() {
 
       this.isLoading = true;
@@ -89,7 +72,6 @@ export default {
           juegos = respuesta;
         }
 
-        // Nos quedamos solo con los que tienen nota de Metacritic > 0.
         var juegosConNota = [];
         for (var i = 0; i < juegos.length; i++) {
           if (juegos[i].metacritic && juegos[i].metacritic > 0) {
@@ -97,15 +79,12 @@ export default {
           }
         }
 
-        // Ordenamos de mayor a menor nota y cogemos los 3 primeros.
         juegosConNota.sort(function (a, b) {
           return b.metacritic - a.metacritic;
         });
         this.topGames = juegosConNota.slice(0, 3);
         this.isLoading = false;
 
-        // Si hay sesion comprobamos cuales son favoritos para pintar
-        // el corazon en su estado correcto.
         if (estadoAutenticacion.usuario) {
           var tareas = [];
           for (var j = 0; j < this.topGames.length; j++) {
@@ -120,13 +99,10 @@ export default {
       }
     },
 
-    // Pide la primera pagina de proximos lanzamientos al cargar el Home.
     async cargarProximosLanzamientos() {
       await this.cargarPaginaProximos(1);
     },
 
-    // Carga la pagina indicada de la seccion "Upcoming Releases".
-    // Replica el patron del catalogo: usa games + count para paginar.
     async cargarPaginaProximos(pagina) {
 
       this.isFutureLoading = true;
@@ -147,8 +123,8 @@ export default {
           this.totalCountProximos = 0;
         }
 
-        // Si pedimos una pagina mas alla del total, volvemos a la ultima
-        // pagina valida para no mostrar lista vacia.
+        // Si pedimos una pagina mas alla del total volvemos a la ultima
+        // valida para no dejar la lista en blanco
         if (this.totalPaginasProximos > 0 && pagina > this.totalPaginasProximos) {
           await this.cargarPaginaProximos(this.totalPaginasProximos);
           return;
@@ -156,8 +132,6 @@ export default {
 
         this.isFutureLoading = false;
 
-        // Hacemos scroll a la seccion para que el usuario vea el cambio
-        // de pagina (salvo en la carga inicial, donde estamos en la 1).
         if (pagina > 1) {
           var elemento = document.getElementById('proximos-section');
           if (elemento) {
@@ -180,9 +154,6 @@ export default {
       }
     },
 
-    // Pide al backend la lista corta de estados (id_juego + status) y los
-    // mete en un Map para acceso rapido. Lo usamos solo para pintar el
-    // badge de estado en las cards.
     async cargarEstadosDeColeccion() {
       try {
         var data = await listarEstadosDeJuego();
@@ -192,17 +163,14 @@ export default {
         }
         this.statuses = mapa;
       } catch (error) {
-        // Fallo silencioso: no es critico. Si falla, las cards no muestran
-        // el badge de estado pero todo lo demas funciona igual.
       }
     },
 
-    // Se dispara cuando una card cambia de estado (via emit @update:status).
-    // Reemplazamos el Map entero para que Vue detecte el cambio y repinte.
     manejarActualizacionEstado(datos) {
       var gameId = datos.gameId;
       var status = datos.status;
 
+      // Reemplazamos el Map entero para que Vue se entere del cambio
       var mapa = new Map(this.statuses);
       if (status) {
         mapa.set(gameId, status);
@@ -212,9 +180,6 @@ export default {
       this.statuses = mapa;
     },
 
-    // Al cargar la lista de juegos pregunta uno a uno si ya son favoritos
-    // del usuario actual. Si lo es, lo metemos en el Set para que la card
-    // muestre el corazon lleno.
     async comprobarFavoritoInicial(gameId) {
       try {
         var data = await consultarSiEsFavorito(gameId);
@@ -226,8 +191,6 @@ export default {
       }
     },
 
-    // Alterna el estado favorito de un juego. Optimista: cambia el Set
-    // antes de saber si el backend acepto el cambio, y muestra notificacion.
     async alternarFavorito(gameId) {
 
       var eraFavorito = this.favorites.has(gameId);
@@ -253,13 +216,10 @@ export default {
       }
     },
 
-    // Navega a la pagina de detalle del juego.
     irADetalle(gameId) {
       this.$router.push('/game/' + gameId);
     },
 
-    // Devuelve la clase CSS de color para la nota de Metacritic.
-    // Verde = 75+, amarillo = 50-74, rojo = menor, gris = sin nota.
     claseColorMetacritic(score) {
       if (!score) {
         return 'rank-score--none';
@@ -273,8 +233,6 @@ export default {
       return 'rank-score--red';
     },
 
-    // Boton del hero para usuarios no logueados: si por algun motivo ya
-    // tienen token guardado los llevamos al catalogo; si no, al login.
     irALogin() {
       var token = localStorage.getItem("token");
       if (token) {
@@ -292,8 +250,6 @@ export default {
       this.$router.push('/content/overview');
     },
 
-    // Boton "Upcoming releases" del hero: hace scroll a la seccion
-    // correspondiente sin recargar la pagina.
     desplazarALanzamientos() {
       var elemento = document.getElementById('proximos-section');
       if (elemento) {
@@ -303,13 +259,12 @@ export default {
   },
 
   computed: {
-    // Lo exponemos como computed para usarlo dentro del template.
     estadoAutenticacion() {
       return estadoAutenticacion;
     },
 
-    // Total de paginas de proximos lanzamientos a partir del count.
-    // Tope de 500 igual que el catalogo porque RAWG corta en esa pagina.
+    // Tope de 500 paginas porque RAWG corta a partir de ahi aunque el
+    // count diga mas
     totalPaginasProximos() {
       if (!this.totalCountProximos) {
         return 0;

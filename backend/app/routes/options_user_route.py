@@ -6,9 +6,6 @@ from app.autorizacion.validadores import admin_required
 from app.limiter import limiter
 
 
-# Endpoints de "settings": editar perfil, cambiar contrasena, panel admin
-# y estadisticas del usuario actual.
-
 user_option_bp = Blueprint("option_route", __name__)
 
 
@@ -21,8 +18,8 @@ def editar_usuario():
 
         id_usuario_objetivo = datos.get("id_user")
 
-        # Solo el admin puede editar la cuenta de OTRO usuario.
-        # Un usuario normal solo puede editar la suya.
+        # Un usuario normal solo puede editar lo suyo, el admin puede tocar
+        # la cuenta de cualquiera
         usuario_actual = obtener_usuario_por_id(id_usuario_actual)
         if usuario_actual.role != 'admin' and int(id_usuario_objetivo) != int(id_usuario_actual):
             return jsonify({"message": "No tienes permisos para editar este usuario"}), 403
@@ -74,8 +71,7 @@ def obtener_lista_de_usuarios():
     try:
         id_usuario_actual = get_jwt_identity()
 
-        # Le pasamos el id del admin para que NO aparezca en la lista
-        # (no tiene sentido que un admin se vea a si mismo en el panel).
+        # Le pasamos el id del admin para que no aparezca en su propia lista
         usuarios = user_service.obtener_lista_de_usuarios(excluir_id_usuario=id_usuario_actual)
 
         usuarios_dict = []
@@ -129,8 +125,6 @@ def cambiar_rol_de_usuario():
 @jwt_required()
 @limiter.limit("3 per minute")
 def eliminar_propia_cuenta():
-    # El usuario actual pide borrar SU PROPIA cuenta. Rate-limit 3/min
-    # para evitar abuso (no es una accion que deba pulsarse en rafaga).
     try:
         id_usuario_actual = get_jwt_identity()
         resultado = user_service.eliminar_usuario(id_usuario=id_usuario_actual)
@@ -179,10 +173,6 @@ def cambiar_contrasena():
 @user_option_bp.route("/stats", methods=["GET"])
 @jwt_required()
 def obtener_estadisticas():
-    # Estadisticas que pinta el perfil: total por estado, favoritos,
-    # comentarios y media de las calificaciones del usuario actual.
-    # La query y el calculo viven en user_service / repos; aqui solo
-    # leemos el id de la sesion y devolvemos el resultado.
     try:
         id_usuario = get_jwt_identity()
         estadisticas = user_service.obtener_estadisticas_usuario(id_usuario)

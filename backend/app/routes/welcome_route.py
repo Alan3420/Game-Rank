@@ -5,9 +5,6 @@ from app.repositories.user_repo import obtener_usuario_por_id
 from app.limiter import limiter
 
 
-# Endpoints publicos (sin login) o personales del usuario actual:
-# login, registro y datos del propio usuario.
-
 welcome_bp = Blueprint('welcome_route', __name__)
 
 
@@ -22,7 +19,7 @@ def iniciar_sesion():
     usuario = user_service.autenticar_usuario(email, contrasena)
 
     if usuario:
-        # JWT identity tiene que ser un string en flask-jwt-extended >= 4.
+        # flask-jwt-extended >= 4 obliga a que la identity sea string
         token = create_access_token(identity=str(usuario.id_user))
         return jsonify({
             "message": "Login exitoso",
@@ -53,8 +50,6 @@ def registrar():
             contrasena=contrasena
         )
 
-        # El servicio devuelve un User si todo va bien, o un string con el
-        # mensaje de error si alguna validacion fallo.
         if type(resultado) != str:
             return jsonify({
                 "message": "Usuario registrado exitosamente",
@@ -70,8 +65,6 @@ def registrar():
 @welcome_bp.route("/me", methods=["GET"])
 @jwt_required()
 def obtener_mi_usuario():
-    # Endpoint que usa el frontend al cargar la app para restaurar la
-    # sesion a partir del token guardado en localStorage.
     id_usuario = get_jwt_identity()
     usuario = obtener_usuario_por_id(id_usuario)
 

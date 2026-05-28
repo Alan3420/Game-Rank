@@ -5,13 +5,9 @@ import { listarEstadosDeJuego } from "../../services/user_game_status";
 import { notificaciones } from "../../store/notificaciones";
 import { estadoAutenticacion } from "../../store/autenticacion";
 
-// Numero de juegos que se piden por pagina al backend. Coincide con el
-// limite que aplica RAWG y permite que la paginacion se vea consistente.
 const POR_PAGINA = 20;
 
-// Componente del catalogo de juegos. Se encarga de mostrar la lista
-// paginada, manejar los filtros (genero, plataforma, fechas, orden) y
-// la busqueda por nombre que llega como query string en la URL.
+
 export default {
     name: "contenido",
 
@@ -37,8 +33,6 @@ export default {
 
     computed: {
 
-        // Devuelve true si el usuario tiene algun filtro aplicado.
-        // Lo usamos para mostrar el badge con el contador en el boton.
         tieneFiltrosActivos() {
             var f = this.filters;
             if (f.ordering !== '') {
@@ -56,8 +50,6 @@ export default {
             return false;
         },
 
-        // Cuenta cuantos filtros distintos hay activos.
-        // El rango de fechas cuenta como un filtro (no como dos).
         cantidadFiltrosActivos() {
             var total = 0;
             var f = this.filters;
@@ -67,14 +59,13 @@ export default {
             }
             total = total + f.genres.length;
             total = total + f.platforms.length;
+            // El rango de fechas cuenta como uno, no como dos
             if (f.dateFrom || f.dateTo) {
                 total = total + 1;
             }
             return total;
         },
 
-        // Estamos "filtrando" si hay filtros o si hay una busqueda por nombre.
-        // Se usa para decidir si pedir el endpoint /catalog o /filtered.
         estaFiltrando() {
             if (this.tieneFiltrosActivos) {
                 return true;
@@ -85,10 +76,8 @@ export default {
             return false;
         },
 
-        // Calcula el total de paginas a partir del total de resultados.
-        // RAWG corta los resultados a partir de la pagina 500 aunque el
-        // total diga mas, asi que ponemos ese tope para no permitir navegar
-        // a paginas vacias.
+        // Tope de 500 paginas porque RAWG corta ahi aunque el count diga mas,
+        // si dejamos pasar paginas mas altas saldria lista vacia
         totalPaginas() {
             if (!this.totalCount) {
                 return 0;
@@ -103,13 +92,10 @@ export default {
 
     async mounted() {
 
-        // Si la URL tenia ?q=algo recogemos esa busqueda y la guardamos.
         if (this.$route.query.q) {
             this.game_name = this.$route.query.q;
         }
 
-        // Recogemos la pagina inicial de la URL. Si es invalida o > 500
-        // la limitamos para no dar problemas con la API.
         var paginaInicial = parseInt(this.$route.query.page);
         if (!paginaInicial || isNaN(paginaInicial)) {
             paginaInicial = 1;
@@ -133,8 +119,6 @@ export default {
 
     watch: {
 
-        // Si el usuario cambia de pagina desde la barra de navegacion del
-        // navegador, sincronizamos el componente.
         '$route.query.page'(nuevoValor) {
             var pagina = parseInt(nuevoValor);
             if (!pagina || isNaN(pagina)) {
@@ -148,7 +132,6 @@ export default {
             }
         },
 
-        // Si cambia la busqueda en la URL recargamos desde la pagina 1.
         async '$route.query.q'(nuevoValor) {
             if (nuevoValor) {
                 this.game_name = nuevoValor;
@@ -161,16 +144,13 @@ export default {
 
     methods: {
 
-        // Carga la pagina pedida. Decide a que endpoint pegar segun haya
-        // filtros activos o no, actualiza la URL para que se pueda compartir
-        // y arranca la comprobacion de favoritos en segundo plano.
         async cargarPagina(pagina) {
 
             this.loading = true;
             this.currentPage = pagina;
 
-            // Reflejamos la pagina en la URL para que se mantenga al recargar
-            // o al compartir el enlace. Cuando es la 1 la omitimos por estetica.
+            // Reflejamos la pagina en la URL para que se mantenga al
+            // recargar o al compartir el enlace
             var consulta = {};
             for (var clave in this.$route.query) {
                 if (Object.prototype.hasOwnProperty.call(this.$route.query, clave)) {
@@ -189,7 +169,6 @@ export default {
                 var respuesta = null;
 
                 if (this.estaFiltrando) {
-                    // Combinamos los filtros con el termino de busqueda.
                     var filtrosCompletos = {
                         ordering: this.filters.ordering,
                         genres: this.filters.genres,
@@ -215,15 +194,13 @@ export default {
                     this.totalCount = 0;
                 }
 
-                // Si llegamos a una pagina mas alla del total recargamos en
-                // la ultima pagina valida para no mostrar lista vacia.
                 if (this.totalPaginas > 0 && pagina > this.totalPaginas) {
                     await this.cargarPagina(this.totalPaginas);
                     return;
                 }
 
-                // Mostramos los juegos enseguida; las llamadas de favoritos
-                // van en segundo plano para que el grid aparezca rapido.
+                // Mostramos el grid enseguida y dejamos los favoritos
+                // cargandose por detras para que la UI no espere
                 this.loading = false;
 
                 if (estadoAutenticacion.usuario) {
@@ -242,8 +219,6 @@ export default {
             }
         },
 
-        // Pide al backend la lista corta (id_juego + estado) para pintar
-        // los badges de estado en las cards del catalogo.
         async cargarEstadosDeColeccion() {
             try {
                 var data = await listarEstadosDeJuego();
@@ -253,11 +228,9 @@ export default {
                 }
                 this.statuses = mapa;
             } catch (error) {
-                // Fallo silencioso, no es critico para la pantalla.
             }
         },
 
-        // Llamado por la card cuando el usuario cambia el estado de un juego.
         manejarActualizacionEstado(datos) {
             var gameId = datos.gameId;
             var status = datos.status;
@@ -271,7 +244,6 @@ export default {
             this.statuses = mapa;
         },
 
-        // Aplica los filtros que envia el panel y recarga desde la pagina 1.
         aplicarFiltros(nuevosFiltros) {
             this.filters = {
                 ordering: nuevosFiltros.ordering,
@@ -284,7 +256,6 @@ export default {
             this.cargarPagina(1);
         },
 
-        // Borra todos los filtros y recarga el catalogo sin filtros.
         limpiarFiltros() {
             this.filters = {
                 ordering: '',
@@ -297,7 +268,6 @@ export default {
             this.cargarPagina(1);
         },
 
-        // Pregunta al backend si el juego ya estaba en favoritos del usuario.
         async comprobarFavoritoInicial(gameId) {
             try {
                 var data = await consultarSiEsFavorito(gameId);
@@ -309,8 +279,6 @@ export default {
             }
         },
 
-        // Alterna el favorito (lo quita si estaba, lo anade si no estaba)
-        // y avisa con una notificacion en cada caso.
         async alternarFavorito(gameId) {
 
             var eraFavorito = this.favorites.has(gameId);
@@ -336,7 +304,6 @@ export default {
             }
         },
 
-        // Cierra el panel de filtros cuando se hace click fuera de el.
         manejarClicFueraDeFiltros(e) {
             if (!this.filterPanelOpen) {
                 return;

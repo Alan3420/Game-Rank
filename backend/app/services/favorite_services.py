@@ -3,14 +3,7 @@ from app.client.clientRAWG import get_game_by_id_api
 from app.services.adapter import formatear_resumen_juego
 
 
-# Servicio de favoritos. Mantiene una regla simple: un usuario no puede
-# tener el mismo juego dos veces en favoritos. La regla se valida aqui
-# antes de insertar, ademas de en la PK compuesta de la BD.
-
-
 def agregar_favorito(id_usuario, id_juego) -> object | str:
-    # Comprobacion previa para devolver un mensaje legible si el juego
-    # ya estaba marcado, en vez de un IntegrityError 500.
     existe = favorite_repo.obtener_favorito(id_usuario=id_usuario, id_juego=id_juego)
 
     if existe:
@@ -31,9 +24,8 @@ def eliminar_favorito(id_usuario, id_juego) -> bool | str:
 
 
 def obtener_favoritos_del_usuario(id_usuario) -> list:
-    # Cada favorito guarda solo el id del juego. Para devolver al frontend
-    # las cards completas (con nombre, imagen, etc.) pedimos los datos a
-    # RAWG por cada uno y los pasamos por el adapter.
+    # En BD solo guardamos el id del juego asi que para cada favorito hay
+    # que pedir el resto de datos a RAWG
     favoritos = favorite_repo.obtener_favoritos_por_usuario(id_usuario=id_usuario)
 
     resultado = []

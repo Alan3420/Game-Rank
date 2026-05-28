@@ -1,6 +1,5 @@
 import api from './api';
 
-// Crea un comentario del usuario para el juego indicado.
 export async function crearComentario(idJuego, descripcion) {
     try {
         const respuesta = await api.post('/comment/create', {
@@ -14,8 +13,6 @@ export async function crearComentario(idJuego, descripcion) {
     }
 }
 
-// Devuelve los comentarios del juego paginados.
-// limit y offset se mandan al backend para no bajar todos de golpe.
 export async function obtenerComentariosDelJuego(idJuego, limite, desplazamiento) {
     if (!limite) {
         limite = 10;
@@ -38,8 +35,6 @@ export async function obtenerComentariosDelJuego(idJuego, limite, desplazamiento
     }
 }
 
-// Trae todos los comentarios del sistema. Lo usa solo el panel de admin
-// para moderar contenido.
 export async function obtenerTodosLosComentarios() {
     try {
         const respuesta = await api.get('/comment/all');
@@ -50,8 +45,6 @@ export async function obtenerTodosLosComentarios() {
     }
 }
 
-// Borra un comentario por id. Puede usarlo el autor del comentario
-// o un administrador.
 export async function eliminarComentario(idComentario) {
     try {
         const respuesta = await api.delete(`/comment/delete/${idComentario}`);
@@ -62,7 +55,6 @@ export async function eliminarComentario(idComentario) {
     }
 }
 
-// Actualiza el texto de un comentario ya existente.
 export async function actualizarComentario(idComentario, descripcion) {
     try {
         const respuesta = await api.put(`/comment/update/${idComentario}`, {
