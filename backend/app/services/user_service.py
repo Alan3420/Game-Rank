@@ -1,4 +1,8 @@
 from app.repositories import user_repo
+from app.repositories.favorite_repo import contar_favoritos_por_usuario
+from app.repositories.comment_repo import contar_comentarios_por_usuario
+from app.repositories.rate_repo import obtener_calificaciones_por_usuario
+from app.repositories.user_game_status_repo import obtener_conteo_estados_por_usuario
 from app.models.User import User
 import re
 
@@ -203,3 +207,42 @@ def cambiar_contrasena(id_usuario, contrasena_actual, contrasena_nueva) -> User 
     )
 
     return usuario_actualizado
+
+
+def obtener_estadisticas_usuario(id_usuario):
+    # Estadisticas que pinta el perfil del usuario actual. Pedimos cada
+    # pieza a su repo y armamos el dict final con la forma que espera
+    # el frontend (no cambia respecto a la version anterior).
+
+    estados = obtener_conteo_estados_por_usuario(id_usuario)
+    estados_dict = {}
+    for fila in estados:
+        estados_dict[fila[0]] = fila[1]
+
+    total_favoritos = contar_favoritos_por_usuario(id_usuario)
+    total_comentarios = contar_comentarios_por_usuario(id_usuario)
+
+    # Para la media nos basta con los valores de "rating". Pedimos la
+    # lista entera al repo (devuelve modelos Rate) y la promediamos aqui.
+    calificaciones = obtener_calificaciones_por_usuario(id_usuario)
+    valores = []
+    for calificacion in calificaciones:
+        valores.append(calificacion.rating)
+
+    rating_medio = None
+    if valores:
+        rating_medio = round(sum(valores) / len(valores), 1)
+
+    return {
+        "coleccion": {
+            "total":      sum(estados_dict.values()),
+            "completado": estados_dict.get("completado", 0),
+            "jugando":    estados_dict.get("jugando", 0),
+            "pendiente":  estados_dict.get("pendiente", 0),
+            "pausado":    estados_dict.get("pausado", 0)
+        },
+        "favoritos":    total_favoritos,
+        "comentarios":  total_comentarios,
+        "valoraciones": len(valores),
+        "rating_medio": rating_medio
+    }

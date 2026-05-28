@@ -1,5 +1,6 @@
 from app.models.Favorite import Favorite
 from app.database.db import db
+from sqlalchemy import func
 
 
 # Capa de acceso a datos para la tabla "favorites".
@@ -34,3 +35,20 @@ def eliminar_favorito(id_usuario, id_juego):
     db.session.delete(favorito)
     db.session.commit()
     return True
+
+
+def obtener_top_favoritos(limite):
+    # Ranking de juegos con mas favoritos. Devuelve (id_game_api, total).
+    total = func.count(Favorite.fav_id).label("total")
+    return (db.session.query(Favorite.id_game_api, total)
+            .group_by(Favorite.id_game_api)
+            .order_by(total.desc())
+            .limit(limite)
+            .all())
+
+
+def contar_favoritos_por_usuario(id_usuario):
+    total = db.session.query(func.count(Favorite.fav_id))\
+                      .filter(Favorite.user_id == id_usuario)\
+                      .scalar()
+    return total or 0

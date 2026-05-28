@@ -1,9 +1,7 @@
-from app.models.Favorite import Favorite
-from app.models.Rate import Rate
-from app.models.Comment import Comment
-from app.models.UserGameStatus import UserGameStatus
-from app.database.db import db
-from sqlalchemy import func
+from app.repositories.favorite_repo import obtener_top_favoritos
+from app.repositories.rate_repo import obtener_top_valorados
+from app.repositories.comment_repo import obtener_top_comentados
+from app.repositories.user_game_status_repo import obtener_top_coleccion
 from app.client.clientRAWG import get_game_by_id_api
 from app.services.adapter import formatear_resumen_juego
 from concurrent.futures import ThreadPoolExecutor
@@ -57,39 +55,12 @@ def _enriquecer_lista(tareas):
 
 
 def obtener_tendencias():
-    # Cuatro queries de agregacion, una por seccion. Las dejamos separadas
-    # en vez de unirlas porque cada una ordena por una metrica distinta y
-    # las uniones acabarian siendo mas dificiles de leer.
-
-    top_favoritos = db.session.query(
-        Favorite.id_game_api,
-        func.count(Favorite.fav_id).label("total")
-    ).group_by(Favorite.id_game_api)\
-     .order_by(func.count(Favorite.fav_id).desc())\
-     .limit(LIMITE_POR_SECCION).all()
-
-    top_valorados = db.session.query(
-        Rate.id_game_api,
-        func.round(func.avg(Rate.rating), 1).label("avg_rating"),
-        func.count(Rate.id_rate).label("votes")
-    ).group_by(Rate.id_game_api)\
-     .having(func.count(Rate.id_user) >= 1)\
-     .order_by(func.avg(Rate.rating).desc())\
-     .limit(LIMITE_POR_SECCION).all()
-
-    top_comentados = db.session.query(
-        Comment.id_videogame,
-        func.count(Comment.id_comment).label("total")
-    ).group_by(Comment.id_videogame)\
-     .order_by(func.count(Comment.id_comment).desc())\
-     .limit(LIMITE_POR_SECCION).all()
-
-    top_coleccion = db.session.query(
-        UserGameStatus.id_game_api,
-        func.count(UserGameStatus.id_status).label("total")
-    ).group_by(UserGameStatus.id_game_api)\
-     .order_by(func.count(UserGameStatus.id_status).desc())\
-     .limit(LIMITE_POR_SECCION).all()
+    # Pedimos los cuatro rankings a los repos. Cada uno hace su propia
+    # query de agregacion contra la BD; aqui solo orquestamos.
+    top_favoritos  = obtener_top_favoritos(LIMITE_POR_SECCION)
+    top_valorados  = obtener_top_valorados(LIMITE_POR_SECCION)
+    top_comentados = obtener_top_comentados(LIMITE_POR_SECCION)
+    top_coleccion  = obtener_top_coleccion(LIMITE_POR_SECCION)
 
     # Para cada lista construimos las "tareas" (id_juego, valor, etiqueta)
     # que el helper usara para hacer las llamadas a RAWG en paralelo.

@@ -141,7 +141,7 @@ def obtener_video_aleatorio() -> dict | None:
     # Recorre varias listas ordenadas (mas anadidos, mejor valorados, etc.)
     # y por cada lista mira los juegos en orden aleatorio buscando uno que
     # tenga al menos un trailer. Devuelve la URL del primer trailer encontrado.
-    ordenes = ["-added", "-rating", "-metacritic", "-released", "-relevance"]
+    ordenes = ["-added", "-rating", "-metacritic", "-relevance"]
 
     for orden in ordenes:
         juegos = get_games_by_ordering(ordering=orden, per_page=40)

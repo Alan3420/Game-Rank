@@ -1,7 +1,7 @@
 from app.models.Comment import Comment
 from app.database.db import db
 from datetime import date
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 
 
 # Capa de acceso a datos para la tabla "comments".
@@ -102,3 +102,20 @@ def eliminar_comentario(id_comentario, id_usuario, es_admin=False) -> bool:
         db.session.rollback()
         print(f"Error en eliminar_comentario: {e}")
         raise e
+
+
+def obtener_top_comentados(limite):
+    # Ranking de juegos con mas resenas. Devuelve (id_videogame, total).
+    total = func.count(Comment.id_comment).label("total")
+    return (db.session.query(Comment.id_videogame, total)
+            .group_by(Comment.id_videogame)
+            .order_by(total.desc())
+            .limit(limite)
+            .all())
+
+
+def contar_comentarios_por_usuario(id_usuario):
+    total = db.session.query(func.count(Comment.id_comment))\
+                      .filter(Comment.id_user == id_usuario)\
+                      .scalar()
+    return total or 0

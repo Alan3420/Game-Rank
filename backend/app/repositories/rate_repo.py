@@ -1,5 +1,6 @@
 from app.database.db import db
 from app.models.Rate import Rate
+from sqlalchemy import func
 
 
 # Capa de acceso a datos para la tabla "rates" (calificaciones de juegos
@@ -57,3 +58,16 @@ def eliminar_calificacion(id_usuario, id_juego):
     db.session.delete(calificacion)
     db.session.commit()
     return True
+
+
+def obtener_top_valorados(limite):
+    # Ranking por media de calificacion. Excluimos juegos sin votos con
+    # el having; devolvemos (id_game_api, promedio, votos).
+    promedio = func.round(func.avg(Rate.rating), 1).label("avg_rating")
+    votos = func.count(Rate.id_rate).label("votes")
+    return (db.session.query(Rate.id_game_api, promedio, votos)
+            .group_by(Rate.id_game_api)
+            .having(func.count(Rate.id_user) >= 1)
+            .order_by(func.avg(Rate.rating).desc())
+            .limit(limite)
+            .all())

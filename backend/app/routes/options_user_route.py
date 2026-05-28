@@ -4,12 +4,6 @@ from app.services import user_service
 from app.repositories.user_repo import obtener_usuario_por_id
 from app.autorizacion.validadores import admin_required
 from app.limiter import limiter
-from app.models.UserGameStatus import UserGameStatus
-from app.models.Favorite import Favorite
-from app.models.Rate import Rate
-from app.models.Comment import Comment
-from sqlalchemy import func
-from app.database.db import db
 
 
 # Endpoints de "settings": editar perfil, cambiar contrasena, panel admin
@@ -187,55 +181,12 @@ def cambiar_contrasena():
 def obtener_estadisticas():
     # Estadisticas que pinta el perfil: total por estado, favoritos,
     # comentarios y media de las calificaciones del usuario actual.
+    # La query y el calculo viven en user_service / repos; aqui solo
+    # leemos el id de la sesion y devolvemos el resultado.
     try:
         id_usuario = get_jwt_identity()
-
-        # Conteo por estado: agrupamos las filas de user_game_status por
-        # su columna "status" y contamos cuantas hay en cada uno.
-        estados = db.session.query(
-            UserGameStatus.status,
-            func.count(UserGameStatus.id_status)
-        ).filter(UserGameStatus.id_user == id_usuario)\
-         .group_by(UserGameStatus.status).all()
-
-        estados_dict = {}
-        for fila in estados:
-            estados_dict[fila[0]] = fila[1]
-
-        total_favoritos = db.session.query(func.count(Favorite.fav_id))\
-                                     .filter(Favorite.user_id == id_usuario)\
-                                     .scalar() or 0
-
-        total_comentarios = db.session.query(func.count(Comment.id_comment))\
-                                       .filter(Comment.id_user == id_usuario)\
-                                       .scalar() or 0
-
-        # Media de las calificaciones: pedimos todos los valores y
-        # calculamos la media en Python para mantener el tipo float.
-        calificaciones = db.session.query(Rate.rating)\
-                                    .filter(Rate.id_user == id_usuario).all()
-
-        valores = []
-        for fila in calificaciones:
-            valores.append(fila[0])
-
-        rating_medio = None
-        if valores:
-            rating_medio = round(sum(valores) / len(valores), 1)
-
-        return jsonify({
-            "coleccion": {
-                "total": sum(estados_dict.values()),
-                "completado": estados_dict.get("completado", 0),
-                "jugando": estados_dict.get("jugando", 0),
-                "pendiente": estados_dict.get("pendiente", 0),
-                "pausado": estados_dict.get("pausado", 0)
-            },
-            "favoritos": total_favoritos,
-            "comentarios": total_comentarios,
-            "valoraciones": len(valores),
-            "rating_medio": rating_medio
-        }), 200
+        estadisticas = user_service.obtener_estadisticas_usuario(id_usuario)
+        return jsonify(estadisticas), 200
 
     except Exception as e:
         return jsonify({"message": "Error al obtener estadísticas"}), 500
