@@ -2,6 +2,8 @@
 
 Plataforma web para descubrir, valorar y organizar videojuegos. Los usuarios pueden explorar un catálogo extenso de juegos obtenido desde la API de RAWG, añadir juegos a favoritos, escribir comentarios, asignar valoraciones y gestionar su colección personal mediante estados de juego. El proyecto incluye un panel de administración para la gestión de usuarios y moderación de comentarios.
 
+Pagina web: https://gamerk.netlify.app/
+
 ---
 
 ## Tecnologías
