@@ -68,12 +68,6 @@
   left: 10px;
   display: flex;
   gap: 6px;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.game-card:hover .card-actions-cluster {
-  opacity: 1;
 }
 
 .card-action-btn {
@@ -129,24 +123,24 @@
 .rating-badge.mc-red    { background: #c03030; }
 .rating-badge.mc-na     { background: #6b7280; }
 
-/* === STATUS BADGE — siempre visible, colores sólidos === */
+/* === STATUS BADGE — mismo estilo que el badge del perfil === */
 .status-badge {
   position: absolute;
   bottom: 8px;
   left: 8px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
+  gap: 4px;
+  padding: 3px 9px;
   border-radius: 20px;
-  font-size: 0.74rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
+  white-space: nowrap;
   /* background y color vienen por inline style desde statusMeta.solidBg / solidText */
 }
 
 .status-badge i {
-  font-size: 0.7rem;
+  font-size: 0.62rem;
 }
 
 /* === DROPDOWN POSICIONAMIENTO === */
@@ -253,7 +247,7 @@
   animation-delay: calc(var(--card-index, 0) * 90ms);
 }
 
-/* RESPONSIVE — en móvil siempre visibles los botones */
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .card-image {
     height: 180px;
@@ -265,10 +259,6 @@
 
   .card-content {
     padding: 1.25rem;
-  }
-
-  .card-actions-cluster {
-    opacity: 1;
   }
 }
 

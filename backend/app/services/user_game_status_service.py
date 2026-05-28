@@ -1,70 +1,70 @@
-from app.repositories.user_game_status_repo import (
-    obtener_status, listar_statuses_por_usuario,
-    crear_status, actualizar_status, eliminar_status
-)
+from app.repositories import user_game_status_repo
 from app.client.clientRAWG import get_game_by_id_api
-from app.services.adapter import game_format_resume
+from app.services.adapter import formatear_resumen_juego
 
 
-STATUS_VALIDOS = {"pendiente", "pausado", "jugando", "completado"}
+ESTADOS_VALIDOS = {"pendiente", "pausado", "jugando", "completado"}
 
 
-def establecer_status(id_user, id_game, status) -> object | str:
-    try:
-        if status not in STATUS_VALIDOS:
-            return f"El status debe ser uno de: {', '.join(STATUS_VALIDOS)}"
+def establecer_estado(id_usuario, id_juego, estado) -> object | str:
+    if estado not in ESTADOS_VALIDOS:
+        return f"El status debe ser uno de: {', '.join(ESTADOS_VALIDOS)}"
 
-        registro_existente = obtener_status(id_user=id_user, id_game=id_game)
-        if registro_existente:
-            return actualizar_status(id_user=id_user, id_game=id_game, nuevo_status=status)
+    registro_existente = user_game_status_repo.obtener_estado(id_usuario=id_usuario, id_juego=id_juego)
+    if registro_existente:
+        return user_game_status_repo.actualizar_estado(
+            id_usuario=id_usuario,
+            id_juego=id_juego,
+            nuevo_estado=estado
+        )
 
-        return crear_status(id_user=id_user, id_game=id_game, status=status)
-    except Exception as e:
-        raise Exception(f"Error al establecer el status: {str(e)}")
-
-
-def obtener_status_juego(id_user, id_game) -> object | None:
-    try:
-        return obtener_status(id_user=id_user, id_game=id_game)
-    except Exception as e:
-        raise Exception(f"Error al obtener el status: {str(e)}")
+    return user_game_status_repo.crear_estado(
+        id_usuario=id_usuario,
+        id_juego=id_juego,
+        estado=estado
+    )
 
 
-def listar_statuses_usuario(id_user) -> list:
-    try:
-        registros = listar_statuses_por_usuario(id_user=id_user)
-        return [r.to_dict() for r in registros]
-    except Exception as e:
-        raise Exception(f"Error al listar los statuses: {str(e)}")
+def obtener_estado_del_juego(id_usuario, id_juego) -> object | None:
+    return user_game_status_repo.obtener_estado(id_usuario=id_usuario, id_juego=id_juego)
 
 
-def listar_statuses_con_juegos(id_user) -> list:
-    try:
-        registros = listar_statuses_por_usuario(id_user=id_user)
-        resultado = []
-        for registro in registros:
-            try:
-                datos_rawg = get_game_by_id_api(game_id=registro.id_game_api)
-                if not datos_rawg:
-                    continue
-                juego_resumen = game_format_resume(datos_rawg)
-                resultado.append({
-                    "id_status": registro.id_status,
-                    "status": registro.status,
-                    "game": juego_resumen
-                })
-            except Exception:
+def listar_estados_del_usuario(id_usuario) -> list:
+    registros = user_game_status_repo.listar_estados_por_usuario(id_usuario=id_usuario)
+
+    resultado = []
+    for r in registros:
+        resultado.append(r.to_dict())
+    return resultado
+
+
+def listar_estados_con_juegos(id_usuario) -> list:
+    registros = user_game_status_repo.listar_estados_por_usuario(id_usuario=id_usuario)
+
+    resultado = []
+    for registro in registros:
+        # Si RAWG falla con un juego concreto saltamos a por el siguiente,
+        # es preferible mostrar 9 de 10 antes que romper toda la respuesta
+        try:
+            datos_rawg = get_game_by_id_api(game_id=registro.id_game_api)
+            if not datos_rawg:
                 continue
-        return resultado
-    except Exception as e:
-        raise Exception(f"Error al listar statuses con juegos: {str(e)}")
+            juego_resumen = formatear_resumen_juego(datos_rawg)
+            resultado.append({
+                "id_status": registro.id_status,
+                "status": registro.status,
+                "game": juego_resumen
+            })
+        except Exception:
+            continue
+
+    return resultado
 
 
-def quitar_status(id_user, id_game) -> bool | str:
-    try:
-        resultado = eliminar_status(id_user=id_user, id_game=id_game)
-        if not resultado:
-            return "Status no encontrado"
-        return resultado
-    except Exception as e:
-        raise Exception(f"Error al eliminar el status: {str(e)}")
+def quitar_estado(id_usuario, id_juego) -> bool | str:
+    resultado = user_game_status_repo.eliminar_estado(id_usuario=id_usuario, id_juego=id_juego)
+
+    if not resultado:
+        return "Status no encontrado"
+
+    return resultado

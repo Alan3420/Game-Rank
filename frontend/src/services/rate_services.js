@@ -1,50 +1,66 @@
 import api from './api';
 
-export const createRate = async (gameId, rating, status = null) => {
-    const response = await api.post('/rate/create', {
-        id_game: gameId,
-        rating: rating,
-        status: status
-    });
-    return response.data;
-};
-
-export const updateRate = async (gameId, rating, status = null) => {
-    const response = await api.put('/rate/update', {
-        id_game: gameId,
-        rating: rating,
-        status: status
-    });
-    return response.data;
-};
-
-export const deleteRate = async (gameId) => {
-    try {
-        const response = await api.delete('/rate/delete', {
-            data: { id_game: gameId }
-        });
-        return response.data;
-    } catch (error) {
-        if (error.response?.status === 404) return null;
-        throw error;
+export const crearCalificacion = async (idJuego, calificacion, estado) => {
+    if (estado === undefined) {
+        estado = null;
     }
+
+    const respuesta = await api.post('/rate/create', {
+        id_game: idJuego,
+        rating: calificacion,
+        status: estado
+    });
+    return respuesta.data;
 };
 
-export const saveRate = async (gameId, rating) => {
+export const actualizarCalificacion = async (idJuego, calificacion, estado) => {
+    if (estado === undefined) {
+        estado = null;
+    }
+
+    const respuesta = await api.put('/rate/update', {
+        id_game: idJuego,
+        rating: calificacion,
+        status: estado
+    });
+    return respuesta.data;
+};
+
+export const eliminarCalificacion = async (idJuego) => {
     try {
-        return await createRate(gameId, rating);
+        const respuesta = await api.delete('/rate/delete', {
+            data: { id_game: idJuego }
+        });
+        return respuesta.data;
     } catch (error) {
-        if (error.response?.status === 409) {
-            return await updateRate(gameId, rating);
+        // Si el backend devuelve 404 es que no habia nada que borrar,
+        // devolvemos null para que la UI no muestre un error feo
+        if (error.response && error.response.status === 404) {
+            return null;
         }
         throw error;
     }
 };
 
-export const getAvgRate = async (gameId) => {
+// Intentamos crear y si el backend dice 409 (ya existia) llamamos al update.
+// Asi el componente no tiene que saber si era el primer voto o no
+export const guardarCalificacion = async (idJuego, calificacion) => {
     try {
-        const response = await api.get(`/rate/avg/${gameId}`);
-        return response.data;
+        const respuesta = await crearCalificacion(idJuego, calificacion);
+        return respuesta;
+    } catch (error) {
+        if (error.response && error.response.status === 409) {
+            const respuestaActualizada = await actualizarCalificacion(idJuego, calificacion);
+            return respuestaActualizada;
+        }
+        throw error;
+    }
+};
+
+export const obtenerPromedioDeCalificacion = async (idJuego) => {
+    try {
+        const respuesta = await api.get(`/rate/avg/${idJuego}`);
+        return respuesta.data;
     } catch (error) {
         console.error('Error al obtener la media:', error);
         return null;

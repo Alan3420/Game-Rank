@@ -3,7 +3,7 @@
     <!-- Topbar -->
     <div class="admin-topbar">
       <div class="topbar-content">
-        <button class="back-btn" @click="goBack">
+        <button class="back-btn" @click="volver">
           <i class="pi pi-arrow-left"></i>
           Back
         </button>
@@ -65,7 +65,7 @@
                     {{ usuario.role === 'admin' ? 'Administrator' : 'User' }}
                   </span>
                 </td>
-                <td class="user-date">{{ formatDate(usuario.date_of_registration) }}</td>
+                <td class="user-date">{{ formatearFecha(usuario.date_of_registration) }}</td>
                 <td class="user-actions">
                   <button
                     v-if="usuario.role !== 'admin'"

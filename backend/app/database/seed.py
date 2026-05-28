@@ -1,5 +1,6 @@
 from datetime import date
 
+
 SEED_EMAILS = [
     "juan@gmail.com",   "maria@gmail.com",  "carlos@gmail.com", "ana@gmail.com",
     "luis@gmail.com",   "sofia@gmail.com",  "diego@gmail.com",  "laura@gmail.com",
@@ -13,7 +14,6 @@ SEED_GAME_IDS = [3328, 3498, 4062, 5679, 13536, 28, 41494, 58175, 326243, 27789]
 def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
     with app.app_context():
 
-        # ── Limpiar datos previos del seed ──
         existing_games = [
             g.id_game_api for g in
             Video_game.query.filter(Video_game.id_game_api.in_(SEED_GAME_IDS)).all()
@@ -27,7 +27,6 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
         User.query.filter(User.email.in_(SEED_EMAILS)).delete(synchronize_session=False)
         db.session.commit()
 
-        # ── Usuarios ──
         users = [
             User("Juan",   "Pérez",     "JuanP",     "juan@gmail.com",   "password123"),
             User("María",  "Gómez",     "MariaG",    "maria@gmail.com",  "password456"),
@@ -48,23 +47,22 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
         db.session.add_all(users)
         db.session.flush()
 
-        j  = users[0].id_user   # Juan
-        m  = users[1].id_user   # María
-        c  = users[2].id_user   # Carlos
-        a  = users[3].id_user   # Ana
-        l  = users[4].id_user   # Luis
-        s  = users[5].id_user   # Sofía
-        d  = users[6].id_user   # Diego
-        r  = users[7].id_user   # Laura
-        p  = users[8].id_user   # Pedro
-        e  = users[9].id_user   # Elena
-        mi = users[10].id_user  # Miguel
-        ca = users[11].id_user  # Carmen
-        ra = users[12].id_user  # Raúl
-        al = users[13].id_user  # Alba
-        iv = users[14].id_user  # Iván
+        j  = users[0].id_user
+        m  = users[1].id_user
+        c  = users[2].id_user
+        a  = users[3].id_user
+        l  = users[4].id_user
+        s  = users[5].id_user
+        d  = users[6].id_user
+        r  = users[7].id_user
+        p  = users[8].id_user
+        e  = users[9].id_user
+        mi = users[10].id_user
+        ca = users[11].id_user
+        ra = users[12].id_user
+        al = users[13].id_user
+        iv = users[14].id_user
 
-        # ── Videojuegos (RAWG IDs) ──
         video_games = [
             Video_game(id_game_api=3328,   name="The Witcher 3: Wild Hunt",    date_release=date(2015, 5, 19),  platforms="PC, PS4, PS5, Xbox One, Switch",           development_company="CD Projekt Red"),
             Video_game(id_game_api=3498,   name="Grand Theft Auto V",          date_release=date(2013, 9, 17),  platforms="PC, PS3, PS4, PS5, Xbox 360, Xbox One",    development_company="Rockstar Games"),
@@ -80,9 +78,7 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
         db.session.add_all(video_games)
         db.session.commit()
 
-        # ── Favoritos ──
         favorites = [
-            # The Witcher 3 — 8 usuarios
             Favorite(user_id=j, id_game_api=3328,   date_added=date(2024, 11, 1)),
             Favorite(user_id=m, id_game_api=3328,   date_added=date(2024, 11, 2)),
             Favorite(user_id=c, id_game_api=3328,   date_added=date(2024, 11, 3)),
@@ -91,7 +87,6 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
             Favorite(user_id=s, id_game_api=3328,   date_added=date(2024, 11, 6)),
             Favorite(user_id=d, id_game_api=3328,   date_added=date(2024, 11, 7)),
             Favorite(user_id=r, id_game_api=3328,   date_added=date(2024, 11, 8)),
-            # GTA V — 7 usuarios
             Favorite(user_id=j, id_game_api=3498,   date_added=date(2024, 11, 10)),
             Favorite(user_id=m, id_game_api=3498,   date_added=date(2024, 11, 11)),
             Favorite(user_id=c, id_game_api=3498,   date_added=date(2024, 11, 12)),
@@ -99,52 +94,41 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
             Favorite(user_id=l, id_game_api=3498,   date_added=date(2024, 11, 14)),
             Favorite(user_id=s, id_game_api=3498,   date_added=date(2024, 11, 15)),
             Favorite(user_id=d, id_game_api=3498,   date_added=date(2024, 11, 16)),
-            # God of War — 6 usuarios
             Favorite(user_id=j, id_game_api=58175,  date_added=date(2024, 12, 1)),
             Favorite(user_id=m, id_game_api=58175,  date_added=date(2024, 12, 2)),
             Favorite(user_id=c, id_game_api=58175,  date_added=date(2024, 12, 3)),
             Favorite(user_id=a, id_game_api=58175,  date_added=date(2024, 12, 4)),
             Favorite(user_id=l, id_game_api=58175,  date_added=date(2024, 12, 5)),
             Favorite(user_id=s, id_game_api=58175,  date_added=date(2024, 12, 6)),
-            # Elden Ring — 5 usuarios
             Favorite(user_id=j, id_game_api=326243, date_added=date(2025, 1, 1)),
             Favorite(user_id=m, id_game_api=326243, date_added=date(2025, 1, 2)),
             Favorite(user_id=c, id_game_api=326243, date_added=date(2025, 1, 3)),
             Favorite(user_id=a, id_game_api=326243, date_added=date(2025, 1, 4)),
             Favorite(user_id=l, id_game_api=326243, date_added=date(2025, 1, 5)),
-            # Skyrim — 5 usuarios
             Favorite(user_id=m, id_game_api=5679,   date_added=date(2024, 12, 10)),
             Favorite(user_id=c, id_game_api=5679,   date_added=date(2024, 12, 11)),
             Favorite(user_id=d, id_game_api=5679,   date_added=date(2024, 12, 12)),
             Favorite(user_id=r, id_game_api=5679,   date_added=date(2024, 12, 13)),
             Favorite(user_id=s, id_game_api=5679,   date_added=date(2024, 12, 14)),
-            # Cyberpunk — 4 usuarios
             Favorite(user_id=c, id_game_api=41494,  date_added=date(2025, 2, 1)),
             Favorite(user_id=d, id_game_api=41494,  date_added=date(2025, 2, 2)),
             Favorite(user_id=r, id_game_api=41494,  date_added=date(2025, 2, 3)),
             Favorite(user_id=l, id_game_api=41494,  date_added=date(2025, 2, 4)),
-            # Red Dead Redemption — 4 usuarios
             Favorite(user_id=j, id_game_api=28,     date_added=date(2025, 1, 15)),
             Favorite(user_id=a, id_game_api=28,     date_added=date(2025, 1, 16)),
             Favorite(user_id=s, id_game_api=28,     date_added=date(2025, 1, 17)),
             Favorite(user_id=r, id_game_api=28,     date_added=date(2025, 1, 18)),
-            # Half-Life 2 — 3 usuarios
             Favorite(user_id=j, id_game_api=13536,  date_added=date(2025, 3, 1)),
             Favorite(user_id=d, id_game_api=13536,  date_added=date(2025, 3, 2)),
             Favorite(user_id=m, id_game_api=13536,  date_added=date(2025, 3, 3)),
-            # Portal 2 — 2 usuarios
             Favorite(user_id=a, id_game_api=4062,   date_added=date(2025, 3, 10)),
             Favorite(user_id=r, id_game_api=4062,   date_added=date(2025, 3, 11)),
-            # Hollow Knight — 1 usuario
             Favorite(user_id=s, id_game_api=27789,  date_added=date(2025, 4, 1)),
         ]
         db.session.add_all(favorites)
         db.session.commit()
 
-        # ── Valoraciones y comentarios (siempre pareados 1 a 1) ──
-        # Cada entrada: (id_user, id_game, rating, fecha, texto)
         pares = [
-            # ── The Witcher 3 (3328) — 15 entradas ──
             (j,  3328, 5, date(2024, 11, 10), "Una obra maestra, la mejor experiencia RPG de mi vida."),
             (m,  3328, 5, date(2024, 11, 11), "El mejor juego de rol que he jugado jamás, historia increíble."),
             (c,  3328, 5, date(2024, 11, 12), "Cada DLC vale lo que pesa, Blood and Wine es espectacular."),
@@ -160,7 +144,6 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
             (ra, 3328, 5, date(2024, 11, 22), "Nunca pensé que un juego de brujos me haría llorar, aquí estoy."),
             (al, 3328, 4, date(2024, 11, 23), "El combate mezclando signos y espada es deliciosamente estratégico."),
             (iv, 3328, 5, date(2024, 11, 24), "Diez años después sigue siendo el referente de los mundos abiertos."),
-            # ── GTA V (3498) — 7 entradas ──
             (j,  3498, 5, date(2024, 11, 20), "El mundo de GTA V sigue siendo increíble después de tantos años."),
             (m,  3498, 4, date(2024, 11, 21), "Online es adictivo, pero la historia también merece la pena."),
             (c,  3498, 4, date(2024, 11, 22), "Tres protagonistas que funcionan a la perfección juntos."),
@@ -168,43 +151,35 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
             (l,  3498, 4, date(2024, 11, 24), "La misión final es de las mejores que he jugado."),
             (s,  3498, 4, date(2024, 11, 25), "Siguen sacando contenido después de 10 años, es increíble."),
             (d,  3498, 4, date(2024, 11, 26), "Trevor es el personaje más loco de la historia de los videojuegos."),
-            # ── God of War (58175) — 6 entradas ──
             (j,  58175, 5, date(2024, 12, 1), "La historia de Kratos y Atreus te llega al alma."),
             (m,  58175, 5, date(2024, 12, 2), "El combate es brutal y satisfactorio al máximo nivel."),
             (c,  58175, 5, date(2024, 12, 3), "Santa Monica hizo un reboot perfecto, redefinió la saga."),
             (a,  58175, 5, date(2024, 12, 4), "Los gráficos son una barbaridad, parece una película de Hollywood."),
             (l,  58175, 5, date(2024, 12, 5), "El final me dejó sin palabras, la mejor aventura que he vivido."),
             (s,  58175, 4, date(2024, 12, 6), "Cada enemigo es un desafío diferente, no te aburres nunca."),
-            # ── Elden Ring (326243) — 5 entradas ──
             (j,  326243, 5, date(2025, 2, 1), "Elden Ring es puro masoquismo del bueno, no puedo parar."),
             (m,  326243, 5, date(2025, 2, 2), "El mundo abierto de FromSoftware es una revolución."),
             (c,  326243, 5, date(2025, 2, 3), "Los jefes finales son los más épicos que he visto en ningún juego."),
             (a,  326243, 5, date(2025, 2, 4), "Difícil pero increíblemente justo, cada muerte es un aprendizaje."),
             (l,  326243, 4, date(2025, 2, 5), "George R.R. Martin y Miyazaki juntos son una combinación brutal."),
-            # ── Skyrim (5679) — 5 entradas ──
             (m,  5679, 5, date(2024, 12, 20), "Skyrim es el juego al que siempre vuelvo, la nostalgia es real."),
             (c,  5679, 4, date(2024, 12, 21), "Las mazmorras son infinitas, nunca te quedas sin contenido."),
             (d,  5679, 5, date(2024, 12, 22), "Los mods lo hacen prácticamente un juego nuevo cada vez."),
             (r,  5679, 5, date(2024, 12, 23), "El sistema de progresión de habilidades es increíblemente adictivo."),
             (s,  5679, 4, date(2024, 12, 24), "Bethesda sabe crear mundos que te enganchan durante cientos de horas."),
-            # ── Half-Life 2 (13536) — 3 entradas ──
             (j,  13536, 5, date(2025, 1, 5), "Half-Life 2 inventó el shooter moderno, es una referencia absoluta."),
             (m,  13536, 5, date(2025, 1, 6), "La física del Gravity Gun cambió los FPS para siempre."),
             (c,  13536, 5, date(2025, 1, 7), "Sigue siendo uno de los mejores juegos de la historia."),
-            # ── Red Dead Redemption (28) — 4 entradas ──
             (j,  28, 5, date(2025, 1, 20), "Red Dead Redemption tiene la mejor historia del oeste en videojuegos."),
             (a,  28, 4, date(2025, 1, 21), "John Marston es un personaje con una profundidad tremenda."),
             (s,  28, 5, date(2025, 1, 22), "El final te parte el corazón, qué escritura tan brutal."),
             (r,  28, 4, date(2025, 1, 23), "El ambiente del lejano oeste está recreado a la perfección."),
-            # ── Cyberpunk 2077 (41494) — 4 entradas ──
             (c,  41494, 4, date(2025, 2, 10), "Tras los parches, Cyberpunk 2077 es otro juego completamente."),
             (d,  41494, 4, date(2025, 2, 11), "Night City es la ciudad más impresionante de cualquier videojuego."),
             (r,  41494, 5, date(2025, 2, 12), "La historia de V es emotiva y te engancha de principio a fin."),
             (l,  41494, 3, date(2025, 2, 13), "El DLC Phantom Liberty es mejor que el juego base, es una pasada."),
-            # ── Portal 2 (4062) — 2 entradas ──
             (j,  4062, 5, date(2025, 3, 1), "Portal 2 es el mejor puzzle game jamás creado, punto."),
             (m,  4062, 5, date(2025, 3, 2), "El humor de GLaDOS y Wheatley no tiene rival en ningún juego."),
-            # ── Hollow Knight (27789) — 1 entrada ──
             (s,  27789, 5, date(2025, 4, 5), "Hollow Knight es la mejor metroidvania que existe, es una joya."),
         ]
 
@@ -218,35 +193,24 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
         db.session.add_all(comments)
         db.session.commit()
 
-        # ── Estados de colección ──
         statuses_map = [
-            # The Witcher 3 — 8 usuarios
             (j, 3328, "completado"), (m, 3328, "completado"), (c, 3328, "completado"),
             (a, 3328, "completado"), (l, 3328, "jugando"),    (s, 3328, "completado"),
             (d, 3328, "completado"), (r, 3328, "pendiente"),
-            # GTA V — 7 usuarios
             (j, 3498, "completado"), (m, 3498, "jugando"),    (c, 3498, "completado"),
             (a, 3498, "completado"), (l, 3498, "pendiente"),  (s, 3498, "completado"),
             (d, 3498, "jugando"),
-            # God of War — 6 usuarios
             (j, 58175, "completado"), (m, 58175, "completado"), (c, 58175, "completado"),
             (a, 58175, "jugando"),    (l, 58175, "completado"), (s, 58175, "pendiente"),
-            # Elden Ring — 6 usuarios
             (j, 326243, "jugando"),    (m, 326243, "completado"), (c, 326243, "pendiente"),
             (a, 326243, "completado"), (d, 326243, "jugando"),    (r, 326243, "completado"),
-            # Skyrim — 5 usuarios
             (m, 5679, "completado"), (c, 5679, "completado"), (d, 5679, "completado"),
             (r, 5679, "jugando"),    (s, 5679, "pendiente"),
-            # Cyberpunk — 5 usuarios
             (c, 41494, "completado"), (d, 41494, "jugando"),    (r, 41494, "completado"),
             (l, 41494, "pendiente"),  (a, 41494, "completado"),
-            # Red Dead Redemption — 4 usuarios
             (j, 28, "completado"), (a, 28, "completado"), (s, 28, "jugando"), (r, 28, "pendiente"),
-            # Half-Life 2 — 3 usuarios
             (j, 13536, "completado"), (d, 13536, "completado"), (m, 13536, "completado"),
-            # Portal 2 — 2 usuarios
             (a, 4062, "completado"), (r, 4062, "completado"),
-            # Hollow Knight — 2 usuarios
             (s, 27789, "jugando"), (j, 27789, "pendiente"),
         ]
 

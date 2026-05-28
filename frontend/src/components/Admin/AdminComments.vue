@@ -4,7 +4,7 @@
     <!-- Topbar -->
     <div class="admin-topbar">
       <div class="topbar-content">
-        <button class="back-btn" @click="goBack">
+        <button class="back-btn" @click="volver">
           <i class="pi pi-arrow-left"></i>
           Back
         </button>
@@ -68,7 +68,7 @@
                 <td class="comment-text-cell">
                   <span class="comment-excerpt" :title="c.description">{{ c.description }}</span>
                 </td>
-                <td class="user-date">{{ formatDate(c.date_of_comment) }}</td>
+                <td class="user-date">{{ formatearFecha(c.date_of_comment) }}</td>
                 <td class="user-actions">
                   <button
                     class="action-btn delete-btn"

@@ -3,135 +3,184 @@ import os
 import time
 from collections import OrderedDict
 
-RAWG_API_KEY = os.getenv('RAWG_API_KEY')
-BASE_URL = "https://api.rawg.io/api"
+
+CLAVE_API_RAWG = os.getenv('RAWG_API_KEY')
+URL_BASE = "https://api.rawg.io/api"
 
 
-class CacheWithTTL:
+class CacheConTTL:
+    # Cache propio porque functools.lru_cache no caduca por tiempo y aqui
+    # nos interesa que las entradas viejas se borren solas
     def __init__(self, max_size=150, ttl=3600):
         self.cache = OrderedDict()
         self.max_size = max_size
         self.ttl = ttl
         self.timestamps = {}
 
-    def get(self, key):
-        if key not in self.cache:
+    def get(self, clave):
+        if clave not in self.cache:
             return None
 
-        if time.time() - self.timestamps[key] > self.ttl:
-            del self.cache[key]
-            del self.timestamps[key]
+        if time.time() - self.timestamps[clave] > self.ttl:
+            del self.cache[clave]
+            del self.timestamps[clave]
             return None
 
-        return self.cache[key]
+        return self.cache[clave]
 
-    def set(self, key, value):
-        if key in self.cache:
-            del self.cache[key]
+    def set(self, clave, valor):
+        if clave in self.cache:
+            del self.cache[clave]
 
         if len(self.cache) >= self.max_size:
-            oldest_key = next(iter(self.cache))
-            del self.cache[oldest_key]
-            del self.timestamps[oldest_key]
+            clave_mas_antigua = next(iter(self.cache))
+            del self.cache[clave_mas_antigua]
+            del self.timestamps[clave_mas_antigua]
 
-        self.cache[key] = value
-        self.timestamps[key] = time.time()
-
-
-cache = CacheWithTTL(max_size=150, ttl=3600)
+        self.cache[clave] = valor
+        self.timestamps[clave] = time.time()
 
 
-def _request_with_cache(endpoint, params=None):
-    cache_key = f"{endpoint}_{str(params)}"
+cache = CacheConTTL(max_size=150, ttl=3600)
 
-    cached_result = cache.get(cache_key)
-    if cached_result is not None:
-        return cached_result
 
-    response = requests.get(
-        f"{BASE_URL}{endpoint}",
-        params={**(params or {}), "key": RAWG_API_KEY},
+def _peticion_con_cache(endpoint, params=None):
+    clave_cache = f"{endpoint}_{str(params)}"
+
+    resultado_cacheado = cache.get(clave_cache)
+    if resultado_cacheado is not None:
+        return resultado_cacheado
+
+    parametros_finales = {}
+    if params:
+        for clave in params:
+            parametros_finales[clave] = params[clave]
+    parametros_finales["key"] = CLAVE_API_RAWG
+
+    respuesta = requests.get(
+        f"{URL_BASE}{endpoint}",
+        params=parametros_finales,
         timeout=5
     )
 
-    if response.status_code != 200:
+    if respuesta.status_code != 200:
         return None
 
-    result = response.json()
-    cache.set(cache_key, result)
-    return result
+    resultado = respuesta.json()
+    cache.set(clave_cache, resultado)
+    return resultado
 
 
 def get_all_games(page=1, per_page=20):
-    result = _request_with_cache("/games", {"page": page, "page_size": per_page, "exclude_additions": "true"})
-    return result or {}
+    # exclude_additions para que no salgan DLC sueltos mezclados con juegos
+    resultado = _peticion_con_cache("/games", {
+        "page": page,
+        "page_size": per_page,
+        "exclude_additions": "true"
+    })
+    return resultado or {}
+
 
 def get_game_by_id_api(game_id) -> dict:
-    result = _request_with_cache(f"/games/{game_id}")
-    return result or {}
+    resultado = _peticion_con_cache(f"/games/{game_id}")
+    return resultado or {}
+
 
 def get_game_screenshots(game_id):
-    result = _request_with_cache(f"/games/{game_id}/screenshots")
-    return result.get("results", []) if result else []
+    resultado = _peticion_con_cache(f"/games/{game_id}/screenshots")
+    if resultado:
+        return resultado.get("results", [])
+    return []
 
 
 def get_game_movies(game_id):
-    result = _request_with_cache(f"/games/{game_id}/movies")
-    return result.get("results", []) if result else []
+    resultado = _peticion_con_cache(f"/games/{game_id}/movies")
+    if resultado:
+        return resultado.get("results", [])
+    return []
+
 
 def get_future_releases(init_date, final_date, page=1, per_page=10):
-    result = _request_with_cache("/games", {
+    resultado = _peticion_con_cache("/games", {
         "dates": f"{init_date},{final_date}",
         "ordering": "released",
         "page": page,
         "page_size": per_page,
         "exclude_additions": "true"
     })
-    return result.get("results", []) if result else []
+    return resultado or {}
+
 
 def get_games_by_ordering(ordering="-added", per_page=40):
-    result = _request_with_cache("/games", {
+    # Acotamos las fechas porque los juegos muy antiguos no suelen tener trailer
+    # y este metodo se usa para el video del hero
+    resultado = _peticion_con_cache("/games", {
         "ordering": ordering,
         "page_size": per_page,
         "dates": "2018-01-01,2026-12-31",
         "exclude_additions": "true"
     })
-    return result.get("results", []) if result else []
+    if resultado:
+        return resultado.get("results", [])
+    return []
+
 
 def obtener_equipo_desarrollo(game_id, page_size=8):
-    result = _request_with_cache(f"/games/{game_id}/development-team", {"page_size": page_size})
-    return result.get("results", []) if result else []
+    resultado = _peticion_con_cache(f"/games/{game_id}/development-team", {"page_size": page_size})
+    if resultado:
+        return resultado.get("results", [])
+    return []
 
 
 def obtener_adicciones_juego(game_id, page_size=6):
-    result = _request_with_cache(f"/games/{game_id}/additions", {"page_size": page_size})
-    return result.get("results", []) if result else []
+    resultado = _peticion_con_cache(f"/games/{game_id}/additions", {"page_size": page_size})
+    if resultado:
+        return resultado.get("results", [])
+    return []
 
 
 def obtener_saga_del_juego(game_id, page_size=8):
-    result = _request_with_cache(f"/games/{game_id}/game-series", {"page_size": page_size})
-    return result.get("results", []) if result else []
+    resultado = _peticion_con_cache(f"/games/{game_id}/game-series", {"page_size": page_size})
+    if resultado:
+        return resultado.get("results", [])
+    return []
 
 
 def obtener_logros_juego(game_id, page_size=12):
-    result = _request_with_cache(f"/games/{game_id}/achievements", {"page_size": page_size})
-    return result.get("results", []) if result else []
+    resultado = _peticion_con_cache(f"/games/{game_id}/achievements", {"page_size": page_size})
+    if resultado:
+        return resultado.get("results", [])
+    return []
 
 
 def get_stores_catalog():
-    result = _request_with_cache("/stores", {"page_size": 50})
-    if not result:
+    # Lo guardamos como dict {id: tienda} asi luego cruzamos rapido con
+    # las tiendas de un juego concreto
+    resultado = _peticion_con_cache("/stores", {"page_size": 50})
+    if not resultado:
         return {}
-    return {s["id"]: s for s in result.get("results", [])}
+
+    diccionario_tiendas = {}
+    for tienda in resultado.get("results", []):
+        diccionario_tiendas[tienda["id"]] = tienda
+    return diccionario_tiendas
 
 
 def get_game_stores(game_id):
-    result = _request_with_cache(f"/games/{game_id}/stores")
-    return result.get("results", []) if result else []
+    resultado = _peticion_con_cache(f"/games/{game_id}/stores")
+    if resultado:
+        return resultado.get("results", [])
+    return []
 
 
-def get_games_filtered(page=1, per_page=20, ordering=None, genres=None, platforms=None, dates=None, search=None):
-    params = {"page": page, "page_size": per_page, "exclude_additions": "true"}
+def get_games_filtered(page=1, per_page=20, ordering=None, genres=None,
+                        platforms=None, dates=None, search=None):
+    params = {
+        "page": page,
+        "page_size": per_page,
+        "exclude_additions": "true"
+    }
+
     if ordering:
         params["ordering"] = ordering
     if genres:
@@ -142,5 +191,6 @@ def get_games_filtered(page=1, per_page=20, ordering=None, genres=None, platform
         params["dates"] = dates
     if search:
         params["search"] = search
-    result = _request_with_cache("/games", params)
-    return result or {}
+
+    resultado = _peticion_con_cache("/games", params)
+    return resultado or {}

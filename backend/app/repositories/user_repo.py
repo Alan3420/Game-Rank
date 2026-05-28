@@ -1,64 +1,91 @@
 from app.database.db import db
 from app.models.User import User
 
-def get_all_users(exclude_user_id=None) -> list[User]:
-    if exclude_user_id:
-        return User.query.filter(User.id_user != exclude_user_id).all()
+
+def obtener_todos_los_usuarios(excluir_id_usuario=None) -> list[User]:
+    if excluir_id_usuario:
+        return User.query.filter(User.id_user != excluir_id_usuario).all()
     return User.query.all()
 
-def get_user_by_id(user_id) -> User:
-    return User.query.get(user_id)
 
-def get_user_by_nickname(nickname) -> User:
+def obtener_usuario_por_id(id_usuario) -> User:
+    return User.query.get(id_usuario)
+
+
+def obtener_usuario_por_nickname(nickname) -> User:
+    # ilike es case-insensitive, asi "JuanP" y "juanp" cuentan como el mismo
     return User.query.filter(User.nickname.ilike(nickname)).first()
 
-def get_user_by_email(email) -> User:
+
+def obtener_usuario_por_email(email) -> User:
     return User.query.filter_by(email=email).first()
 
-def create_user(username, last_name, nickname, email, password) -> User:
-    new_user = User(name=username, last_name=last_name, nickname=nickname, email=email, password=password)
-    db.session.add(new_user)
+
+def crear_usuario(nombre, apellido, nickname, email, contrasena) -> User:
+    nuevo_usuario = User(
+        name=nombre,
+        last_name=apellido,
+        nickname=nickname,
+        email=email,
+        password=contrasena
+    )
+    db.session.add(nuevo_usuario)
     db.session.commit()
-    return new_user
+    return nuevo_usuario
 
-def update_user(user_id, username=None, last_name=None, nickname=None, email=None, password=None) -> User:
-    user = get_user_by_id(user_id)
-    if user:
-        if username:
-            user.name = username
-        if last_name:
-            user.last_name = last_name
+
+def actualizar_usuario(id_usuario, nombre=None, apellido=None, nickname=None,
+                       email=None, contrasena=None) -> User:
+    usuario = obtener_usuario_por_id(id_usuario)
+
+    if usuario:
+        if nombre:
+            usuario.name = nombre
+        if apellido:
+            usuario.last_name = apellido
         if nickname:
-            user.nickname = nickname
+            usuario.nickname = nickname
         if email:
-            user.email = email
-        if password:
-            user.set_password(password)
+            usuario.email = email
+        if contrasena:
+            usuario.set_password(contrasena)
         db.session.commit()
-    return user
 
-def delete_user(user_id) -> bool:
-    user = get_user_by_id(user_id)
-    if user:
+    return usuario
+
+
+def eliminar_usuario(id_usuario) -> bool:
+    # Borramos a mano los datos relacionados porque algunos drivers de MySQL
+    # con Flask-SQLAlchemy no aplican el ON DELETE CASCADE de las FK
+    usuario = obtener_usuario_por_id(id_usuario)
+
+    if usuario:
         from app.models.Favorite import Favorite
         from app.models.Comment import Comment
         from app.models.Rate import Rate
 
-        db.session.query(Favorite).filter(Favorite.user_id == user_id).delete()
-        db.session.query(Comment).filter(Comment.id_user == user_id).delete()
-        db.session.query(Rate).filter(Rate.id_user == user_id).delete()
+        db.session.query(Favorite).filter(Favorite.user_id == id_usuario).delete()
+        db.session.query(Comment).filter(Comment.id_user == id_usuario).delete()
+        db.session.query(Rate).filter(Rate.id_user == id_usuario).delete()
 
-        db.session.delete(user)
+        db.session.delete(usuario)
         db.session.commit()
         return True
+
     return False
 
-def update_user_role(user_id, new_role) -> User:
-    user = get_user_by_id(user_id)
-    if user:
-        if new_role in ['user', 'admin']:
-            user.role = new_role
+
+def actualizar_rol_de_usuario(id_usuario, nuevo_rol) -> User:
+    ROLES_PERMITIDOS = ['user', 'admin']
+
+    usuario = obtener_usuario_por_id(id_usuario)
+    if usuario:
+        if nuevo_rol in ROLES_PERMITIDOS:
+            usuario.role = nuevo_rol
             db.session.commit()
         else:
-            raise ValueError(f"Rol inválido: {new_role}. Roles permitidos: user, admin")
-    return user
+            raise ValueError(
+                f"Rol invalido: {nuevo_rol}. Roles permitidos: user, admin"
+            )
+
+    return usuario

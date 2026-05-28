@@ -1,161 +1,240 @@
-import { getCatalogGames, getHeroVideo } from '../../services/resume_cards.js';
-import { getFutureReleases } from '../../services/clasif_content.js';
+import { obtenerJuegosDelCatalogo, obtenerVideoDestacado } from '../../services/resume_cards.js';
+import { obtenerProximosLanzamientos } from '../../services/clasif_content.js';
 import { estadoAutenticacion } from '../../store/autenticacion.js';
-import { checkFavorite, addTOFavorite, removeTOFavorite } from '../../services/favorites_area.js';
-import { listGameStatuses } from '../../services/user_game_status.js';
+import { consultarSiEsFavorito, agregarAFavoritos, quitarDeFavoritos } from '../../services/favorites_area.js';
+import { listarEstadosDeJuego } from '../../services/user_game_status.js';
 import { notificaciones } from '../../store/notificaciones.js';
-import { computed } from 'vue';
+
+const POR_PAGINA_PROXIMOS = 10;
+
 
 export default {
   name: "home",
+
   data() {
     return {
       topGames: [],
       futureReleases: [],
       favorites: new Set(),
       statuses: new Map(),
-      carouselTrack: null,
       isLoading: true,
       isFutureLoading: true,
-      heroVideo: null
+      heroVideo: null,
+      currentPageProximos: 1,
+      totalCountProximos: 0
     };
   },
+
   async mounted() {
-    const token = localStorage.getItem("token");
-    const tasks = [this.loadHeroVideo()];
+
+    var token = localStorage.getItem("token");
+    var tareas = [];
+
+    tareas.push(this.cargarVideoDestacado());
+
+    // Sin sesion no tiene sentido pedir favoritos ni estados de coleccion
     if (token) {
-      tasks.push(this.loadTopGames(), this.loadFutureReleases(), this.loadStatuses());
+      tareas.push(this.cargarMejoresJuegos());
+      tareas.push(this.cargarProximosLanzamientos());
+      tareas.push(this.cargarEstadosDeColeccion());
     }
-    await Promise.all(tasks);
+
+    await Promise.all(tareas);
   },
+
   methods: {
-    async loadHeroVideo() {
+
+    async cargarVideoDestacado() {
       try {
-        const video = await getHeroVideo();
-        this.heroVideo = video || null;
+        var video = await obtenerVideoDestacado();
+        if (video) {
+          this.heroVideo = video;
+        } else {
+          this.heroVideo = null;
+        }
       } catch (error) {
         console.error('Error al cargar video del hero:', error);
         this.heroVideo = null;
       }
     },
 
-    async loadTopGames() {
+    async cargarMejoresJuegos() {
+
       this.isLoading = true;
-      try {
-        const response = await getCatalogGames(1);
 
-        let games = [];
-        if (response && response.games && Array.isArray(response.games)) {
-          games = response.games;
-        } else if (Array.isArray(response)) {
-          games = response;
+      try {
+        var respuesta = await obtenerJuegosDelCatalogo(1);
+
+        var juegos = [];
+        if (respuesta && respuesta.games && Array.isArray(respuesta.games)) {
+          juegos = respuesta.games;
+        } else if (Array.isArray(respuesta)) {
+          juegos = respuesta;
         }
 
-        const sorted = games
-          .filter(game => game.metacritic && game.metacritic > 0)
-          .sort((a, b) => b.metacritic - a.metacritic);
-        this.topGames = sorted.slice(0, 3);
+        var juegosConNota = [];
+        for (var i = 0; i < juegos.length; i++) {
+          if (juegos[i].metacritic && juegos[i].metacritic > 0) {
+            juegosConNota.push(juegos[i]);
+          }
+        }
+
+        juegosConNota.sort(function (a, b) {
+          return b.metacritic - a.metacritic;
+        });
+        this.topGames = juegosConNota.slice(0, 3);
         this.isLoading = false;
 
         if (estadoAutenticacion.usuario) {
-          await Promise.all(this.topGames.map(g => this.initCheckFavorite(g.id)));
+          var tareas = [];
+          for (var j = 0; j < this.topGames.length; j++) {
+            tareas.push(this.comprobarFavoritoInicial(this.topGames[j].id));
+          }
+          await Promise.all(tareas);
         }
+
       } catch (error) {
-        console.error('Error loading top games:', error);
+        console.error('Error cargando mejores juegos:', error);
         this.isLoading = false;
       }
     },
 
-    async loadFutureReleases() {
+    async cargarProximosLanzamientos() {
+      await this.cargarPaginaProximos(1);
+    },
+
+    async cargarPaginaProximos(pagina) {
+
+      this.isFutureLoading = true;
+      this.currentPageProximos = pagina;
+
       try {
-        const response = await getFutureReleases(1, 10);
-        this.futureReleases = response || [];
+        var respuesta = await obtenerProximosLanzamientos(pagina, POR_PAGINA_PROXIMOS);
+
+        if (respuesta && respuesta.games) {
+          this.futureReleases = respuesta.games;
+        } else {
+          this.futureReleases = [];
+        }
+
+        if (respuesta && respuesta.count) {
+          this.totalCountProximos = respuesta.count;
+        } else {
+          this.totalCountProximos = 0;
+        }
+
+        // Si pedimos una pagina mas alla del total volvemos a la ultima
+        // valida para no dejar la lista en blanco
+        if (this.totalPaginasProximos > 0 && pagina > this.totalPaginasProximos) {
+          await this.cargarPaginaProximos(this.totalPaginasProximos);
+          return;
+        }
+
         this.isFutureLoading = false;
+
+        if (pagina > 1) {
+          var elemento = document.getElementById('proximos-section');
+          if (elemento) {
+            elemento.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
 
         if (estadoAutenticacion.usuario) {
-          await Promise.all(this.futureReleases.map(g => this.initCheckFavorite(g.id)));
+          var tareas = [];
+          for (var i = 0; i < this.futureReleases.length; i++) {
+            tareas.push(this.comprobarFavoritoInicial(this.futureReleases[i].id));
+          }
+          await Promise.all(tareas);
         }
+
       } catch (error) {
-        console.error('Error loading future releases:', error);
+        console.error('Error cargando proximos lanzamientos:', error);
+        this.futureReleases = [];
         this.isFutureLoading = false;
       }
     },
 
-    async loadStatuses() {
+    async cargarEstadosDeColeccion() {
       try {
-        const data = await listGameStatuses();
-        const map = new Map();
-        for (const s of data.statuses) {
-          map.set(s.id_game_api, s.status);
+        var data = await listarEstadosDeJuego();
+        var mapa = new Map();
+        for (var i = 0; i < data.statuses.length; i++) {
+          mapa.set(data.statuses[i].id_game_api, data.statuses[i].status);
         }
-        this.statuses = map;
-      } catch {
-        // fallo silencioso, no crítico
+        this.statuses = mapa;
+      } catch (error) {
       }
     },
 
-    handleStatusUpdate({ gameId, status }) {
-      const map = new Map(this.statuses);
+    manejarActualizacionEstado(datos) {
+      var gameId = datos.gameId;
+      var status = datos.status;
+
+      // Reemplazamos el Map entero para que Vue se entere del cambio
+      var mapa = new Map(this.statuses);
       if (status) {
-        map.set(gameId, status);
+        mapa.set(gameId, status);
       } else {
-        map.delete(gameId);
+        mapa.delete(gameId);
       }
-      this.statuses = map;
+      this.statuses = mapa;
     },
 
-    async initCheckFavorite(gameId) {
+    async comprobarFavoritoInicial(gameId) {
       try {
-        const data = await checkFavorite(gameId);
+        var data = await consultarSiEsFavorito(gameId);
         if (data.is_favorite) {
           this.favorites.add(gameId);
         }
       } catch (error) {
-        console.error(`Error verificando favorito ${gameId}:`, error);
+        console.error('Error verificando favorito ' + gameId + ':', error);
       }
     },
 
-    async toggleFavorite(gameId) {
-      const wasFavorite = this.favorites.has(gameId);
+    async alternarFavorito(gameId) {
+
+      var eraFavorito = this.favorites.has(gameId);
+
       try {
-        if (wasFavorite) {
-          await removeTOFavorite(gameId);
+        if (eraFavorito) {
+          await quitarDeFavoritos(gameId);
           this.favorites.delete(gameId);
           notificaciones.success("Game removed from your favorites.", { title: "Favorite removed" });
         } else {
-          await addTOFavorite(gameId);
+          await agregarAFavoritos(gameId);
           this.favorites.add(gameId);
           notificaciones.success("Game added to your favorites.", { title: "Favorite added" });
         }
       } catch (error) {
-        console.error("Error al cambiar favorito:", error);
-        notificaciones.error(
-          wasFavorite
-            ? "We couldn't remove the game from favorites."
-            : "We couldn't add the game to favorites.",
-          { title: "Favorites error" }
-        );
+        console.error('Error al cambiar favorito:', error);
+
+        var mensaje = "We couldn't add the game to favorites.";
+        if (eraFavorito) {
+          mensaje = "We couldn't remove the game from favorites.";
+        }
+        notificaciones.error(mensaje, { title: "Favorites error" });
       }
     },
 
-    goToDetail(gameId) {
-      this.$router.push(`/game/${gameId}`);
+    irADetalle(gameId) {
+      this.$router.push('/game/' + gameId);
     },
 
-    // scrollCarousel(dir) {
-    //   const track = this.$refs.carouselTrack;
-    //   if (track) track.scrollBy({ left: dir * 300, behavior: 'smooth' });
-    // },
-
-    metacriticColorClass(score) {
-      if (!score) return 'rank-score--none';
-      if (score >= 75) return 'rank-score--green';
-      if (score >= 50) return 'rank-score--yellow';
+    claseColorMetacritic(score) {
+      if (!score) {
+        return 'rank-score--none';
+      }
+      if (score >= 75) {
+        return 'rank-score--green';
+      }
+      if (score >= 50) {
+        return 'rank-score--yellow';
+      }
       return 'rank-score--red';
     },
 
-    goToLogin() {
-      const token = localStorage.getItem("token")
+    irALogin() {
+      var token = localStorage.getItem("token");
       if (token) {
         this.$router.push('/content/overview');
       } else {
@@ -163,26 +242,38 @@ export default {
       }
     },
 
-
-    goToRegister() {
+    irARegistro() {
       this.$router.push("/register");
     },
 
-    goToExplore() {
+    irAExplorar() {
       this.$router.push('/content/overview');
     },
 
-    scrollToReleases() {
-      const element = document.getElementById('proximos-section');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+    desplazarALanzamientos() {
+      var elemento = document.getElementById('proximos-section');
+      if (elemento) {
+        elemento.scrollIntoView({ behavior: 'smooth' });
       }
     }
   },
+
   computed: {
     estadoAutenticacion() {
       return estadoAutenticacion;
+    },
+
+    // Tope de 500 paginas porque RAWG corta a partir de ahi aunque el
+    // count diga mas
+    totalPaginasProximos() {
+      if (!this.totalCountProximos) {
+        return 0;
+      }
+      var calculado = Math.ceil(this.totalCountProximos / POR_PAGINA_PROXIMOS);
+      if (calculado > 500) {
+        return 500;
+      }
+      return calculado;
     }
   }
-}
-
+};

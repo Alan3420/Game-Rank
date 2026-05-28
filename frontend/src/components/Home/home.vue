@@ -25,11 +25,11 @@
           </div>
 
           <div class="hero-cta">
-            <button class="btn btn-primary" @click="goToRegister">
+            <button class="btn btn-primary" @click="irARegistro">
               <i class="pi pi-user-plus"></i>
               Get started for free
             </button>
-            <button class="btn btn-secondary" @click="goToLogin">
+            <button class="btn btn-secondary" @click="irALogin">
               <i class="pi pi-sign-in"></i>
               Sign in
             </button>
@@ -60,14 +60,14 @@
               <i class="pi pi-heart"></i>
               <span>My favorites</span>
             </router-link>
-            <button class="quick-action-btn" @click="scrollToReleases">
+            <button class="quick-action-btn" @click="desplazarALanzamientos">
               <i class="pi pi-calendar"></i>
               <span>Upcoming releases</span>
             </button>
           </div>
 
           <div class="hero-cta">
-            <button class="btn btn-primary" @click="goToExplore">
+            <button class="btn btn-primary" @click="irAExplorar">
               <i class="pi pi-arrow-right"></i>
               Start exploring
             </button>
@@ -92,7 +92,7 @@
       <div v-else-if="topGames.length > 0" class="top-ranking">
 
         <!-- Rank 1 - Carta principal -->
-        <article class="rank-card rank-card--first" @click="goToDetail(topGames[0].id)">
+        <article class="rank-card rank-card--first" @click="irADetalle(topGames[0].id)">
           <img class="rank-card-bg" :src="topGames[0].imge_url" :alt="topGames[0].name" />
           <div class="rank-card-overlay"></div>
           <span class="rank-num">1</span>
@@ -101,7 +101,7 @@
             <h3 class="rank-title">{{ topGames[0].name }}</h3>
             <span class="rank-year">{{ topGames[0].release_date?.split('-')[0] }}</span>
             <div class="rank-meta-wrap">
-              <div class="rank-score" :class="metacriticColorClass(topGames[0].metacritic)">
+              <div class="rank-score" :class="claseColorMetacritic(topGames[0].metacritic)">
                 {{ topGames[0].metacritic ?? '—' }}
               </div>
               <span class="rank-score-label">Metacritic</span>
@@ -111,7 +111,7 @@
 
         <!-- Ranks 2 y 3 -->
         <div class="rank-sub-grid">
-          <article v-if="topGames[1]" class="rank-card rank-card--sub" @click="goToDetail(topGames[1].id)">
+          <article v-if="topGames[1]" class="rank-card rank-card--sub" @click="irADetalle(topGames[1].id)">
             <img class="rank-card-bg" :src="topGames[1].imge_url" :alt="topGames[1].name" />
             <div class="rank-card-overlay"></div>
             <span class="rank-num rank-num--sub">2</span>
@@ -119,7 +119,7 @@
               <h3 class="rank-title">{{ topGames[1].name }}</h3>
               <span class="rank-year">{{ topGames[1].release_date?.split('-')[0] }}</span>
               <div class="rank-meta-wrap">
-                <div class="rank-score rank-score--sm" :class="metacriticColorClass(topGames[1].metacritic)">
+                <div class="rank-score rank-score--sm" :class="claseColorMetacritic(topGames[1].metacritic)">
                   {{ topGames[1].metacritic ?? '—' }}
                 </div>
                 <span class="rank-score-label">Metacritic</span>
@@ -127,7 +127,7 @@
             </div>
           </article>
 
-          <article v-if="topGames[2]" class="rank-card rank-card--sub" @click="goToDetail(topGames[2].id)">
+          <article v-if="topGames[2]" class="rank-card rank-card--sub" @click="irADetalle(topGames[2].id)">
             <img class="rank-card-bg" :src="topGames[2].imge_url" :alt="topGames[2].name" />
             <div class="rank-card-overlay"></div>
             <span class="rank-num rank-num--sub">3</span>
@@ -135,7 +135,7 @@
               <h3 class="rank-title">{{ topGames[2].name }}</h3>
               <span class="rank-year">{{ topGames[2].release_date?.split('-')[0] }}</span>
               <div class="rank-meta-wrap">
-                <div class="rank-score rank-score--sm" :class="metacriticColorClass(topGames[2].metacritic)">
+                <div class="rank-score rank-score--sm" :class="claseColorMetacritic(topGames[2].metacritic)">
                   {{ topGames[2].metacritic ?? '—' }}
                 </div>
                 <span class="rank-score-label">Metacritic</span>
@@ -172,10 +172,9 @@
             :game="game"
             :index="index"
             :is-favorite="favorites.has(game.id)"
-            :status="statuses.get(game.id) || null"
-            @click="goToDetail(game.id)"
-            @action="toggleFavorite"
-            @update:status="handleStatusUpdate"
+            :can-change-status="false"
+            @click="irADetalle(game.id)"
+            @action="alternarFavorito"
         />
     </div>
 
@@ -183,6 +182,14 @@
         <i class="pi pi-inbox"></i>
         <p>No upcoming releases available.</p>
     </div>
+
+    <!-- Paginacion de proximos lanzamientos -->
+    <Pagination
+      v-if="!isFutureLoading"
+      :current-page="currentPageProximos"
+      :total-pages="totalPaginasProximos"
+      @update:current-page="cargarPaginaProximos"
+    />
 </section>
 
     <!-- Crea una cuenta nueva-->
@@ -190,7 +197,7 @@
       <div class="cta-content">
         <h2>Join the community</h2>
         <p>Explore thousands of games, share your opinion and discover titles that match your preferences.</p>
-        <button class="btn btn-accent" @click="goToRegister">
+        <button class="btn btn-accent" @click="irARegistro">
           <i class="pi pi-check"></i>
           Get started now
         </button>
@@ -205,10 +212,11 @@ import jsHome from "./script_home.js";
 import { estadoAutenticacion } from "../../store/autenticacion.js";
 import GameCard from "../Cards/GameCard.vue";
 import Loader from "../Loader/Loader.vue";
+import Pagination from "../Pagination/Pagination.vue";
 
 export default {
   name: 'GameDetail',
-  components: { GameCard, Loader },
+  components: { GameCard, Loader, Pagination },
   mixins: [jsHome]
 };
 </script>

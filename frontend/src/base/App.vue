@@ -2,17 +2,22 @@
   <header class="main-header">
     <div class="header-container">
       <router-link to="/" class="logo-link">
-        <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank Logo" />
+        <picture>
+          <source media="(max-width: 599px)" srcset="/src/assets/logo_GR.png" />
+          <source media="(min-width: 600px) and (max-width: 640px)" srcset="/src/assets/game_rank_logo.png" />
+          <source media="(max-width: 840px)" srcset="/src/assets/logo_GR.png" />
+          <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank Logo" />
+        </picture>
       </router-link>
 
       <div v-if="estadoAutenticacion.usuario" class="header-search">
         <i class="pi pi-search header-search-icon"></i>
         <input type="text" v-model="headerSearch" placeholder="Search a game..." class="header-search-input"
-          @keyup.enter="submitHeaderSearch" />
+          @keyup.enter="enviarBusquedaCabecera" />
       </div>
 
       <nav class="nav-menu">
-        <button class="theme-toggle" @click="toggleTema" :title="tema === 'dark' ? 'Light mode' : 'Dark mode'">
+        <button class="theme-toggle" @click="cambiarTema" :title="tema === 'dark' ? 'Light mode' : 'Dark mode'">
           <i class="pi" :class="tema === 'dark' ? 'pi-sun' : 'pi-moon'"></i>
         </button>
 
@@ -101,11 +106,11 @@
                   </div>
                 </router-link>
 
-                <div v-if="isAdmin" class="dropdown-divider"></div>
+                <div v-if="esAdministrador" class="dropdown-divider"></div>
 
-                <p v-if="isAdmin" class="dropdown-section-label">ADMINISTRATION</p>
+                <p v-if="esAdministrador" class="dropdown-section-label">ADMINISTRATION</p>
 
-                <router-link v-if="isAdmin" to="/admin/users" class="dropdown-item" @click="menuAbierto = false">
+                <router-link v-if="esAdministrador" to="/admin/users" class="dropdown-item" @click="menuAbierto = false">
                   <div class="dropdown-item-icon">
                     <i class="pi pi-users"></i>
                   </div>
@@ -115,7 +120,7 @@
                   </div>
                 </router-link>
 
-                <button v-if="isAdmin" class="dropdown-item" @click="irAModeracion">
+                <button v-if="esAdministrador" class="dropdown-item" @click="irAModeracion">
                   <div class="dropdown-item-icon">
                     <i class="pi pi-comments"></i>
                   </div>
@@ -217,7 +222,7 @@
           <RouterLink v-if="estadoAutenticacion.usuario" to="/content/overview" class="footer-nav-link">Catalog</RouterLink>
           <RouterLink v-if="estadoAutenticacion.usuario" to="/tendencias" class="footer-nav-link">Trends</RouterLink>
           <RouterLink v-if="estadoAutenticacion.usuario" to="/user/profile" class="footer-nav-link">My Profile</RouterLink>
-          <RouterLink v-if="isAdmin" to="/admin/users" class="footer-nav-link">User Management</RouterLink>
+          <RouterLink v-if="esAdministrador" to="/admin/users" class="footer-nav-link">User Management</RouterLink>
         </nav>
       </div>
 

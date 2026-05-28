@@ -1,93 +1,102 @@
-from app.repositories.comment_repo import get_comment_by_id, get_comments_by_game, get_comments_by_game_paginated, get_comments_by_user, get_all_comments, create_comment, update_comment, delete_comment
-from app.repositories.rate_repo import get_rates_by_game
+from app.repositories import comment_repo
+from app.repositories import rate_repo
 
-def crear_comentario(id_user, id_game, description) -> object | str:
-    try:
-        if not description or len(description) < 1 or len(description) > 255:
-            return "La descripción debe tener entre 1 y 255 caracteres"
 
-        existing = [c for c in get_comments_by_game(id_game=id_game) if c.id_user == id_user]
-        if existing:
+def crear_comentario(id_usuario, id_juego, descripcion) -> object | str:
+    if not descripcion or len(descripcion) < 1 or len(descripcion) > 255:
+        return "La descripción debe tener entre 1 y 255 caracteres"
+
+    # Regla de negocio: un usuario solo puede tener un comentario por juego
+    comentarios_del_juego = comment_repo.obtener_comentarios_por_juego(id_juego=id_juego)
+    for comentario in comentarios_del_juego:
+        if comentario.id_user == id_usuario:
             return "Ya has comentado este juego"
-        comment = create_comment(id_user=id_user, id_game=id_game, description=description)
-        return comment
-    except Exception as e:
-        raise Exception(f"Error al crear el comentario: {str(e)}")
 
-def actualizar_comentario(comment_id, description, user_id, es_admin=False) -> object | str:
-    try:
-        if description and (len(description) < 1 or len(description) > 255):
-            return "La descripción debe tener entre 1 y 255 caracteres"
-
-        comment = update_comment(
-            comment_id=comment_id,
-            description=description,
-            user_id=user_id,
-            es_admin=es_admin
-        )
-        if not comment:
-            return "Comentario no encontrado"
-
-        return comment
-    except Exception as e:
-        raise Exception(f"Error al actualizar el comentario: {str(e)}")
-
-def eliminar_comentario(comment_id, user_id, es_admin=False) -> bool | str:
-    try:
-        resultado = delete_comment(comment_id=int(comment_id), user_id=user_id, es_admin=es_admin)
-
-        if not resultado:
-            return "Comentario no encontrado"
-
-        return resultado
-    except Exception as e:
-        raise Exception(f"Error al eliminar el comentario: {str(e)}")
-    
-def get_comentarios_juego(id_game, limit=10, offset=0) -> dict:
-    try:
-        comments, total = get_comments_by_game_paginated(id_game=id_game, limit=limit, offset=offset)
-        rates = get_rates_by_game(id_game=id_game)
-        rating_by_user = {r.id_user: r.rating for r in rates}
-
-        resultado = []
-        for comment in comments:
-            data = comment.to_dict()
-            data["rating"] = rating_by_user.get(comment.id_user)
-            resultado.append(data)
-
-        return {
-            "comments": resultado,
-            "total": total,
-            "has_more": (offset + len(resultado)) < total
-        }
-    except Exception as e:
-        raise Exception(f"Error al obtener comentarios: {str(e)}")
-
-def get_todos_comentarios_admin() -> list:
-    try:
-        comments = get_all_comments()
-        resultado = []
-        for c in comments:
-            data = c.to_dict()
-            data['user_last_name'] = c.users_rl.last_name if c.users_rl else ''
-            resultado.append(data)
-        return resultado
-    except Exception as e:
-        raise Exception(f"Error al obtener todos los comentarios: {str(e)}")
-
-def get_comentarios_usuario(id_user) -> list:
-
-    try:
-        comments = get_comments_by_user(id_user=id_user)
-        resultado = []
-
-        for comment in comments:
-            resultado.append(comment.to_dict())
+    nuevo_comentario = comment_repo.crear_comentario(
+        id_usuario=id_usuario,
+        id_juego=id_juego,
+        descripcion=descripcion
+    )
+    return nuevo_comentario
 
 
-        return resultado
-    except Exception as e:
-        raise Exception(f"Error al obtener comentarios: {str(e)}")
-    
+def actualizar_comentario(id_comentario, descripcion, id_usuario, es_admin=False) -> object | str:
+    if descripcion and (len(descripcion) < 1 or len(descripcion) > 255):
+        return "La descripción debe tener entre 1 y 255 caracteres"
+
+    comentario = comment_repo.actualizar_comentario(
+        id_comentario=id_comentario,
+        descripcion=descripcion,
+        id_usuario=id_usuario,
+        es_admin=es_admin
+    )
+
+    if not comentario:
+        return "Comentario no encontrado"
+
+    return comentario
 
 
+def eliminar_comentario(id_comentario, id_usuario, es_admin=False) -> bool | str:
+    resultado = comment_repo.eliminar_comentario(
+        id_comentario=int(id_comentario),
+        id_usuario=id_usuario,
+        es_admin=es_admin
+    )
+
+    if not resultado:
+        return "Comentario no encontrado"
+
+    return resultado
+
+
+def obtener_comentarios_del_juego(id_juego, limite=10, desplazamiento=0) -> dict:
+    comentarios, total = comment_repo.obtener_comentarios_por_juego_paginados(
+        id_juego=id_juego,
+        limite=limite,
+        desplazamiento=desplazamiento
+    )
+
+    # Adjuntamos al comentario la nota que el mismo usuario le dio al juego
+    # asi el front lo pinta junto al texto sin pedir otra cosa
+    calificaciones = rate_repo.obtener_calificaciones_por_juego(id_juego=id_juego)
+    calificacion_por_usuario = {}
+    for calificacion in calificaciones:
+        calificacion_por_usuario[calificacion.id_user] = calificacion.rating
+
+    resultado = []
+    for comentario in comentarios:
+        datos = comentario.to_dict()
+        datos["rating"] = calificacion_por_usuario.get(comentario.id_user)
+        resultado.append(datos)
+
+    return {
+        "comments": resultado,
+        "total": total,
+        "has_more": (desplazamiento + len(resultado)) < total
+    }
+
+
+def obtener_todos_los_comentarios() -> list:
+    comentarios = comment_repo.obtener_todos_los_comentarios()
+
+    resultado = []
+    for comentario in comentarios:
+        datos = comentario.to_dict()
+        if comentario.users_rl:
+            datos['user_last_name'] = comentario.users_rl.last_name
+        else:
+            datos['user_last_name'] = ''
+        resultado.append(datos)
+
+    return resultado
+
+
+def obtener_comentarios_del_usuario(id_usuario) -> list:
+    comentarios = comment_repo.obtener_comentarios_por_usuario(id_usuario=id_usuario)
+
+    resultado = []
+    for comentario in comentarios:
+        resultado.append(comentario.to_dict())
+
+    return resultado

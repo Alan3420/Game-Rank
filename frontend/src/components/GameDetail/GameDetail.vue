@@ -8,7 +8,7 @@
         <div v-else-if="!game" class="detail-error">
             <i class="pi pi-exclamation-circle"></i>
             <h2>{{ errorMessage || 'Could not load game details.' }}</h2>
-            <Button icon="pi pi-arrow-left" label="Back" class="back-btn" @click="goBack" />
+            <Button icon="pi pi-arrow-left" label="Back" class="back-btn" @click="volver" />
         </div>
 
         <!-- Contenido principal -->
@@ -16,7 +16,7 @@
 
             <!-- NAVEGACIÓN SUPERIOR -->
             <div class="detail-topbar">
-                <Button icon="pi pi-arrow-left" label="Back" class="back-btn" @click="goBack" />
+                <Button icon="pi pi-arrow-left" label="Back" class="back-btn" @click="volver" />
                 <span class="breadcrumb-hint">
                     <i class="pi pi-home"></i>
                     <i class="pi pi-angle-right"></i>
@@ -41,7 +41,7 @@
                     <div class="detail-stats">
                         <div class="stat-item" title="Metacritic Score">
                             <span class="stat-value">
-                                <span v-if="game.metacritic" class="mc-badge" :class="metacriticClass(game.metacritic)">{{ game.metacritic }}</span>
+                                <span v-if="game.metacritic" class="mc-badge" :class="claseMetacritic(game.metacritic)">{{ game.metacritic }}</span>
                                 <span v-else class="mc-badge mc-na">N/A</span>
                             </span>
                             <span class="stat-label">Metacritic</span>
@@ -62,7 +62,7 @@
                         <div class="stat-item">
                             <span class="stat-value">
                                 <i class="pi pi-calendar"></i>
-                                {{ formatDate(game.release_date) }}
+                                {{ formatearFecha(game.release_date) }}
                             </span>
                             <span class="stat-label">Release</span>
                         </div>
@@ -85,15 +85,18 @@
                         class="hero-fav-btn"
                         :class="{ 'is-fav': isFavorite, 'is-loading': favoriteLoading }"
                         :disabled="favoriteLoading"
-                        @click="toggleFavorite"
+                        @click="alternarFavorito"
                         :title="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
                     >
                         <i v-if="favoriteLoading" class="pi pi-spin pi-spinner"></i>
                         <i v-else :class="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
                     </button>
 
-                    <!-- Status button + dropdown wrapper -->
-                    <div class="hero-status-wrap">
+                    <!-- Status button + dropdown wrapper.
+                         Solo se muestra si el juego ya salio: no se puede
+                         marcar como "jugando" o "completado" un juego que
+                         todavia no esta a la venta. -->
+                    <div v-if="juegoYaSalio" class="hero-status-wrap">
                         <button
                             class="hero-status-btn"
                             :class="{ 'has-status': gameStatus }"
@@ -111,7 +114,7 @@
                                 :game-id="game.id"
                                 :current-status="gameStatus"
                                 @close="showStatusModal = false"
-                                @update:status="handleStatusUpdate"
+                                @update:status="manejarActualizacionEstado"
                             />
                         </div>
                     </div>
@@ -145,9 +148,9 @@
                             <!-- Si el item activo es una imagen -->
                             <img v-else :src="mediaItems[activeShot]?.url"
                                 :alt="`${game.name} — screenshot ${activeShot + 1}`" class="sc-viewer__img" />
-                            <button class="sc-arrow sc-arrow--l" @click="prevShot"
+                            <button class="sc-arrow sc-arrow--l" @click="mediaAnterior"
                                 aria-label="Previous">&#8249;</button>
-                            <button class="sc-arrow sc-arrow--r" @click="nextShot"
+                            <button class="sc-arrow sc-arrow--r" @click="mediaSiguiente"
                                 aria-label="Next">&#8250;</button>
                         </div>
 
@@ -241,19 +244,19 @@
                                             <span class="comment-user">{{ comment.username }}</span>
                                             <span v-if="comment.nickname" class="comment-nickname">@{{ comment.nickname }}</span>
                                             <span class="comment-dot"></span>
-                                            <span class="comment-date">{{ formatDate(comment.date_of_comment) }}</span>
+                                            <span class="comment-date">{{ formatearFecha(comment.date_of_comment) }}</span>
                                             <span v-if="comment.date_of_update" class="comment-edited">
                                                 <span class="comment-dot"></span>
                                                 <i class="pi pi-pencil"></i>
-                                                edited on {{ formatDate(comment.date_of_update) }}
+                                                edited on {{ formatearFecha(comment.date_of_update) }}
                                             </span>
                                         </div>
                                         <button v-if="comment.id_user === data_user.id_user || data_user?.role === 'admin'" class="comment-delete-btn"
-                                            @click="delComment(comment.id_comment)" title="Delete comment">
+                                            @click="eliminarMiComentario(comment.id_comment)" title="Delete comment">
                                             <i class="pi pi-trash"></i>
                                         </button>
                                         <button v-if="comment.id_user === data_user.id_user" class="comment-edit-btn"
-                                            @click="editar(comment)" title="Edit comment">
+                                            @click="iniciarEdicionComentario(comment)" title="Edit comment">
                                             <i class="pi pi-pencil"></i>
                                         </button>
                                     </div>
@@ -282,7 +285,7 @@
                         </div>
 
                         <!-- FORMULARIO -->
-                        <div class="add-comment-form" :class="{ 'is-disabled': formDisabled }">
+                        <div class="add-comment-form" :class="{ 'is-disabled': formularioDeshabilitado }">
                             <div class="comment-avatar comment-avatar-form">
                                 <i class="pi pi-user"></i>
                             </div>
@@ -292,8 +295,8 @@
                                     <div class="rating-input-stars">
                                         <button v-for="n in 5" :key="n" type="button" class="rating-star-btn"
                                             :class="{ 'is-active': n <= (formHover || formRating) }"
-                                            @click="setFormRating(n)" @mouseenter="formHover = n"
-                                            :disabled="formDisabled"
+                                            @click="establecerCalificacionFormulario(n)" @mouseenter="formHover = n"
+                                            :disabled="formularioDeshabilitado"
                                             :title="`${n} de 5`">
                                             <i class="pi pi-star-fill"></i>
                                         </button>
@@ -304,7 +307,7 @@
                                 </div>
                                 <textarea v-model="newComment" placeholder="Write your opinion about this game..."
                                     class="comment-textarea" maxlength="255" rows="3"
-                                    :disabled="formDisabled"></textarea>
+                                    :disabled="formularioDeshabilitado"></textarea>
                                 <div class="comment-form-footer">
                                     <div class="form-footer-left">
                                         <span class="comment-char-hint" :class="{ active: newComment?.length > 0 }">
@@ -313,12 +316,12 @@
                                     </div>
                                     <div class="grp-botones">
                                         <!-- Botón cancelar, solo visible al editar -->
-                                        <button v-if="editingId" class="comment-cancel-btn" @click="cancelarEdit()">
+                                        <button v-if="editingId" class="comment-cancel-btn" @click="cancelarEdicionComentario()">
                                             Cancel
                                         </button>
                                         <button class="comment-submit-btn" :class="{ editingId: editDescription }"
-                                            @click="editingId ? updComment() : addComment()"
-                                            :disabled="formDisabled || !newComment?.trim() || !formRating">
+                                            @click="editingId ? actualizarMiComentario() : publicarComentario()"
+                                            :disabled="formularioDeshabilitado || !newComment?.trim() || !formRating">
                                             <i :class="editingId ? 'pi pi-check' : 'pi pi-send'"></i>
                                             {{ editingId ? 'Update' : 'Publish' }}
                                         </button>
@@ -403,7 +406,7 @@
                                 </div>
                                 <div class="adicion-info">
                                     <span class="adicion-name">{{ dlc.name }}</span>
-                                    <span class="adicion-date">{{ formatDate(dlc.release_date) }}</span>
+                                    <span class="adicion-date">{{ formatearFecha(dlc.release_date) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -440,7 +443,7 @@
                             <li>
                                 <span class="meta-label">Metacritic</span>
                                 <span class="meta-value">
-                                    <span v-if="game.metacritic" class="mc-badge" :class="metacriticClass(game.metacritic)">{{ game.metacritic }}</span>
+                                    <span v-if="game.metacritic" class="mc-badge" :class="claseMetacritic(game.metacritic)">{{ game.metacritic }}</span>
                                     <span v-else>—</span>
                                 </span>
                             </li>
@@ -453,7 +456,7 @@
                             </li>
                             <li>
                                 <span class="meta-label">Release</span>
-                                <span class="meta-value">{{ formatDate(game.release_date) }}</span>
+                                <span class="meta-value">{{ formatearFecha(game.release_date) }}</span>
                             </li>
                             <li v-if="game.platforms?.length">
                                 <span class="meta-label">Platforms</span>
@@ -478,9 +481,9 @@
                                 v-for="store in game.stores"
                                 :key="store.id"
                                 class="store-btn"
-                                @click="openExternalLink(store.url, store.name)"
+                                @click="abrirEnlaceExterno(store.url, store.name)"
                             >
-                                <i :class="'pi ' + getStoreIcon(store.slug)"></i>
+                                <i :class="'pi ' + obtenerIconoDeTienda(store.slug)"></i>
                                 <span>{{ store.name }}</span>
                                 <i class="pi pi-external-link store-btn__ext"></i>
                             </button>
@@ -495,7 +498,7 @@
     </div>
 
     <!-- Modal aviso enlace externo -->
-    <div v-if="externalLink.open" class="ext-modal-overlay" @click.self="cancelExternalLink">
+    <div v-if="externalLink.open" class="ext-modal-overlay" @click.self="cancelarEnlaceExterno">
         <div class="ext-modal" role="dialog" aria-modal="true">
             <div class="ext-modal__icon">
                 <i class="pi pi-external-link"></i>
@@ -507,10 +510,10 @@
                 Do you want to continue?
             </p>
             <div class="ext-modal__actions">
-                <button class="ext-modal__btn ext-modal__btn--cancel" @click="cancelExternalLink">
+                <button class="ext-modal__btn ext-modal__btn--cancel" @click="cancelarEnlaceExterno">
                     Cancel
                 </button>
-                <button class="ext-modal__btn ext-modal__btn--confirm" @click="confirmExternalLink">
+                <button class="ext-modal__btn ext-modal__btn--confirm" @click="confirmarEnlaceExterno">
                     <i class="pi pi-external-link"></i>
                     Continue
                 </button>

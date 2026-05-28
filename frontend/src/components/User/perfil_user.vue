@@ -14,9 +14,9 @@
           <div class="banner-identity">
             <h1>{{ estadoAutenticacion.usuario.name }} {{ estadoAutenticacion.usuario.last_name }}</h1>
             <span v-if="estadoAutenticacion.usuario.nickname" class="banner-nickname">@{{ estadoAutenticacion.usuario.nickname }}</span>
-            <span class="badge" :class="{ 'badge-admin': isAdmin }">
-              <i :class="isAdmin ? 'pi pi-crown' : 'pi pi-shield'"></i>
-              {{ isAdmin ? 'Administrator' : 'User' }}
+            <span class="badge" :class="{ 'badge-admin': esAdministrador }">
+              <i :class="esAdministrador ? 'pi pi-crown' : 'pi pi-shield'"></i>
+              {{ esAdministrador ? 'Administrator' : 'User' }}
             </span>
           </div>
         </div>
@@ -159,7 +159,7 @@
           </div>
 
           <!-- Admin Panel -->
-          <div v-if="isAdmin" class="admin-panel">
+          <div v-if="esAdministrador" class="admin-panel">
             <div class="admin-header">
               <div class="admin-title-group">
                 <i class="pi pi-sliders-v"></i>
@@ -235,7 +235,7 @@
                 v-for="item in coleccionFiltrada"
                 :key="item.id_status"
                 class="coleccion-item"
-                @click="goToDetail(item.game.id)"
+                @click="irADetalle(item.game.id)"
               >
                 <div class="coleccion-item-thumb">
                   <img v-if="item.game.imge_url" :src="item.game.imge_url" :alt="item.game.name" />
@@ -252,7 +252,7 @@
                 <button
                   class="coleccion-item-fav"
                   :class="{ 'is-fav': favoritosIds.has(item.game.id), 'is-loading': favLoadingId === item.game.id }"
-                  @click.stop="toggleFavoritoColeccion(item.game.id)"
+                  @click.stop="alternarFavoritoColeccion(item.game.id)"
                   :title="favoritosIds.has(item.game.id) ? 'Remove from favorites' : 'Add to favorites'"
                 >
                   <i v-if="favLoadingId === item.game.id" class="pi pi-spin pi-spinner"></i>
@@ -295,39 +295,19 @@
                 removable
                 :is-loading="remover === fav.id"
                 :status="statuses.get(fav.id) || null"
-                @click="goToDetail(fav.id)"
+                :can-change-status="juegoYaSalio(fav)"
+                @click="irADetalle(fav.id)"
                 @action="quitarFavorito"
-                @update:status="handleStatusUpdate"
+                @update:status="manejarActualizacionEstado"
               />
             </div>
 
-            <div v-if="!favoritosLoading && favoritos.length > FAVS_POR_PAGINA" class="fav-pagination">
-              <button
-                class="fav-page-btn fav-page-nav"
-                :disabled="paginaFavoritos === 1"
-                @click="paginaFavoritos--"
-                aria-label="Previous page"
-              >
-                <i class="pi pi-chevron-left"></i>
-              </button>
-
-              <button
-                v-for="n in totalPaginasFavoritos"
-                :key="n"
-                class="fav-page-btn"
-                :class="{ 'is-active': paginaFavoritos === n }"
-                @click="paginaFavoritos = n"
-              >{{ n }}</button>
-
-              <button
-                class="fav-page-btn fav-page-nav"
-                :disabled="paginaFavoritos === totalPaginasFavoritos"
-                @click="paginaFavoritos++"
-                aria-label="Next page"
-              >
-                <i class="pi pi-chevron-right"></i>
-              </button>
-            </div>
+            <Pagination
+              v-if="!favoritosLoading"
+              :current-page="paginaFavoritos"
+              :total-pages="totalPaginasFavoritos"
+              @update:current-page="paginaFavoritos = $event"
+            />
           </div>
 
         </div>
@@ -529,10 +509,11 @@
 import jsPerfil from "./script_perfil.js";
 import GameCard from "../Cards/GameCard.vue";
 import Loader from "../Loader/Loader.vue";
+import Pagination from "../Pagination/Pagination.vue";
 
 export default {
   name: 'perfil',
-  components: { GameCard, Loader },
+  components: { GameCard, Loader, Pagination },
   mixins: [jsPerfil]
 };
 </script>

@@ -1,61 +1,45 @@
-from app.repositories.favorite_repo import get_favorite, get_favorites_by_user, create_favorite, delete_favorite
+from app.repositories import favorite_repo
 from app.client.clientRAWG import get_game_by_id_api
-from app.services.adapter import game_format_resume
+from app.services.adapter import formatear_resumen_juego
 
-def añadir_favorito(id_user, id_game) -> object | str:
-    try:
-        existe = get_favorite(user_id=id_user, id_game=id_game)
 
-        if existe:
-            return "El juego ya está en favoritos"
-        favorite = create_favorite(user_id=id_user, id_game=id_game)
+def agregar_favorito(id_usuario, id_juego) -> object | str:
+    existe = favorite_repo.obtener_favorito(id_usuario=id_usuario, id_juego=id_juego)
 
-        return favorite
-    except Exception as e:
-        raise Exception(f"Error al añadir favorito: {str(e)}")
-    
+    if existe:
+        return "El juego ya está en favoritos"
 
-def eliminar_favorito(id_user, id_game) -> bool | str:
-    
-    try:
-        existe = get_favorite(user_id=id_user, id_game=id_game)
+    nuevo_favorito = favorite_repo.crear_favorito(id_usuario=id_usuario, id_juego=id_juego)
+    return nuevo_favorito
 
-        if not existe:
-            return "El juego no está en favoritos"
-        
-        resultado = delete_favorite(user_id=id_user, id_game=id_game)
 
-        return resultado
-    except Exception as e:
-        raise Exception(f"Error al eliminar favorito: {str(e)}")
+def eliminar_favorito(id_usuario, id_juego) -> bool | str:
+    existe = favorite_repo.obtener_favorito(id_usuario=id_usuario, id_juego=id_juego)
 
-def get_favoritos_usuario(id_user) -> list:
-    
-    try:
-        favorites = get_favorites_by_user(user_id=id_user)
-        resultado = []
+    if not existe:
+        return "El juego no está en favoritos"
 
-        for fav in favorites:
-            game = get_game_by_id_api(fav.id_game_api)
-            if game:
-                resultado.append(game_format_resume(game))
+    resultado = favorite_repo.eliminar_favorito(id_usuario=id_usuario, id_juego=id_juego)
+    return resultado
 
-        return resultado
-    
-    except Exception as e:
-        raise Exception(f"Error al obtener favoritos: {str(e)}")
-    
 
-def es_favorito(id_user, id_game) -> bool:
+def obtener_favoritos_del_usuario(id_usuario) -> list:
+    # En BD solo guardamos el id del juego asi que para cada favorito hay
+    # que pedir el resto de datos a RAWG
+    favoritos = favorite_repo.obtener_favoritos_por_usuario(id_usuario=id_usuario)
 
-    try:
-        favorite = get_favorite(user_id=id_user, id_game=id_game)
+    resultado = []
+    for favorito in favoritos:
+        juego = get_game_by_id_api(favorito.id_game_api)
+        if juego:
+            resultado.append(formatear_resumen_juego(juego))
 
-        if favorite:
-            return True
-        
-        return False
-    
-    except Exception as e:
-        raise Exception(f"Error al comprobar favorito: {str(e)}")
+    return resultado
 
+
+def es_favorito(id_usuario, id_juego) -> bool:
+    favorito = favorite_repo.obtener_favorito(id_usuario=id_usuario, id_juego=id_juego)
+
+    if favorito:
+        return True
+    return False

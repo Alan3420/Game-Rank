@@ -1,29 +1,45 @@
 from app.models.Favorite import Favorite
 from app.database.db import db
+from sqlalchemy import func
 
 
-def get_favorite(user_id, id_game):
-    return Favorite.query.filter_by(user_id=user_id, id_game_api=id_game).first()
+def obtener_favorito(id_usuario, id_juego):
+    return Favorite.query.filter_by(user_id=id_usuario, id_game_api=id_juego).first()
 
 
-def get_favorites_by_user(user_id):
-    return Favorite.query.filter_by(user_id=user_id).all()
+def obtener_favoritos_por_usuario(id_usuario):
+    return Favorite.query.filter_by(user_id=id_usuario).all()
 
 
-def create_favorite(user_id, id_game):
-    favorite = Favorite(user_id=user_id, id_game_api=id_game)
-    db.session.add(favorite)
+def crear_favorito(id_usuario, id_juego):
+    nuevo_favorito = Favorite(user_id=id_usuario, id_game_api=id_juego)
+    db.session.add(nuevo_favorito)
     db.session.commit()
-    return favorite
+    return nuevo_favorito
 
-def delete_favorite(user_id, id_game):
-    
-    favorite = get_favorite(user_id=user_id, id_game=id_game)
-    if not favorite:
+
+def eliminar_favorito(id_usuario, id_juego):
+    favorito = obtener_favorito(id_usuario=id_usuario, id_juego=id_juego)
+
+    if not favorito:
         return False
-    db.session.delete(favorite)
+
+    db.session.delete(favorito)
     db.session.commit()
     return True
 
-    
 
+def obtener_top_favoritos(limite):
+    total = func.count(Favorite.fav_id).label("total")
+    return (db.session.query(Favorite.id_game_api, total)
+            .group_by(Favorite.id_game_api)
+            .order_by(total.desc())
+            .limit(limite)
+            .all())
+
+
+def contar_favoritos_por_usuario(id_usuario):
+    total = db.session.query(func.count(Favorite.fav_id))\
+                      .filter(Favorite.user_id == id_usuario)\
+                      .scalar()
+    return total or 0

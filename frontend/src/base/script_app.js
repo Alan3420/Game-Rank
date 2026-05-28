@@ -1,6 +1,7 @@
 import { estadoAutenticacion } from '../store/autenticacion';
 import { notificaciones } from '../store/notificaciones';
-import { deleteOwnAccount } from '../services/user_service';
+import { eliminarMiCuenta } from '../services/user_service';
+
 
 export default {
 
@@ -13,13 +14,18 @@ export default {
       confirmTexto: '',
       eliminandoCuenta: false
     };
-
   },
 
   computed: {
 
-    isAdmin() {
-      return estadoAutenticacion.usuario?.role === 'admin';
+    esAdministrador() {
+      if (!estadoAutenticacion.usuario) {
+        return false;
+      }
+      if (estadoAutenticacion.usuario.role === 'admin') {
+        return true;
+      }
+      return false;
     },
 
     estadoAutenticacion() {
@@ -29,18 +35,31 @@ export default {
 
   methods: {
 
-    toggleTema() {
-      this.tema = this.tema === 'light' ? 'dark' : 'light';
+    cambiarTema() {
+      if (this.tema === 'light') {
+        this.tema = 'dark';
+      } else {
+        this.tema = 'light';
+      }
+
       document.documentElement.setAttribute('data-theme', this.tema);
       localStorage.setItem('tema', this.tema);
     },
 
+    enviarBusquedaCabecera() {
 
-    submitHeaderSearch() {
-      const term = this.headerSearch.trim();
-      this.$router.push({ path: '/content/overview', query: term ? { q: term } : {} });
+      var termino = this.headerSearch.trim();
+      var consulta = {};
+
+      if (termino) {
+        consulta.q = termino;
+      }
+
+      this.$router.push({
+        path: '/content/overview',
+        query: consulta
+      });
     },
-
 
     manejarCierreSesion() {
       this.menuAbierto = false;
@@ -49,12 +68,10 @@ export default {
       notificaciones.success("You've signed out successfully.", { title: "Goodbye" });
     },
 
-
     irAModeracion() {
       this.menuAbierto = false;
       this.$router.push('/admin/comments');
     },
-
 
     abrirConfirmEliminar() {
       this.menuAbierto = false;
@@ -62,78 +79,99 @@ export default {
       this.confirmEliminarAbierto = true;
     },
 
-
     cerrarConfirmEliminar() {
-      if (this.eliminandoCuenta) return;
+      if (this.eliminandoCuenta) {
+        return;
+      }
       this.confirmEliminarAbierto = false;
       this.confirmTexto = '';
     },
 
-
     async confirmarEliminarCuenta() {
 
-      if (this.confirmTexto !== 'DELETE' || this.eliminandoCuenta) return;
+      if (this.confirmTexto !== 'DELETE' || this.eliminandoCuenta) {
+        return;
+      }
+
       this.eliminandoCuenta = true;
 
       try {
 
-        await deleteOwnAccount();
+        await eliminarMiCuenta();
 
         this.confirmEliminarAbierto = false;
         estadoAutenticacion.cerrarSesion();
-
         this.$router.push("/login");
-        notificaciones.success("Your account has been permanently deleted.", { title: "Account deleted" });
+
+        notificaciones.success("Your account has been permanently deleted.", {
+          title: "Account deleted"
+        });
 
       } catch (error) {
 
         console.error('Error al eliminar la cuenta:', error);
-        notificaciones.error(
-          error.response?.data?.message || "We couldn't delete your account. Please try again.",
-          { title: "Error" }
-        );
+
+        var mensaje = "We couldn't delete your account. Please try again.";
+        if (error.response && error.response.data && error.response.data.message) {
+          mensaje = error.response.data.message;
+        }
+
+        notificaciones.error(mensaje, { title: "Error" });
+
       } finally {
         this.eliminandoCuenta = false;
       }
     },
 
-
-    handleClickOutside(e) {
+    manejarClicFuera(e) {
       if (this.$refs.userMenuRef && !this.$refs.userMenuRef.contains(e.target)) {
         this.menuAbierto = false;
       }
     }
-
   },
 
-
   watch: {
-    '$route.query.q'(val) {
-      this.headerSearch = val || '';
+
+    '$route.query.q'(valor) {
+      if (valor) {
+        this.headerSearch = valor;
+      } else {
+        this.headerSearch = '';
+      }
     }
   },
 
   mounted() {
 
+    // Aplicamos el tema enseguida para no tener un flashazo de tema claro
+    // si el usuario tenia el oscuro guardado
     document.documentElement.setAttribute('data-theme', this.tema);
-    document.addEventListener('mousedown', this.handleClickOutside);
+
+    document.addEventListener('mousedown', this.manejarClicFuera);
 
     estadoAutenticacion.restaurarSesion();
 
-    const flash = localStorage.getItem('flashNotificacion');
-
+    // Si en una peticion anterior guardamos un aviso flash (por ejemplo
+    // "sesion expirada" tras un 401) lo recogemos y lo mostramos ahora
+    var flash = localStorage.getItem('flashNotificacion');
     if (flash) {
       localStorage.removeItem('flashNotificacion');
 
       try {
-        const { type, title, message } = JSON.parse(flash);
-        const fn = type === 'success' ? notificaciones.success : notificaciones.error;
-        fn(message, { title });
-      } catch { }
+        var datos = JSON.parse(flash);
+        var fn = null;
+        if (datos.type === 'success') {
+          fn = notificaciones.success;
+        } else {
+          fn = notificaciones.error;
+        }
+        fn(datos.message, { title: datos.title });
+      } catch (error) {
+      }
     }
   },
-  
+
   unmounted() {
-    document.removeEventListener('mousedown', this.handleClickOutside);
+    document.removeEventListener('mousedown', this.manejarClicFuera);
   }
 };
