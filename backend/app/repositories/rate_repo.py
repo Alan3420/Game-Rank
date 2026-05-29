@@ -54,7 +54,7 @@ def eliminar_calificacion(id_usuario, id_juego):
 
 def obtener_top_valorados(limite):
     promedio = func.round(func.avg(Rate.rating), 1).label("avg_rating")
-    votos = func.count(Rate.id_rate).label("votes")
+    votos = func.count(Rate.id_user).label("votes")
     return (db.session.query(Rate.id_game_api, promedio, votos)
             .group_by(Rate.id_game_api)
             .having(func.count(Rate.id_user) >= 1)

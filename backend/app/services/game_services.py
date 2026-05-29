@@ -1,4 +1,3 @@
-from app.repositories import vGame_repo
 from app.client.clientRAWG import (
     get_game_by_id_api,
     get_all_games,
@@ -16,22 +15,11 @@ from app.client.clientRAWG import (
 )
 from app.services.adapter import formatear_detalle_juego, formatear_resumen_juego, formatear_logros
 from datetime import datetime
-from concurrent.futures import ThreadPoolExecutor
 import random
-
-
-# Pool para ir guardando juegos en segundo plano mientras se pinta el
-# catalogo, asi la respuesta sale al usuario antes de tocar la BD
-pool_guardado_segundo_plano = ThreadPoolExecutor(
-    max_workers=5,
-    thread_name_prefix="guardar_juego"
-)
 
 
 def obtener_detalle_del_videojuego(id_juego) -> dict:
     detalle_juego = get_game_by_id_api(game_id=id_juego)
-
-    juego_existe = vGame_repo.obtener_juego_por_id_bd(id_juego=id_juego)
 
     detalle_juego["short_screenshots"] = get_game_screenshots(game_id=id_juego)
     detalle_juego["movies"] = get_game_movies(game_id=id_juego)[:2]
@@ -48,28 +36,6 @@ def obtener_detalle_del_videojuego(id_juego) -> dict:
 
     detalle_juego["stores"] = tiendas
     detalle_juego["team"] = obtener_equipo_desarrollo(game_id=id_juego)
-
-    if not juego_existe:
-        lista_plataformas = ""
-        lista_desarrolladoras = ""
-
-        for plataforma in detalle_juego["platforms"]:
-            lista_plataformas = lista_plataformas + plataforma["platform"]["name"]
-            if plataforma != detalle_juego["platforms"][-1]:
-                lista_plataformas = lista_plataformas + ", "
-
-        for desarrolladora in detalle_juego["developers"]:
-            lista_desarrolladoras = lista_desarrolladoras + desarrolladora["name"]
-            if desarrolladora != detalle_juego["developers"][-1]:
-                lista_desarrolladoras = lista_desarrolladoras + ", "
-
-        vGame_repo.crear_videojuego(
-            id_juego_api=detalle_juego["id"],
-            nombre=detalle_juego["name"],
-            fecha_lanzamiento=detalle_juego["released"],
-            plataformas=lista_plataformas,
-            compania_desarrollo=lista_desarrolladoras
-        )
 
     return formatear_detalle_juego(detalle_juego)
 
@@ -92,24 +58,6 @@ def obtener_proximos_lanzamientos(pagina, por_pagina):
         "previous": resultado.get("previous"),
         "count": resultado.get("count", 0)
     }
-
-
-def _guardar_juego_si_no_existe(id_juego, app):
-    # Como esto corre en otro hilo necesita su propio app_context
-    with app.app_context():
-        try:
-            if vGame_repo.obtener_juego_por_id_bd(id_juego):
-                return
-            obtener_detalle_del_videojuego(id_juego=id_juego)
-        except Exception as error:
-            print(f"Error al guardar el juego con id {id_juego}: {str(error)}")
-
-
-def guardar_juegos(juegos: list[dict] | None, app):
-    if not juegos:
-        return
-    for juego in juegos:
-        pool_guardado_segundo_plano.submit(_guardar_juego_si_no_existe, juego["id"], app)
 
 
 def obtener_video_aleatorio() -> dict | None:

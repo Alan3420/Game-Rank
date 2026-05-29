@@ -7,18 +7,15 @@ class Rate(db.Model):
     __tablename__ = "rates"
     __table_args__ = (PrimaryKeyConstraint('id_user', 'id_game_api'),)
 
-    id_rate = Column(Integer, autoincrement=True, unique=True)
     id_user = Column(Integer, ForeignKey("users.id_user", ondelete="CASCADE"), nullable=False)
-    id_game_api = Column(Integer, ForeignKey("videoGame.id_game_api", ondelete="CASCADE"), nullable=False)
+    id_game_api = Column(Integer, nullable=False)
     date_rate = Column(Date, nullable=False, default=datetime.today)
     rating = Column(Integer, nullable=False)
 
-    video_games_rl = relationship("Video_game", back_populates="rates_rl", overlaps="users_rl,video_games_rl")
-    users_rl =relationship("User", back_populates="rates_rl", overlaps="users_rl,video_games_rl,rates_rl")
+    users_rl = relationship("User", back_populates="rates_rl")
 
     def to_dict(self):
         return {
-            "id_rate": self.id_rate,
             "id_user": self.id_user,
             "id_game_api": self.id_game_api,
             "date_rate": str(self.date_rate),

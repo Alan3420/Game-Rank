@@ -16,9 +16,8 @@ class User(db.Model):
     date_of_registration = Column(Date, nullable=False, default=datetime.now)
     role = Column(String(20), default='user')
 
-    comments_rl = relationship('Comment',back_populates="users_rl")
-    video_games_rl = relationship("Video_game", secondary="rates", back_populates="users_rl")
-    rates_rl = relationship("Rate", back_populates="users_rl", overlaps="video_games_rl")
+    comments_rl = relationship('Comment', back_populates="users_rl")
+    rates_rl = relationship("Rate", back_populates="users_rl")
     favorites_rl = relationship("Favorite", back_populates="users_rl")
 
     def __init__(self, name, last_name, nickname, email, password, role='user'):

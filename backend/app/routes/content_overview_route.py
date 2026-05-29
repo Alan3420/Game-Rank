@@ -1,9 +1,8 @@
-from flask import Blueprint, jsonify, request, current_app
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 from app.services.game_services import (
     obtener_detalle_del_videojuego,
     obtener_juegos_del_catalogo,
-    guardar_juegos,
     obtener_proximos_lanzamientos,
     obtener_video_aleatorio,
     obtener_juegos_filtrados,
@@ -37,13 +36,6 @@ def proximos_lanzamientos():
 
         resultado = obtener_proximos_lanzamientos(pagina=pagina, por_pagina=por_pagina)
 
-        # Guardamos en BD en segundo plano para tener referencia local del
-        # juego cuando el usuario lo marque como favorito, comentado, etc.
-        guardar_juegos(
-            juegos=resultado.get("games", []),
-            app=current_app._get_current_object()
-        )
-
         return jsonify(resultado), 200
 
     except Exception as e:
@@ -59,11 +51,6 @@ def juegos_del_catalogo():
         por_pagina = min(request.args.get('per_page', default=20, type=int), 40)
 
         resultado = obtener_juegos_del_catalogo(pagina=pagina, por_pagina=por_pagina)
-
-        guardar_juegos(
-            juegos=resultado.get("games", []),
-            app=current_app._get_current_object()
-        )
 
         return jsonify(resultado), 200
 
@@ -92,11 +79,6 @@ def juegos_filtrados():
             platforms=platforms,
             dates=dates,
             search=search
-        )
-
-        guardar_juegos(
-            juegos=resultado.get("games", []),
-            app=current_app._get_current_object()
         )
 
         return jsonify(resultado), 200

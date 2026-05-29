@@ -20,7 +20,6 @@ _modulos_a_mockear = [
     'app.models.Comment',
     'app.models.Rate',
     'app.models.Favorite',
-    'app.models.Video_game',
     'app.models.UserGameStatus',
     'app.repositories',
     'app.repositories.comment_repo',

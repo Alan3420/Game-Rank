@@ -8,13 +8,12 @@ class Comment(db.Model):
 
     id_comment = Column(Integer, primary_key=True, autoincrement=True)
     id_user = Column(Integer, ForeignKey("users.id_user", ondelete="CASCADE"), nullable=False)
-    id_videogame = Column(Integer, ForeignKey("videoGame.id_game_api", ondelete="CASCADE"), nullable=False)
+    id_videogame = Column(Integer, primary_key=True, nullable=False)
     description = Column(String(255), nullable=False)
     date_of_comment = Column(Date, nullable=False, default=date.today)
     date_of_update = Column(Date, nullable=True)
 
-    users_rl = relationship('User',back_populates="comments_rl", overlaps="rates_rl")
-    video_game_rl = relationship("Video_game", back_populates="comments_rl")
+    users_rl = relationship('User', back_populates="comments_rl")
 
 
     def to_dict(self):

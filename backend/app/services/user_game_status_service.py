@@ -51,7 +51,6 @@ def listar_estados_con_juegos(id_usuario) -> list:
                 continue
             juego_resumen = formatear_resumen_juego(datos_rawg)
             resultado.append({
-                "id_status": registro.id_status,
                 "status": registro.status,
                 "game": juego_resumen
             })

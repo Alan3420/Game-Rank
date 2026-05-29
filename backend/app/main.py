@@ -18,7 +18,6 @@ from app.limiter import limiter
 # Importamos los modelos aqui para que Alembic los detecte al migrar
 from app.models.User import User
 from app.models.Comment import Comment
-from app.models.Video_game import Video_game
 from app.models.Rate import Rate
 from app.models.Favorite import Favorite
 from app.models.UserGameStatus import UserGameStatus
@@ -129,7 +128,7 @@ def db_create():
 @app.cli.command("db-seed")
 def db_seed():
     with app.app_context():
-        seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus)
+        seed(app, db, User, Comment, Rate, Favorite, UserGameStatus)
         print("Los datos de prueba han sido implementados")
 
 

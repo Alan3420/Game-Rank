@@ -45,7 +45,7 @@ def eliminar_estado(id_usuario, id_juego) -> bool:
 
 
 def obtener_top_coleccion(limite):
-    total = func.count(UserGameStatus.id_status).label("total")
+    total = func.count(UserGameStatus.id_user).label("total")
     return (db.session.query(UserGameStatus.id_game_api, total)
             .group_by(UserGameStatus.id_game_api)
             .order_by(total.desc())
@@ -54,7 +54,7 @@ def obtener_top_coleccion(limite):
 
 
 def obtener_conteo_estados_por_usuario(id_usuario):
-    return (db.session.query(UserGameStatus.status, func.count(UserGameStatus.id_status))
+    return (db.session.query(UserGameStatus.status, func.count(UserGameStatus.id_user))
             .filter(UserGameStatus.id_user == id_usuario)
             .group_by(UserGameStatus.status)
             .all())

@@ -11,18 +11,8 @@ SEED_EMAILS = [
 SEED_GAME_IDS = [3328, 3498, 4062, 5679, 13536, 28, 41494, 58175, 326243, 27789]
 
 
-def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
+def seed(app, db, User, Comment, Rate, Favorite, UserGameStatus):
     with app.app_context():
-
-        existing_games = [
-            g.id_game_api for g in
-            Video_game.query.filter(Video_game.id_game_api.in_(SEED_GAME_IDS)).all()
-        ]
-        if existing_games:
-            Video_game.query.filter(
-                Video_game.id_game_api.in_(existing_games)
-            ).delete(synchronize_session=False)
-            db.session.commit()
 
         User.query.filter(User.email.in_(SEED_EMAILS)).delete(synchronize_session=False)
         db.session.commit()
@@ -62,21 +52,6 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
         ra = users[12].id_user
         al = users[13].id_user
         iv = users[14].id_user
-
-        video_games = [
-            Video_game(id_game_api=3328,   name="The Witcher 3: Wild Hunt",    date_release=date(2015, 5, 19),  platforms="PC, PS4, PS5, Xbox One, Switch",           development_company="CD Projekt Red"),
-            Video_game(id_game_api=3498,   name="Grand Theft Auto V",          date_release=date(2013, 9, 17),  platforms="PC, PS3, PS4, PS5, Xbox 360, Xbox One",    development_company="Rockstar Games"),
-            Video_game(id_game_api=4062,   name="Portal 2",                    date_release=date(2011, 4, 19),  platforms="PC, PS3, Xbox 360",                        development_company="Valve"),
-            Video_game(id_game_api=5679,   name="The Elder Scrolls V: Skyrim", date_release=date(2011, 11, 11), platforms="PC, PS3, PS4, Xbox 360, Xbox One, Switch",  development_company="Bethesda Game Studios"),
-            Video_game(id_game_api=13536,  name="Half-Life 2",                 date_release=date(2004, 11, 16), platforms="PC",                                       development_company="Valve"),
-            Video_game(id_game_api=28,     name="Red Dead Redemption",         date_release=date(2010, 5, 18),  platforms="PS3, Xbox 360",                            development_company="Rockstar San Diego"),
-            Video_game(id_game_api=41494,  name="Cyberpunk 2077",              date_release=date(2020, 12, 10), platforms="PC, PS4, PS5, Xbox One, Xbox Series",      development_company="CD Projekt Red"),
-            Video_game(id_game_api=58175,  name="God of War",                  date_release=date(2018, 4, 20),  platforms="PS4, PS5, PC",                             development_company="Santa Monica Studio"),
-            Video_game(id_game_api=326243, name="Elden Ring",                  date_release=date(2022, 2, 25),  platforms="PC, PS4, PS5, Xbox One, Xbox Series",      development_company="FromSoftware"),
-            Video_game(id_game_api=27789,  name="Hollow Knight",               date_release=date(2017, 2, 24),  platforms="PC, PS4, Xbox One, Switch",                development_company="Team Cherry"),
-        ]
-        db.session.add_all(video_games)
-        db.session.commit()
 
         favorites = [
             Favorite(user_id=j, id_game_api=3328,   date_added=date(2024, 11, 1)),
@@ -221,6 +196,6 @@ def seed(app, db, User, Comment, Video_game, Rate, Favorite, UserGameStatus):
         db.session.add_all(statuses)
         db.session.commit()
 
-        print(f"Seed completado: {len(users)} usuarios, {len(video_games)} juegos, "
+        print(f"Seed completado: {len(users)} usuarios, "
               f"{len(favorites)} favoritos, {len(rates)} valoraciones, "
               f"{len(comments)} comentarios, {len(statuses)} estados.")
