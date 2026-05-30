@@ -1,7 +1,6 @@
 <template>
   <div class="admin-users-page">
 
-    <!-- Topbar -->
     <div class="admin-topbar">
       <div class="topbar-content">
         <button class="back-btn" @click="volver">
@@ -18,7 +17,6 @@
       </div>
     </div>
 
-    <!-- Contenido -->
     <div class="admin-container">
       <div class="users-section">
         <div class="section-header">
@@ -33,10 +31,8 @@
           </div>
         </div>
 
-        <!-- Loader -->
         <Loader v-if="loading" message="Loading comments..." />
 
-        <!-- Tabla -->
         <div v-else-if="comentariosFiltrados.length > 0" class="users-table-wrap">
           <table class="users-table">
             <thead>
@@ -83,7 +79,6 @@
           </table>
         </div>
 
-        <!-- Vacío -->
         <div v-else class="users-empty">
           <div class="empty-icon"><i class="pi pi-comments"></i></div>
           <p>No matching comments</p>

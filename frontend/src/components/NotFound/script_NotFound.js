@@ -1,8 +1,5 @@
 import { useRouter, useRoute } from 'vue-router';
 
-// Logica de la pantalla 404. Solo necesita guardar una referencia al router
-// para poder llevar al usuario a otra pagina, y la ruta que pidio (para
-// mostrarla en pantalla y que entienda que esa URL no existe).
 export default {
   name: 'NotFound',
 
@@ -20,7 +17,6 @@ export default {
 
   methods: {
 
-    // Boton "Go home": lleva al inicio sin importar desde donde se vino.
     irAlInicio() {
       this.router.push('/');
     },

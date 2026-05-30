@@ -5,19 +5,15 @@
     :style="{ '--card-index': index }"
     @click="manejarClicEnCard"
   >
-    <!-- IMAGEN -->
     <div class="card-image">
       <GameImage :src="game.imge_url" :alt="game.name" class="game-image" />
       <div class="image-overlay"></div>
 
-      <!-- Metacritic Badge -->
       <div class="rating-badge" :class="game.metacritic ? claseMetacritic(game.metacritic) : 'mc-na'">
         {{ game.metacritic ?? '—' }}
       </div>
 
-      <!-- Cluster de acciones (hover) -->
       <div class="card-actions-cluster">
-        <!-- Favorito -->
         <button
           v-if="!removable"
           class="card-action-btn"
@@ -38,7 +34,6 @@
           <i :class="isLoading ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
         </button>
 
-        <!-- Boton de estado -->
         <button
           v-if="canChangeStatus"
           class="card-action-btn card-action-btn--status"
@@ -62,7 +57,6 @@
       </div>
     </div>
 
-    <!-- CONTENIDO -->
     <div class="card-content">
       <h3 class="game-title">{{ game.name }}</h3>
 
@@ -73,7 +67,6 @@
         </div>
       </div>
 
-      <!-- FOOTER -->
       <div class="card-footer">
         <span class="view-detail">View details</span>
         <i class="pi pi-arrow-right"></i>
@@ -122,10 +115,8 @@ const props = defineProps({
   canChangeStatus: { type: Boolean, default: true }
 });
 
-// Estado local para abrir/cerrar el dropdown de estado.
 const mostrarDropdown = ref(false);
 
-// Devuelve la meta (color, icono, etc.) del estado actual o null si no hay.
 const metaDelEstado = computed(function () {
   if (props.status) {
     return STATUS_META[props.status];
@@ -133,8 +124,6 @@ const metaDelEstado = computed(function () {
   return null;
 });
 
-// Devuelve la clase CSS del badge de Metacritic segun la nota.
-// Verde >=80, amarillo 50-79, rojo el resto.
 function claseMetacritic(score) {
   if (score >= 80) {
     return 'mc-green';
@@ -155,7 +144,6 @@ function manejarClicEnCard() {
   emit('click');
 }
 
-// Reenvia al padre el evento del dropdown de estado.
 function reenviarActualizacionEstado(payload) {
   emit('update:status', payload);
 }

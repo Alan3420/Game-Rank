@@ -6,13 +6,6 @@ import { notificaciones } from '../../store/notificaciones';
 import { useRouter } from 'vue-router';
 import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
 
-// Componente de la pantalla de perfil. Reune todo lo "personal" del usuario:
-// banner con sus datos, estadisticas, lista de coleccion por estado, lista
-// de favoritos paginada, y los modales para editar perfil / cambiar
-// contrasena. Tambien expone los accesos al panel de admin si corresponde.
-//
-// Nota: las claves "formularioCambiarContraseña" y sus relacionadas se
-// mantienen con la "ñ" porque coinciden con los v-model del template.
 export default {
   name: "perfil",
 
@@ -63,7 +56,6 @@ export default {
 
   computed: {
 
-    // Marca al usuario actual como admin para mostrar/ocultar opciones.
     esAdministrador() {
       if (!estadoAutenticacion.usuario) {
         return false;
@@ -74,8 +66,6 @@ export default {
       return false;
     },
 
-    // Devuelve la coleccion filtrada por el tab elegido en la UI.
-    // Si el tab es "todos" devolvemos la lista completa.
     coleccionFiltrada() {
 
       if (this.filtroColeccion === 'todos') {
@@ -91,8 +81,6 @@ export default {
       return resultado;
     },
 
-    // Devuelve un objeto agrupado: para cada estado, la lista de items.
-    // Lo dejamos preparado por si en el futuro hace falta otra vista.
     coleccionPorEstado() {
       var resultado = {};
       for (var i = 0; i < STATUS_LIST.length; i++) {
@@ -118,7 +106,6 @@ export default {
       return ids;
     },
 
-    // Numero total de paginas de la lista de favoritos.
     totalPaginasFavoritos() {
       var calculado = Math.ceil(this.favoritos.length / this.FAVS_POR_PAGINA);
       if (calculado < 1) {
@@ -127,7 +114,6 @@ export default {
       return calculado;
     },
 
-    // Devuelve solo los favoritos visibles en la pagina actual.
     favoritosPaginados() {
       var inicio = (this.paginaFavoritos - 1) * this.FAVS_POR_PAGINA;
       var fin = inicio + this.FAVS_POR_PAGINA;
@@ -154,8 +140,6 @@ export default {
 
   methods: {
 
-    // Pide al backend las estadisticas del usuario (favoritos totales,
-    // juegos completados, media de rating, etc.) para pintarlas arriba.
     async cargarEstadisticas() {
       this.statsLoading = true;
       try {
@@ -199,9 +183,6 @@ export default {
       return juego.release_date <= hoyIso;
     },
 
-    // Abre el modal de edicion de perfil. Antes de abrirlo precargamos el
-    // formulario con los datos actuales del usuario para que vea los
-    // valores que esta a punto de cambiar.
     abrirModalEditar() {
       this.mostrarMenuEditar = false;
 
@@ -236,8 +217,6 @@ export default {
       this.errorEditar = '';
     },
 
-    // Valida los datos del formulario y, si todo va bien, manda la
-    // actualizacion al backend y refresca el estado local del usuario.
     async guardarCambiosPerfil() {
 
       var name = this.formularioEditar.name;
@@ -335,8 +314,6 @@ export default {
       }
     },
 
-    // Pide los estados (id_juego + estado) para pintar el badge en las
-    // cards de los favoritos del perfil.
     async cargarEstadosDeColeccion() {
       try {
         var data = await listarEstadosDeJuego();
@@ -350,9 +327,6 @@ export default {
       }
     },
 
-    // Llamado cuando una card emite que su estado cambio. Actualiza el
-    // mapa de estados y tambien la lista de coleccion para que la pestana
-    // correspondiente refleje el cambio sin recargar la pagina.
     manejarActualizacionEstado(datos) {
       var gameId = datos.gameId;
       var status = datos.status;
@@ -381,7 +355,6 @@ export default {
           }
         }
       } else {
-        // Si nos quitan el estado, lo sacamos de la coleccion entera.
         var nueva = [];
         for (var j = 0; j < this.coleccion.length; j++) {
           if (this.coleccion[j].game.id !== gameId) {
@@ -392,8 +365,6 @@ export default {
       }
     },
 
-    // Pide al backend la coleccion completa (con datos del juego para
-    // pintar la imagen y el nombre en la lista).
     async cargarColeccion() {
       this.coleccionLoading = true;
       try {
@@ -406,7 +377,6 @@ export default {
       }
     },
 
-    // Pide al backend la lista de favoritos del usuario.
     async cargarFavoritos() {
       this.favoritosLoading = true;
       try {
@@ -424,8 +394,6 @@ export default {
       }
     },
 
-    // Toggle de favorito desde la lista de la coleccion (cada item de la
-    // coleccion tiene su propio botoncito de corazon).
     async alternarFavoritoColeccion(gameId) {
 
       if (this.favLoadingId === gameId) {
@@ -477,7 +445,6 @@ export default {
       }
     },
 
-    // Quita un favorito desde la card de la seccion "My Favorites".
     async quitarFavorito(idGame) {
       this.remover = idGame;
       try {
@@ -519,8 +486,6 @@ export default {
       this.router.push('/admin/comments');
     },
 
-    // Abre el modal de cambio de contrasena. Resetea el formulario para
-    // que no queden datos de aperturas anteriores.
     abrirModalCambiarContraseña() {
       this.mostrarMenuEditar = false;
       this.mostrarModalCambiarContraseña = true;
@@ -542,7 +507,6 @@ export default {
       this.errorCambiarContraseña = '';
     },
 
-    // Si se hace click fuera del menu desplegable de edicion, lo cerramos.
     manejarClicFueraDelMenu(e) {
       var menuRef = this.$refs.menuEditarRef;
       if (menuRef && !menuRef.contains(e.target)) {
@@ -550,8 +514,6 @@ export default {
       }
     },
 
-    // Valida el formulario de cambio de contrasena y, si todo va bien,
-    // manda la nueva al backend.
     async guardarCambioContraseña() {
 
       var actual = this.formularioCambiarContraseña.actual;

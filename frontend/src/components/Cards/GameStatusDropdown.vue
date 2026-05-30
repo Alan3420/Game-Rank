@@ -48,7 +48,6 @@ const emit = defineEmits(['close', 'update:status']);
 const panelRef = ref(null);
 const loading = ref(false);
 
-// Si el usuario hace click fuera del panel, lo cerramos.
 function alClicEnDocumento(e) {
     if (panelRef.value && !panelRef.value.contains(e.target)) {
         emit('close');
@@ -93,8 +92,6 @@ async function manejarSeleccionEstado(estado) {
     }
 }
 
-// Click en "Remove status": pide al backend borrar el estado y emite
-// update:status con null para que el padre actualice su mapa.
 async function manejarEliminacionEstado() {
 
     if (loading.value) {

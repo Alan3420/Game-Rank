@@ -9,8 +9,6 @@ URL_BASE = "https://api.rawg.io/api"
 
 
 class CacheConTTL:
-    # Cache propio porque functools.lru_cache no caduca por tiempo y aqui
-    # nos interesa que las entradas viejas se borren solas
     def __init__(self, max_size=150, ttl=3600):
         self.cache = OrderedDict()
         self.max_size = max_size

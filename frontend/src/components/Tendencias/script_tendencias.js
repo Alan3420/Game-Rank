@@ -1,8 +1,5 @@
 import { obtenerTendencias } from '../../services/tendencias';
 
-// Componente de la pagina Tendencias. Pide al backend cuatro listas de
-// juegos (mas favoritos, mejor valorados, mas comentados, mas coleccionados)
-// y las pinta en secciones separadas con scroll horizontal entre cards.
 export default {
 
   data() {
@@ -15,13 +12,6 @@ export default {
 
   computed: {
 
-    // Devuelve la lista de secciones de la pagina. Cada seccion tiene
-    // una "key" que coincide con la propiedad del objeto que devuelve el
-    // backend, y un titulo / subtitulo / icono que se muestran en el header
-    // de cada bloque.
-    //
-    // Las claves estan en espanol porque asi llegan del backend; los
-    // textos visibles estan en ingles porque la UI esta en ingles.
     secciones() {
       return [
         {
@@ -69,8 +59,6 @@ export default {
 
   methods: {
 
-    // Lleva la pagina hasta la seccion indicada con scroll suave.
-    // Lo usan los botones del menu superior que sirven de "tabs".
     desplazarASeccion(key) {
       var el = document.getElementById(key);
       if (el) {
@@ -78,8 +66,6 @@ export default {
       }
     },
 
-    // Devuelve la clase CSS que pintara el badge de metacritic segun la nota.
-    // Verde = 80 o mas, amarillo = 50-79, rojo = menos de 50.
     claseMetacritic(score) {
       if (!score) {
         return 'mc-na';
@@ -93,9 +79,6 @@ export default {
       return 'mc-red';
     },
 
-    // Construye la etiqueta de cada card en ingles a partir del valor
-    // numerico que devuelve el backend. Asi no dependemos del texto
-    // ya traducido que manda el servidor (que viene en espanol).
     formatearEtiquetaTendencia(seccionKey, valor) {
 
       if (valor === null || valor === undefined) {
@@ -133,7 +116,6 @@ export default {
       return '';
     },
 
-    // Navega al detalle del juego al hacer click en una card.
     irAJuego(id) {
       this.$router.push('/game/' + id);
     }

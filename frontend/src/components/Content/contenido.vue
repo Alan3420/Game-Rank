@@ -38,7 +38,6 @@
       <FilterPanel :open="filterPanelOpen" @apply="aplicarFiltros" @clear="limpiarFiltros" />
     </div>
 
-    <!-- Empty state -->
     <div v-if="estaFiltrando && !loading && games.length === 0" class="search-empty">
       <div class="search-empty-icon">
         <i class="pi pi-search"></i>
@@ -48,7 +47,6 @@
       <p v-else>No games found with the applied filters.</p>
     </div>
 
-    <!-- Cards -->
     <Loader v-if="loading" size="small" :message="game_name ? 'Searching games...' : 'Loading games...'" />
 
     <div v-else-if="!estaFiltrando || games.length > 0" class="card_content">
@@ -66,7 +64,6 @@
       />
     </div>
 
-    <!-- Paginación -->
     <Pagination
       v-if="!loading"
       :current-page="currentPage"

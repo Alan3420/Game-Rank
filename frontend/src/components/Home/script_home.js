@@ -32,7 +32,6 @@ export default {
 
     tareas.push(this.cargarVideoDestacado());
 
-    // Sin sesion no tiene sentido pedir favoritos ni estados de coleccion
     if (token) {
       tareas.push(this.cargarMejoresJuegos());
       tareas.push(this.cargarProximosLanzamientos());

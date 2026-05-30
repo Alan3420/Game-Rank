@@ -53,7 +53,6 @@ def seed(app, db, User, Comment, Favorite, AddFavorite):
         al = users[13].id_user
         iv = users[14].id_user
 
-        # (user_id, id_game_api, date_added, status)
         datos_favorites = [
             (j, 3328,   date(2024, 11, 1),  "completado"),
             (m, 3328,   date(2024, 11, 2),  "completado"),

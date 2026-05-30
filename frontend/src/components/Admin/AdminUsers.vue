@@ -1,6 +1,5 @@
 <template>
   <div class="admin-users-page">
-    <!-- Topbar -->
     <div class="admin-topbar">
       <div class="topbar-content">
         <button class="back-btn" @click="volver">
@@ -17,9 +16,7 @@
       </div>
     </div>
 
-    <!-- Contenido -->
     <div class="admin-container">
-      <!-- Header de tabla -->
       <div class="users-section">
         <div class="section-header">
           <h2>User List</h2>
@@ -33,10 +30,8 @@
           </div>
         </div>
 
-        <!-- Loader -->
         <Loader v-if="loading" message="Loading users..." />
 
-        <!-- Tabla de usuarios -->
         <div v-else-if="usuarios.length > 0" class="users-table-wrap">
           <table class="users-table">
             <thead>
@@ -96,7 +91,6 @@
           </table>
         </div>
 
-        <!-- Estado vacío -->
         <div v-else-if="!loading" class="users-empty">
           <div class="empty-icon">
             <i class="pi pi-users"></i>
