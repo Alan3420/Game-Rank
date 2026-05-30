@@ -17,8 +17,7 @@ class User(db.Model):
     role = Column(String(20), default='user')
 
     comments_rl = relationship('Comment', back_populates="users_rl")
-    rates_rl = relationship("Rate", back_populates="users_rl")
-    favorites_rl = relationship("Favorite", back_populates="users_rl")
+    add_favorites_rl = relationship("AddFavorite", back_populates="users_rl")
 
     def __init__(self, name, last_name, nickname, email, password, role='user'):
         self.name = name

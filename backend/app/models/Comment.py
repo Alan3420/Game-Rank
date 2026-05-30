@@ -10,6 +10,7 @@ class Comment(db.Model):
     id_user = Column(Integer, ForeignKey("users.id_user", ondelete="CASCADE"), nullable=False)
     id_videogame = Column(Integer, primary_key=True, nullable=False)
     description = Column(String(255), nullable=False)
+    rating = Column(Integer, nullable=False)
     date_of_comment = Column(Date, nullable=False, default=date.today)
     date_of_update = Column(Date, nullable=True)
 
@@ -24,6 +25,7 @@ class Comment(db.Model):
             "nickname": self.users_rl.nickname,
             "id_videogame": self.id_videogame,
             "description": self.description,
+            "rating": self.rating,
             "date_of_comment": str(self.date_of_comment),
             "date_of_update": str(self.date_of_update) if self.date_of_update else None
         }

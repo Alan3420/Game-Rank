@@ -96,7 +96,7 @@
                          Solo se muestra si el juego ya salio: no se puede
                          marcar como "jugando" o "completado" un juego que
                          todavia no esta a la venta. -->
-                    <div v-if="juegoYaSalio" class="hero-status-wrap">
+                    <div v-if="juegoYaSalio && isFavorite" class="hero-status-wrap">
                         <button
                             class="hero-status-btn"
                             :class="{ 'has-status': gameStatus }"
@@ -344,7 +344,10 @@
                                 :key="juego.id"
                                 :game="juego"
                                 :index="i"
+                                :is-favorite="sagaFavoritos.has(juego.id)"
+                                :can-change-status="false"
                                 @click="irAlJuego(juego.id)"
+                                @action="alternarFavoritoSaga"
                             />
                         </div>
                     </div>

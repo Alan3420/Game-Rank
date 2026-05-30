@@ -1,6 +1,6 @@
 import api from "./api";
 
-export const agregarAFavoritos = async (idJuego) => {
+export const agregarAFavoritos = async (idJuego, estado = null) => {
     try {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -8,10 +8,10 @@ export const agregarAFavoritos = async (idJuego) => {
             return;
         }
 
-        const respuesta = await api.post('/favorite/add', {
-            id_game: idJuego
-        });
+        const datos = { id_game: idJuego };
+        if (estado) datos.status = estado;
 
+        const respuesta = await api.post('/favorite/add', datos);
         return respuesta.data;
     } catch (error) {
         if (error.response && error.response.data && error.response.data.message) {
@@ -33,7 +33,6 @@ export const quitarDeFavoritos = async (idJuego) => {
         const respuesta = await api.delete('/favorite/remove', {
             data: { id_game: idJuego }
         });
-
         return respuesta.data;
     } catch (error) {
         var mensaje = "";
@@ -83,4 +82,32 @@ export const obtenerListaDeFavoritos = async () => {
             console.error(error);
         }
     }
+}
+
+export const actualizarEstadoDeJuego = async (idJuego, estado) => {
+    const respuesta = await api.put('/favorite/status', {
+        id_game: idJuego,
+        status: estado
+    });
+    return respuesta.data;
+}
+
+export const obtenerEstadoDeJuego = async (idJuego) => {
+    const respuesta = await api.get(`/favorite/status/${idJuego}`);
+    return respuesta.data;
+}
+
+export const eliminarEstadoDeJuego = async (idJuego) => {
+    const respuesta = await api.delete(`/favorite/status/${idJuego}`);
+    return respuesta.data;
+}
+
+export const listarEstadosDeJuego = async () => {
+    const respuesta = await api.get('/favorite/list');
+    return respuesta.data;
+}
+
+export const listarEstadosDeJuegoCompletos = async () => {
+    const respuesta = await api.get('/favorite/list/full');
+    return respuesta.data;
 }

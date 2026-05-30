@@ -1,8 +1,6 @@
 import { obtenerDetalleDeJuego, obtenerSagaDelJuego, obtenerAdiccionesJuego, obtenerLogrosJuego } from '../../services/gameDetail';
-import { obtenerComentariosDelJuego, crearComentario, eliminarComentario, actualizarComentario } from '../../services/comment_services';
-import { agregarAFavoritos, quitarDeFavoritos, consultarSiEsFavorito } from '../../services/favorites_area';
-import { obtenerEstadoDeJuego } from '../../services/user_game_status';
-import { guardarCalificacion, actualizarCalificacion, eliminarCalificacion, obtenerPromedioDeCalificacion } from '../../services/rate_services';
+import { obtenerComentariosDelJuego, crearComentario, eliminarComentario, actualizarComentario, obtenerPromedioDeCalificacion } from '../../services/comment_services';
+import { agregarAFavoritos, quitarDeFavoritos, consultarSiEsFavorito, obtenerEstadoDeJuego } from '../../services/favorites_area';
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
 import { STATUS_META } from '../../utils/statusMeta.js';
@@ -28,6 +26,7 @@ export default {
             editDescription: '',
             isFavorite: false,
             favoriteLoading: false,
+            sagaFavoritos: new Set(),
             formRating: 0,
             formHover: 0,
             communityAvg: 0,
@@ -151,7 +150,10 @@ export default {
         await this.comprobarSiEsFavorito();
         await this.cargarEstadoDelJuego();
 
-        this.cargarSagaDelJuego();
+        var self = this;
+        this.cargarSagaDelJuego().then(function() {
+            self.cargarFavoritosDeSaga();
+        });
         this.cargarAdiciones();
         this.cargarLogros();
     },
@@ -176,6 +178,7 @@ export default {
             this.gameStatus = null;
             this.showStatusModal = false;
             this.juegosSaga = [];
+            this.sagaFavoritos = new Set();
             this.adiciones = [];
             this.logros = [];
             this.comments = [];
@@ -188,7 +191,9 @@ export default {
                 self.cargarPromedioDeComunidad();
                 self.comprobarSiEsFavorito();
                 self.cargarEstadoDelJuego();
-                self.cargarSagaDelJuego(nuevoId);
+                self.cargarSagaDelJuego(nuevoId).then(function() {
+                    self.cargarFavoritosDeSaga();
+                });
                 self.cargarAdiciones(nuevoId);
                 self.cargarLogros(nuevoId);
             });
@@ -351,8 +356,7 @@ export default {
 
             try {
                 var gameId = this.$route.params.id;
-                await guardarCalificacion(gameId, this.formRating);
-                await crearComentario(gameId, this.newComment);
+                await crearComentario(gameId, this.newComment, this.formRating);
 
                 this.newComment = '';
                 this.formRating = 0;
@@ -424,8 +428,7 @@ export default {
 
             try {
                 var gameId = this.$route.params.id;
-                await actualizarCalificacion(gameId, this.formRating);
-                await actualizarComentario(this.editingId, this.newComment);
+                await actualizarComentario(this.editingId, this.newComment, this.formRating);
 
                 this.editingId = null;
                 this.newComment = '';
@@ -456,9 +459,7 @@ export default {
         async eliminarMiComentario(id_comment) {
 
             try {
-                var gameId = this.$route.params.id;
                 await eliminarComentario(id_comment);
-                await eliminarCalificacion(gameId);
 
                 this.formRating = 0;
                 this.formHover = 0;
@@ -553,6 +554,8 @@ export default {
                 if (this.isFavorite) {
                     await quitarDeFavoritos(this.game.id);
                     this.isFavorite = false;
+                    this.gameStatus = null;
+                    this.showStatusModal = false;
                     notificaciones.success("Game removed from favorites.", { title: "Favorite removed" });
                 } else {
                     await agregarAFavoritos(this.game.id);
@@ -616,6 +619,48 @@ export default {
                 this.juegosSaga = await obtenerSagaDelJuego(gameId);
             } catch (error) {
                 this.juegosSaga = [];
+            }
+        },
+
+        async cargarFavoritosDeSaga() {
+            if (!estadoAutenticacion.usuario || !this.juegosSaga.length) {
+                return;
+            }
+            var nuevoSet = new Set();
+            var tareas = this.juegosSaga.map(function(juego) {
+                return consultarSiEsFavorito(juego.id).then(function(data) {
+                    if (data && data.is_favorite) {
+                        nuevoSet.add(juego.id);
+                    }
+                }).catch(function() {});
+            });
+            await Promise.all(tareas);
+            this.sagaFavoritos = nuevoSet;
+        },
+
+        async alternarFavoritoSaga(gameId) {
+            if (!estadoAutenticacion.usuario) {
+                notificaciones.info("Sign in to add games to favorites.", { title: "Sign in required" });
+                return;
+            }
+
+            var eraFavorito = this.sagaFavoritos.has(gameId);
+            try {
+                if (eraFavorito) {
+                    await quitarDeFavoritos(gameId);
+                    this.sagaFavoritos.delete(gameId);
+                    notificaciones.success("Game removed from favorites.", { title: "Favorite removed" });
+                } else {
+                    await agregarAFavoritos(gameId);
+                    this.sagaFavoritos.add(gameId);
+                    notificaciones.success("Game added to favorites.", { title: "Favorite added" });
+                }
+            } catch (error) {
+                var mensaje = "We couldn't add the game to favorites.";
+                if (eraFavorito) {
+                    mensaje = "We couldn't remove the game from favorites.";
+                }
+                notificaciones.error(mensaje, { title: "Favorites error" });
             }
         },
 

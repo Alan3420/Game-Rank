@@ -6,7 +6,8 @@ from app.services.comment_services import (
     eliminar_comentario,
     obtener_comentarios_del_juego,
     obtener_comentarios_del_usuario,
-    obtener_todos_los_comentarios
+    obtener_todos_los_comentarios,
+    obtener_promedio_del_juego
 )
 from app.services import user_service
 from app.repositories.user_repo import obtener_usuario_por_id
@@ -26,9 +27,10 @@ def crear():
         id_usuario = get_jwt_identity()
         id_juego = datos.get("id_game")
         descripcion = datos.get("description")
+        rating = datos.get("rating")
 
-        if not id_juego or not descripcion:
-            return jsonify({"message": "id_game y description son obligatorios"}), 400
+        if not id_juego or not descripcion or rating is None:
+            return jsonify({"message": "id_game, description y rating son obligatorios"}), 400
 
         if len(descripcion) > 255:
             return jsonify({"message": "El comentario no puede superar los 255 caracteres"}), 400
@@ -36,7 +38,8 @@ def crear():
         resultado = crear_comentario(
             id_usuario=id_usuario,
             id_juego=id_juego,
-            descripcion=descripcion
+            descripcion=descripcion,
+            rating=rating
         )
 
         if type(resultado) == str:
@@ -58,6 +61,7 @@ def actualizar(comment_id):
     try:
         datos = request.get_json()
         descripcion = datos.get("description")
+        rating = datos.get("rating")
 
         if not descripcion:
             return jsonify({"message": "description es obligatoria"}), 400
@@ -76,6 +80,7 @@ def actualizar(comment_id):
             id_comentario=comment_id,
             descripcion=descripcion,
             id_usuario=id_usuario,
+            rating=rating,
             es_admin=es_admin
         )
 
@@ -134,6 +139,17 @@ def obtener_por_juego(game_id):
 
     except Exception as e:
         return jsonify({"message": "Error al obtener comentarios"}), 500
+
+
+@comment_bp.route("/avg/<int:game_id>", methods=["GET"])
+@jwt_required()
+def obtener_promedio(game_id):
+    try:
+        promedio = obtener_promedio_del_juego(id_juego=game_id)
+        return jsonify({"game_id": game_id, "avg_rating": promedio}), 200
+
+    except Exception as e:
+        return jsonify({"message": "Error al obtener la media"}), 500
 
 
 @comment_bp.route("/all", methods=["GET"])

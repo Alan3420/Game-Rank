@@ -127,33 +127,6 @@
     color: var(--color-text);
 }
 
-/* Progress bar */
-.toast-progress {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 2px;
-    width: 100%;
-    transform-origin: left center;
-    animation: toast-progress 3.5s linear forwards;
-    opacity: 0.6;
-}
-
-.toast-success .toast-progress { background: var(--color-success); }
-.toast-error .toast-progress   { background: var(--color-error); }
-.toast-warning .toast-progress { background: var(--color-warning); }
-.toast-info .toast-progress    { background: var(--color-info); }
-
-@keyframes toast-progress {
-    from {
-        transform: scaleX(1);
-    }
-
-    to {
-        transform: scaleX(0);
-    }
-}
-
 /* Transitions for entrance / exit */
 .toast-enter-active,
 .toast-leave-active {

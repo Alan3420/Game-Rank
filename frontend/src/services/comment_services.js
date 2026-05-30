@@ -1,10 +1,11 @@
 import api from './api';
 
-export async function crearComentario(idJuego, descripcion) {
+export async function crearComentario(idJuego, descripcion, rating) {
     try {
         const respuesta = await api.post('/comment/create', {
             id_game: idJuego,
-            description: descripcion
+            description: descripcion,
+            rating: rating
         });
         return respuesta.data;
     } catch (error) {
@@ -55,14 +56,25 @@ export async function eliminarComentario(idComentario) {
     }
 }
 
-export async function actualizarComentario(idComentario, descripcion) {
+export async function actualizarComentario(idComentario, descripcion, rating) {
     try {
         const respuesta = await api.put(`/comment/update/${idComentario}`, {
-            description: descripcion
+            description: descripcion,
+            rating: rating
         });
         return respuesta.data;
     } catch (error) {
         console.error('Error al actualizar el comentario:', error);
         throw error;
+    }
+}
+
+export async function obtenerPromedioDeCalificacion(idJuego) {
+    try {
+        const respuesta = await api.get(`/comment/avg/${idJuego}`);
+        return respuesta.data;
+    } catch (error) {
+        console.error('Error al obtener la media:', error);
+        return null;
     }
 }

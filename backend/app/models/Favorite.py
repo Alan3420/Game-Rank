@@ -1,24 +1,20 @@
 from app.database.db import db
-from sqlalchemy import Column, Integer, Date,ForeignKey
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from datetime import datetime
 
 
 class Favorite(db.Model):
     __tablename__ = 'favorites'
 
-    fav_id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id_user', ondelete="CASCADE"), primary_key=True, nullable=False)
-    id_game_api = Column(Integer, primary_key=True, nullable=False)
-    date_added = Column(Date, nullable=False, default=datetime.now)
+    fav_id      = Column(Integer, primary_key=True, autoincrement=True)
+    id_game_api = Column(Integer, nullable=False)
+    status      = Column(String(20), nullable=True)
 
-    users_rl = relationship("User", back_populates="favorites_rl")
-
+    add_favorites_rl = relationship("AddFavorite", back_populates="favorite_rl", cascade="all, delete-orphan")
 
     def to_dict(self):
         return {
-            "fav_id": self.fav_id,
-            "user_id": self.user_id,
+            "fav_id":      self.fav_id,
             "id_game_api": self.id_game_api,
-            "date_added": str(self.date_added)
+            "status":      self.status
         }

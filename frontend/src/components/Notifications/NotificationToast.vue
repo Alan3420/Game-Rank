@@ -14,7 +14,6 @@
           <button class="toast-close" @click="notificaciones.remove(item.id)" aria-label="Close notification">
             <i class="pi pi-times"></i>
           </button>
-          <span class="toast-progress"></span>
         </div>
       </TransitionGroup>
     </div>

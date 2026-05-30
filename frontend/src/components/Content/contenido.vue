@@ -59,6 +59,7 @@
         :index="index"
         :is-favorite="favorites.has(game.id)"
         :status="statuses.get(game.id) || null"
+        :can-change-status="favorites.has(game.id)"
         @click="irADetalle(game.id)"
         @action="alternarFavorito"
         @update:status="manejarActualizacionEstado"

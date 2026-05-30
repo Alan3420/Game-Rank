@@ -1,8 +1,6 @@
 from app.repositories import user_repo
-from app.repositories.favorite_repo import contar_favoritos_por_usuario
-from app.repositories.comment_repo import contar_comentarios_por_usuario
-from app.repositories.rate_repo import obtener_calificaciones_por_usuario
-from app.repositories.user_game_status_repo import obtener_conteo_estados_por_usuario
+from app.repositories.favorite_repo import contar_favoritos_por_usuario, obtener_conteo_estados_por_usuario
+from app.repositories.comment_repo import contar_comentarios_por_usuario, obtener_comentarios_por_usuario
 from app.models.User import User
 import re
 
@@ -192,10 +190,8 @@ def obtener_estadisticas_usuario(id_usuario):
     total_favoritos = contar_favoritos_por_usuario(id_usuario)
     total_comentarios = contar_comentarios_por_usuario(id_usuario)
 
-    calificaciones = obtener_calificaciones_por_usuario(id_usuario)
-    valores = []
-    for calificacion in calificaciones:
-        valores.append(calificacion.rating)
+    comentarios = obtener_comentarios_por_usuario(id_usuario)
+    valores = [c.rating for c in comentarios if c.rating is not None]
 
     rating_medio = None
     if valores:

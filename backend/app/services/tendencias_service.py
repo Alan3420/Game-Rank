@@ -1,7 +1,5 @@
-from app.repositories.favorite_repo import obtener_top_favoritos
-from app.repositories.rate_repo import obtener_top_valorados
-from app.repositories.comment_repo import obtener_top_comentados
-from app.repositories.user_game_status_repo import obtener_top_coleccion
+from app.repositories.favorite_repo import obtener_top_favoritos, obtener_top_coleccion
+from app.repositories.comment_repo import obtener_top_valorados, obtener_top_comentados
 from app.client.clientRAWG import get_game_by_id_api
 from app.services.adapter import formatear_resumen_juego
 from concurrent.futures import ThreadPoolExecutor

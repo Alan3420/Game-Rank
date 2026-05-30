@@ -18,17 +18,14 @@ from app.limiter import limiter
 # Importamos los modelos aqui para que Alembic los detecte al migrar
 from app.models.User import User
 from app.models.Comment import Comment
-from app.models.Rate import Rate
 from app.models.Favorite import Favorite
-from app.models.UserGameStatus import UserGameStatus
+from app.models.AddFavorite import AddFavorite
 
 from app.routes.welcome_route import welcome_bp
 from app.routes.options_user_route import user_option_bp
 from app.routes.content_overview_route import content_overview_bp
-from app.routes.rates_route import rates_bp
 from app.routes.comment_route import comment_bp
 from app.routes.favorite_route import favorite_bp
-from app.routes.user_game_status_route import status_bp
 from app.routes.tendencias_route import tendencias_bp
 
 
@@ -74,10 +71,8 @@ app.config['JWT_SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.register_blueprint(welcome_bp, url_prefix="/user")
 app.register_blueprint(content_overview_bp, url_prefix="/content")
 app.register_blueprint(user_option_bp, url_prefix="/settings")
-app.register_blueprint(rates_bp, url_prefix="/rate")
 app.register_blueprint(comment_bp, url_prefix="/comment")
 app.register_blueprint(favorite_bp, url_prefix="/favorite")
-app.register_blueprint(status_bp, url_prefix="/status")
 app.register_blueprint(tendencias_bp, url_prefix="/tendencias")
 
 
@@ -128,7 +123,7 @@ def db_create():
 @app.cli.command("db-seed")
 def db_seed():
     with app.app_context():
-        seed(app, db, User, Comment, Rate, Favorite, UserGameStatus)
+        seed(app, db, User, Comment, Favorite, AddFavorite)
         print("Los datos de prueba han sido implementados")
 
 

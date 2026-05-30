@@ -1,10 +1,12 @@
 from app.repositories import comment_repo
-from app.repositories import rate_repo
 
 
-def crear_comentario(id_usuario, id_juego, descripcion) -> object | str:
+def crear_comentario(id_usuario, id_juego, descripcion, rating) -> object | str:
     if not descripcion or len(descripcion) < 1 or len(descripcion) > 255:
         return "La descripción debe tener entre 1 y 255 caracteres"
+
+    if not isinstance(rating, int) or rating < 1 or rating > 5:
+        return "El rating debe ser un número entero entre 1 y 5"
 
     # Regla de negocio: un usuario solo puede tener un comentario por juego
     comentarios_del_juego = comment_repo.obtener_comentarios_por_juego(id_juego=id_juego)
@@ -15,19 +17,24 @@ def crear_comentario(id_usuario, id_juego, descripcion) -> object | str:
     nuevo_comentario = comment_repo.crear_comentario(
         id_usuario=id_usuario,
         id_juego=id_juego,
-        descripcion=descripcion
+        descripcion=descripcion,
+        rating=rating
     )
     return nuevo_comentario
 
 
-def actualizar_comentario(id_comentario, descripcion, id_usuario, es_admin=False) -> object | str:
+def actualizar_comentario(id_comentario, descripcion, id_usuario, rating=None, es_admin=False) -> object | str:
     if descripcion and (len(descripcion) < 1 or len(descripcion) > 255):
         return "La descripción debe tener entre 1 y 255 caracteres"
+
+    if rating is not None and (not isinstance(rating, int) or rating < 1 or rating > 5):
+        return "El rating debe ser un número entero entre 1 y 5"
 
     comentario = comment_repo.actualizar_comentario(
         id_comentario=id_comentario,
         descripcion=descripcion,
         id_usuario=id_usuario,
+        rating=rating,
         es_admin=es_admin
     )
 
@@ -57,24 +64,19 @@ def obtener_comentarios_del_juego(id_juego, limite=10, desplazamiento=0) -> dict
         desplazamiento=desplazamiento
     )
 
-    # Adjuntamos al comentario la nota que el mismo usuario le dio al juego
-    # asi el front lo pinta junto al texto sin pedir otra cosa
-    calificaciones = rate_repo.obtener_calificaciones_por_juego(id_juego=id_juego)
-    calificacion_por_usuario = {}
-    for calificacion in calificaciones:
-        calificacion_por_usuario[calificacion.id_user] = calificacion.rating
-
     resultado = []
     for comentario in comentarios:
-        datos = comentario.to_dict()
-        datos["rating"] = calificacion_por_usuario.get(comentario.id_user)
-        resultado.append(datos)
+        resultado.append(comentario.to_dict())
 
     return {
         "comments": resultado,
         "total": total,
         "has_more": (desplazamiento + len(resultado)) < total
     }
+
+
+def obtener_promedio_del_juego(id_juego) -> float:
+    return comment_repo.obtener_promedio_por_juego(id_juego=id_juego)
 
 
 def obtener_todos_los_comentarios() -> list:
