@@ -249,15 +249,6 @@
                   <i :class="'pi ' + STATUS_META[item.status]?.icon"></i>
                   <span class="status-label">{{ STATUS_META[item.status]?.label }}</span>
                 </span>
-                <button
-                  class="coleccion-item-fav"
-                  :class="{ 'is-fav': favoritosIds.has(item.game.id), 'is-loading': favLoadingId === item.game.id }"
-                  @click.stop="alternarFavoritoColeccion(item.game.id)"
-                  :title="favoritosIds.has(item.game.id) ? 'Remove from favorites' : 'Add to favorites'"
-                >
-                  <i v-if="favLoadingId === item.game.id" class="pi pi-spin pi-spinner"></i>
-                  <i v-else :class="favoritosIds.has(item.game.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
-                </button>
               </div>
             </div>
           </div>
