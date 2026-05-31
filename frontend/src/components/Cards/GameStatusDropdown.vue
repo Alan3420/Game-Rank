@@ -6,7 +6,7 @@
                 :key="key"
                 class="gsd-option"
                 :class="{ 'is-active': currentStatus === key, 'is-loading': loading }"
-                @click.stop="handleSelect(key)"
+                @click.stop="manejarSeleccionEstado(key)"
                 :disabled="loading"
             >
                 <span>{{ STATUS_META[key].label }}</span>
@@ -19,7 +19,7 @@
         <button
             v-if="currentStatus"
             class="gsd-remove"
-            @click.stop="handleRemove"
+            @click.stop="manejarEliminacionEstado"
             :disabled="loading"
         >
             <i v-if="loading" class="pi pi-spin pi-spinner"></i>
@@ -31,8 +31,12 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
-import { setGameStatus, removeGameStatus } from '../../services/user_game_status.js';
+import { establecerEstadoDeJuego, eliminarEstadoDeJuego } from '../../services/user_game_status.js';
 import { notificaciones } from '../../store/notificaciones.js';
+
+// Dropdown que se muestra encima de una card para asignar (o quitar) el
+// estado en que el usuario tiene un juego. Emite "update:status" cuando
+// el backend confirma el cambio, y "close" cuando hay que ocultarse.
 
 const props = defineProps({
     gameId: { type: Number, required: true },
@@ -44,48 +48,67 @@ const emit = defineEmits(['close', 'update:status']);
 const panelRef = ref(null);
 const loading = ref(false);
 
-function onDocClick(e) {
+function alClicEnDocumento(e) {
     if (panelRef.value && !panelRef.value.contains(e.target)) {
         emit('close');
     }
 }
 
-onMounted(() => {
-    setTimeout(() => document.addEventListener('mousedown', onDocClick), 0);
+// Registramos el listener en setTimeout(0) para que el mismo click que
+// abrio el dropdown no lo cierre de inmediato (porque ese click se
+// propaga al document despues del onClick que nos monto).
+onMounted(function () {
+    setTimeout(function () {
+        document.addEventListener('mousedown', alClicEnDocumento);
+    }, 0);
 });
 
-onBeforeUnmount(() => {
-    document.removeEventListener('mousedown', onDocClick);
+onBeforeUnmount(function () {
+    document.removeEventListener('mousedown', alClicEnDocumento);
 });
 
-async function handleSelect(status) {
-    if (loading.value || status === props.currentStatus) {
+// Click en una de las opciones de estado. Si el usuario pulso el estado
+// que ya estaba activo, no hacemos nada (solo cerramos el dropdown).
+async function manejarSeleccionEstado(estado) {
+
+    if (loading.value || estado === props.currentStatus) {
         emit('close');
         return;
     }
+
     loading.value = true;
+
     try {
-        await setGameStatus(props.gameId, status);
-        emit('update:status', { gameId: props.gameId, status });
-        notificaciones.success(`Status updated to "${STATUS_META[status].label}".`, { title: 'Status saved' });
+        await establecerEstadoDeJuego(props.gameId, estado);
+        emit('update:status', { gameId: props.gameId, status: estado });
+        notificaciones.success('Status updated to "' + STATUS_META[estado].label + '".', { title: 'Status saved' });
         emit('close');
-    } catch {
-        notificaciones.error('We couldn\'t save the status.', { title: 'Error' });
+
+    } catch (error) {
+        notificaciones.error("We couldn't save the status.", { title: 'Error' });
+
     } finally {
         loading.value = false;
     }
 }
 
-async function handleRemove() {
-    if (loading.value) return;
+async function manejarEliminacionEstado() {
+
+    if (loading.value) {
+        return;
+    }
+
     loading.value = true;
+
     try {
-        await removeGameStatus(props.gameId);
+        await eliminarEstadoDeJuego(props.gameId);
         emit('update:status', { gameId: props.gameId, status: null });
         notificaciones.success('Status removed.', { title: 'Status removed' });
         emit('close');
-    } catch {
-        notificaciones.error('We couldn\'t remove the status.', { title: 'Error' });
+
+    } catch (error) {
+        notificaciones.error("We couldn't remove the status.", { title: 'Error' });
+
     } finally {
         loading.value = false;
     }

@@ -1,65 +1,74 @@
-from app.services import user_service
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from app.repositories.user_repo import get_user_by_id
+from app.services import user_service
+from app.repositories.user_repo import obtener_usuario_por_id
 from app.limiter import limiter
+
 
 welcome_bp = Blueprint('welcome_route', __name__)
 
+
 @welcome_bp.route("/login", methods=["POST"])
 @limiter.limit("10 per minute")
-def login():
-    data_log = request.get_json()
+def iniciar_sesion():
+    datos_login = request.get_json()
 
-    email = data_log.get("email")
-    passwd = data_log.get("password")
-    
+    email = datos_login.get("email")
+    contrasena = datos_login.get("password")
 
-    user = user_service.user_authentication(email, passwd)
+    usuario = user_service.autenticar_usuario(email, contrasena)
 
-    if user:
-        token_user = create_access_token(identity= str(user.id_user))
-        return jsonify({"message": "Login exitoso",
-                        "user": user.to_dict(),
-                        "token": token_user}), 200
-    else:
-        return jsonify({"message": "Correo electronico o contraseña incorrectos"}), 401
+    if usuario:
+        # flask-jwt-extended >= 4 obliga a que la identity sea string
+        token = create_access_token(identity=str(usuario.id_user))
+        return jsonify({
+            "message": "Login exitoso",
+            "user": usuario.to_dict(),
+            "token": token
+        }), 200
+
+    return jsonify({"message": "Correo electronico o contraseña incorrectos"}), 401
+
 
 @welcome_bp.route("/register", methods=["POST"])
 @limiter.limit("5 per minute")
-def register():
+def registrar():
     try:
-        register_data = request.get_json()
+        datos_registro = request.get_json()
 
-        name_user = register_data.get("name")
-        last_name_user = register_data.get("last_name")
-        nickname_user = register_data.get("nickname")
-        email_user = register_data.get("email")
-        password_user = register_data.get("password")
+        nombre = datos_registro.get("name")
+        apellido = datos_registro.get("last_name")
+        nickname = datos_registro.get("nickname")
+        email = datos_registro.get("email")
+        contrasena = datos_registro.get("password")
 
-        user = user_service.user_registration(name=name_user,
-                                              last_name=last_name_user,
-                                              nickname=nickname_user,
-                                              email=email_user,
-                                              passwd=password_user)
+        resultado = user_service.registrar_usuario(
+            nombre=nombre,
+            apellido=apellido,
+            nickname=nickname,
+            email=email,
+            contrasena=contrasena
+        )
 
-        if type(user) != str:
+        if type(resultado) != str:
+            return jsonify({
+                "message": "Usuario registrado exitosamente",
+                "user": resultado.to_dict()
+            }), 201
 
-            return jsonify({"message": "Usuario registrado exitosamente", 
-                            "user": user.to_dict()}), 201
-        
-        else:
-            return jsonify({"message": user}), 409
-        
+        return jsonify({"message": resultado}), 409
+
     except Exception as e:
         return jsonify({"message": "Error al registrar el usuario"}), 500
 
+
 @welcome_bp.route("/me", methods=["GET"])
 @jwt_required()
-def get_me():
-    user_id = get_jwt_identity()
-    user = get_user_by_id(user_id)
-    if not user:
-        return jsonify({"message": "Usuario no encontrado"}), 404
-    return jsonify({"user": user.to_dict()}), 200
+def obtener_mi_usuario():
+    id_usuario = get_jwt_identity()
+    usuario = obtener_usuario_por_id(id_usuario)
 
+    if not usuario:
+        return jsonify({"message": "Usuario no encontrado"}), 404
+
+    return jsonify({"user": usuario.to_dict()}), 200

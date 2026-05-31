@@ -1,10 +1,9 @@
 <template>
   <div class="admin-users-page">
 
-    <!-- Topbar -->
     <div class="admin-topbar">
       <div class="topbar-content">
-        <button class="back-btn" @click="goBack">
+        <button class="back-btn" @click="volver">
           <i class="pi pi-arrow-left"></i>
           Back
         </button>
@@ -18,7 +17,6 @@
       </div>
     </div>
 
-    <!-- Contenido -->
     <div class="admin-container">
       <div class="users-section">
         <div class="section-header">
@@ -33,10 +31,8 @@
           </div>
         </div>
 
-        <!-- Loader -->
         <Loader v-if="loading" message="Loading comments..." />
 
-        <!-- Tabla -->
         <div v-else-if="comentariosFiltrados.length > 0" class="users-table-wrap">
           <table class="users-table">
             <thead>
@@ -60,7 +56,7 @@
                   </div>
                 </td>
                 <td>
-                  <router-link :to="'/game/' + c.id_videogame" class="game-link" target="_blank">
+                  <router-link :to="'/game/' + c.id_game_api" class="game-link" target="_blank">
                     View game
                     <i class="pi pi-external-link" style="font-size:0.75rem"></i>
                   </router-link>
@@ -68,7 +64,7 @@
                 <td class="comment-text-cell">
                   <span class="comment-excerpt" :title="c.description">{{ c.description }}</span>
                 </td>
-                <td class="user-date">{{ formatDate(c.date_of_comment) }}</td>
+                <td class="user-date">{{ formatearFecha(c.date_of_comment) }}</td>
                 <td class="user-actions">
                   <button
                     class="action-btn delete-btn"
@@ -83,7 +79,6 @@
           </table>
         </div>
 
-        <!-- Vacío -->
         <div v-else class="users-empty">
           <div class="empty-icon"><i class="pi pi-comments"></i></div>
           <p>No matching comments</p>

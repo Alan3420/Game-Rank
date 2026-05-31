@@ -1,36 +1,42 @@
-from flask import Blueprint, jsonify, request, current_app
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
-from app.services.game_services import get_video_game_details, get_catalog_games, save_games, get_upcoming_launch_games, get_random_game_video, get_video_games_filtered, obtener_saga_servicio, obtener_adicciones_servicio, obtener_logros_servicio
+from app.services.game_services import (
+    obtener_detalle_del_videojuego,
+    obtener_juegos_del_catalogo,
+    obtener_proximos_lanzamientos,
+    obtener_video_aleatorio,
+    obtener_juegos_filtrados,
+    obtener_saga,
+    obtener_adicciones_del_juego,
+    obtener_logros_del_juego
+)
 from app.limiter import limiter
 
 
 content_overview_bp = Blueprint('content_overview_route', __name__)
 
 
-
-
 @content_overview_bp.route('/overview/<int:game_id>', methods=["GET"])
 @jwt_required()
-def overview_by_id(game_id):
+def detalle_de_juego(game_id):
     try:
-        game_details = get_video_game_details(game_id=game_id)
-        return jsonify(game_details), 200
+        detalles = obtener_detalle_del_videojuego(id_juego=game_id)
+        return jsonify(detalles), 200
+
     except Exception as e:
         return jsonify({"message": "Error al obtener los detalles del juego"}), 500
 
 
 @content_overview_bp.route("/release", methods=["GET"])
 @jwt_required()
-def future_release():
+def proximos_lanzamientos():
     try:
-        page = request.args.get('page', default=1, type=int)
-        per_page = min(request.args.get('per_page', default=10, type=int), 40)
+        pagina = request.args.get('page', default=1, type=int)
+        por_pagina = min(request.args.get('per_page', default=10, type=int), 40)
 
-        games = get_upcoming_launch_games(page=page, per_page=per_page)
-        save_games(games=games, app=current_app._get_current_object())
+        resultado = obtener_proximos_lanzamientos(pagina=pagina, por_pagina=por_pagina)
 
-
-        return jsonify(games), 200
+        return jsonify(resultado), 200
 
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos"}), 500
@@ -39,15 +45,15 @@ def future_release():
 @content_overview_bp.route('/catalog', methods=["GET"])
 @jwt_required()
 @limiter.limit("60 per minute")
-def catalog_games():
+def juegos_del_catalogo():
     try:
-        page = request.args.get('page', default=1, type=int)
-        per_page = min(request.args.get('per_page', default=20, type=int), 40)
+        pagina = request.args.get('page', default=1, type=int)
+        por_pagina = min(request.args.get('per_page', default=20, type=int), 40)
 
-        games = get_catalog_games(page=page, per_page=per_page)
-        save_games(games=games.get("games", []), app=current_app._get_current_object())
+        resultado = obtener_juegos_del_catalogo(pagina=pagina, por_pagina=por_pagina)
 
-        return jsonify(games), 200
+        return jsonify(resultado), 200
+
     except Exception as e:
         return jsonify({"message": "Error al obtener el catálogo"}), 500
 
@@ -55,28 +61,28 @@ def catalog_games():
 @content_overview_bp.route('/filtered', methods=["GET"])
 @jwt_required()
 @limiter.limit("30 per minute")
-def filtered_games():
+def juegos_filtrados():
     try:
-        page = request.args.get('page', default=1, type=int)
-        per_page = min(request.args.get('per_page', default=20, type=int), 40)
+        pagina = request.args.get('page', default=1, type=int)
+        por_pagina = min(request.args.get('per_page', default=20, type=int), 40)
         ordering = request.args.get('ordering', default=None, type=str)
         genres = request.args.get('genres', default=None, type=str)
         platforms = request.args.get('platforms', default=None, type=str)
         dates = request.args.get('dates', default=None, type=str)
         search = request.args.get('search', default=None, type=str)
 
-        games = get_video_games_filtered(
-            page=page,
-            per_page=per_page,
+        resultado = obtener_juegos_filtrados(
+            pagina=pagina,
+            por_pagina=por_pagina,
             ordering=ordering,
             genres=genres,
             platforms=platforms,
             dates=dates,
             search=search
         )
-        save_games(games=games.get("games", []), app=current_app._get_current_object())
 
-        return jsonify(games), 200
+        return jsonify(resultado), 200
+
     except Exception as e:
         return jsonify({"message": "Error al obtener los juegos filtrados"}), 500
 
@@ -85,8 +91,9 @@ def filtered_games():
 @jwt_required()
 def adicciones_del_juego(game_id):
     try:
-        adicciones = obtener_adicciones_servicio(game_id=game_id)
+        adicciones = obtener_adicciones_del_juego(id_juego=game_id)
         return jsonify(adicciones), 200
+
     except Exception as e:
         return jsonify({"message": "Error al obtener adicciones"}), 500
 
@@ -95,8 +102,9 @@ def adicciones_del_juego(game_id):
 @jwt_required()
 def saga_del_juego(game_id):
     try:
-        juegos = obtener_saga_servicio(game_id=game_id)
+        juegos = obtener_saga(id_juego=game_id)
         return jsonify(juegos), 200
+
     except Exception as e:
         return jsonify({"message": "Error al obtener saga del juego"}), 500
 
@@ -105,16 +113,20 @@ def saga_del_juego(game_id):
 @jwt_required()
 def logros_del_juego(game_id):
     try:
-        logros = obtener_logros_servicio(game_id=game_id)
+        logros = obtener_logros_del_juego(id_juego=game_id)
         return jsonify(logros), 200
+
     except Exception as e:
         return jsonify({"message": "Error al obtener logros"}), 500
 
 
 @content_overview_bp.route("/hero-video", methods=["GET"])
-def get_hero_video():
+@limiter.limit("30 per minute")
+def video_destacado():
+    #este endpoint no lleva jwt_required porque el video se muestra
+    # en el hero del Home antes de que el usuario inicie sesion
     try:
-        video = get_random_game_video()
+        video = obtener_video_aleatorio()
 
         if not video:
             return jsonify({"message": "No hay videos disponibles"}), 404

@@ -25,7 +25,7 @@
             :href="'#' + seccion.id"
             class="toc-link"
             :class="{ 'is-active': seccionActiva === seccion.id }"
-            @click.prevent="scrollTo(seccion.id)"
+            @click.prevent="desplazarASeccion(seccion.id)"
           >
             <span class="toc-num">{{ seccion.num }}</span>
             {{ seccion.titulo }}
@@ -256,51 +256,82 @@
 </template>
 
 <script>
+// Pagina estatica con los terminos y condiciones legales. El unico
+// "interactivo" es la tabla de contenidos lateral, que se subraya segun
+// la seccion visible mientras el usuario hace scroll, y permite saltar
+// a cualquier seccion con click.
 export default {
   name: 'TerminosCondiciones',
+
   data() {
     return {
       seccionActiva: '',
+      observador: null,
       secciones: [
-        { id: 'aceptacion',     num: '01', titulo: 'Acceptance' },
-        { id: 'descripcion',    num: '02', titulo: 'Description of Service' },
-        { id: 'cuenta',         num: '03', titulo: 'Registration & Account' },
-        { id: 'uso-aceptable',  num: '04', titulo: 'Acceptable Use' },
-        { id: 'contenido',      num: '05', titulo: 'User Content' },
-        { id: 'propiedad',      num: '06', titulo: 'Intellectual Property' },
-        { id: 'privacidad',     num: '07', titulo: 'Privacy & Data' },
-        { id: 'responsabilidad',num: '08', titulo: 'Limitation of Liability' },
-        { id: 'modificaciones', num: '09', titulo: 'Modifications' },
-        { id: 'terminacion',    num: '10', titulo: 'Account Termination' },
-        { id: 'contacto',       num: '11', titulo: 'Contact' },
+        { id: 'aceptacion',      num: '01', titulo: 'Acceptance' },
+        { id: 'descripcion',     num: '02', titulo: 'Description of Service' },
+        { id: 'cuenta',          num: '03', titulo: 'Registration & Account' },
+        { id: 'uso-aceptable',   num: '04', titulo: 'Acceptable Use' },
+        { id: 'contenido',       num: '05', titulo: 'User Content' },
+        { id: 'propiedad',       num: '06', titulo: 'Intellectual Property' },
+        { id: 'privacidad',      num: '07', titulo: 'Privacy & Data' },
+        { id: 'responsabilidad', num: '08', titulo: 'Limitation of Liability' },
+        { id: 'modificaciones',  num: '09', titulo: 'Modifications' },
+        { id: 'terminacion',     num: '10', titulo: 'Account Termination' },
+        { id: 'contacto',        num: '11', titulo: 'Contact' }
       ]
     };
   },
+
   mounted() {
-    this.observer = new IntersectionObserver(this.onIntersect, {
+    var self = this;
+
+    // Creamos un IntersectionObserver para detectar que seccion esta visible
+    // en pantalla mientras el usuario hace scroll. Los margenes acortan la
+    // "ventana" de deteccion al tercio superior, para que la seccion activa
+    // sea la que esta cerca de la parte alta y no la que asoma por debajo.
+    this.observador = new IntersectionObserver(this.alIntersectar, {
       rootMargin: '-30% 0px -60% 0px'
     });
-    this.$nextTick(() => {
-      this.secciones.forEach(s => {
-        const el = document.getElementById(s.id);
-        if (el) this.observer.observe(el);
-      });
+
+    // En el siguiente tick (cuando ya estan en el DOM) registramos cada
+    // seccion en el observador.
+    this.$nextTick(function () {
+      for (var i = 0; i < self.secciones.length; i++) {
+        var el = document.getElementById(self.secciones[i].id);
+        if (el) {
+          self.observador.observe(el);
+        }
+      }
     });
   },
+
   beforeUnmount() {
-    if (this.observer) this.observer.disconnect();
+    if (this.observador) {
+      this.observador.disconnect();
+    }
   },
+
   methods: {
-    scrollTo(id) {
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Click en la TOC lateral: hace scroll suave hasta la seccion indicada.
+    desplazarASeccion(id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     },
-    onIntersect(entries) {
-      entries.forEach(entry => {
+
+    // Callback del IntersectionObserver. Por cada seccion que entra en la
+    // "ventana" visible, marcamos su id como activa para resaltarla en la
+    // TOC lateral.
+    alIntersectar(entries) {
+      for (var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
         if (entry.isIntersecting) {
           this.seccionActiva = entry.target.id;
         }
-      });
+      }
     }
   }
 };

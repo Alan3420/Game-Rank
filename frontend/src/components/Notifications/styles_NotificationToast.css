@@ -41,13 +41,10 @@
     border-radius: 4px 0 0 4px;
 }
 
-.toast-success::before {
-    background: #4ea674;
-}
-
-.toast-error::before {
-    background: #d96a6a;
-}
+.toast-success::before { background: var(--color-success); }
+.toast-error::before   { background: var(--color-error); }
+.toast-warning::before { background: var(--color-warning); }
+.toast-info::before    { background: var(--color-info); }
 
 /* Icon bubble */
 .toast-icon {
@@ -62,13 +59,23 @@
 }
 
 .toast-success .toast-icon {
-    background: #e8f5ee;
-    color: #3c8a5d;
+    background: var(--color-success-light);
+    color: var(--color-success-hover);
 }
 
 .toast-error .toast-icon {
-    background: #fbe9e9;
-    color: #b94f4f;
+    background: var(--color-error-light);
+    color: var(--color-error-hover);
+}
+
+.toast-warning .toast-icon {
+    background: var(--color-warning-light);
+    color: var(--color-warning-hover);
+}
+
+.toast-info .toast-icon {
+    background: var(--color-info-light);
+    color: var(--color-info-hover);
 }
 
 .toast-body {
@@ -87,26 +94,23 @@
     color: var(--color-text);
 }
 
-.toast-success .toast-title {
-    color: #2f6d4a;
-}
-
-.toast-error .toast-title {
-    color: #983f3f;
-}
+.toast-success .toast-title { color: var(--color-success-hover); }
+.toast-error .toast-title   { color: var(--color-error-hover); }
+.toast-warning .toast-title { color: var(--color-warning-hover); }
+.toast-info .toast-title    { color: var(--color-info-hover); }
 
 .toast-message {
     margin: 0;
     font-size: 0.82rem;
     line-height: 1.4;
-    color: #565878;
+    color: var(--color-text-secondary);
     word-wrap: break-word;
 }
 
 .toast-close {
     background: none;
     border: none;
-    color: #b0b0c8;
+    color: var(--color-text-placeholder);
     cursor: pointer;
     padding: 4px;
     border-radius: 6px;
@@ -121,36 +125,6 @@
 .toast-close:hover {
     background: var(--color-border-lightest);
     color: var(--color-text);
-}
-
-/* Progress bar */
-.toast-progress {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 2px;
-    width: 100%;
-    transform-origin: left center;
-    animation: toast-progress 3.5s linear forwards;
-    opacity: 0.6;
-}
-
-.toast-success .toast-progress {
-    background: #4ea674;
-}
-
-.toast-error .toast-progress {
-    background: #d96a6a;
-}
-
-@keyframes toast-progress {
-    from {
-        transform: scaleX(1);
-    }
-
-    to {
-        transform: scaleX(0);
-    }
 }
 
 /* Transitions for entrance / exit */

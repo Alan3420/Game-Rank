@@ -1,19 +1,31 @@
 import api from './api';
 
-export async function getCatalogGames(page = 1, perPage = 20) {
-    const response = await api.get('/content/catalog', {
-        params: { page, per_page: perPage }
+export async function obtenerJuegosDelCatalogo(pagina, porPagina) {
+    if (!pagina) {
+        pagina = 1;
+    }
+    if (!porPagina) {
+        porPagina = 20;
+    }
+
+    const respuesta = await api.get('/content/catalog', {
+        params: {
+            page: pagina,
+            per_page: porPagina
+        }
     });
-    return response.data;
+    return respuesta.data;
 }
 
 
-export async function getHeroVideo() {
+export async function obtenerVideoDestacado() {
     try {
-        const response = await api.get('/content/hero-video');
-        return response.data;
+        const respuesta = await api.get('/content/hero-video');
+        return respuesta.data;
     } catch (error) {
-        if (error.response?.status === 404) {
+        // 404 significa que aun no hay video disponible, devolvemos null
+        // para que el componente del Home oculte la seccion
+        if (error.response && error.response.status === 404) {
             return null;
         }
         console.error('Error obteniendo video del hero:', error);

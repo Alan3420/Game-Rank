@@ -6,7 +6,7 @@
         <p class="register-subtitle">Create your account to access reviews, favorites and much more</p>
       </div>
 
-      <form @submit.prevent="handleRegister" class="register-form">
+      <form @submit.prevent="manejarRegistro" class="register-form">
         <div class="form-row">
           <div class="form-group">
             <label for="name" class="form-label">First Name</label>
@@ -61,7 +61,7 @@
             id="email"
             v-model="email"
             type="email"
-            placeholder="tu@gmail.com"
+            placeholder="your@gmail.com"
             class="form-input"
             :class="{ 'input-error': email && !emailDominioValido }"
             maxlength="100"
@@ -120,7 +120,7 @@
           </span>
         </label>
 
-        <button type="submit" :disabled="loading || !isFormValid" class="btn btn-primary">
+        <button type="submit" :disabled="loading || !formularioValido" class="btn btn-primary">
           <span :style="{ visibility: loading ? 'hidden' : 'visible' }">Create Account</span>
           <span v-if="loading" class="dots-loader">
             <span></span>

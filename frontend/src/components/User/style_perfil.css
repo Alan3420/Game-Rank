@@ -115,68 +115,6 @@
   border-color: rgba(255, 255, 255, 0.22);
 }
 
-/* Banner stats */
-.banner-stats {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  background: rgba(99, 102, 241, 0.08);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 16px;
-  padding: 14px 24px;
-  backdrop-filter: blur(10px);
-  flex-shrink: 0;
-}
-
-[data-theme="dark"] .banner-stats {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.banner-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  min-width: 52px;
-}
-
-.banner-stat-value {
-  font-size: 1.7rem;
-  font-weight: 800;
-  color: #1e1b4b;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-[data-theme="dark"] .banner-stat-value {
-  color: #fff;
-}
-
-.banner-stat-label {
-  font-size: 0.68rem;
-  color: rgba(30, 27, 75, 0.65);
-  font-weight: 600;
-  white-space: nowrap;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-[data-theme="dark"] .banner-stat-label {
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.banner-stat-divider {
-  width: 1px;
-  height: 38px;
-  background: rgba(30, 27, 75, 0.15);
-  flex-shrink: 0;
-}
-
-[data-theme="dark"] .banner-stat-divider {
-  background: rgba(255, 255, 255, 0.18);
-}
 
 /* ── ESTADÍSTICAS ── */
 .stats-section {
@@ -702,55 +640,6 @@
 }
 
 
-/* ── FAVORITES PAGINATION ── */
-.fav-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 20px 0 4px;
-}
-
-.fav-page-btn {
-  min-width: 36px;
-  height: 36px;
-  padding: 0 10px;
-  border-radius: 10px;
-  border: 1.5px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text-medium);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Sora', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fav-page-btn:hover:not(:disabled) {
-  border-color: var(--color-secondary);
-  color: var(--color-secondary);
-  background: var(--color-secondary-light);
-}
-
-.fav-page-btn.is-active {
-  background: var(--color-secondary);
-  border-color: var(--color-secondary);
-  color: #fff;
-}
-
-.fav-page-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.fav-page-nav {
-  min-width: 36px;
-  padding: 0;
-}
-
 /* ── EDIT MODAL ── */
 .edit-modal-overlay {
   position: fixed;
@@ -1106,11 +995,6 @@
   font-weight: 600;
 }
 
-.admin-subtitle {
-  margin: 0;
-  color: var(--color-text-medium);
-  font-size: 0.9rem;
-}
 
 .admin-actions {
   display: flex;
@@ -1407,35 +1291,6 @@
   font-size: 0.62rem;
 }
 
-.coleccion-item-fav {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  color: var(--color-text-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-  font-size: 0.82rem;
-}
-
-.coleccion-item-fav:hover {
-  background: var(--color-surface-hover);
-  color: #e11d48;
-}
-
-.coleccion-item-fav.is-fav {
-  color: #e11d48;
-}
-
-.coleccion-item-fav.is-loading {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
 
 /* Compact empty state */
 .coleccion-empty-small {
@@ -1485,18 +1340,9 @@
   .banner-inner {
     padding: 0 28px;
   }
-  .banner-stats {
-    gap: 18px;
-    padding: 12px 18px;
-  }
 }
 
 @media (max-width: 900px) {
-  .banner-stats {
-    margin-left: 0;
-    gap: 16px;
-    padding: 12px 18px;
-  }
   .coleccion-grid {
     grid-template-columns: 1fr;
   }
@@ -1519,7 +1365,7 @@
   .profile-content {
     grid-template-columns: 1fr;
     padding: 0 16px 44px;
-    margin-top: -36px;
+    margin-top: 0;
   }
 
   .profile-sidebar {
@@ -1550,35 +1396,7 @@
     font-size: 1.5rem;
   }
 
-  .banner-stats {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding: 10px;
-    border-radius: 12px;
-  }
-
-  .banner-stat-divider {
-    display: none;
-  }
-
-  .banner-stat {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
-    padding: 10px 8px;
-    min-width: 0;
-  }
-
-  .banner-stat-value {
-    font-size: 1.3rem;
-  }
-
-  .banner-stat-label {
-    font-size: 0.6rem;
-  }
-
-  .profile-card {
+.profile-card {
     padding: 16px;
   }
 

@@ -5,7 +5,7 @@
         <div v-for="item in notificaciones.state.items" :key="item.id" class="toast" :class="`toast-${item.type}`"
           role="status">
           <div class="toast-icon">
-            <i class="pi" :class="item.type === 'success' ? 'pi-check-circle' : 'pi-times-circle'"></i>
+            <i class="pi" :class="item.icon"></i>
           </div>
           <div class="toast-body">
             <p class="toast-title">{{ item.title }}</p>
@@ -14,7 +14,6 @@
           <button class="toast-close" @click="notificaciones.remove(item.id)" aria-label="Close notification">
             <i class="pi pi-times"></i>
           </button>
-          <span class="toast-progress"></span>
         </div>
       </TransitionGroup>
     </div>

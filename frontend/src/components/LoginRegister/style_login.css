@@ -72,11 +72,6 @@
   align-items: center;
 }
 
-.char-count {
-  font-size: 0.8rem;
-  color: var(--color-text-placeholder);
-  font-weight: 400;
-}
 
 .error-text {
   display: block;

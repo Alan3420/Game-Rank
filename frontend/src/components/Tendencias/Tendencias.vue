@@ -31,7 +31,7 @@
           v-for="seccion in secciones"
           :key="seccion.key"
           class="tab-btn"
-          @click="scrollToSection(seccion.key)"
+          @click="desplazarASeccion(seccion.key)"
         >
           <i class="pi" :class="seccion.icono"></i>
           {{ seccion.label }}
@@ -62,7 +62,7 @@
             v-for="game in tendencias[seccion.key]"
             :key="game.id"
             class="trend-card"
-            @click="goToGame(game.id)"
+            @click="irAJuego(game.id)"
           >
             <img
               v-if="game.imge_url"
@@ -82,11 +82,11 @@
               <div class="trend-card__meta">
                 <span
                   class="mc-badge"
-                  :class="game.metacritic ? metacriticClass(game.metacritic) : 'mc-na'"
+                  :class="game.metacritic ? claseMetacritic(game.metacritic) : 'mc-na'"
                 >
                   {{ game.metacritic ?? '—' }}
                 </span>
-                <span class="trend-card__stat">{{ game.stat_label }}</span>
+                <span class="trend-card__stat">{{ formatearEtiquetaTendencia(seccion.key, game.stat_value) }}</span>
               </div>
             </div>
           </div>

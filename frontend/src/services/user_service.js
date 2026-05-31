@@ -1,73 +1,74 @@
 import api from "./api";
 
-export async function login(email, passwd) {
-    const response = await api.post("/user/login", {
+export async function autenticarUsuario(email, contrasena) {
+    const respuesta = await api.post("/user/login", {
         email: email,
-        password: passwd
+        password: contrasena
     });
-    return response.data;
-
+    return respuesta.data;
 }
 
-export async function register(name, last_name, nickname, email, passwd) {
-    const response = await api.post("/user/register", {
-        name: name,
-        last_name: last_name,
+export async function registrarUsuario(nombre, apellido, nickname, email, contrasena) {
+    const respuesta = await api.post("/user/register", {
+        name: nombre,
+        last_name: apellido,
         nickname: nickname,
         email: email,
-        password: passwd
+        password: contrasena
     });
-
-    return response.data;
+    return respuesta.data;
 }
 
-export async function getListUsers() {
-    const response = await api.get("/settings/options");
-    return response.data;
+export async function obtenerListaDeUsuarios() {
+    const respuesta = await api.get("/settings/options");
+    return respuesta.data;
 }
 
-export async function changePassword(contraseña_actual, contraseña_nueva) {
-    const response = await api.put("/settings/change-password", {
-        current_password: contraseña_actual,
-        new_password: contraseña_nueva
+export async function cambiarContrasena(contrasenaActual, contrasenaNueva) {
+    const respuesta = await api.put("/settings/change-password", {
+        current_password: contrasenaActual,
+        new_password: contrasenaNueva
     });
-    return response.data;
+    return respuesta.data;
 }
 
-export async function changeUserRole(id_user, new_role) {
-    const response = await api.put("/settings/change-role", {
-        id_user: id_user,
-        new_role: new_role
+export async function cambiarRolDeUsuario(idUsuario, nuevoRol) {
+    const respuesta = await api.put("/settings/change-role", {
+        id_user: idUsuario,
+        new_role: nuevoRol
     });
-    return response.data;
+    return respuesta.data;
 }
 
-export async function updateUser(id_user, datos) {
-    const response = await api.put("/settings/options", {
-        id_user: id_user,
-        ...datos
+export async function actualizarUsuario(idUsuario, datos) {
+    var cuerpo = { id_user: idUsuario };
+
+    for (var clave in datos) {
+        cuerpo[clave] = datos[clave];
+    }
+
+    const respuesta = await api.put("/settings/options", cuerpo);
+    return respuesta.data;
+}
+
+export async function eliminarUsuario(idUsuario) {
+    const respuesta = await api.delete("/settings/options", {
+        data: { id_user: idUsuario }
     });
-    return response.data;
+    return respuesta.data;
 }
 
-export async function deleteUser(id_user) {
-    const response = await api.delete("/settings/options", {
-        data: { id_user: id_user }
-    });
-    return response.data;
+export async function eliminarMiCuenta() {
+    const respuesta = await api.delete("/settings/account");
+    return respuesta.data;
 }
 
-export async function deleteOwnAccount() {
-    const response = await api.delete("/settings/account");
-    return response.data;
+export async function obtenerMiUsuario() {
+    const respuesta = await api.get("/user/me");
+    return respuesta.data;
 }
 
-export async function getMe() {
-    const response = await api.get("/user/me");
-    return response.data;
-}
-
-export async function getEstadisticasUsuario() {
-    const response = await api.get("/settings/stats");
-    return response.data;
+export async function obtenerEstadisticasUsuario() {
+    const respuesta = await api.get("/settings/stats");
+    return respuesta.data;
 }

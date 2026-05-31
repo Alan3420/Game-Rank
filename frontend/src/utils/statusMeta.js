@@ -1,3 +1,5 @@
+// Las claves estan en espanol porque asi se guardan en BD, pero los label
+// van en ingles porque toda la UI esta en ingles
 export const STATUS_META = {
     pendiente: {
         label: 'Pending',

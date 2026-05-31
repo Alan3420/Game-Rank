@@ -1,70 +1,127 @@
 from app.models.Comment import Comment
 from app.database.db import db
 from datetime import date
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 
-def get_all_comments() -> list[Comment]:
-    return Comment.query.order_by(desc(Comment.date_of_comment), desc(Comment.id_comment)).all()
 
-def get_comment_by_id(comment_id) -> Comment:
+def obtener_todos_los_comentarios() -> list[Comment]:
+    return Comment.query.order_by(
+        desc(Comment.date_of_comment),
+        desc(Comment.id_comment)
+    ).all()
 
-    return Comment.query.filter_by(id_comment = comment_id).first()
 
-def get_comments_by_game(id_game):
-    return Comment.query.filter_by(id_videogame=id_game).all()
+def obtener_comentario_por_id(id_comentario) -> Comment:
+    return Comment.query.filter_by(id_comment=id_comentario).first()
 
-def get_comments_by_game_paginated(id_game, limit, offset):
-    total = Comment.query.filter_by(id_videogame=id_game).count()
-    comments = (Comment.query
-                .filter_by(id_videogame=id_game)
-                .order_by(desc(Comment.date_of_comment), desc(Comment.id_comment))
-                .limit(limit)
-                .offset(offset)
-                .all())
-    return comments, total
 
-def get_comments_by_user(id_user):
-    return Comment.query.filter_by(id_user=id_user).all()
+def obtener_comentarios_por_juego(id_juego):
+    return Comment.query.filter_by(id_game_api=id_juego).all()
 
-def create_comment(description, id_user, id_game):
-    comment = Comment(description=description, id_user=id_user, id_videogame=id_game)
-    db.session.add(comment)
+
+def obtener_comentarios_por_juego_paginados(id_juego, limite, desplazamiento):
+    total = Comment.query.filter_by(id_game_api=id_juego).count()
+
+    comentarios = (Comment.query
+                   .filter_by(id_game_api=id_juego)
+                   .order_by(desc(Comment.date_of_comment), desc(Comment.id_comment))
+                   .limit(limite)
+                   .offset(desplazamiento)
+                   .all())
+
+    return comentarios, total
+
+
+def obtener_comentarios_por_usuario(id_usuario):
+    return Comment.query.filter_by(id_user=id_usuario).all()
+
+
+def crear_comentario(descripcion, id_usuario, id_juego, rating):
+    nuevo_comentario = Comment(
+        description=descripcion,
+        id_user=id_usuario,
+        id_game_api=id_juego,
+        rating=rating
+    )
+    db.session.add(nuevo_comentario)
     db.session.commit()
-    return comment
+    return nuevo_comentario
 
-def update_comment(comment_id, description, user_id, es_admin=False) -> Comment:
+
+def actualizar_comentario(id_comentario, descripcion, id_usuario, rating=None, es_admin=False) -> Comment:
+    # El admin puede editar cualquier comentario, un usuario normal solo el suyo
     if es_admin:
-        comment = Comment.query.filter_by(id_comment=comment_id).first()
+        comentario = Comment.query.filter_by(id_comment=id_comentario).first()
     else:
-        comment = Comment.query.filter_by(
-            id_comment=comment_id,
-            id_user=user_id
+        comentario = Comment.query.filter_by(
+            id_comment=id_comentario,
+            id_user=id_usuario
         ).first()
 
-    if comment:
-        comment.description = description
-        comment.date_of_update = date.today()
+    if comentario:
+        comentario.description = descripcion
+        comentario.date_of_update = date.today()
+        if rating is not None:
+            comentario.rating = rating
         db.session.commit()
 
-    return comment
+    return comentario
 
-def delete_comment(comment_id, user_id, es_admin=False) -> bool:
+
+def eliminar_comentario(id_comentario, id_usuario, es_admin=False) -> bool:
     try:
         if es_admin:
-            comment = Comment.query.filter_by(id_comment=comment_id).first()
+            comentario = Comment.query.filter_by(id_comment=id_comentario).first()
         else:
-            comment = Comment.query.filter_by(
-                id_comment=comment_id,
-                id_user=user_id
+            comentario = Comment.query.filter_by(
+                id_comment=id_comentario,
+                id_user=id_usuario
             ).first()
 
-        if comment:
-            db.session.delete(comment)
+        if comentario:
+            db.session.delete(comentario)
             db.session.commit()
             return True
 
         return False
+
     except Exception as e:
         db.session.rollback()
-        print(f"Error en delete_comment: {e}")
+        print(f"Error en eliminar_comentario: {e}")
         raise e
+
+
+def obtener_promedio_por_juego(id_juego) -> float:
+    resultado = (db.session.query(func.avg(Comment.rating))
+                 .filter(Comment.id_game_api == id_juego)
+                 .scalar())
+    if resultado is None:
+        return 0.0
+    return round(float(resultado), 2)
+
+
+def obtener_top_comentados(limite):
+    total = func.count(Comment.id_comment).label("total")
+    return (db.session.query(Comment.id_game_api, total)
+            .group_by(Comment.id_game_api)
+            .order_by(total.desc())
+            .limit(limite)
+            .all())
+
+
+def obtener_top_valorados(limite):
+    promedio = func.round(func.avg(Comment.rating), 1).label("avg_rating")
+    votos = func.count(Comment.id_comment).label("votes")
+    return (db.session.query(Comment.id_game_api, promedio, votos)
+            .group_by(Comment.id_game_api)
+            .having(func.count(Comment.id_comment) >= 1)
+            .order_by(func.avg(Comment.rating).desc())
+            .limit(limite)
+            .all())
+
+
+def contar_comentarios_por_usuario(id_usuario):
+    total = db.session.query(func.count(Comment.id_comment))\
+                      .filter(Comment.id_user == id_usuario)\
+                      .scalar()
+    return total or 0

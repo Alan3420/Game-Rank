@@ -43,6 +43,20 @@
   --color-rating-bg: #fff8e6;
   --color-rating-text: #b08800;
 
+  /* === ESTADOS UI (success / warning / info / error) === */
+  --color-success: #22c55e;
+  --color-success-hover: #16a34a;
+  --color-success-light: #dcfce7;
+  --color-warning: #f59e0b;
+  --color-warning-hover: #d97706;
+  --color-warning-light: #fef3c7;
+  --color-info: #3b82f6;
+  --color-info-hover: #2563eb;
+  --color-info-light: #dbeafe;
+  --color-error: var(--color-danger);
+  --color-error-hover: var(--color-danger-hover);
+  --color-error-light: var(--color-danger-light);
+
   /* === SCROLLBAR === */
   --color-scrollbar: #e1e4f0;
   --color-scrollbar-thumb: #c4c8d8;
@@ -116,6 +130,20 @@
   --color-rating: #BF9030;
   --color-rating-bg: rgba(191, 144, 48, 0.10);
   --color-rating-text: #D4A840;
+
+  /* === ESTADOS UI (success / warning / info / error) === */
+  --color-success: #4ade80;
+  --color-success-hover: #22c55e;
+  --color-success-light: rgba(74, 222, 128, 0.15);
+  --color-warning: #fbbf24;
+  --color-warning-hover: #f59e0b;
+  --color-warning-light: rgba(251, 191, 36, 0.15);
+  --color-info: #60a5fa;
+  --color-info-hover: #3b82f6;
+  --color-info-light: rgba(96, 165, 250, 0.15);
+  --color-error: var(--color-danger);
+  --color-error-hover: var(--color-danger-hover);
+  --color-error-light: var(--color-danger-light);
 
   /* === SCROLLBAR === */
   --color-scrollbar: #2B3240;
