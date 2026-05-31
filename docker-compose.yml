@@ -22,7 +22,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: alan307/game-rank-backend:1.0.0
+    image: alan307/game-rank-backend:1.0.3
     restart: unless-stopped
     ports:
       - "5000:5000"

@@ -21,9 +21,15 @@
           <i :class="isLoading ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
         </button>
 
-        <button v-if="canChangeStatus" class="card-action-btn card-action-btn--status" :class="{ 'has-status': status }"
-          :style="status ? { color: metaDelEstado?.color } : {}" @click.stop="mostrarDropdown = !mostrarDropdown"
-          title="Change game status">
+        <!-- Boton de estado -->
+        <button
+          v-if="canChangeStatus"
+          class="card-action-btn card-action-btn--status"
+          :class="{ 'has-status': status }"
+          :style="status ? { color: metaDelEstado?.color } : {}"
+          @click.stop="mostrarDropdown = !mostrarDropdown"
+          title="Change game status"
+        >
           <i :class="'pi ' + (status ? metaDelEstado?.icon : 'pi-bookmark')"></i>
         </button>
       </div>
@@ -54,8 +60,12 @@
 
     <!-- Dropdown de estado (fuera de card-image para no ser clipeado) -->
     <div v-if="mostrarDropdown && canChangeStatus" class="card-status-dropdown-wrap">
-      <GameStatusDropdown :game-id="game.id" :current-status="status" @close="mostrarDropdown = false"
-        @update:status="reenviarActualizacionEstado" />
+      <GameStatusDropdown
+        :game-id="game.id"
+        :current-status="status"
+        @close="mostrarDropdown = false"
+        @update:status="reenviarActualizacionEstado"
+      />
     </div>
   </div>
 </template>
@@ -99,6 +109,8 @@ const metaDelEstado = computed(function () {
   return null;
 });
 
+// Devuelve la clase CSS del badge de Metacritic segun la nota.
+// Verde >=80, amarillo 50-79, rojo el resto.
 function claseMetacritic(score) {
   if (score >= 80) {
     return 'mc-green';
