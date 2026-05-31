@@ -123,7 +123,7 @@ def logros_del_juego(game_id):
 @content_overview_bp.route("/hero-video", methods=["GET"])
 @limiter.limit("30 per minute")
 def video_destacado():
-    # Ojo, este endpoint no lleva jwt_required porque el video se muestra
+    #este endpoint no lleva jwt_required porque el video se muestra
     # en el hero del Home antes de que el usuario inicie sesion
     try:
         video = obtener_video_aleatorio()

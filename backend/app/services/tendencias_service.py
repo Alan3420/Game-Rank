@@ -20,7 +20,7 @@ def _enriquecer_juego(id_juego, valor_estadistico, etiqueta_estadistica):
 
 
 def _enriquecer_lista(tareas):
-    # Lanzamos las llamadas a RAWG en hilos para no esperar una detras de otra,
+    # lanzamos las llamadas a RAWG en hilos para no esperar una detras de otra,
     # executor.map respeta el orden de la lista asi que el ranking se conserva
     if not tareas:
         return []
@@ -49,7 +49,10 @@ def obtener_tendencias():
     for fila in top_favoritos:
         id_juego = fila[0]
         total = fila[1]
-        etiqueta_singular = 'favorito' if total == 1 else 'favoritos'
+        if total == 1:
+            etiqueta_singular = 'favorito'
+        else:
+            etiqueta_singular = 'favoritos'
         etiqueta = f"{total} {etiqueta_singular}"
         tareas_favs.append((id_juego, float(total), etiqueta))
 
@@ -59,14 +62,17 @@ def obtener_tendencias():
         promedio = 0.0
         if fila[1]:
             promedio = float(fila[1])
-        etiqueta = f"{round(promedio, 1)} / 5 ★"
+        etiqueta = f"{round(promedio, 1)} / 5"
         tareas_valoradas.append((id_juego, promedio, etiqueta))
 
     tareas_comentados = []
     for fila in top_comentados:
         id_juego = fila[0]
         total = fila[1]
-        etiqueta_singular = 'reseña' if total == 1 else 'reseñas'
+        if total == 1:
+            etiqueta_singular = 'reseña'
+        else:
+            etiqueta_singular = 'reseñas'
         etiqueta = f"{total} {etiqueta_singular}"
         tareas_comentados.append((id_juego, float(total), etiqueta))
 
@@ -74,7 +80,10 @@ def obtener_tendencias():
     for fila in top_coleccion:
         id_juego = fila[0]
         total = fila[1]
-        etiqueta_singular = 'usuario' if total == 1 else 'usuarios'
+        if total == 1:
+            etiqueta_singular = 'usuario'
+        else:
+            etiqueta_singular = 'usuarios'
         etiqueta = f"{total} {etiqueta_singular}"
         tareas_coleccion.append((id_juego, float(total), etiqueta))
 

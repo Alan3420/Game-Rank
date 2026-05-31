@@ -153,9 +153,7 @@ export default {
             // recargar o al compartir el enlace
             var consulta = {};
             for (var clave in this.$route.query) {
-                if (Object.prototype.hasOwnProperty.call(this.$route.query, clave)) {
-                    consulta[clave] = this.$route.query[clave];
-                }
+                consulta[clave] = this.$route.query[clave];
             }
             if (pagina > 1) {
                 consulta.page = pagina;

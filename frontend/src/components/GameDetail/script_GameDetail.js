@@ -627,14 +627,14 @@ export default {
                 return;
             }
             var nuevoSet = new Set();
-            var tareas = this.juegosSaga.map(function(juego) {
-                return consultarSiEsFavorito(juego.id).then(function(data) {
+            for (var i = 0; i < this.juegosSaga.length; i++) {
+                try {
+                    var data = await consultarSiEsFavorito(this.juegosSaga[i].id);
                     if (data && data.is_favorite) {
-                        nuevoSet.add(juego.id);
+                        nuevoSet.add(this.juegosSaga[i].id);
                     }
-                }).catch(function() {});
-            });
-            await Promise.all(tareas);
+                } catch (e) {}
+            }
             this.sagaFavoritos = nuevoSet;
         },
 

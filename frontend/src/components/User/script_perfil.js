@@ -343,14 +343,10 @@ export default {
         // Si el juego ya estaba en coleccion lo actualizamos in-place.
         for (var i = 0; i < this.coleccion.length; i++) {
           if (this.coleccion[i].game.id === gameId) {
-            var copia = {};
-            for (var k in this.coleccion[i]) {
-              if (Object.prototype.hasOwnProperty.call(this.coleccion[i], k)) {
-                copia[k] = this.coleccion[i][k];
-              }
-            }
-            copia.status = status;
-            this.coleccion[i] = copia;
+            this.coleccion[i] = {
+              game: this.coleccion[i].game,
+              status: status
+            };
             break;
           }
         }

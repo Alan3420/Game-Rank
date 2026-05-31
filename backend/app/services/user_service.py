@@ -5,7 +5,7 @@ from app.models.User import User
 import re
 
 
-# Lista blanca de dominios de correo permitidos, replicada en el frontend
+# lista blanca de dominios de correo permitidos, replicada en el frontend
 DOMINIOS_PERMITIDOS = {
     "gmail.com", "hotmail.com", "hotmail.es",
     "outlook.com", "outlook.es",
@@ -191,7 +191,10 @@ def obtener_estadisticas_usuario(id_usuario):
     total_comentarios = contar_comentarios_por_usuario(id_usuario)
 
     comentarios = obtener_comentarios_por_usuario(id_usuario)
-    valores = [c.rating for c in comentarios if c.rating is not None]
+    valores = []
+    for c in comentarios:
+        if c.rating is not None:
+            valores.append(c.rating)
 
     rating_medio = None
     if valores:

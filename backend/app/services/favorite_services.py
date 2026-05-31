@@ -71,7 +71,11 @@ def obtener_favoritos_del_usuario(id_usuario) -> list:
 
 def listar_favoritos_con_status(id_usuario) -> list:
     favoritos = favorite_repo.obtener_favoritos_por_usuario(id_usuario=id_usuario)
-    return [f.to_dict() for f in favoritos if f.status]
+    resultado = []
+    for f in favoritos:
+        if f.status:
+            resultado.append(f.to_dict())
+    return resultado
 
 
 def listar_favoritos_completos(id_usuario) -> list:

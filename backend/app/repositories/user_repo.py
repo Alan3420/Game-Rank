@@ -60,13 +60,21 @@ def eliminar_usuario(id_usuario) -> bool:
     usuario = obtener_usuario_por_id(id_usuario)
 
     if usuario:
-        from app.models.Favorite import Favorite
         from app.models.Comment import Comment
-        from app.models.Rate import Rate
+        from app.models.AddFavorite import AddFavorite
+        from app.models.Favorite import Favorite
 
-        db.session.query(Favorite).filter(Favorite.user_id == id_usuario).delete()
+        fav_ids = []
+        for row in db.session.query(AddFavorite.fav_id).filter(AddFavorite.id_user == id_usuario).all():
+            fav_ids.append(row.fav_id)
+
         db.session.query(Comment).filter(Comment.id_user == id_usuario).delete()
-        db.session.query(Rate).filter(Rate.id_user == id_usuario).delete()
+        db.session.query(AddFavorite).filter(AddFavorite.id_user == id_usuario).delete()
+
+        if fav_ids:
+            db.session.query(Favorite).filter(
+                Favorite.fav_id.in_(fav_ids)
+            ).delete(synchronize_session='fetch')
 
         db.session.delete(usuario)
         db.session.commit()

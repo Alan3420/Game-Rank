@@ -44,9 +44,7 @@ export async function actualizarUsuario(idUsuario, datos) {
     var cuerpo = { id_user: idUsuario };
 
     for (var clave in datos) {
-        if (Object.prototype.hasOwnProperty.call(datos, clave)) {
-            cuerpo[clave] = datos[clave];
-        }
+        cuerpo[clave] = datos[clave];
     }
 
     const respuesta = await api.put("/settings/options", cuerpo);

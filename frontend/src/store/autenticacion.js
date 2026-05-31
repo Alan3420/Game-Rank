@@ -44,9 +44,7 @@ export const estadoAutenticacion = reactive({
         }
 
         for (var clave in datosNuevos) {
-            if (Object.prototype.hasOwnProperty.call(datosNuevos, clave)) {
-                this.usuario[clave] = datosNuevos[clave];
-            }
+            this.usuario[clave] = datosNuevos[clave];
         }
     }
 });

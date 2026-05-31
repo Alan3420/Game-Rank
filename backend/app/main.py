@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-# Cargamos el .env antes que nada, si no los modulos que vienen despues
+# cargamos el .env antes que nada, si no los modulos que vienen despues
 # no veran las variables (DB_URI, SECRET_KEY...)
 load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 
@@ -15,7 +15,7 @@ from app.database.db import db
 from app.database.seed import seed
 from app.limiter import limiter
 
-# Importamos los modelos aqui para que Alembic los detecte al migrar
+# importamos los modelos aqui para que Alembic los detecte al migrar
 from app.models.User import User
 from app.models.Comment import Comment
 from app.models.Favorite import Favorite

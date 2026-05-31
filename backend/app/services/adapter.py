@@ -18,7 +18,7 @@ PALABRAS_NSFW = {
 
 
 def nombre_es_nsfw(nombre) -> bool:
-    # Vamos palabra a palabra con \b\w+\b para no tener falsos positivos
+    # vamos palabra a palabra con \b\w+\b para no tener falsos positivos
     # del tipo "scuba" activando "cuba"
     if not nombre:
         return False
