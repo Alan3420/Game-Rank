@@ -62,8 +62,8 @@ api.interceptors.response.use(
                 // de login lo lea al cargar y avise al usuario
                 var avisoFlash = {
                     type: 'error',
-                    title: 'Sesión expirada',
-                    message: 'Tu sesión ha expirado. Vuelve a iniciar sesión.'
+                    title: 'Session expired',
+                    message: 'Your session has expired. Please sign in again.'
                 };
                 localStorage.setItem('flashNotificacion', JSON.stringify(avisoFlash));
 

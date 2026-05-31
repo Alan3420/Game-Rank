@@ -364,7 +364,7 @@
                   v-model="formularioEditar.nickname"
                   type="text"
                   class="form-input form-input--with-prefix"
-                  placeholder="tu_nickname"
+                  placeholder="your_nickname"
                   maxlength="30"
                   :disabled="guardandoEditar"
                 />

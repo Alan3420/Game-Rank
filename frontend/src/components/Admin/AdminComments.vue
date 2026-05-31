@@ -56,7 +56,7 @@
                   </div>
                 </td>
                 <td>
-                  <router-link :to="'/game/' + c.id_videogame" class="game-link" target="_blank">
+                  <router-link :to="'/game/' + c.id_game_api" class="game-link" target="_blank">
                     View game
                     <i class="pi pi-external-link" style="font-size:0.75rem"></i>
                   </router-link>

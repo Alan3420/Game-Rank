@@ -15,7 +15,7 @@
             type="email"
             id="email"
             v-model="email"
-            placeholder="tu@email.com"
+            placeholder="your@email.com"
             class="form-input"
             maxlength="100"
             required

@@ -61,7 +61,7 @@
             id="email"
             v-model="email"
             type="email"
-            placeholder="tu@gmail.com"
+            placeholder="your@gmail.com"
             class="form-input"
             :class="{ 'input-error': email && !emailDominioValido }"
             maxlength="100"

@@ -16,14 +16,14 @@ def obtener_comentario_por_id(id_comentario) -> Comment:
 
 
 def obtener_comentarios_por_juego(id_juego):
-    return Comment.query.filter_by(id_videogame=id_juego).all()
+    return Comment.query.filter_by(id_game_api=id_juego).all()
 
 
 def obtener_comentarios_por_juego_paginados(id_juego, limite, desplazamiento):
-    total = Comment.query.filter_by(id_videogame=id_juego).count()
+    total = Comment.query.filter_by(id_game_api=id_juego).count()
 
     comentarios = (Comment.query
-                   .filter_by(id_videogame=id_juego)
+                   .filter_by(id_game_api=id_juego)
                    .order_by(desc(Comment.date_of_comment), desc(Comment.id_comment))
                    .limit(limite)
                    .offset(desplazamiento)
@@ -40,7 +40,7 @@ def crear_comentario(descripcion, id_usuario, id_juego, rating):
     nuevo_comentario = Comment(
         description=descripcion,
         id_user=id_usuario,
-        id_videogame=id_juego,
+        id_game_api=id_juego,
         rating=rating
     )
     db.session.add(nuevo_comentario)
@@ -93,7 +93,7 @@ def eliminar_comentario(id_comentario, id_usuario, es_admin=False) -> bool:
 
 def obtener_promedio_por_juego(id_juego) -> float:
     resultado = (db.session.query(func.avg(Comment.rating))
-                 .filter(Comment.id_videogame == id_juego)
+                 .filter(Comment.id_game_api == id_juego)
                  .scalar())
     if resultado is None:
         return 0.0
@@ -102,8 +102,8 @@ def obtener_promedio_por_juego(id_juego) -> float:
 
 def obtener_top_comentados(limite):
     total = func.count(Comment.id_comment).label("total")
-    return (db.session.query(Comment.id_videogame, total)
-            .group_by(Comment.id_videogame)
+    return (db.session.query(Comment.id_game_api, total)
+            .group_by(Comment.id_game_api)
             .order_by(total.desc())
             .limit(limite)
             .all())
@@ -112,8 +112,8 @@ def obtener_top_comentados(limite):
 def obtener_top_valorados(limite):
     promedio = func.round(func.avg(Comment.rating), 1).label("avg_rating")
     votos = func.count(Comment.id_comment).label("votes")
-    return (db.session.query(Comment.id_videogame, promedio, votos)
-            .group_by(Comment.id_videogame)
+    return (db.session.query(Comment.id_game_api, promedio, votos)
+            .group_by(Comment.id_game_api)
             .having(func.count(Comment.id_comment) >= 1)
             .order_by(func.avg(Comment.rating).desc())
             .limit(limite)

@@ -8,7 +8,7 @@ class Comment(db.Model):
 
     id_comment = Column(Integer, primary_key=True, autoincrement=True)
     id_user = Column(Integer, ForeignKey("users.id_user", ondelete="CASCADE"), nullable=False)
-    id_videogame = Column(Integer, primary_key=True, nullable=False)
+    id_game_api = Column(Integer, nullable=False)
     description = Column(String(255), nullable=False)
     rating = Column(Integer, nullable=False)
     date_of_comment = Column(Date, nullable=False, default=date.today)
@@ -23,7 +23,7 @@ class Comment(db.Model):
             "id_user": self.id_user,
             "username": self.users_rl.name,
             "nickname": self.users_rl.nickname,
-            "id_videogame": self.id_videogame,
+            "id_game_api": self.id_game_api,
             "description": self.description,
             "rating": self.rating,
             "date_of_comment": str(self.date_of_comment),
