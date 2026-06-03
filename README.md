@@ -180,7 +180,7 @@ flask --app app.main db-seed
 **Paso 7 — Arrancar el servidor:**
 
 ```bash
-python app.main.py
+python -m app.main
 ```
 
 El backend queda disponible en `http://localhost:5000`.
