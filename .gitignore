@@ -3,3 +3,8 @@ __pycache__
 *.pyc
 *.pyo
 *.pyd
+
+# Tests y cobertura
+.coverage
+htmlcov/
+.pytest_cache/
