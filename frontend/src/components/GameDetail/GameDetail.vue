@@ -1,5 +1,5 @@
 <template>
-    <div class="game-detail-page">
+    <div class="game-detail-page card-world">
 
         <!-- Skeleton: misma estructura que la ficha (carta + columna) -->
         <div v-if="loading" class="gd-shell" aria-busy="true">
@@ -57,7 +57,7 @@
                 </button>
             </div>
 
-            <div class="gd-grid" :class="gameStatus && isFavorite ? `gd-frame--${gameStatus}` : ''">
+            <div class="gd-grid cw-frame" :class="gameStatus && isFavorite ? `cw-frame--${gameStatus}` : ''">
 
                 <!-- ── LA CARTA ── -->
                 <div class="gd-card-col">
@@ -424,28 +424,13 @@
             <section v-if="juegosSaga.length" class="gd-section" aria-labelledby="gd-series-title">
                 <h2 id="gd-series-title" class="gd-h2">More from this series</h2>
                 <ul class="gd-series">
-                    <li v-for="juego in juegosSaga" :key="juego.id" class="gd-mini">
-                        <router-link :to="'/game/' + juego.id" class="gd-mini__link">
-                            <span class="gd-mini__band">
-                                <span class="gd-mini__name" :title="juego.name">{{ juego.name }}</span>
-                                <span class="gd-mini__mc" :class="juego.metacritic ? claseMetacritic(juego.metacritic) : 'mc-na'">
-                                    <span class="sr-only">Metacritic</span>{{ juego.metacritic ?? '—' }}
-                                </span>
-                            </span>
-                            <span class="gd-mini__art">
-                                <GameImage :src="juego.imge_url" alt="" width="640" height="480" />
-                            </span>
-                            <span class="gd-mini__set">
-                                <span class="gd-card__number">No. {{ juego.id }}</span>
-                                <span>{{ juego.release_date ? juego.release_date.split('-')[0] : 'TBA' }}</span>
-                            </span>
-                        </router-link>
-                        <button type="button" class="gd-icon-btn gd-mini__fav"
-                            :aria-pressed="sagaFavoritos.has(juego.id)"
-                            :aria-label="(sagaFavoritos.has(juego.id) ? 'Remove ' : 'Add ') + juego.name + (sagaFavoritos.has(juego.id) ? ' from favorites' : ' to favorites')"
-                            @click="alternarFavoritoSaga(juego.id)">
-                            <i aria-hidden="true" :class="sagaFavoritos.has(juego.id) ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
-                        </button>
+                    <li v-for="juego in juegosSaga" :key="juego.id">
+                        <MiniCard
+                            :game="juego"
+                            :favorite="sagaFavoritos.has(juego.id)"
+                            show-favorite
+                            @toggle-favorite="alternarFavoritoSaga"
+                        />
                     </li>
                 </ul>
             </section>
@@ -480,20 +465,15 @@
 </template>
 
 <script>
-import '@fontsource/barlow/400.css';
-import '@fontsource/barlow/500.css';
-import '@fontsource/barlow/600.css';
-import '@fontsource/barlow/700.css';
-import '@fontsource/barlow-condensed/700.css';
-import '@fontsource/barlow-condensed/800.css';
 import jsDetalles from "./script_GameDetail.js";
 import Skeleton from '../Skeleton/Skeleton.vue';
 import GameImage from '../Image/GameImage.vue';
 import GameStatusDropdown from '../Cards/GameStatusDropdown.vue';
+import MiniCard from '../CardWorld/MiniCard.vue';
 
 export default {
     name: 'GameDetail',
-    components: { Skeleton, GameImage, GameStatusDropdown },
+    components: { Skeleton, GameImage, GameStatusDropdown, MiniCard },
     mixins: [jsDetalles],
 
     data() {

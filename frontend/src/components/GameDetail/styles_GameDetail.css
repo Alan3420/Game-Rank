@@ -4,80 +4,8 @@
    y lo decide el estado de coleccion del jugador.
 ───────────────────────────────────────── */
 
-.game-detail-page {
-    /* superficie */
-    --gd-ground: #EEF0F4;
-    --gd-face: #FFFFFF;
-    --gd-ink: #16141D;
-    --gd-ink-2: #4B4858;
-    --gd-ink-3: #64616F;
-    --gd-rule: #DCDFE7;
-    --gd-rule-strong: #C3C7D2;
-    --gd-raise: 0 1px 2px rgba(22, 20, 29, 0.06), 0 10px 28px rgba(22, 20, 29, 0.10);
-
-    /* marco de la carta: neutro o color del estado */
-    --gd-frame-neutral: #2A2733;
-    --gd-pending: #2563EB;
-    --gd-playing: #0E7A3F;
-    --gd-paused: #9A5B00;
-    --gd-completed: #6D3FD6;
-    --gd-on-frame: #FFFFFF;
-    --gd-on-frame-neutral: #FFFFFF;
-
-    --gd-star: #C98A00;
-    --gd-rare: #B45309;
-    --gd-uncommon: #2563EB;
-    --gd-common: #8A8796;
-
-    min-height: 100vh;
-    background: var(--gd-ground);
-    color: var(--gd-ink);
-    font-family: 'Barlow', system-ui, sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-[data-theme="dark"] .game-detail-page {
-    --gd-ground: #0E0F15;
-    --gd-face: #181922;
-    --gd-ink: #F1F0F6;
-    --gd-ink-2: #BCB9CA;
-    --gd-ink-3: #A09DB0;
-    --gd-rule: #2A2B38;
-    --gd-rule-strong: #3B3C4C;
-    --gd-raise: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.45);
-
-    --gd-frame-neutral: #4A4757;
-    --gd-pending: #7AA2FF;
-    --gd-playing: #3DD68C;
-    --gd-paused: #F2B544;
-    --gd-completed: #B096FF;
-    --gd-on-frame: #0E0F15;
-    /* el marco neutro oscuro necesita texto claro (AA) */
-    --gd-on-frame-neutral: #F1F0F6;
-
-    --gd-star: #F2B544;
-    --gd-rare: #F59E0B;
-    --gd-uncommon: #7AA2FF;
-    --gd-common: #8E8BA0;
-}
-
-/* style.css fija Sora en "*": aqui todo hereda Barlow salvo los iconos.
-   :where() deja la especificidad en la del contenedor para que las
-   reglas de abajo (Barlow Condensed) sigan ganando. */
-.game-detail-page :deep(:where(*:not(.pi))) {
-    font-family: inherit;
-}
-
-.game-detail-page :deep(*::selection) {
-    background: var(--gd-ink);
-    color: var(--gd-face);
-}
-
-.game-detail-page :deep(:focus-visible) {
-    outline: 2px solid var(--gd-pending);
-    outline-offset: 2px;
-}
+/* tokens, tipografia base, seleccion y foco: styles/card-world.css
+   (la raiz de la vista lleva la clase "card-world") */
 
 /* ── ESTRUCTURA ── */
 .gd-shell {
@@ -91,8 +19,6 @@
 }
 
 .gd-grid {
-    --gd-frame: var(--gd-frame-neutral);
-    --gd-on-frame-now: var(--gd-on-frame-neutral);
     display: grid;
     grid-template-columns: 380px minmax(0, 1fr);
     gap: 28px;
@@ -190,11 +116,6 @@
     transition: background-color 320ms var(--ease-out);
 }
 
-.gd-frame--pendiente { --gd-frame: var(--gd-pending); --gd-on-frame-now: var(--gd-on-frame); }
-.gd-frame--jugando { --gd-frame: var(--gd-playing); --gd-on-frame-now: var(--gd-on-frame); }
-.gd-frame--pausado { --gd-frame: var(--gd-paused); --gd-on-frame-now: var(--gd-on-frame); }
-.gd-frame--completado { --gd-frame: var(--gd-completed); --gd-on-frame-now: var(--gd-on-frame); }
-
 .gd-card--skeleton {
     --gd-frame: var(--gd-rule);
 }
@@ -254,9 +175,9 @@
     line-height: 1;
 }
 
-.gd-card__mc.mc-green { background: #157347; }
-.gd-card__mc.mc-yellow { background: #8C5A00; }
-.gd-card__mc.mc-red { background: #B3261E; }
+.gd-card__mc.mc-green { background: var(--gd-mc-green); }
+.gd-card__mc.mc-yellow { background: var(--gd-mc-yellow); }
+.gd-card__mc.mc-red { background: var(--gd-mc-red); }
 .gd-card__mc.mc-na {
     background: var(--gd-ground);
     color: var(--gd-ink-2);
@@ -480,7 +401,7 @@
     }
 
     .gd-icon-btn--danger:hover {
-        color: #B3261E;
+        color: var(--gd-danger);
     }
 }
 
@@ -1195,7 +1116,7 @@
     }
 }
 
-/* ── SAGA: cartas pequenas ── */
+/* ── SAGA (cartas pequenas: components/CardWorld/MiniCard.vue) ── */
 .gd-series {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -1203,112 +1124,6 @@
     margin: 0;
     padding: 0;
     list-style: none;
-}
-
-.gd-mini {
-    position: relative;
-    padding: 6px;
-    border-radius: 16px;
-    background: var(--gd-frame-neutral);
-    box-shadow: var(--gd-raise);
-    transition: transform 200ms var(--ease-out);
-}
-
-.gd-mini__link {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    height: 100%;
-    padding: 10px;
-    border-radius: 11px;
-    background: var(--gd-face);
-    color: var(--gd-ink);
-    text-decoration: none;
-}
-
-.gd-mini__band {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-    height: 2.35rem;
-}
-
-.gd-mini__name {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
-    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 800;
-    line-height: 1.05;
-    overflow-wrap: anywhere;
-}
-
-.gd-mini__mc {
-    flex-shrink: 0;
-    min-width: 30px;
-    padding: 2px 6px;
-    border-radius: 6px;
-    color: #FFFFFF;
-    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 800;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-}
-
-.gd-mini__mc.mc-green { background: #157347; }
-.gd-mini__mc.mc-yellow { background: #8C5A00; }
-.gd-mini__mc.mc-red { background: #B3261E; }
-.gd-mini__mc.mc-na {
-    background: var(--gd-ground);
-    color: var(--gd-ink-2);
-    border: 1px solid var(--gd-rule);
-}
-
-.gd-mini__art {
-    display: block;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    border-radius: 7px;
-    background: var(--gd-ground);
-}
-
-.gd-mini__art :deep(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.gd-mini__set {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding-right: 34px;
-    font-size: 0.8rem;
-    color: var(--gd-ink-3);
-    font-variant-numeric: tabular-nums;
-}
-
-.gd-mini__fav {
-    position: absolute;
-    right: 12px;
-    bottom: 10px;
-}
-
-.gd-mini__fav[aria-pressed="true"] {
-    color: var(--gd-ink);
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .gd-mini:hover {
-        transform: translateY(-3px);
-    }
 }
 
 /* ── ERROR ── */
@@ -1325,7 +1140,7 @@
 
 .gd-error .pi-exclamation-circle {
     font-size: 2.4rem;
-    color: #B3261E;
+    color: var(--gd-danger);
 }
 
 .gd-error h2 {
@@ -1432,29 +1247,6 @@
         gap: 10px;
     }
 
-    /* carta estrecha: el nombre ocupa toda la banda y la nota de
-       Metacritic pasa a la esquina de la portada */
-    .gd-mini__link {
-        position: relative;
-    }
-
-    .gd-mini__band {
-        display: block;
-        height: 3.35rem;
-    }
-
-    .gd-mini__name {
-        font-size: 1rem;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
-    }
-
-    .gd-mini__mc {
-        position: absolute;
-        top: calc(10px + 3.35rem + 8px + 6px);
-        right: 16px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    }
 
     .gd-copy__row {
         flex-direction: column;

@@ -35,7 +35,11 @@ export async function obtenerJuegosFiltrados(pagina, porPagina, filtros) {
     // El backend quiere el rango como "AAAA-MM-DD,AAAA-MM-DD", asi que si
     // el usuario solo marca un extremo del rango rellenamos el otro con
     // 1980 (minimo) o el 31 de diciembre del anio actual (maximo)
-    if (filtros.dateFrom || filtros.dateTo) {
+    // Rango exacto "AAAA-MM-DD,AAAA-MM-DD" (lo usa la Home para "lo mejor
+    // del año" y "novedades del mes"); tiene prioridad sobre los años
+    if (filtros.dates) {
+        parametros.dates = filtros.dates;
+    } else if (filtros.dateFrom || filtros.dateTo) {
         var anioActual = new Date().getFullYear();
         var fechaInicio = '';
         var fechaFin = '';

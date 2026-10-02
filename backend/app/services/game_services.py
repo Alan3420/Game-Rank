@@ -87,7 +87,15 @@ def obtener_video_aleatorio() -> dict | None:
                     datos_video = v.get("data") or {}
                     url_video = datos_video.get("max") or datos_video.get("480")
                     if url_video:
-                        return {"video_url": url_video}
+                        # Ademas del video devolvemos que juego es, para que
+                        # el Home pueda nombrarlo y enlazar su ficha
+                        return {
+                            "video_url": url_video,
+                            "id": id_juego,
+                            "name": juego.get("name"),
+                            "metacritic": juego.get("metacritic"),
+                            "imge_url": juego.get("background_image")
+                        }
 
             except Exception:
                 continue

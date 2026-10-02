@@ -1,0 +1,153 @@
+/* ─────────────────────────────────────────
+   MUNDO "CARTA COLECCIONABLE" · tokens compartidos
+   Lo usan todas las vistas migradas (ficha del juego, Home...). Cada
+   vista anade la clase "card-world" a su raiz: asi comparten paleta,
+   tipografia y semantica del marco (color de estado = propiedad).
+───────────────────────────────────────── */
+
+.card-world {
+    /* superficie */
+    --gd-ground: #EEF0F4;
+    --gd-face: #FFFFFF;
+    --gd-ink: #16141D;
+    --gd-ink-2: #4B4858;
+    --gd-ink-3: #64616F;
+    --gd-rule: #DCDFE7;
+    --gd-rule-strong: #C3C7D2;
+    --gd-raise: 0 1px 2px rgba(22, 20, 29, 0.06), 0 10px 28px rgba(22, 20, 29, 0.10);
+
+    /* marco de la carta: neutro o color del estado */
+    --gd-frame-neutral: #2A2733;
+    --gd-pending: #2563EB;
+    --gd-playing: #0E7A3F;
+    --gd-paused: #9A5B00;
+    --gd-completed: #6D3FD6;
+    --gd-on-frame: #FFFFFF;
+    --gd-on-frame-neutral: #FFFFFF;
+
+    --gd-star: #C98A00;
+    --gd-rare: #B45309;
+    --gd-uncommon: #2563EB;
+    --gd-common: #8A8796;
+    --gd-danger: #B3261E;
+
+    /* notas de Metacritic */
+    --gd-mc-green: #157347;
+    --gd-mc-yellow: #8C5A00;
+    --gd-mc-red: #B3261E;
+
+    min-height: 100vh;
+    background: var(--gd-ground);
+    color: var(--gd-ink);
+    font-family: 'Barlow', system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+[data-theme="dark"] .card-world {
+    --gd-ground: #0E0F15;
+    --gd-face: #181922;
+    --gd-ink: #F1F0F6;
+    --gd-ink-2: #BCB9CA;
+    --gd-ink-3: #A09DB0;
+    --gd-rule: #2A2B38;
+    --gd-rule-strong: #3B3C4C;
+    --gd-raise: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.45);
+
+    --gd-frame-neutral: #4A4757;
+    --gd-pending: #7AA2FF;
+    --gd-playing: #3DD68C;
+    --gd-paused: #F2B544;
+    --gd-completed: #B096FF;
+    --gd-on-frame: #0E0F15;
+    /* el marco neutro oscuro necesita texto claro (AA) */
+    --gd-on-frame-neutral: #F1F0F6;
+
+    --gd-star: #F2B544;
+    --gd-rare: #F59E0B;
+    --gd-uncommon: #7AA2FF;
+    --gd-common: #8E8BA0;
+    --gd-danger: #F07A72;
+}
+
+/* style.css fija Sora en "*": dentro del mundo todo hereda Barlow salvo
+   los iconos. :where() deja la especificidad en la del contenedor para
+   que las reglas de cada vista (Barlow Condensed) sigan ganando. */
+.card-world :where(*:not(.pi)) {
+    font-family: inherit;
+}
+
+.card-world *::selection {
+    background: var(--gd-ink);
+    color: var(--gd-face);
+}
+
+.card-world :focus-visible {
+    outline: 2px solid var(--gd-pending);
+    outline-offset: 2px;
+}
+
+/* marco por estado: se aplica a cualquier contenedor y lo heredan sus
+   cartas, sellos y paneles de propiedad */
+.card-world,
+.cw-frame {
+    --gd-frame: var(--gd-frame-neutral);
+    --gd-on-frame-now: var(--gd-on-frame-neutral);
+}
+
+.cw-frame--pendiente { --gd-frame: var(--gd-pending); --gd-on-frame-now: var(--gd-on-frame); }
+.cw-frame--jugando { --gd-frame: var(--gd-playing); --gd-on-frame-now: var(--gd-on-frame); }
+.cw-frame--pausado { --gd-frame: var(--gd-paused); --gd-on-frame-now: var(--gd-on-frame); }
+.cw-frame--completado { --gd-frame: var(--gd-completed); --gd-on-frame-now: var(--gd-on-frame); }
+
+/* titulo de seccion compartido por todas las vistas del mundo */
+.cw-h2 {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0 0 18px;
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--gd-ink);
+}
+
+.cw-count {
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gd-ink-3);
+    font-variant-numeric: tabular-nums;
+}
+
+/* sello de Metacritic */
+.cw-mc {
+    flex-shrink: 0;
+    min-width: 30px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    color: #FFFFFF;
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.3;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.cw-mc.mc-green { background: var(--gd-mc-green); }
+.cw-mc.mc-yellow { background: var(--gd-mc-yellow); }
+.cw-mc.mc-red { background: var(--gd-mc-red); }
+.cw-mc.mc-na {
+    background: var(--gd-ground);
+    color: var(--gd-ink-2);
+    border: 1px solid var(--gd-rule);
+}
+
+@media (max-width: 480px) {
+    .cw-h2 {
+        font-size: 1.65rem;
+    }
+}

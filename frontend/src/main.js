@@ -6,6 +6,13 @@ import { activable } from "./utils/activable.js";
 
 import 'primeicons/primeicons.css';
 import "./style.css";
+import "@fontsource/barlow/400.css";
+import "@fontsource/barlow/500.css";
+import "@fontsource/barlow/600.css";
+import "@fontsource/barlow/700.css";
+import "@fontsource/barlow-condensed/700.css";
+import "@fontsource/barlow-condensed/800.css";
+import "./styles/card-world.css";
 
 
 const app = createApp(App);
