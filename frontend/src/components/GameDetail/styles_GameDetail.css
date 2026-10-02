@@ -291,14 +291,21 @@
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(8px);
-    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: transform 160ms var(--ease-out), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     flex-shrink: 0;
 }
 
-.hero-fav-btn:hover {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.75);
-    transform: scale(1.06);
+.hero-fav-btn:active,
+.hero-fav-btn:hover:active {
+    transform: scale(0.95);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-fav-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.75);
+      transform: scale(1.06);
+  }
 }
 
 .hero-fav-btn.is-fav {
@@ -363,6 +370,25 @@
     bottom: calc(100% + 8px);
     right: 0;
     z-index: 300;
+    /* se abre hacia arriba desde el boton "Status", alineado a la derecha */
+    transform-origin: bottom right;
+}
+
+.gsd-enter-active {
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out);
+}
+
+.gsd-leave-active {
+  transition: opacity 100ms var(--ease-out);
+}
+
+.gsd-enter-from {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.gsd-leave-to {
+  opacity: 0;
 }
 
 @media (max-width: 600px) {
@@ -914,6 +940,34 @@
 .comments-list {
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+/* mas especificidad que .comment-item, que declara su propio transition.
+   publicar / borrar resena: entra deslizando 8px, sale con fundido y el
+   resto de la lista se recoloca sin salto */
+.comments-list > .comment-enter-active {
+    transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+
+.comments-list > .comment-leave-active {
+    transition: opacity 150ms var(--ease-out);
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+
+.comments-list > .comment-enter-from {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+.comments-list > .comment-leave-to {
+    opacity: 0;
+}
+
+.comments-list > .comment-move {
+    transition: transform 200ms var(--ease-out);
 }
 
 .comment-item {

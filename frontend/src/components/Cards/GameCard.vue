@@ -64,14 +64,16 @@
     </div>
 
     <!-- Dropdown de estado (fuera de card-image para no ser clipeado) -->
-    <div v-if="mostrarDropdown && canChangeStatus" class="card-status-dropdown-wrap">
-      <GameStatusDropdown
-        :game-id="game.id"
-        :current-status="status"
-        @close="mostrarDropdown = false"
-        @update:status="reenviarActualizacionEstado"
-      />
-    </div>
+    <Transition name="gsd">
+      <div v-if="mostrarDropdown && canChangeStatus" class="card-status-dropdown-wrap">
+        <GameStatusDropdown
+          :game-id="game.id"
+          :current-status="status"
+          @close="mostrarDropdown = false"
+          @update:status="reenviarActualizacionEstado"
+        />
+      </div>
+    </Transition>
   </div>
 </template>
 

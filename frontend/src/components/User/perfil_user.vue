@@ -361,212 +361,216 @@
       </div>
 
       <!-- Modal Editar Perfil -->
-      <div v-if="mostrarModalEditar" class="edit-modal-overlay" @click.self="cerrarModalEditar">
-        <div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-profile-title">
-          <div class="edit-modal-header">
-            <div class="edit-modal-title">
-              <div class="edit-modal-icon">
-                <i aria-hidden="true" class="pi pi-user-edit"></i>
+      <Transition name="modal">
+        <div v-if="mostrarModalEditar" class="edit-modal-overlay" @click.self="cerrarModalEditar">
+          <div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-profile-title">
+            <div class="edit-modal-header">
+              <div class="edit-modal-title">
+                <div class="edit-modal-icon">
+                  <i aria-hidden="true" class="pi pi-user-edit"></i>
+                </div>
+                <div>
+                  <h3 id="edit-profile-title">Edit profile</h3>
+                  <span>Update your personal information</span>
+                </div>
               </div>
-              <div>
-                <h3 id="edit-profile-title">Edit profile</h3>
-                <span>Update your personal information</span>
-              </div>
-            </div>
-            <button class="edit-modal-close" @click="cerrarModalEditar" aria-label="Close">
-              <i aria-hidden="true" class="pi pi-times"></i>
-            </button>
-          </div>
-
-          <div class="edit-modal-body">
-            <div class="form-group">
-              <label for="perfil-name" class="form-label">
-                <i aria-hidden="true" class="pi pi-id-card"></i>
-                First Name
-              </label>
-              <input
-                id="perfil-name"
-                name="name"
-                autocomplete="given-name"
-                v-model="formularioEditar.name"
-                type="text"
-                class="form-input"
-                placeholder="Enter your first name…"
-                maxlength="50"
-                :disabled="guardandoEditar"
-              />
+              <button class="edit-modal-close" @click="cerrarModalEditar" aria-label="Close">
+                <i aria-hidden="true" class="pi pi-times"></i>
+              </button>
             </div>
 
-            <div class="form-group">
-              <label for="perfil-last-name" class="form-label">
-                <i aria-hidden="true" class="pi pi-id-card"></i>
-                Last Name
-              </label>
-              <input
-                id="perfil-last-name"
-                name="last_name"
-                autocomplete="family-name"
-                v-model="formularioEditar.last_name"
-                type="text"
-                class="form-input"
-                placeholder="Enter your last name…"
-                maxlength="50"
-                :disabled="guardandoEditar"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="perfil-nickname" class="form-label">
-                <i aria-hidden="true" class="pi pi-tag"></i>
-                Nickname
-              </label>
-              <div class="input-prefix-wrap">
-                <span class="input-at-prefix">@</span>
+            <div class="edit-modal-body">
+              <div class="form-group">
+                <label for="perfil-name" class="form-label">
+                  <i aria-hidden="true" class="pi pi-id-card"></i>
+                  First Name
+                </label>
                 <input
-                id="perfil-nickname"
-                name="nickname"
-                autocomplete="username"
-                spellcheck="false"
-                  v-model="formularioEditar.nickname"
+                  id="perfil-name"
+                  name="name"
+                  autocomplete="given-name"
+                  v-model="formularioEditar.name"
                   type="text"
-                  class="form-input form-input--with-prefix"
-                  placeholder="your_nickname"
-                  maxlength="30"
+                  class="form-input"
+                  placeholder="Enter your first name…"
+                  maxlength="50"
                   :disabled="guardandoEditar"
                 />
               </div>
-              <span class="form-hint">
-                <i aria-hidden="true" class="pi pi-info-circle"></i>
-                3–30 characters: letters, numbers and underscores (_).
-              </span>
+
+              <div class="form-group">
+                <label for="perfil-last-name" class="form-label">
+                  <i aria-hidden="true" class="pi pi-id-card"></i>
+                  Last Name
+                </label>
+                <input
+                  id="perfil-last-name"
+                  name="last_name"
+                  autocomplete="family-name"
+                  v-model="formularioEditar.last_name"
+                  type="text"
+                  class="form-input"
+                  placeholder="Enter your last name…"
+                  maxlength="50"
+                  :disabled="guardandoEditar"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="perfil-nickname" class="form-label">
+                  <i aria-hidden="true" class="pi pi-tag"></i>
+                  Nickname
+                </label>
+                <div class="input-prefix-wrap">
+                  <span class="input-at-prefix">@</span>
+                  <input
+                  id="perfil-nickname"
+                  name="nickname"
+                  autocomplete="username"
+                  spellcheck="false"
+                    v-model="formularioEditar.nickname"
+                    type="text"
+                    class="form-input form-input--with-prefix"
+                    placeholder="your_nickname"
+                    maxlength="30"
+                    :disabled="guardandoEditar"
+                  />
+                </div>
+                <span class="form-hint">
+                  <i aria-hidden="true" class="pi pi-info-circle"></i>
+                  3–30 characters: letters, numbers and underscores (_).
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label for="perfil-email" class="form-label">
+                  <i aria-hidden="true" class="pi pi-envelope"></i>
+                  Email address
+                  <span class="form-badge-disabled">Not editable</span>
+                </label>
+                <input
+                  id="perfil-email"
+                  name="email"
+                  autocomplete="email"
+                  spellcheck="false"
+                  type="email"
+                  class="form-input is-disabled"
+                  :value="estadoAutenticacion.usuario?.email || 'Not provided'"
+                  disabled
+                />
+                <span class="form-hint">
+                  <i aria-hidden="true" class="pi pi-info-circle"></i>
+                  Email address cannot be modified.
+                </span>
+              </div>
+
+              <div v-if="errorEditar" class="error-alert">
+                <i aria-hidden="true" class="pi pi-exclamation-circle"></i>
+                {{ errorEditar }}
+              </div>
             </div>
 
-            <div class="form-group">
-              <label for="perfil-email" class="form-label">
-                <i aria-hidden="true" class="pi pi-envelope"></i>
-                Email address
-                <span class="form-badge-disabled">Not editable</span>
-              </label>
-              <input
-                id="perfil-email"
-                name="email"
-                autocomplete="email"
-                spellcheck="false"
-                type="email"
-                class="form-input is-disabled"
-                :value="estadoAutenticacion.usuario?.email || 'Not provided'"
-                disabled
-              />
-              <span class="form-hint">
-                <i aria-hidden="true" class="pi pi-info-circle"></i>
-                Email address cannot be modified.
-              </span>
+            <div class="edit-modal-footer">
+              <button class="btn-cancel" @click="cerrarModalEditar" :disabled="guardandoEditar">
+                Cancel
+              </button>
+              <button class="btn-save" @click="guardarCambiosPerfil" :disabled="guardandoEditar">
+                <i aria-hidden="true" v-if="!guardandoEditar" class="pi pi-check"></i>
+                <i aria-hidden="true" v-else class="pi pi-spin pi-spinner"></i>
+                {{ guardandoEditar ? 'Saving…' : 'Save changes' }}
+              </button>
             </div>
-
-            <div v-if="errorEditar" class="error-alert">
-              <i aria-hidden="true" class="pi pi-exclamation-circle"></i>
-              {{ errorEditar }}
-            </div>
-          </div>
-
-          <div class="edit-modal-footer">
-            <button class="btn-cancel" @click="cerrarModalEditar" :disabled="guardandoEditar">
-              Cancel
-            </button>
-            <button class="btn-save" @click="guardarCambiosPerfil" :disabled="guardandoEditar">
-              <i aria-hidden="true" v-if="!guardandoEditar" class="pi pi-check"></i>
-              <i aria-hidden="true" v-else class="pi pi-spin pi-spinner"></i>
-              {{ guardandoEditar ? 'Saving…' : 'Save changes' }}
-            </button>
           </div>
         </div>
-      </div>
+      </Transition>
 
       <!-- Modal Cambiar Contraseña -->
-      <div v-if="mostrarModalCambiarContraseña" class="edit-modal-overlay" @click.self="cerrarModalCambiarContraseña">
-        <div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="change-password-title">
-          <div class="edit-modal-header">
-            <div class="edit-modal-title">
-              <div class="edit-modal-icon" style="background: #6366f1; color: white;">
-                <i aria-hidden="true" class="pi pi-lock"></i>
+      <Transition name="modal">
+        <div v-if="mostrarModalCambiarContraseña" class="edit-modal-overlay" @click.self="cerrarModalCambiarContraseña">
+          <div class="edit-modal" role="dialog" aria-modal="true" aria-labelledby="change-password-title">
+            <div class="edit-modal-header">
+              <div class="edit-modal-title">
+                <div class="edit-modal-icon" style="background: #6366f1; color: white;">
+                  <i aria-hidden="true" class="pi pi-lock"></i>
+                </div>
+                <div>
+                  <h3 id="change-password-title">Change password</h3>
+                  <span>Update your password to keep your account secure</span>
+                </div>
               </div>
-              <div>
-                <h3 id="change-password-title">Change password</h3>
-                <span>Update your password to keep your account secure</span>
+              <button class="edit-modal-close" @click="cerrarModalCambiarContraseña" aria-label="Close">
+                <i aria-hidden="true" class="pi pi-times"></i>
+              </button>
+            </div>
+
+            <div class="edit-modal-body">
+              <div class="form-group">
+                <label for="pwd-actual" class="form-label">
+                  <i aria-hidden="true" class="pi pi-lock"></i>
+                  Current Password
+                </label>
+                <input
+                  id="pwd-actual"
+                  name="current_password"
+                  autocomplete="current-password"
+                  v-model="formularioCambiarContraseña.actual"
+                  type="password"
+                  class="form-input"
+                  placeholder="Enter your current password…"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="pwd-nueva" class="form-label">
+                  <i aria-hidden="true" class="pi pi-lock"></i>
+                  New Password
+                </label>
+                <input
+                  id="pwd-nueva"
+                  name="new_password"
+                  autocomplete="new-password"
+                  v-model="formularioCambiarContraseña.nueva"
+                  type="password"
+                  class="form-input"
+                  placeholder="At least 8 characters…"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="pwd-confirmar" class="form-label">
+                  <i aria-hidden="true" class="pi pi-lock"></i>
+                  Confirm Password
+                </label>
+                <input
+                  id="pwd-confirmar"
+                  name="confirm_password"
+                  autocomplete="new-password"
+                  v-model="formularioCambiarContraseña.confirmar"
+                  type="password"
+                  class="form-input"
+                  placeholder="Repeat your new password…"
+                />
+              </div>
+
+              <div v-if="errorCambiarContraseña" class="error-alert">
+                <i aria-hidden="true" class="pi pi-exclamation-circle"></i>
+                {{ errorCambiarContraseña }}
               </div>
             </div>
-            <button class="edit-modal-close" @click="cerrarModalCambiarContraseña" aria-label="Close">
-              <i aria-hidden="true" class="pi pi-times"></i>
-            </button>
-          </div>
 
-          <div class="edit-modal-body">
-            <div class="form-group">
-              <label for="pwd-actual" class="form-label">
-                <i aria-hidden="true" class="pi pi-lock"></i>
-                Current Password
-              </label>
-              <input
-                id="pwd-actual"
-                name="current_password"
-                autocomplete="current-password"
-                v-model="formularioCambiarContraseña.actual"
-                type="password"
-                class="form-input"
-                placeholder="Enter your current password…"
-              />
+            <div class="edit-modal-footer">
+              <button class="btn-cancel" @click="cerrarModalCambiarContraseña">
+                Cancel
+              </button>
+              <button class="btn-save" @click="guardarCambioContraseña" :disabled="cambiandoContraseña">
+                <i aria-hidden="true" v-if="!cambiandoContraseña" class="pi pi-check"></i>
+                <i aria-hidden="true" v-else class="pi pi-spin pi-spinner"></i>
+                {{ cambiandoContraseña ? 'Updating…' : 'Change password' }}
+              </button>
             </div>
-
-            <div class="form-group">
-              <label for="pwd-nueva" class="form-label">
-                <i aria-hidden="true" class="pi pi-lock"></i>
-                New Password
-              </label>
-              <input
-                id="pwd-nueva"
-                name="new_password"
-                autocomplete="new-password"
-                v-model="formularioCambiarContraseña.nueva"
-                type="password"
-                class="form-input"
-                placeholder="At least 8 characters…"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="pwd-confirmar" class="form-label">
-                <i aria-hidden="true" class="pi pi-lock"></i>
-                Confirm Password
-              </label>
-              <input
-                id="pwd-confirmar"
-                name="confirm_password"
-                autocomplete="new-password"
-                v-model="formularioCambiarContraseña.confirmar"
-                type="password"
-                class="form-input"
-                placeholder="Repeat your new password…"
-              />
-            </div>
-
-            <div v-if="errorCambiarContraseña" class="error-alert">
-              <i aria-hidden="true" class="pi pi-exclamation-circle"></i>
-              {{ errorCambiarContraseña }}
-            </div>
-          </div>
-
-          <div class="edit-modal-footer">
-            <button class="btn-cancel" @click="cerrarModalCambiarContraseña">
-              Cancel
-            </button>
-            <button class="btn-save" @click="guardarCambioContraseña" :disabled="cambiandoContraseña">
-              <i aria-hidden="true" v-if="!cambiandoContraseña" class="pi pi-check"></i>
-              <i aria-hidden="true" v-else class="pi pi-spin pi-spinner"></i>
-              {{ cambiandoContraseña ? 'Updating…' : 'Change password' }}
-            </button>
           </div>
         </div>
-      </div>
+      </Transition>
 
     </div>
 

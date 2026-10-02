@@ -719,12 +719,12 @@
 
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s var(--ease-out);
 }
 
 .modal-fade-enter-active .confirm-modal,
 .modal-fade-leave-active .confirm-modal {
-  transition: transform 0.2s ease;
+  transition: transform 0.2s var(--ease-out);
 }
 
 .modal-fade-enter-from,

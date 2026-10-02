@@ -279,3 +279,9 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .dots-loader span {
+    animation: none;
+    opacity: 0.6;
+  }
+}

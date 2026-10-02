@@ -164,14 +164,16 @@
                         </button>
 
                         <!-- Dropdown de estado -->
-                        <div v-if="showStatusModal && game" class="hero-status-dropdown-wrap">
-                            <GameStatusDropdown
-                                :game-id="game.id"
-                                :current-status="gameStatus"
-                                @close="showStatusModal = false"
-                                @update:status="manejarActualizacionEstado"
-                            />
-                        </div>
+                        <Transition name="gsd">
+                          <div v-if="showStatusModal && game" class="hero-status-dropdown-wrap">
+                              <GameStatusDropdown
+                                  :game-id="game.id"
+                                  :current-status="gameStatus"
+                                  @close="showStatusModal = false"
+                                  @update:status="manejarActualizacionEstado"
+                              />
+                          </div>
+                        </Transition>
                     </div>
                 </div>
             </section>
@@ -287,7 +289,7 @@
                         </div>
 
                         <!-- LISTA DE COMENTARIOS -->
-                        <div v-else class="comments-list">
+                        <TransitionGroup v-else tag="div" name="comment" class="comments-list">
                             <div v-for="comment in comments" :key="comment.id_comment" class="comment-item">
                                 <!-- Avatar -->
                                 <div class="comment-avatar">
@@ -325,7 +327,7 @@
                                     <p class="comment-body">{{ comment.description }}</p>
                                 </div>
                             </div>
-                        </div>
+                        </TransitionGroup>
 
                         <!-- CARGAR MÁS -->
                         <div v-if="hasMoreComments || loadingMore" class="load-more-wrap">
@@ -560,28 +562,30 @@
     </div>
 
     <!-- Modal aviso enlace externo -->
-    <div v-if="externalLink.open" class="ext-modal-overlay" @click.self="cancelarEnlaceExterno">
-        <div class="ext-modal" role="dialog" aria-modal="true">
-            <div class="ext-modal__icon">
-                <i aria-hidden="true" class="pi pi-external-link"></i>
-            </div>
-            <h2 class="ext-modal__title">Leaving GameRank</h2>
-            <p class="ext-modal__body">
-                You are about to visit <strong>{{ externalLink.storeName }}</strong>,
-                an external site not controlled by GameRank.
-                Do you want to continue?
-            </p>
-            <div class="ext-modal__actions">
-                <button class="ext-modal__btn ext-modal__btn--cancel" @click="cancelarEnlaceExterno">
-                    Cancel
-                </button>
-                <button class="ext-modal__btn ext-modal__btn--confirm" @click="confirmarEnlaceExterno">
-                    <i aria-hidden="true" class="pi pi-external-link"></i>
-                    Continue
-                </button>
-            </div>
-        </div>
-    </div>
+    <Transition name="modal">
+      <div v-if="externalLink.open" class="ext-modal-overlay" @click.self="cancelarEnlaceExterno">
+          <div class="ext-modal" role="dialog" aria-modal="true">
+              <div class="ext-modal__icon">
+                  <i aria-hidden="true" class="pi pi-external-link"></i>
+              </div>
+              <h2 class="ext-modal__title">Leaving GameRank</h2>
+              <p class="ext-modal__body">
+                  You are about to visit <strong>{{ externalLink.storeName }}</strong>,
+                  an external site not controlled by GameRank.
+                  Do you want to continue?
+              </p>
+              <div class="ext-modal__actions">
+                  <button class="ext-modal__btn ext-modal__btn--cancel" @click="cancelarEnlaceExterno">
+                      Cancel
+                  </button>
+                  <button class="ext-modal__btn ext-modal__btn--confirm" @click="confirmarEnlaceExterno">
+                      <i aria-hidden="true" class="pi pi-external-link"></i>
+                      Continue
+                  </button>
+              </div>
+          </div>
+      </div>
+    </Transition>
 </template>
 
 <script>

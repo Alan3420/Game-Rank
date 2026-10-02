@@ -96,6 +96,11 @@
   --neu-raised: 5px 5px 10px var(--neu-shadow-dark), -5px -5px 10px var(--neu-shadow-light);
   --neu-raised-sm: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
   --neu-pressed: inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light);
+
+  /* === MOTION === */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 [data-theme="dark"] {
@@ -272,13 +277,16 @@ input[type="search"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* fuera desplazamientos y escalados: las transiciones solo pueden
+     animar opacidad y color; transform cambia al instante */
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    transition-property: opacity, color, background-color, border-color, box-shadow !important;
   }
 }
 
@@ -311,6 +319,44 @@ main {
   background: var(--color-border-dark);
 }
 
+/* ── TRANSICION DE MODALES ──
+   entrada 220ms, salida 150ms: el sistema responde rapido al cerrar.
+   Los modales quedan centrados (transform-origin por defecto). */
+.modal-enter-active {
+  transition: opacity 220ms var(--ease-out);
+}
+
+.modal-leave-active {
+  transition: opacity 150ms var(--ease-out);
+}
+
+.modal-enter-active .ext-modal,
+.modal-enter-active .edit-modal {
+  transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
+}
+
+.modal-leave-active .ext-modal,
+.modal-leave-active .edit-modal {
+  transition: opacity 150ms var(--ease-out), transform 150ms var(--ease-out);
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .ext-modal,
+.modal-enter-from .edit-modal {
+  opacity: 0;
+  transform: translateY(8px) scale(0.97);
+}
+
+.modal-leave-to .ext-modal,
+.modal-leave-to .edit-modal {
+  opacity: 0;
+  transform: scale(0.97);
+}
+
 /* ── MODAL ENLACE EXTERNO ── */
 .ext-modal-overlay {
     position: fixed;
@@ -324,13 +370,8 @@ main {
     z-index: 2000;
     padding: 20px;
     overscroll-behavior: contain;
-    animation: extOverlayIn 0.2s ease;
 }
 
-@keyframes extOverlayIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
 
 .ext-modal {
     background: var(--color-surface);
@@ -345,13 +386,8 @@ main {
     align-items: center;
     text-align: center;
     gap: 1rem;
-    animation: extModalUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes extModalUp {
-    from { opacity: 0; transform: translateY(16px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-}
 
 .ext-modal__icon {
     width: 56px;
