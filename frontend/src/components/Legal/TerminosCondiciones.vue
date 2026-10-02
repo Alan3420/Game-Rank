@@ -5,7 +5,7 @@
     <div class="terminos-hero">
       <div class="terminos-hero-inner">
         <span class="terminos-eyebrow">
-          <i class="pi pi-shield"></i>
+          <i aria-hidden="true" class="pi pi-shield"></i>
           Legal
         </span>
         <h1>Terms and Conditions</h1>
@@ -151,7 +151,7 @@
             and may not be reproduced or distributed without express authorization.
           </p>
           <div class="terminos-attribution-note">
-            <i class="pi pi-database"></i>
+            <i aria-hidden="true" class="pi pi-database"></i>
             <div>
               <strong>Video game data provided by RAWG</strong>
               <span>Game Rank uses the RAWG API to obtain information about video games. RAWG is the owner
@@ -239,13 +239,13 @@
             you can contact us through the project repository on GitHub:
           </p>
           <a href="https://github.com/Alan3420" target="_blank" rel="noopener noreferrer" class="terminos-contact-link">
-            <i class="pi pi-github"></i>
+            <i aria-hidden="true" class="pi pi-github"></i>
             github.com/Alan3420
           </a>
         </section>
 
         <div class="terminos-footer-note">
-          <i class="pi pi-info-circle"></i>
+          <i aria-hidden="true" class="pi pi-info-circle"></i>
           These terms were drafted on May 15, 2026 and apply to all Game Rank users
           from that date.
         </div>

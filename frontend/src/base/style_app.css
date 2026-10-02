@@ -568,6 +568,7 @@
 
 /* ── MODAL CONFIRMACIÓN ── */
 .confirm-overlay {
+  overscroll-behavior: contain;
   position: fixed;
   inset: 0;
   background: rgba(15, 15, 30, 0.55);
@@ -685,7 +686,7 @@
   font-size: 0.9rem;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 }
 
 .confirm-btn-cancel {
@@ -936,4 +937,9 @@
 
 [data-theme="dark"] .confirm-input-group label {
   color: var(--color-text);
+}
+
+/* destino del skip link: recibe foco por programa, no es interactivo */
+.main-content:focus {
+  outline: none;
 }

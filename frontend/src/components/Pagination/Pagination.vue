@@ -6,7 +6,7 @@
             @click="cambiarPagina(currentPage - 1)"
             aria-label="Previous page"
         >
-            <i class="pi pi-chevron-left"></i>
+            <i aria-hidden="true" class="pi pi-chevron-left"></i>
         </button>
 
         <template v-for="(item, i) in paginasVisibles" :key="i">
@@ -25,7 +25,7 @@
             @click="cambiarPagina(currentPage + 1)"
             aria-label="Next page"
         >
-            <i class="pi pi-chevron-right"></i>
+            <i aria-hidden="true" class="pi pi-chevron-right"></i>
         </button>
     </div>
 </template>

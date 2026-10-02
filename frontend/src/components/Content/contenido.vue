@@ -3,7 +3,7 @@
     <div class="catalogo-header">
       <div class="catalogo-header-texto">
         <span class="catalogo-eyebrow">
-          <i class="pi pi-th-large"></i>
+          <i aria-hidden="true" class="pi pi-th-large"></i>
           Game Catalog
         </span>
         <h1>
@@ -26,10 +26,10 @@
           :class="{ 'is-active': filterPanelOpen }"
           @click="filterPanelOpen = !filterPanelOpen"
         >
-          <i class="pi pi-sliders-h"></i>
+          <i aria-hidden="true" class="pi pi-sliders-h"></i>
           <span>Filters</span>
           <span v-if="cantidadFiltrosActivos > 0" class="filter-badge">{{ cantidadFiltrosActivos }}</span>
-          <i class="pi" :class="filterPanelOpen ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+          <i aria-hidden="true" class="pi" :class="filterPanelOpen ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
         </button>
       </div>
     </div>
@@ -40,7 +40,7 @@
 
     <div v-if="estaFiltrando && !loading && games.length === 0" class="search-empty">
       <div class="search-empty-icon">
-        <i class="pi pi-search"></i>
+        <i aria-hidden="true" class="pi pi-search"></i>
       </div>
       <h2>No Results</h2>
       <p v-if="game_name">No games found matching "{{ game_name }}"{{ tieneFiltrosActivos ? ' with the applied filters' : '' }}.</p>

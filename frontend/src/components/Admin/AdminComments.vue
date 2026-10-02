@@ -4,11 +4,11 @@
     <div class="admin-topbar">
       <div class="topbar-content">
         <button class="back-btn" @click="volver">
-          <i class="pi pi-arrow-left"></i>
+          <i aria-hidden="true" class="pi pi-arrow-left"></i>
           Back
         </button>
         <div class="topbar-title">
-          <i class="pi pi-comments"></i>
+          <i aria-hidden="true" class="pi pi-comments"></i>
           <h1>Comment Moderation</h1>
         </div>
         <div class="topbar-stats">
@@ -24,8 +24,11 @@
           <div class="filter-group">
             <input
               v-model="filtro"
-              type="text"
-              placeholder="Search by user or game..."
+              type="search"
+              name="filtro_comentarios"
+              autocomplete="off"
+              aria-label="Search comments by user or game"
+              placeholder="Search by user or game…"
               class="search-input"
             />
           </div>
@@ -58,7 +61,7 @@
                 <td>
                   <router-link :to="'/game/' + c.id_game_api" class="game-link" target="_blank">
                     View game
-                    <i class="pi pi-external-link" style="font-size:0.75rem"></i>
+                    <i aria-hidden="true" class="pi pi-external-link" style="font-size:0.75rem"></i>
                   </router-link>
                 </td>
                 <td class="comment-text-cell">
@@ -70,8 +73,9 @@
                     class="action-btn delete-btn"
                     @click="eliminarComentario(c)"
                     title="Delete comment"
+                    :aria-label="'Delete comment by ' + c.username"
                   >
-                    <i class="pi pi-trash"></i>
+                    <i aria-hidden="true" class="pi pi-trash"></i>
                   </button>
                 </td>
               </tr>
@@ -80,7 +84,7 @@
         </div>
 
         <div v-else class="users-empty">
-          <div class="empty-icon"><i class="pi pi-comments"></i></div>
+          <div class="empty-icon"><i aria-hidden="true" class="pi pi-comments"></i></div>
           <p>No matching comments</p>
         </div>
       </div>

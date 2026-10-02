@@ -12,6 +12,8 @@
             <label for="name" class="form-label">First Name</label>
             <input
               id="name"
+              name="name"
+              autocomplete="given-name"
               v-model="name"
               type="text"
               placeholder="Your first name"
@@ -25,6 +27,8 @@
             <label for="last_name" class="form-label">Last Name</label>
             <input
               id="last_name"
+              name="last_name"
+              autocomplete="family-name"
               v-model="last_name"
               type="text"
               placeholder="Your last name"
@@ -41,6 +45,9 @@
             <span class="input-prefix">@</span>
             <input
               id="nickname"
+              name="nickname"
+              autocomplete="username"
+              spellcheck="false"
               v-model="nickname"
               type="text"
               placeholder="your_nickname"
@@ -59,6 +66,9 @@
           <label for="email" class="form-label">Email Address</label>
           <input
             id="email"
+            name="email"
+            autocomplete="email"
+            spellcheck="false"
             v-model="email"
             type="email"
             placeholder="your@gmail.com"
@@ -77,6 +87,8 @@
           <div class="input-wrap">
             <input
               id="password"
+              name="password"
+              autocomplete="new-password"
               v-model="password"
               :type="mostrarPassword ? 'text' : 'password'"
               placeholder="Minimum 8 characters"
@@ -84,8 +96,9 @@
               maxlength="50"
               required
             >
-            <button type="button" class="eye-btn" @click="mostrarPassword = !mostrarPassword" tabindex="-1">
-              <i class="pi" :class="mostrarPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+            <button type="button" class="eye-btn" @click="mostrarPassword = !mostrarPassword"
+              :aria-label="mostrarPassword ? 'Hide password' : 'Show password'" :aria-pressed="mostrarPassword">
+              <i aria-hidden="true" class="pi" :class="mostrarPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
             </button>
           </div>
         </div>
@@ -95,6 +108,8 @@
           <div class="input-wrap">
             <input
               id="confirmPassword"
+              name="confirm_password"
+              autocomplete="new-password"
               v-model="confirmPassword"
               :type="mostrarConfirmPassword ? 'text' : 'password'"
               placeholder="Repeat your password"
@@ -103,8 +118,9 @@
               maxlength="50"
               required
             >
-            <button type="button" class="eye-btn" @click="mostrarConfirmPassword = !mostrarConfirmPassword" tabindex="-1">
-              <i class="pi" :class="mostrarConfirmPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+            <button type="button" class="eye-btn" @click="mostrarConfirmPassword = !mostrarConfirmPassword"
+              :aria-label="mostrarConfirmPassword ? 'Hide password' : 'Show password'" :aria-pressed="mostrarConfirmPassword">
+              <i aria-hidden="true" class="pi" :class="mostrarConfirmPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
             </button>
           </div>
           <span v-if="confirmPassword && password !== confirmPassword" class="error-text">
@@ -130,7 +146,7 @@
         </button>
 
         <div v-if="errorMessage" class="error-message">
-          <i class="pi pi-exclamation-triangle"></i>
+          <i aria-hidden="true" class="pi pi-exclamation-triangle"></i>
           {{ errorMessage }}
         </div>
 

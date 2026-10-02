@@ -1,5 +1,5 @@
 <template>
-  <div class="game-card" :class="{ 'has-dropdown': mostrarDropdown }" :style="{ '--card-index': index }"
+  <div v-activable class="game-card" :class="{ 'has-dropdown': mostrarDropdown }" :aria-label="game.name" :style="{ '--card-index': index }"
     @click="manejarClicEnCard">
     <div class="card-image">
       <GameImage :src="game.imge_url" :alt="game.name" class="game-image" />
@@ -11,14 +11,16 @@
 
       <div class="card-actions-cluster">
         <button v-if="!removable" class="card-action-btn" :class="{ 'is-fav': isFavorite }"
-          @click.stop="$emit('action', game.id)" :title="isFavorite ? 'Remove from favorites' : 'Add to favorites'">
-          <i :class="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
+          @click.stop="$emit('action', game.id)" :title="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+          :aria-label="(isFavorite ? 'Remove ' : 'Add ') + game.name + (isFavorite ? ' from favorites' : ' to favorites')"
+          :aria-pressed="isFavorite">
+          <i aria-hidden="true" :class="isFavorite ? 'pi pi-heart-fill' : 'pi pi-heart'"></i>
         </button>
 
         <!-- Eliminar (modo removable) -->
         <button v-else class="card-action-btn card-action-btn--danger" @click.stop="$emit('action', game.id)"
-          title="Remove from favorites">
-          <i :class="isLoading ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
+          title="Remove from favorites" :aria-label="'Remove ' + game.name + ' from favorites'">
+          <i aria-hidden="true" :class="isLoading ? 'pi pi-spin pi-spinner' : 'pi pi-trash'"></i>
         </button>
 
         <!-- Boton de estado -->
@@ -29,15 +31,18 @@
           :style="status ? { color: metaDelEstado?.color } : {}"
           @click.stop="mostrarDropdown = !mostrarDropdown"
           title="Change game status"
+          :aria-label="'Change status of ' + game.name"
+          aria-haspopup="menu"
+          :aria-expanded="mostrarDropdown"
         >
-          <i :class="'pi ' + (status ? metaDelEstado?.icon : 'pi-bookmark')"></i>
+          <i aria-hidden="true" :class="'pi ' + (status ? metaDelEstado?.icon : 'pi-bookmark')"></i>
         </button>
       </div>
 
       <!-- Badge de estado (siempre visible si existe) -->
       <div v-if="status && canChangeStatus" class="status-badge"
         :style="{ background: metaDelEstado?.solidBg, color: metaDelEstado?.solidText }">
-        <i :class="'pi ' + metaDelEstado?.icon"></i>
+        <i aria-hidden="true" :class="'pi ' + metaDelEstado?.icon"></i>
         <span>{{ metaDelEstado?.label }}</span>
       </div>
     </div>
@@ -47,14 +52,14 @@
 
       <div class="game-info">
         <div class="info-item">
-          <i class="pi pi-calendar"></i>
+          <i aria-hidden="true" class="pi pi-calendar"></i>
           <span>{{ game.release_date }}</span>
         </div>
       </div>
 
       <div class="card-footer">
         <span class="view-detail">View details</span>
-        <i class="pi pi-arrow-right"></i>
+        <i aria-hidden="true" class="pi pi-arrow-right"></i>
       </div>
     </div>
 

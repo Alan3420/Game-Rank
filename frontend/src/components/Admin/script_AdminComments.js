@@ -3,6 +3,8 @@ import {
   eliminarComentario as eliminarComentarioEnBackend
 } from '../../services/comment_services';
 import { notificaciones } from '../../store/notificaciones';
+import { confirmacion } from '../../store/confirmacion';
+import { formatearFechaCorta } from '../../utils/formatoFecha.js';
 import { useRouter, useRoute } from 'vue-router';
 import { watchEffect } from 'vue';
 import { estadoAutenticacion } from '../../store/autenticacion';
@@ -106,7 +108,7 @@ export default {
         this.comentarios = data.comments;
       } catch (error) {
         console.error('Error al cargar comentarios:', error);
-        notificaciones.error("We couldn't load the comments.", { title: "Loading error" });
+        notificaciones.error("Comments didn't load. Reload the page to try again.", { title: "Loading error" });
       } finally {
         this.loading = false;
       }
@@ -114,7 +116,11 @@ export default {
 
     async eliminarComentario(comentario) {
 
-      var confirmar = confirm('Delete comment by ' + comentario.username + '?');
+      var confirmar = await confirmacion.pedir({
+        title: 'Delete comment?',
+        message: 'The comment by ' + comentario.username + ' will be removed permanently.',
+        confirmLabel: 'Delete comment'
+      });
       if (!confirmar) {
         return;
       }
@@ -134,20 +140,12 @@ export default {
 
       } catch (error) {
         console.error('Error al eliminar comentario:', error);
-        notificaciones.error("We couldn't delete the comment.", { title: "Error" });
+        notificaciones.error("Comment wasn't deleted. Check your connection and try again.", { title: "Error" });
       }
     },
 
     formatearFecha(valor) {
-
-      if (!valor) {
-        return '—';
-      }
-
-      var meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      var d = new Date(valor);
-
-      return d.getDate() + ' ' + meses[d.getMonth()] + ' ' + d.getFullYear();
+      return formatearFechaCorta(valor);
     },
 
     volver() {

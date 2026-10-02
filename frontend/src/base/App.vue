@@ -1,4 +1,6 @@
 <template>
+  <a href="#contenido" class="skip-link">Skip to content</a>
+
   <header class="main-header">
     <div class="header-container">
       <router-link to="/" class="logo-link">
@@ -6,19 +8,21 @@
           <source media="(max-width: 599px)" srcset="/src/assets/logo_GR.png" />
           <source media="(min-width: 600px) and (max-width: 640px)" srcset="/src/assets/game_rank_logo.png" />
           <source media="(max-width: 840px)" srcset="/src/assets/logo_GR.png" />
-          <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank Logo" />
+          <img id="logo" src="/src/assets/game_rank_logo.png" alt="Game Rank home" width="856" height="186" fetchpriority="high" />
         </picture>
       </router-link>
 
       <div v-if="estadoAutenticacion.usuario" class="header-search">
-        <i class="pi pi-search header-search-icon"></i>
-        <input type="text" v-model="headerSearch" placeholder="Search a game..." class="header-search-input"
+        <i aria-hidden="true" class="pi pi-search header-search-icon"></i>
+        <input type="search" name="q" autocomplete="off" aria-label="Search games" v-model="headerSearch"
+          placeholder="Search a game…" class="header-search-input"
           @keyup.enter="enviarBusquedaCabecera" />
       </div>
 
       <nav class="nav-menu">
-        <button class="theme-toggle" @click="cambiarTema" :title="tema === 'dark' ? 'Light mode' : 'Dark mode'">
-          <i class="pi" :class="tema === 'dark' ? 'pi-sun' : 'pi-moon'"></i>
+        <button class="theme-toggle" @click="cambiarTema" :title="tema === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+          :aria-label="tema === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
+          <i aria-hidden="true" class="pi" :class="tema === 'dark' ? 'pi-sun' : 'pi-moon'"></i>
         </button>
 
         <template v-if="estadoAutenticacion.cargando">
@@ -29,12 +33,12 @@
 
         <template v-else-if="estadoAutenticacion.usuario">
           <router-link to="/content/overview" class="header-catalog-link">
-            <i class="pi pi-th-large"></i>
+            <i aria-hidden="true" class="pi pi-th-large"></i>
             <span>Catalog</span>
           </router-link>
 
           <router-link to="/tendencias" class="header-catalog-link header-trends-link">
-            <i class="pi pi-chart-line"></i>
+            <i aria-hidden="true" class="pi pi-chart-line"></i>
             <span>Trends</span>
           </router-link>
 
@@ -44,7 +48,7 @@
                 {{ estadoAutenticacion.usuario.name?.charAt(0)?.toUpperCase() }}
               </div>
               <span class="user-btn-name">{{ estadoAutenticacion.usuario.name }}</span>
-              <i class="pi" :class="menuAbierto ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
+              <i aria-hidden="true" class="pi" :class="menuAbierto ? 'pi-chevron-up' : 'pi-chevron-down'"></i>
             </button>
 
             <Transition name="dropdown">
@@ -67,7 +71,7 @@
 
                 <router-link to="/" class="dropdown-item" @click="menuAbierto = false">
                   <div class="dropdown-item-icon">
-                    <i class="pi pi-home"></i>
+                    <i aria-hidden="true" class="pi pi-home"></i>
                   </div>
                   <div class="dropdown-item-text">
                     <span class="dropdown-item-title">Home</span>
@@ -77,7 +81,7 @@
 
                 <router-link to="/content/overview" class="dropdown-item" @click="menuAbierto = false">
                   <div class="dropdown-item-icon">
-                    <i class="pi pi-th-large"></i>
+                    <i aria-hidden="true" class="pi pi-th-large"></i>
                   </div>
                   <div class="dropdown-item-text">
                     <span class="dropdown-item-title">Catalog</span>
@@ -87,7 +91,7 @@
 
                 <router-link to="/tendencias" class="dropdown-item" @click="menuAbierto = false">
                   <div class="dropdown-item-icon">
-                    <i class="pi pi-chart-line"></i>
+                    <i aria-hidden="true" class="pi pi-chart-line"></i>
                   </div>
                   <div class="dropdown-item-text">
                     <span class="dropdown-item-title">Trends</span>
@@ -101,7 +105,7 @@
 
                 <router-link to="/user/profile" class="dropdown-item" @click="menuAbierto = false">
                   <div class="dropdown-item-icon">
-                    <i class="pi pi-id-card"></i>
+                    <i aria-hidden="true" class="pi pi-id-card"></i>
                   </div>
                   <div class="dropdown-item-text">
                     <span class="dropdown-item-title">Profile</span>
@@ -115,7 +119,7 @@
 
                 <router-link v-if="esAdministrador" to="/admin/users" class="dropdown-item" @click="menuAbierto = false">
                   <div class="dropdown-item-icon">
-                    <i class="pi pi-users"></i>
+                    <i aria-hidden="true" class="pi pi-users"></i>
                   </div>
                   <div class="dropdown-item-text">
                     <span class="dropdown-item-title">Manage Users</span>
@@ -125,7 +129,7 @@
 
                 <button v-if="esAdministrador" class="dropdown-item" @click="irAModeracion">
                   <div class="dropdown-item-icon">
-                    <i class="pi pi-comments"></i>
+                    <i aria-hidden="true" class="pi pi-comments"></i>
                   </div>
                   <div class="dropdown-item-text">
                     <span class="dropdown-item-title">Moderation</span>
@@ -139,7 +143,7 @@
 
                 <button class="dropdown-item dropdown-danger" @click="abrirConfirmEliminar">
                   <div class="dropdown-item-icon dropdown-danger-icon">
-                    <i class="pi pi-trash"></i>
+                    <i aria-hidden="true" class="pi pi-trash"></i>
                   </div>
                   <div class="dropdown-item-text">
                     <span class="dropdown-item-title">Delete account</span>
@@ -151,7 +155,7 @@
 
                 <button class="dropdown-item dropdown-logout" @click="manejarCierreSesion">
                   <div class="dropdown-item-icon dropdown-logout-icon">
-                    <i class="pi pi-sign-out"></i>
+                    <i aria-hidden="true" class="pi pi-sign-out"></i>
                   </div>
                   <span class="dropdown-item-title">Sign out</span>
                 </button>
@@ -162,11 +166,11 @@
 
         <template v-else>
           <router-link to="/login" class="nav-link">
-            <i class="pi pi-sign-in"></i>
+            <i aria-hidden="true" class="pi pi-sign-in"></i>
             <span class="btn-text">Sign in</span>
           </router-link>
           <router-link to="/register" class="nav-link nav-link-primary">
-            <i class="pi pi-user-plus"></i>
+            <i aria-hidden="true" class="pi pi-user-plus"></i>
             <span class="btn-text">Sign up</span>
           </router-link>
         </template>
@@ -174,25 +178,27 @@
     </div>
   </header>
 
-  <main class="main-content">
+  <main id="contenido" class="main-content" tabindex="-1">
     <RouterView />
   </main>
 
   <NotificationToast />
+  <ConfirmDialog />
 
   <Transition name="modal-fade">
     <div v-if="confirmEliminarAbierto" class="confirm-overlay" @click.self="cerrarConfirmEliminar">
-      <div class="confirm-modal">
+      <div class="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-account-title">
         <div class="confirm-icon-wrap">
-          <i class="pi pi-exclamation-triangle"></i>
+          <i aria-hidden="true" class="pi pi-exclamation-triangle"></i>
         </div>
-        <h2>Delete your account?</h2>
+        <h2 id="delete-account-title">Delete your account?</h2>
         <p>This action is <strong>permanent</strong>. All your comments, ratings and favorites will be deleted. You will
           not be able to recover your account.</p>
 
         <div class="confirm-input-group">
-          <label>Type <strong>DELETE</strong> to confirm:</label>
-          <input type="text" v-model="confirmTexto" class="confirm-input" placeholder="DELETE"
+          <label for="confirm-delete">Type <strong>DELETE</strong> to confirm:</label>
+          <input id="confirm-delete" name="confirm_delete" type="text" autocomplete="off" spellcheck="false"
+            v-model="confirmTexto" class="confirm-input" placeholder="DELETE"
             :disabled="eliminandoCuenta" />
         </div>
 
@@ -202,9 +208,9 @@
           </button>
           <button class="confirm-btn confirm-btn-delete" @click="confirmarEliminarCuenta"
             :disabled="confirmTexto !== 'DELETE' || eliminandoCuenta">
-            <i v-if="eliminandoCuenta" class="pi pi-spin pi-spinner"></i>
-            <i v-else class="pi pi-trash"></i>
-            {{ eliminandoCuenta ? 'Deleting...' : 'Delete account' }}
+            <i aria-hidden="true" v-if="eliminandoCuenta" class="pi pi-spin pi-spinner"></i>
+            <i aria-hidden="true" v-else class="pi pi-trash"></i>
+            {{ eliminandoCuenta ? 'Deleting…' : 'Delete account' }}
           </button>
         </div>
       </div>
@@ -240,14 +246,14 @@
         <div class="footer-author">
           <span class="footer-label">Created by</span>
           <a href="https://github.com/Alan3420" target="_blank" class="footer-author-link">
-            <i class="pi pi-github"></i>
+            <i aria-hidden="true" class="pi pi-github"></i>
             Alan Novas Mateo
           </a>
         </div>
         <div class="footer-powered">
           <span class="footer-label">Powered by</span>
           <a href="https://rawg.io" target="_blank" class="footer-link">
-            <i class="pi pi-external-link"></i>
+            <i aria-hidden="true" class="pi pi-external-link"></i>
             RAWG
           </a>
         </div>
@@ -264,10 +270,11 @@
 import jsApp from "./script_app.js";
 import NotificationToast from '../components/Notifications/NotificationToast.vue';
 import Skeleton from '../components/Skeleton/Skeleton.vue';
+import ConfirmDialog from '../components/Confirm/ConfirmDialog.vue';
 
 export default {
   name: 'App',
-  components: { NotificationToast, Skeleton },
+  components: { NotificationToast, Skeleton, ConfirmDialog },
   mixins: [jsApp]
 };
 </script>

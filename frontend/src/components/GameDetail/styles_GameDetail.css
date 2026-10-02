@@ -175,6 +175,7 @@
 
 /* ── METACRITIC BADGE ── */
 .mc-badge {
+  font-variant-numeric: tabular-nums;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -861,6 +862,7 @@
 }
 
 .comment-count {
+  font-variant-numeric: tabular-nums;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1287,7 +1289,7 @@
     font-weight: 600;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 }
 
 .comment-submit-btn i {
@@ -1758,7 +1760,7 @@
     padding: 0.6rem 1.25rem;
     font-size: 0.88rem;
     font-weight: 600;
-    transition: all 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
     gap: 0.4rem;
 }
 

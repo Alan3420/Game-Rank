@@ -137,7 +137,7 @@ export default {
           });
 
         } else {
-          notificaciones.error("There was a problem creating your account. Please try again later.", {
+          notificaciones.error("Account wasn't created. Check your details and try again in a few minutes.", {
             title: "Registration error"
           });
         }

@@ -168,6 +168,7 @@
 }
 
 .stat-card__value {
+  font-variant-numeric: tabular-nums;
   font-size: 1.4rem;
   font-weight: 800;
   line-height: 1;
@@ -338,7 +339,7 @@
   font-size: 0.875rem;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 }
 
 .btn-edit:hover {
@@ -387,7 +388,7 @@
   cursor: pointer;
   width: 100%;
   text-align: left;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
   border-bottom: 1px solid var(--color-border-lightest);
 }
 
@@ -434,7 +435,7 @@
 
 .dropdown-edit-enter-active,
 .dropdown-edit-leave-active {
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 }
 
 .dropdown-edit-enter-from {
@@ -583,6 +584,7 @@
 }
 
 .fav-count {
+  font-variant-numeric: tabular-nums;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -644,7 +646,7 @@
   font-size: 0.9rem;
   font-weight: 700;
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
   box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
 }
 
@@ -664,6 +666,7 @@
 
 /* ── EDIT MODAL ── */
 .edit-modal-overlay {
+  overscroll-behavior: contain;
   position: fixed;
   inset: 0;
   background: rgba(15, 15, 30, 0.55);
@@ -758,7 +761,7 @@
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
   flex-shrink: 0;
 }
 
@@ -868,7 +871,7 @@
   font-size: 0.875rem;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
   font-family: inherit;
 }
 
@@ -890,7 +893,7 @@
   font-size: 0.875rem;
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease, opacity 0.25s ease;
   box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
   font-family: inherit;
 }
@@ -1033,7 +1036,7 @@
   border: 1.5px solid var(--color-border-light);
   border-radius: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
   font-size: 1rem;
   position: relative;
   overflow: hidden;
@@ -1193,6 +1196,7 @@
 }
 
 .coleccion-count {
+  font-variant-numeric: tabular-nums;
   background: var(--color-primary-light);
   color: var(--color-primary);
   font-size: 0.72rem;
@@ -1219,7 +1223,7 @@
   font-size: 0.76rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
   font-family: 'Sora', sans-serif;
 }
 
@@ -1346,7 +1350,7 @@
   font-size: 0.8rem;
   font-weight: 700;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
 }
 
 .coleccion-explore-link:hover {

@@ -35,6 +35,16 @@ export default {
 
   methods: {
 
+    // Ademas del atributo actualizamos theme-color para que la barra del
+    // navegador movil coincida con el fondo del tema
+    aplicarTema() {
+      document.documentElement.setAttribute('data-theme', this.tema);
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) {
+        meta.setAttribute('content', this.tema === 'dark' ? '#0F1115' : '#f1f5f9');
+      }
+    },
+
     cambiarTema() {
       if (this.tema === 'light') {
         this.tema = 'dark';
@@ -42,7 +52,7 @@ export default {
         this.tema = 'light';
       }
 
-      document.documentElement.setAttribute('data-theme', this.tema);
+      this.aplicarTema();
       localStorage.setItem('tema', this.tema);
     },
 
@@ -111,7 +121,7 @@ export default {
 
         console.error('Error al eliminar la cuenta:', error);
 
-        var mensaje = "We couldn't delete your account. Please try again.";
+        var mensaje = "Account wasn't deleted. Check your connection and try again.";
         if (error.response && error.response.data && error.response.data.message) {
           mensaje = error.response.data.message;
         }
@@ -145,7 +155,7 @@ export default {
 
     // Aplicamos el tema enseguida para no tener un flashazo de tema claro
     // si el usuario tenia el oscuro guardado
-    document.documentElement.setAttribute('data-theme', this.tema);
+    this.aplicarTema();
 
     document.addEventListener('mousedown', this.manejarClicFuera);
 

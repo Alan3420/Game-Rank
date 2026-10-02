@@ -51,7 +51,7 @@ export default {
       this.tendencias = await obtenerTendencias();
     } catch (error) {
       console.error('Error cargando tendencias:', error);
-      this.error = "We couldn't load the trends. Please try again later.";
+      this.error = "Trends didn't load. Reload the page to try again.";
     } finally {
       this.loading = false;
     }

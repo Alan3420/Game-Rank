@@ -3,11 +3,11 @@
     <div class="admin-topbar">
       <div class="topbar-content">
         <button class="back-btn" @click="volver">
-          <i class="pi pi-arrow-left"></i>
+          <i aria-hidden="true" class="pi pi-arrow-left"></i>
           Back
         </button>
         <div class="topbar-title">
-          <i class="pi pi-users"></i>
+          <i aria-hidden="true" class="pi pi-users"></i>
           <h1>User Management</h1>
         </div>
         <div class="topbar-stats">
@@ -23,8 +23,11 @@
           <div class="filter-group">
             <input
               v-model="filtro"
-              type="text"
-              placeholder="Search by name or email..."
+              type="search"
+              name="filtro_usuarios"
+              autocomplete="off"
+              aria-label="Search users by name or email"
+              placeholder="Search by name or email…"
               class="search-input"
             />
           </div>
@@ -67,23 +70,26 @@
                     class="action-btn promote-btn"
                     @click="promoverAdmin(usuario)"
                     title="Promote to admin"
+                    :aria-label="'Promote ' + usuario.name + ' to admin'"
                   >
-                    <i class="pi pi-arrow-up"></i>
+                    <i aria-hidden="true" class="pi pi-arrow-up"></i>
                   </button>
                   <button
                     v-else
                     class="action-btn demote-btn"
                     @click="degradarAdmin(usuario)"
                     title="Demote to user"
+                    :aria-label="'Demote ' + usuario.name + ' to user'"
                   >
-                    <i class="pi pi-arrow-down"></i>
+                    <i aria-hidden="true" class="pi pi-arrow-down"></i>
                   </button>
                   <button
                     class="action-btn delete-btn"
                     @click="eliminarUsuario(usuario)"
                     title="Delete user"
+                    :aria-label="'Delete ' + usuario.name"
                   >
-                    <i class="pi pi-trash"></i>
+                    <i aria-hidden="true" class="pi pi-trash"></i>
                   </button>
                 </td>
               </tr>
@@ -93,7 +99,7 @@
 
         <div v-else-if="!loading" class="users-empty">
           <div class="empty-icon">
-            <i class="pi pi-users"></i>
+            <i aria-hidden="true" class="pi pi-users"></i>
           </div>
           <p>No users match the search</p>
         </div>

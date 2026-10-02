@@ -14,6 +14,9 @@
           <input
             type="email"
             id="email"
+            name="email"
+            autocomplete="email"
+            spellcheck="false"
             v-model="email"
             placeholder="your@email.com"
             class="form-input"
@@ -30,14 +33,17 @@
             <input
               :type="mostrarPassword ? 'text' : 'password'"
               id="passwd"
+              name="password"
+              autocomplete="current-password"
               v-model="password"
               placeholder="Your password"
               class="form-input"
               maxlength="50"
               required
             >
-            <button type="button" class="eye-btn" @click="mostrarPassword = !mostrarPassword" tabindex="-1">
-              <i class="pi" :class="mostrarPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+            <button type="button" class="eye-btn" @click="mostrarPassword = !mostrarPassword"
+              :aria-label="mostrarPassword ? 'Hide password' : 'Show password'" :aria-pressed="mostrarPassword">
+              <i aria-hidden="true" class="pi" :class="mostrarPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
             </button>
           </div>
         </div>
@@ -52,7 +58,7 @@
         </button>
 
         <div v-if="errorMessage" class="error-message">
-          <i class="pi pi-exclamation-triangle"></i>
+          <i aria-hidden="true" class="pi pi-exclamation-triangle"></i>
           {{ errorMessage }}
         </div>
 

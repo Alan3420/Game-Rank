@@ -72,7 +72,7 @@ export default {
           });
 
         } else {
-          notificaciones.error("We couldn't connect to the server. Please try again later.", {
+          notificaciones.error("Server unreachable. Check your connection and try again in a few minutes.", {
             title: "Connection error"
           });
         }

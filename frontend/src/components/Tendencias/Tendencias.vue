@@ -4,7 +4,7 @@
     <!-- Cabecera -->
     <div class="tendencias-header">
       <span class="tendencias-eyebrow">
-        <i class="pi pi-chart-line"></i>
+        <i aria-hidden="true" class="pi pi-chart-line"></i>
         Community
       </span>
       <h1>Trends</h1>
@@ -33,7 +33,7 @@
 
     <!-- Error -->
     <div v-else-if="error" class="tendencias-error">
-      <i class="pi pi-exclamation-circle"></i>
+      <i aria-hidden="true" class="pi pi-exclamation-circle"></i>
       <span>{{ error }}</span>
     </div>
 
@@ -47,7 +47,7 @@
           class="tab-btn"
           @click="desplazarASeccion(seccion.key)"
         >
-          <i class="pi" :class="seccion.icono"></i>
+          <i aria-hidden="true" class="pi" :class="seccion.icono"></i>
           {{ seccion.label }}
         </button>
       </div>
@@ -60,7 +60,7 @@
         class="tendencias-seccion"
       >
         <div class="seccion-header">
-          <i class="pi seccion-header__icono" :class="seccion.icono"></i>
+          <i aria-hidden="true" class="pi seccion-header__icono" :class="seccion.icono"></i>
           <div>
             <h2 class="seccion-header__titulo">{{ seccion.titulo }}</h2>
             <p class="seccion-subtitulo">{{ seccion.subtitulo }}</p>
@@ -75,18 +75,23 @@
           <div
             v-for="game in tendencias[seccion.key]"
             :key="game.id"
+            v-activable
             class="trend-card"
+            :aria-label="game.name"
             @click="irAJuego(game.id)"
           >
             <img
               v-if="game.imge_url"
               class="trend-card__img"
               :src="game.imge_url"
-              :alt="game.name"
+              alt=""
+              width="640"
+              height="360"
               loading="lazy"
+              decoding="async"
             />
             <div v-else class="trend-card__placeholder">
-              <i class="pi pi-image"></i>
+              <i aria-hidden="true" class="pi pi-image"></i>
             </div>
 
             <div class="trend-card__overlay"></div>

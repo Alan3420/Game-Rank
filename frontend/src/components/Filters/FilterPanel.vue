@@ -12,7 +12,7 @@
             :class="{ 'is-active': ordenLocal === opt.value }"
             @click="alternarOrden(opt.value)"
           >
-            <i class="pi" :class="opt.icon"></i>
+            <i aria-hidden="true" class="pi" :class="opt.icon"></i>
             {{ opt.label }}
           </button>
         </div>
@@ -43,7 +43,7 @@
             :class="{ 'is-active': plataformasLocales.includes(plat.value) }"
             @click="alternarPlataforma(plat.value)"
           >
-            <i v-if="plat.icon" class="pi" :class="plat.icon"></i>
+            <i aria-hidden="true" v-if="plat.icon" class="pi" :class="plat.icon"></i>
             {{ plat.label }}
           </button>
         </div>
@@ -53,9 +53,13 @@
         <p class="filter-section-title">Release Year</p>
         <div class="filter-year-range">
           <div class="filter-year-input">
-            <label>From</label>
+            <label for="filtro-anio-desde">From</label>
             <input
+              id="filtro-anio-desde"
+              name="year_from"
               type="number"
+              inputmode="numeric"
+              autocomplete="off"
               v-model.number="fechaDesdeLocal"
               min="1980"
               :max="anioActual"
@@ -64,9 +68,13 @@
           </div>
           <div class="filter-year-sep">—</div>
           <div class="filter-year-input">
-            <label>To</label>
+            <label for="filtro-anio-hasta">To</label>
             <input
+              id="filtro-anio-hasta"
+              name="year_to"
               type="number"
+              inputmode="numeric"
+              autocomplete="off"
               v-model.number="fechaHastaLocal"
               min="1980"
               :max="anioActual"
@@ -78,11 +86,11 @@
 
       <div class="filter-actions">
         <button class="filter-btn-clear" @click="manejarLimpiar">
-          <i class="pi pi-times"></i>
+          <i aria-hidden="true" class="pi pi-times"></i>
           Clear filters
         </button>
         <button class="filter-btn-apply" @click="manejarAplicar">
-          <i class="pi pi-check"></i>
+          <i aria-hidden="true" class="pi pi-check"></i>
           Apply filters
         </button>
       </div>

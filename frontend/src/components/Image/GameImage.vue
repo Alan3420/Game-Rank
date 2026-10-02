@@ -3,6 +3,11 @@
     :src="imagenActual"
     :alt="alt"
     :class="imageClass"
+    :width="width"
+    :height="height"
+    :loading="eager ? 'eager' : 'lazy'"
+    :fetchpriority="eager ? 'high' : null"
+    decoding="async"
     @error="cuandoFallaLaImagen"
   />
 </template>
@@ -28,6 +33,21 @@ export default {
     imageClass: {
       type: String,
       default: ''
+    },
+    // Dimensiones intrinsecas para reservar el hueco y evitar saltos de
+    // layout (CLS). El tamano real lo sigue mandando el CSS.
+    width: {
+      type: [Number, String],
+      default: 640
+    },
+    height: {
+      type: [Number, String],
+      default: 360
+    },
+    // Imagenes visibles al cargar (hero del detalle): sin lazy y con prioridad
+    eager: {
+      type: Boolean,
+      default: false
     }
   },
 

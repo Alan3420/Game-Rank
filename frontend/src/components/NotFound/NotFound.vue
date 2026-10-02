@@ -3,7 +3,7 @@
     <div class="notfound-card">
       <div class="notfound-code">404</div>
       <div class="notfound-icon">
-        <i class="pi pi-map"></i>
+        <i aria-hidden="true" class="pi pi-map"></i>
       </div>
       <h1 class="notfound-title">Page Not Found</h1>
       <p class="notfound-description">
@@ -13,11 +13,11 @@
       <span class="notfound-path">{{ ruta }}</span>
       <div class="notfound-actions">
         <button class="notfound-btn notfound-btn--primary" @click="irAlInicio">
-          <i class="pi pi-home"></i>
+          <i aria-hidden="true" class="pi pi-home"></i>
           Go home
         </button>
         <button class="notfound-btn notfound-btn--secondary" @click="volver">
-          <i class="pi pi-arrow-left"></i>
+          <i aria-hidden="true" class="pi pi-arrow-left"></i>
           Go back
         </button>
       </div>

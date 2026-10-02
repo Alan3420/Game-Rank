@@ -10,7 +10,7 @@
                 :disabled="loading"
             >
                 <span>{{ STATUS_META[key].label }}</span>
-                <i v-if="currentStatus === key" class="pi pi-check gsd-check"></i>
+                <i aria-hidden="true" v-if="currentStatus === key" class="pi pi-check gsd-check"></i>
             </button>
         </div>
 
@@ -22,7 +22,7 @@
             @click.stop="manejarEliminacionEstado"
             :disabled="loading"
         >
-            <i v-if="loading" class="pi pi-spin pi-spinner"></i>
+            <i aria-hidden="true" v-if="loading" class="pi pi-spin pi-spinner"></i>
             <span v-else>Remove status</span>
         </button>
     </div>
@@ -85,7 +85,7 @@ async function manejarSeleccionEstado(estado) {
         emit('close');
 
     } catch (error) {
-        notificaciones.error("We couldn't save the status.", { title: 'Error' });
+        notificaciones.error("Status wasn't saved. Check your connection and try again.", { title: 'Error' });
 
     } finally {
         loading.value = false;
@@ -107,7 +107,7 @@ async function manejarEliminacionEstado() {
         emit('close');
 
     } catch (error) {
-        notificaciones.error("We couldn't remove the status.", { title: 'Error' });
+        notificaciones.error("Status wasn't removed. Check your connection and try again.", { title: 'Error' });
 
     } finally {
         loading.value = false;

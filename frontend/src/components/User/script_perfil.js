@@ -3,6 +3,7 @@ import { obtenerListaDeFavoritos, quitarDeFavoritos, agregarAFavoritos } from ".
 import { listarEstadosDeJuego, listarEstadosDeJuegoCompletos } from "../../services/user_game_status";
 import { cambiarContrasena, actualizarUsuario, obtenerEstadisticasUsuario } from "../../services/user_service";
 import { notificaciones } from '../../store/notificaciones';
+import { confirmacion } from '../../store/confirmacion';
 import { useRouter } from 'vue-router';
 import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
 
@@ -303,7 +304,7 @@ export default {
       } catch (error) {
         console.error('Error al actualizar perfil:', error);
 
-        var mensaje = "We couldn't update your information.";
+        var mensaje = "Profile wasn't updated. Check the fields and try again.";
         if (error.response && error.response.data && error.response.data.message) {
           mensaje = error.response.data.message;
         }
@@ -435,13 +436,23 @@ export default {
         }
       } catch (error) {
         console.error('Error al alternar favorito:', error);
-        notificaciones.error("We couldn't update favorites.", { title: "Error" });
+        notificaciones.error("Favorites weren't updated. Check your connection and try again.", { title: "Error" });
       } finally {
         this.favLoadingId = null;
       }
     },
 
     async quitarFavorito(idGame) {
+      var juego = this.favoritos.find(function (f) { return f.id === idGame; });
+      var confirmado = await confirmacion.pedir({
+        title: 'Remove from favorites?',
+        message: (juego ? juego.name : 'This game') + ' will leave your favorites. You can add it again from the catalog.',
+        confirmLabel: 'Remove'
+      });
+      if (!confirmado) {
+        return;
+      }
+
       this.remover = idGame;
       try {
         await quitarDeFavoritos(idGame);
@@ -462,7 +473,7 @@ export default {
 
       } catch (error) {
         console.error("Error al quitar favorito:", error);
-        notificaciones.error("We couldn't remove the game from favorites.", {
+        notificaciones.error("Game wasn't removed from favorites. Check your connection and try again.", {
           title: "Favorites error"
         });
       } finally {
@@ -544,7 +555,7 @@ export default {
       } catch (error) {
         console.error('Error al cambiar contrasena:', error);
 
-        var mensaje = "We couldn't change your password.";
+        var mensaje = "Password wasn't changed. Check your current password and try again.";
         if (error.response && error.response.data && error.response.data.message) {
           mensaje = error.response.data.message;
         }

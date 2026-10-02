@@ -3,6 +3,8 @@ import { obtenerComentariosDelJuego, crearComentario, eliminarComentario, actual
 import { agregarAFavoritos, quitarDeFavoritos, consultarSiEsFavorito, obtenerEstadoDeJuego } from '../../services/favorites_area';
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
+import { confirmacion } from '../../store/confirmacion';
+import { formatearFechaCorta } from '../../utils/formatoFecha.js';
 import { STATUS_META } from '../../utils/statusMeta.js';
 import DOMPurify from 'dompurify';
 
@@ -216,7 +218,7 @@ export default {
             } catch (error) {
                 console.error('Error al cargar el detalle del juego:', error);
                 this.game = null;
-                this.errorMessage = 'Could not load game details. Please try again later.';
+                this.errorMessage = "Game details didn't load. Go back and open the game again, or reload the page.";
 
             } finally {
                 this.loading = false;
@@ -327,14 +329,14 @@ export default {
         async publicarComentario() {
 
             if (!this.newComment || !this.newComment.trim()) {
-                notificaciones.warning("Comment cannot be empty.", {
+                notificaciones.warning("Write a comment before publishing.", {
                     title: "Comment required"
                 });
                 return;
             }
 
             if (this.newComment.length > 255) {
-                notificaciones.warning("Comment cannot exceed 255 characters.", {
+                notificaciones.warning("Shorten your comment to 255 characters or fewer.", {
                     title: "Comment too long"
                 });
                 return;
@@ -348,7 +350,7 @@ export default {
             }
 
             if (this.formRating < 0 || this.formRating > 5) {
-                notificaciones.warning("Rating must be between 0 and 5.", {
+                notificaciones.warning("Choose a rating from 1 to 5 stars.", {
                     title: "Invalid rating"
                 });
                 return;
@@ -370,7 +372,7 @@ export default {
             } catch (error) {
                 console.error('Error al agregar comentario:', error);
 
-                var mensajeError = "We couldn't publish your comment. Please try again.";
+                var mensajeError = "Review wasn't published. Check your connection and try again.";
                 if (error.response && error.response.data && error.response.data.message) {
                     mensajeError = error.response.data.message;
                 }
@@ -399,14 +401,14 @@ export default {
         async actualizarMiComentario() {
 
             if (!this.newComment || !this.newComment.trim()) {
-                notificaciones.warning("Comment cannot be empty.", {
+                notificaciones.warning("Write a comment before publishing.", {
                     title: "Comment required"
                 });
                 return;
             }
 
             if (this.newComment.length > 255) {
-                notificaciones.warning("Comment cannot exceed 255 characters.", {
+                notificaciones.warning("Shorten your comment to 255 characters or fewer.", {
                     title: "Comment too long"
                 });
                 return;
@@ -420,7 +422,7 @@ export default {
             }
 
             if (this.formRating < 0 || this.formRating > 5) {
-                notificaciones.warning("Rating must be between 0 and 5.", {
+                notificaciones.warning("Choose a rating from 1 to 5 stars.", {
                     title: "Invalid rating"
                 });
                 return;
@@ -443,7 +445,7 @@ export default {
             } catch (error) {
                 console.log("Error al actualizar el comentario");
 
-                var mensajeError = "We couldn't update your comment.";
+                var mensajeError = "Review wasn't updated. Check your connection and try again.";
                 if (error.response && error.response.data && error.response.data.message) {
                     mensajeError = error.response.data.message;
                 }
@@ -457,6 +459,15 @@ export default {
         // Al borrar el comentario tambien quitamos la calificacion para
         // que no quede una nota suelta sin texto asociado
         async eliminarMiComentario(id_comment) {
+
+            var confirmado = await confirmacion.pedir({
+                title: 'Delete this review?',
+                message: 'The comment and its rating will be removed permanently.',
+                confirmLabel: 'Delete review'
+            });
+            if (!confirmado) {
+                return;
+            }
 
             try {
                 await eliminarComentario(id_comment);
@@ -479,7 +490,7 @@ export default {
 
             } catch (error) {
                 console.error("Error al eliminar el comentario:", error);
-                notificaciones.error("We couldn't delete the comment.", {
+                notificaciones.error("Comment wasn't deleted. Check your connection and try again.", {
                     title: "Error deleting"
                 });
             }
@@ -565,7 +576,7 @@ export default {
 
             } catch (error) {
                 console.error('Error al cambiar favorito:', error);
-                notificaciones.error("We couldn't update your favorites.", {
+                notificaciones.error("Favorites weren't updated. Check your connection and try again.", {
                     title: "Error"
                 });
 
@@ -580,10 +591,7 @@ export default {
                 return 'Not available';
             }
 
-            var meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            var fecha = new Date(valor);
-
-            return fecha.getDate() + ' ' + meses[fecha.getMonth()] + ' ' + fecha.getFullYear();
+            return formatearFechaCorta(valor);
         },
 
         async cargarAdiciones(id) {
@@ -656,9 +664,9 @@ export default {
                     notificaciones.success("Game added to favorites.", { title: "Favorite added" });
                 }
             } catch (error) {
-                var mensaje = "We couldn't add the game to favorites.";
+                var mensaje = "Game wasn't added to favorites. Check your connection and try again.";
                 if (eraFavorito) {
-                    mensaje = "We couldn't remove the game from favorites.";
+                    mensaje = "Game wasn't removed from favorites. Check your connection and try again.";
                 }
                 notificaciones.error(mensaje, { title: "Favorites error" });
             }

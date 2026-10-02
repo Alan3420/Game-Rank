@@ -4,6 +4,8 @@ import {
   eliminarUsuario as eliminarUsuarioEnBackend
 } from '../../services/user_service';
 import { notificaciones } from '../../store/notificaciones';
+import { confirmacion } from '../../store/confirmacion';
+import { formatearFechaCorta } from '../../utils/formatoFecha.js';
 import { useRouter, useRoute } from 'vue-router';
 import { watchEffect } from 'vue';
 import { estadoAutenticacion } from '../../store/autenticacion';
@@ -109,7 +111,7 @@ export default {
         this.usuarios = data.users;
       } catch (error) {
         console.error('Error al cargar usuarios:', error);
-        notificaciones.error("We couldn't load the user list.", {
+        notificaciones.error("User list didn't load. Reload the page to try again.", {
           title: "Loading error"
         });
       } finally {
@@ -127,7 +129,7 @@ export default {
         });
       } catch (error) {
         console.error('Error al promover usuario:', error);
-        notificaciones.error("We couldn't promote the user.", {
+        notificaciones.error("User wasn't promoted. Check your connection and try again.", {
           title: "Error"
         });
       }
@@ -143,7 +145,7 @@ export default {
         });
       } catch (error) {
         console.error('Error al degradar usuario:', error);
-        notificaciones.error("We couldn't demote the user.", {
+        notificaciones.error("User wasn't demoted. Check your connection and try again.", {
           title: "Error"
         });
       }
@@ -151,7 +153,11 @@ export default {
 
     async eliminarUsuario(usuario) {
 
-      var confirmar = confirm('Are you sure you want to delete ' + usuario.name + '?');
+      var confirmar = await confirmacion.pedir({
+        title: 'Delete user?',
+        message: usuario.name + ' ' + (usuario.last_name || '') + ' and all their comments, ratings and favorites will be removed permanently.',
+        confirmLabel: 'Delete user'
+      });
       if (!confirmar) {
         return;
       }
@@ -173,7 +179,7 @@ export default {
 
       } catch (error) {
         console.error('Error al eliminar usuario:', error);
-        notificaciones.error("We couldn't delete the user.", {
+        notificaciones.error("User wasn't deleted. Check your connection and try again.", {
           title: "Error"
         });
       }
@@ -189,10 +195,7 @@ export default {
         return 'Not available';
       }
 
-      var meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      var d = new Date(fecha);
-
-      return d.getDate() + ' ' + meses[d.getMonth()] + ' ' + d.getFullYear();
+      return formatearFechaCorta(fecha);
     }
   }
 };

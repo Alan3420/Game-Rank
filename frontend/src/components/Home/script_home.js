@@ -20,6 +20,8 @@ export default {
       isLoading: true,
       isFutureLoading: true,
       heroVideo: null,
+      // Si el sistema pide menos movimiento el video arranca parado
+      videoPausado: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
       currentPageProximos: 1,
       totalCountProximos: 0
     };
@@ -42,6 +44,20 @@ export default {
   },
 
   methods: {
+
+    alternarVideo() {
+      var video = this.$refs.heroVideoRef;
+      this.videoPausado = !this.videoPausado;
+
+      if (!video) {
+        return;
+      }
+      if (this.videoPausado) {
+        video.pause();
+      } else {
+        video.play();
+      }
+    },
 
     async cargarVideoDestacado() {
       try {
@@ -207,9 +223,9 @@ export default {
       } catch (error) {
         console.error('Error al cambiar favorito:', error);
 
-        var mensaje = "We couldn't add the game to favorites.";
+        var mensaje = "Game wasn't added to favorites. Check your connection and try again.";
         if (eraFavorito) {
-          mensaje = "We couldn't remove the game from favorites.";
+          mensaje = "Game wasn't removed from favorites. Check your connection and try again.";
         }
         notificaciones.error(mensaje, { title: "Favorites error" });
       }

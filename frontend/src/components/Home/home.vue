@@ -2,9 +2,14 @@
   <div class="home-page">
     <!-- Hero Section - No Autenticado -->
     <section v-if="!estadoAutenticacion.usuario" class="hero-section">
-      <video v-if="heroVideo" class="hero-video" autoplay muted loop playsinline>
+      <video v-if="heroVideo" ref="heroVideoRef" class="hero-video" :autoplay="!videoPausado" muted loop playsinline
+        aria-hidden="true">
         <source :src="heroVideo.video_url" type="video/mp4" />
       </video>
+      <button v-if="heroVideo" type="button" class="hero-video-toggle" @click="alternarVideo"
+        :aria-label="videoPausado ? 'Play background video' : 'Pause background video'">
+        <i aria-hidden="true" class="pi" :class="videoPausado ? 'pi-play' : 'pi-pause'"></i>
+      </button>
       <div class="hero-overlay-dark"></div>
       <div class="hero-content">
         <div class="hero-text">
@@ -15,22 +20,22 @@
 
           <div class="hero-features">
             <div class="feature-item">
-              <i class="pi pi-star-fill"></i>
+              <i aria-hidden="true" class="pi pi-star-fill"></i>
               <span>Community reviews</span>
             </div>
             <div class="feature-item">
-              <i class="pi pi-users"></i>
+              <i aria-hidden="true" class="pi pi-users"></i>
               <span>Players sharing opinions</span>
             </div>
           </div>
 
           <div class="hero-cta">
             <button class="btn btn-primary" @click="irARegistro">
-              <i class="pi pi-user-plus"></i>
+              <i aria-hidden="true" class="pi pi-user-plus"></i>
               Get started for free
             </button>
             <button class="btn btn-secondary" @click="irALogin">
-              <i class="pi pi-sign-in"></i>
+              <i aria-hidden="true" class="pi pi-sign-in"></i>
               Sign in
             </button>
           </div>
@@ -40,9 +45,14 @@
 
     <!-- Hero Section - Autenticado -->
     <section v-else class="hero-section">
-      <video v-if="heroVideo" class="hero-video" autoplay muted loop playsinline>
+      <video v-if="heroVideo" ref="heroVideoRef" class="hero-video" :autoplay="!videoPausado" muted loop playsinline
+        aria-hidden="true">
         <source :src="heroVideo.video_url" type="video/mp4" />
       </video>
+      <button v-if="heroVideo" type="button" class="hero-video-toggle" @click="alternarVideo"
+        :aria-label="videoPausado ? 'Play background video' : 'Pause background video'">
+        <i aria-hidden="true" class="pi" :class="videoPausado ? 'pi-play' : 'pi-pause'"></i>
+      </button>
       <div class="hero-overlay-dark"></div>
       <div class="hero-content">
         <div class="hero-text">
@@ -53,22 +63,22 @@
 
           <div class="hero-quick-actions">
             <router-link to="/content/overview" class="quick-action-btn">
-              <i class="pi pi-search"></i>
+              <i aria-hidden="true" class="pi pi-search"></i>
               <span>Explore catalog</span>
             </router-link>
             <router-link to="/user/profile" class="quick-action-btn">
-              <i class="pi pi-heart"></i>
+              <i aria-hidden="true" class="pi pi-heart"></i>
               <span>My favorites</span>
             </router-link>
             <button class="quick-action-btn" @click="desplazarALanzamientos">
-              <i class="pi pi-calendar"></i>
+              <i aria-hidden="true" class="pi pi-calendar"></i>
               <span>Upcoming releases</span>
             </button>
           </div>
 
           <div class="hero-cta">
             <button class="btn btn-primary" @click="irAExplorar">
-              <i class="pi pi-arrow-right"></i>
+              <i aria-hidden="true" class="pi pi-arrow-right"></i>
               Start exploring
             </button>
           </div>
@@ -80,7 +90,7 @@
     <section v-if="estadoAutenticacion.usuario !== null" class="top-section">
       <div class="section-header">
         <span class="section-eyebrow">
-          <i class="pi pi-trophy"></i>
+          <i aria-hidden="true" class="pi pi-trophy"></i>
           Ranking
         </span>
         <h2>Top Rated</h2>
@@ -98,12 +108,12 @@
       <div v-else-if="topGames.length > 0" class="top-ranking">
 
         <!-- Rank 1 - Carta principal -->
-        <article class="rank-card rank-card--first" @click="irADetalle(topGames[0].id)">
-          <img class="rank-card-bg" :src="topGames[0].imge_url" :alt="topGames[0].name" />
+        <article v-activable class="rank-card rank-card--first" @click="irADetalle(topGames[0].id)">
+          <img class="rank-card-bg" :src="topGames[0].imge_url" :alt="topGames[0].name" width="1280" height="720" decoding="async" />
           <div class="rank-card-overlay"></div>
           <span class="rank-num">1</span>
           <div class="rank-card-content">
-            <span class="rank-best-badge"><i class="pi pi-crown"></i> Best rated</span>
+            <span class="rank-best-badge"><i aria-hidden="true" class="pi pi-crown"></i> Best rated</span>
             <h3 class="rank-title">{{ topGames[0].name }}</h3>
             <span class="rank-year">{{ topGames[0].release_date?.split('-')[0] }}</span>
             <div class="rank-meta-wrap">
@@ -117,8 +127,8 @@
 
         <!-- Ranks 2 y 3 -->
         <div class="rank-sub-grid">
-          <article v-if="topGames[1]" class="rank-card rank-card--sub" @click="irADetalle(topGames[1].id)">
-            <img class="rank-card-bg" :src="topGames[1].imge_url" :alt="topGames[1].name" />
+          <article v-if="topGames[1]" v-activable class="rank-card rank-card--sub" @click="irADetalle(topGames[1].id)">
+            <img class="rank-card-bg" :src="topGames[1].imge_url" :alt="topGames[1].name" width="640" height="360" loading="lazy" decoding="async" />
             <div class="rank-card-overlay"></div>
             <span class="rank-num rank-num--sub">2</span>
             <div class="rank-card-content">
@@ -133,8 +143,8 @@
             </div>
           </article>
 
-          <article v-if="topGames[2]" class="rank-card rank-card--sub" @click="irADetalle(topGames[2].id)">
-            <img class="rank-card-bg" :src="topGames[2].imge_url" :alt="topGames[2].name" />
+          <article v-if="topGames[2]" v-activable class="rank-card rank-card--sub" @click="irADetalle(topGames[2].id)">
+            <img class="rank-card-bg" :src="topGames[2].imge_url" :alt="topGames[2].name" width="640" height="360" loading="lazy" decoding="async" />
             <div class="rank-card-overlay"></div>
             <span class="rank-num rank-num--sub">3</span>
             <div class="rank-card-content">
@@ -153,7 +163,7 @@
       </div>
 
       <div v-else class="estado-vacio">
-        <i class="pi pi-inbox"></i>
+        <i aria-hidden="true" class="pi pi-inbox"></i>
         <p>No games available.</p>
       </div>
     </section>
@@ -162,7 +172,7 @@
     <section v-if="estadoAutenticacion.usuario !== null" id="proximos-section" class="proximos-section">
     <div class="section-header">
         <span class="section-eyebrow">
-            <i class="pi pi-clock"></i>
+            <i aria-hidden="true" class="pi pi-clock"></i>
             Coming Soon
         </span>
         <h2>Upcoming Releases</h2>
@@ -187,7 +197,7 @@
     </div>
 
     <div v-else class="estado-vacio">
-        <i class="pi pi-inbox"></i>
+        <i aria-hidden="true" class="pi pi-inbox"></i>
         <p>No upcoming releases available.</p>
     </div>
 
@@ -206,7 +216,7 @@
         <h2>Join the community</h2>
         <p>Explore thousands of games, share your opinion and discover titles that match your preferences.</p>
         <button class="btn btn-accent" @click="irARegistro">
-          <i class="pi pi-check"></i>
+          <i aria-hidden="true" class="pi pi-check"></i>
           Get started now
         </button>
       </div>
