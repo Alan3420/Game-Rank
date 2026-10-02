@@ -1,8 +1,61 @@
 <template>
     <div class="game-detail-page">
 
-        <!-- Loader -->
-        <Loader v-if="loading" message="Loading game details..." full-height />
+        <!-- Skeleton -->
+        <div v-if="loading" class="detail-layout" aria-busy="true">
+            <div class="detail-topbar">
+                <Skeleton width="90px" height="36px" radius="10px" />
+                <Skeleton width="180px" height="0.85rem" />
+            </div>
+
+            <section class="detail-hero">
+                <div class="hero-content detail-skel-hero">
+                    <div class="detail-categories">
+                        <Skeleton v-for="n in 3" :key="n" on-dark width="70px" height="24px" radius="999px" />
+                    </div>
+                    <Skeleton on-dark width="420px" height="2.6rem" radius="10px" />
+                    <div class="detail-stats">
+                        <Skeleton v-for="n in 4" :key="n" on-dark width="80px" height="2.4rem" />
+                    </div>
+                </div>
+            </section>
+
+            <div class="detail-body">
+                <div class="detail-main">
+                    <div class="detail-card detail-skel-card">
+                        <Skeleton width="160px" height="1.1rem" />
+                        <Skeleton width="100%" height="0.85rem" />
+                        <Skeleton width="100%" height="0.85rem" />
+                        <Skeleton width="92%" height="0.85rem" />
+                        <Skeleton width="70%" height="0.85rem" />
+                    </div>
+                    <div class="detail-card detail-skel-card">
+                        <Skeleton width="140px" height="1.1rem" />
+                        <Skeleton width="100%" height="320px" radius="14px" />
+                    </div>
+                    <div class="detail-card detail-skel-card">
+                        <Skeleton width="150px" height="1.1rem" />
+                        <div v-for="n in 3" :key="n" class="detail-skel-comment">
+                            <Skeleton circle width="40px" />
+                            <div class="detail-skel-comment-body">
+                                <Skeleton width="140px" height="0.85rem" />
+                                <Skeleton width="100%" height="0.8rem" />
+                                <Skeleton width="60%" height="0.8rem" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <aside class="detail-aside">
+                    <div v-for="n in 3" :key="n" class="detail-card detail-skel-card">
+                        <Skeleton width="120px" height="1.1rem" />
+                        <div class="detail-skel-tags">
+                            <Skeleton v-for="t in 4" :key="t" width="72px" height="26px" radius="999px" />
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
 
         <!-- Error -->
         <div v-else-if="!game" class="detail-error">
@@ -528,13 +581,13 @@
 <script>
 import jsDetalles from "./script_GameDetail.js";
 import Button from 'primevue/button';
-import Loader from '../Loader/Loader.vue';
+import Skeleton from '../Skeleton/Skeleton.vue';
 import GameImage from '../Image/GameImage.vue';
 import GameStatusDropdown from '../Cards/GameStatusDropdown.vue';
 import GameCard from '../Cards/GameCard.vue';
 export default {
     name: 'GameDetail',
-    components: { Button, Loader, GameImage, GameStatusDropdown, GameCard },
+    components: { Button, Skeleton, GameImage, GameStatusDropdown, GameCard },
     mixins: [jsDetalles]
 };
 </script>

@@ -87,7 +87,13 @@
         <p>Ranked by Metacritic score</p>
       </div>
 
-      <Loader v-if="isLoading" message="Loading featured games..." />
+      <div v-if="isLoading" class="top-ranking" aria-busy="true">
+        <Skeleton class="rank-card--first" radius="18px" />
+        <div class="rank-sub-grid">
+          <Skeleton class="rank-card--sub" radius="18px" />
+          <Skeleton class="rank-card--sub" radius="18px" />
+        </div>
+      </div>
 
       <div v-else-if="topGames.length > 0" class="top-ranking">
 
@@ -163,7 +169,9 @@
         <p>Games coming soon</p>
     </div>
 
-    <Loader v-if="isFutureLoading" message="Loading upcoming releases..." />
+    <div v-if="isFutureLoading" class="proximos-grid" aria-busy="true">
+        <GameCardSkeleton v-for="n in 10" :key="n" />
+    </div>
 
     <div v-else-if="futureReleases.length > 0" class="proximos-grid">
         <GameCard
@@ -211,12 +219,13 @@
 import jsHome from "./script_home.js";
 import { estadoAutenticacion } from "../../store/autenticacion.js";
 import GameCard from "../Cards/GameCard.vue";
-import Loader from "../Loader/Loader.vue";
+import Skeleton from "../Skeleton/Skeleton.vue";
+import GameCardSkeleton from "../Skeleton/GameCardSkeleton.vue";
 import Pagination from "../Pagination/Pagination.vue";
 
 export default {
   name: 'GameDetail',
-  components: { GameCard, Loader, Pagination },
+  components: { GameCard, Skeleton, GameCardSkeleton, Pagination },
   mixins: [jsHome]
 };
 </script>

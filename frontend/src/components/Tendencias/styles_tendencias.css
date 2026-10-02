@@ -255,8 +255,25 @@
 .mc-badge.mc-red    { background: #c03030; }
 .mc-badge.mc-na     { background: rgba(255, 255, 255, 0.15); color: rgba(255,255,255,0.6); }
 
+/* ── SKELETON ── */
+.trend-skel {
+    width: 100%;
+    height: 100%;
+}
+
+.trend-skel:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.trend-skel-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 100%;
+}
+
 /* ── ESTADOS ── */
-.tendencias-loading,
 .tendencias-error {
     display: flex;
     flex-direction: column;
@@ -271,7 +288,6 @@
 
 .tendencias-error { color: var(--color-danger); }
 
-.tendencias-loading i,
 .tendencias-error i { font-size: 2rem; }
 
 .seccion-vacia {
@@ -301,7 +317,8 @@
         gap: 0.65rem;
     }
 
-    .trend-card:first-child {
+    .trend-card:first-child,
+    .trend-skel:first-child {
         grid-column: span 2;
         grid-row: span 1;
     }
@@ -323,7 +340,8 @@
         gap: 0.55rem;
     }
 
-    .trend-card:first-child {
+    .trend-card:first-child,
+    .trend-skel:first-child {
         grid-column: span 2;
         grid-row: span 1;
     }

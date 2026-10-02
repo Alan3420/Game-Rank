@@ -260,6 +260,28 @@
   min-width: 0;
 }
 
+/* ── SKELETON ── */
+.profile-skel-identity,
+.profile-skel-stat,
+.profile-skel-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-skel-stat {
+  gap: 8px;
+}
+
+.profile-skel-title {
+  margin-bottom: 20px;
+}
+
+.profile-skel-row {
+  cursor: default;
+  pointer-events: none;
+}
+
 /* ── PROFILE CARD ── */
 .profile-card {
   background: var(--color-surface);

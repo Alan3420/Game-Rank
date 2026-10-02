@@ -1,7 +1,47 @@
 <template>
   <div class="profile-page">
 
-    <Loader v-if="estadoAutenticacion.cargando" size="large" :fullHeight="true" message="Loading profile..." />
+    <div v-if="estadoAutenticacion.cargando" aria-busy="true">
+      <div class="profile-banner">
+        <div class="banner-inner">
+          <Skeleton circle width="104px" />
+          <div class="banner-identity profile-skel-identity">
+            <Skeleton width="260px" height="2.2rem" radius="10px" />
+            <Skeleton width="120px" height="0.9rem" />
+            <Skeleton width="90px" height="1.5rem" radius="999px" />
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-section">
+        <div class="stats-grid">
+          <div v-for="n in 6" :key="n" class="stat-card">
+            <Skeleton width="42px" height="42px" radius="12px" />
+            <div class="profile-skel-stat">
+              <Skeleton width="2.5rem" height="1.4rem" />
+              <Skeleton width="4.5rem" height="0.7rem" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-content">
+        <aside class="profile-sidebar">
+          <div class="profile-card profile-skel-card">
+            <Skeleton width="120px" height="1rem" />
+            <Skeleton v-for="n in 4" :key="n" width="100%" height="2.6rem" radius="10px" />
+          </div>
+        </aside>
+        <div class="profile-main">
+          <div class="favorites-section">
+            <Skeleton width="160px" height="1.3rem" class="profile-skel-title" />
+            <div class="fav-grid">
+              <GameCardSkeleton v-for="n in 4" :key="n" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div v-else-if="estadoAutenticacion.usuario">
 
@@ -29,7 +69,8 @@
           <div class="stat-card stat-card--green">
             <div class="stat-card__icon"><i class="pi pi-check-circle"></i></div>
             <div class="stat-card__body">
-              <span class="stat-card__value">{{ stats?.coleccion?.completado ?? '—' }}</span>
+              <Skeleton v-if="statsLoading" width="2.5rem" height="1.4rem" />
+              <span v-else class="stat-card__value">{{ stats?.coleccion?.completado ?? '—' }}</span>
               <span class="stat-card__label">Completed</span>
             </div>
           </div>
@@ -37,7 +78,8 @@
           <div class="stat-card stat-card--blue">
             <div class="stat-card__icon"><i class="pi pi-play-circle"></i></div>
             <div class="stat-card__body">
-              <span class="stat-card__value">{{ stats?.coleccion?.jugando ?? '—' }}</span>
+              <Skeleton v-if="statsLoading" width="2.5rem" height="1.4rem" />
+              <span v-else class="stat-card__value">{{ stats?.coleccion?.jugando ?? '—' }}</span>
               <span class="stat-card__label">Playing</span>
             </div>
           </div>
@@ -45,7 +87,8 @@
           <div class="stat-card stat-card--amber">
             <div class="stat-card__icon"><i class="pi pi-clock"></i></div>
             <div class="stat-card__body">
-              <span class="stat-card__value">{{ stats?.coleccion?.pendiente ?? '—' }}</span>
+              <Skeleton v-if="statsLoading" width="2.5rem" height="1.4rem" />
+              <span v-else class="stat-card__value">{{ stats?.coleccion?.pendiente ?? '—' }}</span>
               <span class="stat-card__label">Pending</span>
             </div>
           </div>
@@ -53,7 +96,8 @@
           <div class="stat-card stat-card--pink">
             <div class="stat-card__icon"><i class="pi pi-heart-fill"></i></div>
             <div class="stat-card__body">
-              <span class="stat-card__value">{{ stats?.favoritos ?? '—' }}</span>
+              <Skeleton v-if="statsLoading" width="2.5rem" height="1.4rem" />
+              <span v-else class="stat-card__value">{{ stats?.favoritos ?? '—' }}</span>
               <span class="stat-card__label">Favorites</span>
             </div>
           </div>
@@ -61,7 +105,8 @@
           <div class="stat-card stat-card--yellow">
             <div class="stat-card__icon"><i class="pi pi-star-fill"></i></div>
             <div class="stat-card__body">
-              <span class="stat-card__value">{{ stats?.rating_medio != null ? stats.rating_medio + ' ★' : '—' }}</span>
+              <Skeleton v-if="statsLoading" width="2.5rem" height="1.4rem" />
+              <span v-else class="stat-card__value">{{ stats?.rating_medio != null ? stats.rating_medio + ' ★' : '—' }}</span>
               <span class="stat-card__label">Average rating</span>
             </div>
           </div>
@@ -69,7 +114,8 @@
           <div class="stat-card stat-card--purple">
             <div class="stat-card__icon"><i class="pi pi-comments"></i></div>
             <div class="stat-card__body">
-              <span class="stat-card__value">{{ stats?.comentarios ?? '—' }}</span>
+              <Skeleton v-if="statsLoading" width="2.5rem" height="1.4rem" />
+              <span v-else class="stat-card__value">{{ stats?.comentarios ?? '—' }}</span>
               <span class="stat-card__label">Reviews</span>
             </div>
           </div>
@@ -217,7 +263,13 @@
               </div>
             </div>
 
-            <Loader v-if="coleccionLoading" message="Loading..." />
+            <div v-if="coleccionLoading" class="coleccion-grid" aria-busy="true">
+              <div v-for="n in 6" :key="n" class="coleccion-item profile-skel-row">
+                <Skeleton width="40px" height="40px" radius="8px" />
+                <Skeleton class="coleccion-item-name" height="0.85rem" />
+                <Skeleton width="70px" height="22px" radius="999px" />
+              </div>
+            </div>
 
             <div v-else-if="coleccion.length === 0" class="coleccion-empty-small">
               <i class="pi pi-bookmark"></i>
@@ -263,7 +315,9 @@
               </div>
             </div>
 
-            <Loader v-if="favoritosLoading" message="Loading your favorites..." />
+            <div v-if="favoritosLoading" class="fav-grid" aria-busy="true">
+              <GameCardSkeleton v-for="n in 4" :key="n" />
+            </div>
 
             <div v-else-if="favoritos.length === 0" class="fav-empty">
               <div class="fav-empty-icon">
@@ -499,12 +553,13 @@
 <script>
 import jsPerfil from "./script_perfil.js";
 import GameCard from "../Cards/GameCard.vue";
-import Loader from "../Loader/Loader.vue";
+import Skeleton from "../Skeleton/Skeleton.vue";
+import GameCardSkeleton from "../Skeleton/GameCardSkeleton.vue";
 import Pagination from "../Pagination/Pagination.vue";
 
 export default {
   name: 'perfil',
-  components: { GameCard, Loader, Pagination },
+  components: { GameCard, Skeleton, GameCardSkeleton, Pagination },
   mixins: [jsPerfil]
 };
 </script>

@@ -22,6 +22,9 @@
         </button>
 
         <template v-if="estadoAutenticacion.cargando">
+          <Skeleton class="header-skel-link" width="92px" height="36px" radius="10px" />
+          <Skeleton class="header-skel-link" width="84px" height="36px" radius="10px" />
+          <Skeleton width="130px" height="42px" radius="10px" />
         </template>
 
         <template v-else-if="estadoAutenticacion.usuario">
@@ -217,7 +220,7 @@
 
       <div class="footer-section">
         <h4 class="footer-section-title">Explore</h4>
-        <nav class="footer-nav">
+        <nav class="footer-nav footer-nav--grid">
           <RouterLink to="/" class="footer-nav-link">Home</RouterLink>
           <RouterLink v-if="estadoAutenticacion.usuario" to="/content/overview" class="footer-nav-link">Catalog</RouterLink>
           <RouterLink v-if="estadoAutenticacion.usuario" to="/tendencias" class="footer-nav-link">Trends</RouterLink>
@@ -260,10 +263,11 @@
 <script>
 import jsApp from "./script_app.js";
 import NotificationToast from '../components/Notifications/NotificationToast.vue';
+import Skeleton from '../components/Skeleton/Skeleton.vue';
 
 export default {
   name: 'App',
-  components: { NotificationToast },
+  components: { NotificationToast, Skeleton },
   mixins: [jsApp]
 };
 </script>

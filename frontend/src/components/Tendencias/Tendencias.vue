@@ -12,9 +12,23 @@
     </div>
 
     <!-- Cargando -->
-    <div v-if="loading" class="tendencias-loading">
-      <i class="pi pi-spin pi-spinner" style="color: var(--color-primary);"></i>
-      <span>Calculating trends...</span>
+    <div v-if="loading" aria-busy="true">
+      <div class="tendencias-tabs">
+        <Skeleton v-for="n in 4" :key="n" width="110px" height="36px" radius="999px" />
+      </div>
+
+      <div v-for="s in 2" :key="s" class="tendencias-seccion">
+        <div class="seccion-header">
+          <Skeleton width="2rem" height="2rem" radius="10px" />
+          <div class="trend-skel-header-text">
+            <Skeleton width="180px" height="1.2rem" />
+            <Skeleton width="280px" height="0.8rem" />
+          </div>
+        </div>
+        <div class="trend-grid">
+          <Skeleton v-for="n in 5" :key="n" class="trend-skel" radius="16px" />
+        </div>
+      </div>
     </div>
 
     <!-- Error -->
@@ -99,9 +113,11 @@
 
 <script>
 import tendenciasScript from './script_tendencias.js';
+import Skeleton from '../Skeleton/Skeleton.vue';
 
 export default {
     name: 'Tendencias',
+    components: { Skeleton },
     ...tendenciasScript,
 };
 </script>

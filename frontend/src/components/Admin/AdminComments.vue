@@ -31,7 +31,7 @@
           </div>
         </div>
 
-        <Loader v-if="loading" message="Loading comments..." />
+        <TableSkeleton v-if="loading" :columns="5" aria-busy="true" />
 
         <div v-else-if="comentariosFiltrados.length > 0" class="users-table-wrap">
           <table class="users-table">
@@ -90,11 +90,11 @@
 
 <script>
 import jsAdminComments from "./script_AdminComments.js";
-import Loader from "../Loader/Loader.vue";
+import TableSkeleton from "../Skeleton/TableSkeleton.vue";
 
 export default {
   name: 'AdminComments',
-  components: { Loader },
+  components: { TableSkeleton },
   mixins: [jsAdminComments]
 };
 </script>

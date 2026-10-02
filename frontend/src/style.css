@@ -84,9 +84,30 @@
   --status-pausado-solid-text: #92400e;
   --status-completado-solid-bg: #ede9fe;
   --status-completado-solid-text: #5b21b6;
+
+  /* === SKELETON === */
+  --color-skeleton-base: #e6e8f0;
+  --color-skeleton-highlight: rgba(255, 255, 255, 0.65);
+
+  /* === NEUMORPHISM (header / footer) === */
+  --neu-bg: #eceff5;
+  --neu-shadow-dark: rgba(163, 174, 196, 0.55);
+  --neu-shadow-light: rgba(255, 255, 255, 0.95);
+  --neu-raised: 5px 5px 10px var(--neu-shadow-dark), -5px -5px 10px var(--neu-shadow-light);
+  --neu-raised-sm: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+  --neu-pressed: inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light);
 }
 
 [data-theme="dark"] {
+  /* === SKELETON === */
+  --color-skeleton-base: #262c3a;
+  --color-skeleton-highlight: rgba(255, 255, 255, 0.06);
+
+  /* === NEUMORPHISM (header / footer) === */
+  --neu-bg: #1a1e27;
+  --neu-shadow-dark: rgba(0, 0, 0, 0.55);
+  --neu-shadow-light: rgba(255, 255, 255, 0.045);
+
   /* === BRAND === */
   --color-primary: #6B5FE0;
   --color-primary-hover: #5C52D0;

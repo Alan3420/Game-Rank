@@ -47,7 +47,9 @@
       <p v-else>No games found with the applied filters.</p>
     </div>
 
-    <Loader v-if="loading" size="small" :message="game_name ? 'Searching games...' : 'Loading games...'" />
+    <div v-if="loading" class="card_content" aria-busy="true">
+      <GameCardSkeleton v-for="n in 12" :key="n" />
+    </div>
 
     <div v-else-if="!estaFiltrando || games.length > 0" class="card_content">
       <GameCard
@@ -77,13 +79,13 @@
 import contenido from "./script_contenido.js";
 import Button from "primevue/button"
 import GameCard from "../Cards/GameCard.vue"
-import Loader from "../Loader/Loader.vue"
+import GameCardSkeleton from "../Skeleton/GameCardSkeleton.vue"
 import FilterPanel from "../Filters/FilterPanel.vue"
 import Pagination from "../Pagination/Pagination.vue"
 
 export default {
     name: 'contenido',
-    components: { Button, GameCard, Loader, FilterPanel, Pagination },
+    components: { Button, GameCard, GameCardSkeleton, FilterPanel, Pagination },
     ...contenido
 };
 </script>
