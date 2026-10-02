@@ -217,6 +217,13 @@ html {
   color-scheme: dark;
 }
 
+/* en movil el header ocupa dos filas (logo + buscador) */
+@media (max-width: 640px) {
+  html {
+    scroll-padding-top: 140px;
+  }
+}
+
 button,
 a,
 [role="button"],

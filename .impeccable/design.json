@@ -1,0 +1,607 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T23:25:18+00:00",
+  "title": "Design System: Game Rank",
+  "extensions": {
+    "scope": "Pilot: game detail route (/game/:id). Tokens are scoped as --gd-* custom properties on .game-detail-page (light) and [data-theme=\"dark\"] .game-detail-page (dark) in frontend/src/components/GameDetail/styles_GameDetail.css. The other eight views still run the previous system.",
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Card Stock",
+        "canonical": "#EEF0F4",
+        "oklch": "oklch(95.5% 0.006 264.5)",
+        "tonalRamp": [
+          "oklch(15% 0.006 264.5)",
+          "oklch(26% 0.006 264.5)",
+          "oklch(38% 0.006 264.5)",
+          "oklch(50% 0.006 264.5)",
+          "oklch(62% 0.006 264.5)",
+          "oklch(74% 0.006 264.5)",
+          "oklch(85% 0.006 264.5)",
+          "oklch(95% 0.006 264.5)"
+        ],
+        "darkValue": "#0E0F15"
+      },
+      "face": {
+        "role": "neutral",
+        "displayName": "Card Face",
+        "canonical": "#FFFFFF",
+        "oklch": "oklch(100.0% 0.0 89.9)",
+        "tonalRamp": [
+          "oklch(15% 0.0 89.9)",
+          "oklch(26% 0.0 89.9)",
+          "oklch(38% 0.0 89.9)",
+          "oklch(50% 0.0 89.9)",
+          "oklch(62% 0.0 89.9)",
+          "oklch(74% 0.0 89.9)",
+          "oklch(85% 0.0 89.9)",
+          "oklch(95% 0.0 89.9)"
+        ],
+        "darkValue": "#181922"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#16141D",
+        "oklch": "oklch(19.8% 0.018 294.9)",
+        "tonalRamp": [
+          "oklch(15% 0.018 294.9)",
+          "oklch(26% 0.018 294.9)",
+          "oklch(38% 0.018 294.9)",
+          "oklch(50% 0.018 294.9)",
+          "oklch(62% 0.018 294.9)",
+          "oklch(74% 0.018 294.9)",
+          "oklch(85% 0.018 294.9)",
+          "oklch(95% 0.018 294.9)"
+        ],
+        "darkValue": "#F1F0F6"
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "#4B4858",
+        "oklch": "oklch(41.1% 0.027 293.8)",
+        "tonalRamp": [
+          "oklch(15% 0.027 293.8)",
+          "oklch(26% 0.027 293.8)",
+          "oklch(38% 0.027 293.8)",
+          "oklch(50% 0.027 293.8)",
+          "oklch(62% 0.027 293.8)",
+          "oklch(74% 0.027 293.8)",
+          "oklch(85% 0.027 293.8)",
+          "oklch(95% 0.027 293.8)"
+        ],
+        "darkValue": "#BCB9CA"
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "#64616F",
+        "oklch": "oklch(50.0% 0.022 295.4)",
+        "tonalRamp": [
+          "oklch(15% 0.022 295.4)",
+          "oklch(26% 0.022 295.4)",
+          "oklch(38% 0.022 295.4)",
+          "oklch(50% 0.022 295.4)",
+          "oklch(62% 0.022 295.4)",
+          "oklch(74% 0.022 295.4)",
+          "oklch(85% 0.022 295.4)",
+          "oklch(95% 0.022 295.4)"
+        ],
+        "darkValue": "#A09DB0"
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#DCDFE7",
+        "oklch": "oklch(90.4% 0.011 269.5)",
+        "tonalRamp": [
+          "oklch(15% 0.011 269.5)",
+          "oklch(26% 0.011 269.5)",
+          "oklch(38% 0.011 269.5)",
+          "oklch(50% 0.011 269.5)",
+          "oklch(62% 0.011 269.5)",
+          "oklch(74% 0.011 269.5)",
+          "oklch(85% 0.011 269.5)",
+          "oklch(95% 0.011 269.5)"
+        ],
+        "darkValue": "#2A2B38"
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Rule",
+        "canonical": "#C3C7D2",
+        "oklch": "oklch(83.0% 0.016 270.0)",
+        "tonalRamp": [
+          "oklch(15% 0.016 270.0)",
+          "oklch(26% 0.016 270.0)",
+          "oklch(38% 0.016 270.0)",
+          "oklch(50% 0.016 270.0)",
+          "oklch(62% 0.016 270.0)",
+          "oklch(74% 0.016 270.0)",
+          "oklch(85% 0.016 270.0)",
+          "oklch(95% 0.016 270.0)"
+        ],
+        "darkValue": "#3B3C4C"
+      },
+      "frame-neutral": {
+        "role": "primary",
+        "displayName": "Unowned Frame",
+        "canonical": "#2A2733",
+        "oklch": "oklch(28.1% 0.022 296.4)",
+        "tonalRamp": [
+          "oklch(15% 0.022 296.4)",
+          "oklch(26% 0.022 296.4)",
+          "oklch(38% 0.022 296.4)",
+          "oklch(50% 0.022 296.4)",
+          "oklch(62% 0.022 296.4)",
+          "oklch(74% 0.022 296.4)",
+          "oklch(85% 0.022 296.4)",
+          "oklch(95% 0.022 296.4)"
+        ],
+        "darkValue": "#4A4757"
+      },
+      "status-pending": {
+        "role": "primary",
+        "displayName": "Pending Blue",
+        "canonical": "#2563EB",
+        "oklch": "oklch(54.6% 0.215 262.9)",
+        "tonalRamp": [
+          "oklch(15% 0.18 262.9)",
+          "oklch(26% 0.18 262.9)",
+          "oklch(38% 0.18 262.9)",
+          "oklch(50% 0.18 262.9)",
+          "oklch(62% 0.18 262.9)",
+          "oklch(74% 0.18 262.9)",
+          "oklch(85% 0.18 262.9)",
+          "oklch(95% 0.18 262.9)"
+        ],
+        "darkValue": "#7AA2FF"
+      },
+      "status-playing": {
+        "role": "primary",
+        "displayName": "Playing Green",
+        "canonical": "#0E7A3F",
+        "oklch": "oklch(51.0% 0.129 152.2)",
+        "tonalRamp": [
+          "oklch(15% 0.129 152.2)",
+          "oklch(26% 0.129 152.2)",
+          "oklch(38% 0.129 152.2)",
+          "oklch(50% 0.129 152.2)",
+          "oklch(62% 0.129 152.2)",
+          "oklch(74% 0.129 152.2)",
+          "oklch(85% 0.129 152.2)",
+          "oklch(95% 0.129 152.2)"
+        ],
+        "darkValue": "#3DD68C"
+      },
+      "status-paused": {
+        "role": "primary",
+        "displayName": "Paused Amber",
+        "canonical": "#9A5B00",
+        "oklch": "oklch(53.1% 0.119 65.1)",
+        "tonalRamp": [
+          "oklch(15% 0.119 65.1)",
+          "oklch(26% 0.119 65.1)",
+          "oklch(38% 0.119 65.1)",
+          "oklch(50% 0.119 65.1)",
+          "oklch(62% 0.119 65.1)",
+          "oklch(74% 0.119 65.1)",
+          "oklch(85% 0.119 65.1)",
+          "oklch(95% 0.119 65.1)"
+        ],
+        "darkValue": "#F2B544"
+      },
+      "status-completed": {
+        "role": "primary",
+        "displayName": "Completed Violet",
+        "canonical": "#6D3FD6",
+        "oklch": "oklch(51.2% 0.216 290.7)",
+        "tonalRamp": [
+          "oklch(15% 0.18 290.7)",
+          "oklch(26% 0.18 290.7)",
+          "oklch(38% 0.18 290.7)",
+          "oklch(50% 0.18 290.7)",
+          "oklch(62% 0.18 290.7)",
+          "oklch(74% 0.18 290.7)",
+          "oklch(85% 0.18 290.7)",
+          "oklch(95% 0.18 290.7)"
+        ],
+        "darkValue": "#B096FF"
+      },
+      "star": {
+        "role": "secondary",
+        "displayName": "Star Gold",
+        "canonical": "#C98A00",
+        "oklch": "oklch(67.9% 0.142 76.5)",
+        "tonalRamp": [
+          "oklch(15% 0.142 76.5)",
+          "oklch(26% 0.142 76.5)",
+          "oklch(38% 0.142 76.5)",
+          "oklch(50% 0.142 76.5)",
+          "oklch(62% 0.142 76.5)",
+          "oklch(74% 0.142 76.5)",
+          "oklch(85% 0.142 76.5)",
+          "oklch(95% 0.142 76.5)"
+        ],
+        "darkValue": "#F2B544"
+      },
+      "rarity-rare": {
+        "role": "tertiary",
+        "displayName": "Rare Burnt Amber",
+        "canonical": "#B45309",
+        "oklch": "oklch(55.5% 0.146 49.0)",
+        "tonalRamp": [
+          "oklch(15% 0.146 49.0)",
+          "oklch(26% 0.146 49.0)",
+          "oklch(38% 0.146 49.0)",
+          "oklch(50% 0.146 49.0)",
+          "oklch(62% 0.146 49.0)",
+          "oklch(74% 0.146 49.0)",
+          "oklch(85% 0.146 49.0)",
+          "oklch(95% 0.146 49.0)"
+        ],
+        "darkValue": "#F59E0B"
+      },
+      "rarity-uncommon": {
+        "role": "tertiary",
+        "displayName": "Uncommon Blue",
+        "canonical": "#2563EB",
+        "oklch": "oklch(54.6% 0.215 262.9)",
+        "tonalRamp": [
+          "oklch(15% 0.18 262.9)",
+          "oklch(26% 0.18 262.9)",
+          "oklch(38% 0.18 262.9)",
+          "oklch(50% 0.18 262.9)",
+          "oklch(62% 0.18 262.9)",
+          "oklch(74% 0.18 262.9)",
+          "oklch(85% 0.18 262.9)",
+          "oklch(95% 0.18 262.9)"
+        ],
+        "darkValue": "#7AA2FF"
+      },
+      "rarity-common": {
+        "role": "tertiary",
+        "displayName": "Common Grey",
+        "canonical": "#8A8796",
+        "oklch": "oklch(63.1% 0.022 294.9)",
+        "tonalRamp": [
+          "oklch(15% 0.022 294.9)",
+          "oklch(26% 0.022 294.9)",
+          "oklch(38% 0.022 294.9)",
+          "oklch(50% 0.022 294.9)",
+          "oklch(62% 0.022 294.9)",
+          "oklch(74% 0.022 294.9)",
+          "oklch(85% 0.022 294.9)",
+          "oklch(95% 0.022 294.9)"
+        ],
+        "darkValue": "#8E8BA0"
+      },
+      "metacritic-high": {
+        "role": "secondary",
+        "displayName": "Metacritic Green",
+        "canonical": "#157347",
+        "oklch": "oklch(49.2% 0.109 157.0)",
+        "tonalRamp": [
+          "oklch(15% 0.109 157.0)",
+          "oklch(26% 0.109 157.0)",
+          "oklch(38% 0.109 157.0)",
+          "oklch(50% 0.109 157.0)",
+          "oklch(62% 0.109 157.0)",
+          "oklch(74% 0.109 157.0)",
+          "oklch(85% 0.109 157.0)",
+          "oklch(95% 0.109 157.0)"
+        ]
+      },
+      "metacritic-mid": {
+        "role": "secondary",
+        "displayName": "Metacritic Amber",
+        "canonical": "#8C5A00",
+        "oklch": "oklch(51.0% 0.109 72.1)",
+        "tonalRamp": [
+          "oklch(15% 0.109 72.1)",
+          "oklch(26% 0.109 72.1)",
+          "oklch(38% 0.109 72.1)",
+          "oklch(50% 0.109 72.1)",
+          "oklch(62% 0.109 72.1)",
+          "oklch(74% 0.109 72.1)",
+          "oklch(85% 0.109 72.1)",
+          "oklch(95% 0.109 72.1)"
+        ]
+      },
+      "metacritic-low": {
+        "role": "secondary",
+        "displayName": "Metacritic Red",
+        "canonical": "#B3261E",
+        "oklch": "oklch(50.1% 0.178 28.7)",
+        "tonalRamp": [
+          "oklch(15% 0.178 28.7)",
+          "oklch(26% 0.178 28.7)",
+          "oklch(38% 0.178 28.7)",
+          "oklch(50% 0.178 28.7)",
+          "oklch(62% 0.178 28.7)",
+          "oklch(74% 0.178 28.7)",
+          "oklch(85% 0.178 28.7)",
+          "oklch(95% 0.178 28.7)"
+        ]
+      },
+      "danger": {
+        "role": "neutral",
+        "displayName": "Danger",
+        "canonical": "#B3261E",
+        "tonalRamp": [
+          "oklch(15% 0.178 28.7)",
+          "oklch(26% 0.178 28.7)",
+          "oklch(38% 0.178 28.7)",
+          "oklch(50% 0.178 28.7)",
+          "oklch(62% 0.178 28.7)",
+          "oklch(74% 0.178 28.7)",
+          "oklch(85% 0.178 28.7)",
+          "oklch(95% 0.178 28.7)"
+        ]
+      },
+      "on-frame": {
+        "role": "primary",
+        "displayName": "On Frame",
+        "canonical": "#FFFFFF",
+        "darkValue": "#0E0F15",
+        "tonalRamp": [
+          "oklch(15% 0.0 89.9)",
+          "oklch(26% 0.0 89.9)",
+          "oklch(38% 0.0 89.9)",
+          "oklch(50% 0.0 89.9)",
+          "oklch(62% 0.0 89.9)",
+          "oklch(74% 0.0 89.9)",
+          "oklch(85% 0.0 89.9)",
+          "oklch(95% 0.0 89.9)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Card Name",
+        "purpose": "Card name in the name band."
+      },
+      "headline": {
+        "displayName": "Section Heading",
+        "purpose": "Full-width section headings."
+      },
+      "title": {
+        "displayName": "Panel Heading",
+        "purpose": "Your copy, About, Details."
+      },
+      "stat-value": {
+        "displayName": "Stat Value",
+        "purpose": "Stat cells; same face for scores, ratings and set numbers."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default text."
+      },
+      "prose": {
+        "displayName": "Prose",
+        "purpose": "About description and review bodies, max 68ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Definition terms and rating label; sentence case."
+      },
+      "label-sm": {
+        "displayName": "Small Label",
+        "purpose": "Stat-cell terms."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Button text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-lift",
+        "value": "0 1px 2px rgba(22, 20, 29, 0.06), 0 10px 28px rgba(22, 20, 29, 0.10)",
+        "purpose": "Main card and series mini cards only (light)."
+      },
+      {
+        "name": "card-lift-dark",
+        "value": "0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.45)",
+        "purpose": "Card lift in dark theme."
+      },
+      {
+        "name": "art-inset-rule",
+        "value": "inset 0 0 0 1px var(--gd-rule)",
+        "purpose": "Edge of the card art box."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Default curve: frame recolor (320ms), menu enter (160ms), button press (160ms), review enter (200ms), mini-card lift (200ms)."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+        "purpose": "Holo sweep (900ms), the one signature motion."
+      },
+      {
+        "name": "ease-drawer",
+        "value": "cubic-bezier(0.32, 0.72, 0, 1)",
+        "purpose": "Shared global token; not used on the pilot surface."
+      },
+      {
+        "name": "frame-recolor",
+        "value": "320ms var(--ease-out)",
+        "purpose": "Frame, stamp and Your copy recolor on status change."
+      },
+      {
+        "name": "holo-sweep",
+        "value": "900ms var(--ease-in-out); translateX(-110%) to translateX(110%); fades over the last 20%",
+        "purpose": "Runs once per player-made status change; display:none under prefers-reduced-motion."
+      },
+      {
+        "name": "hover-color",
+        "value": "150ms ease",
+        "purpose": "Hover color and border changes, fine pointers only."
+      },
+      {
+        "name": "press",
+        "value": "scale(0.97) 160ms var(--ease-out)",
+        "purpose": "Button press; rating stars press to scale(0.9)."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact-desktop",
+        "value": "1024px"
+      },
+      {
+        "name": "single-column",
+        "value": "860px"
+      },
+      {
+        "name": "mobile",
+        "value": "480px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Single main action in a group (Add to favorites, Publish review).",
+      "html": "<button class=\"ds-btn ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z\"/></svg>Add to favorites</button>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:10px;border:1px solid transparent;font:600 0.95rem/1 Barlow,system-ui,sans-serif;cursor:pointer;transition:background-color 150ms ease,border-color 150ms ease,transform 160ms var(--ease-out)} .ds-btn:active{transform:scale(0.97)} .ds-btn:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-btn-primary{background:var(--gd-ink);color:var(--gd-face)} .ds-btn-primary:hover{background:var(--gd-ink-2)}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Every secondary action (Back, Rate & review, Read more, Load more, Cancel).",
+      "html": "<button class=\"ds-btn ds-btn-ghost\">Rate &amp; review</button>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:10px;border:1px solid transparent;font:600 0.95rem/1 Barlow,system-ui,sans-serif;cursor:pointer;transition:background-color 150ms ease,border-color 150ms ease,transform 160ms var(--ease-out)} .ds-btn:active{transform:scale(0.97)} .ds-btn:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-btn-ghost{background:var(--gd-face);border-color:var(--gd-rule-strong);color:var(--gd-ink)} .ds-btn-ghost:hover{background:var(--gd-ground);border-color:var(--gd-ink-3)}"
+    },
+    {
+      "name": "Status Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Ghost button outlined and inked in the current status hue; opens the status menu.",
+      "html": "<button class=\"ds-btn ds-status\">Playing <svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:10px;border:1px solid transparent;font:600 0.95rem/1 Barlow,system-ui,sans-serif;cursor:pointer;transition:background-color 150ms ease,border-color 150ms ease,transform 160ms var(--ease-out)} .ds-btn:active{transform:scale(0.97)} .ds-btn:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-status{background:var(--gd-face);border-color:var(--gd-playing);color:var(--gd-playing)} .ds-status:hover{background:var(--gd-ground)}"
+    },
+    {
+      "name": "Review Textarea",
+      "kind": "input",
+      "refersTo": "textarea",
+      "description": "Review text field, max 255 characters.",
+      "html": "<textarea class=\"ds-textarea\" rows=\"4\" placeholder=\"What did you think of this game?…\"></textarea>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-textarea{width:100%;min-height:110px;padding:12px;border:1px solid var(--gd-rule-strong);border-radius:10px;background:var(--gd-face);color:var(--gd-ink);font:400 0.95rem/1.5 Barlow,system-ui,sans-serif;resize:vertical;transition:border-color 150ms ease} .ds-textarea::placeholder{color:var(--gd-ink-3)} .ds-textarea:focus{border-color:var(--gd-ink);outline:none} .ds-textarea:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px}"
+    },
+    {
+      "name": "Fact Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Hairline pill for platform names.",
+      "html": "<ul class=\"ds-chips\"><li>PC</li><li>PlayStation 5</li><li>Xbox Series S/X</li></ul>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none} .ds-chips li{padding:4px 10px;border:1px solid var(--gd-rule);border-radius:999px;font:500 0.875rem Barlow,sans-serif}"
+    },
+    {
+      "name": "Metacritic Seal",
+      "kind": "chip",
+      "refersTo": "metacritic-high",
+      "description": "Score seal in the card name band; green 80+, amber 50-79, red under 50.",
+      "html": "<span class=\"ds-mc ds-mc-high\"><span class=\"ds-mc-l\">MC</span><span class=\"ds-mc-v\">92</span></span> <span class=\"ds-mc ds-mc-mid\"><span class=\"ds-mc-l\">MC</span><span class=\"ds-mc-v\">68</span></span> <span class=\"ds-mc ds-mc-low\"><span class=\"ds-mc-l\">MC</span><span class=\"ds-mc-v\">41</span></span>",
+      "css": ".ds-mc{display:inline-flex;flex-direction:column;align-items:center;min-width:54px;padding:4px 8px 6px;border-radius:8px;color:#fff;font-variant-numeric:tabular-nums} .ds-mc-l{font:700 0.7rem/1.2 Barlow,sans-serif;opacity:.9} .ds-mc-v{font:800 1.6rem/1 'Barlow Condensed',Barlow,sans-serif} .ds-mc-high{background:#157347} .ds-mc-mid{background:#8C5A00} .ds-mc-low{background:#B3261E}"
+    },
+    {
+      "name": "Collectible Card",
+      "kind": "card",
+      "refersTo": "card-frame",
+      "description": "Signature component: status-colored frame around a white face with name band, 4:3 art, stat cells and set footer.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-face\"><header class=\"ds-band\"><h1 class=\"ds-name\">Hollow Knight</h1><span class=\"ds-mc\">87</span></header><div class=\"ds-art\"></div><p class=\"ds-type\">Action, Platformer</p><dl class=\"ds-stats\"><div><dt>Community</dt><dd>4.6</dd></div><div><dt>Release</dt><dd>Feb 24, 2017</dd></div><div><dt>Platforms</dt><dd>6</dd></div></dl><footer class=\"ds-set\"><span class=\"ds-no\">No. 9767</span><span>Data by RAWG</span><span class=\"ds-stamp\">Playing</span></footer></div></article>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-card{--frame:var(--gd-playing);width:340px;background:var(--frame);border-radius:22px;padding:10px;box-shadow:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);transition:background-color 320ms var(--ease-out)} .ds-face{display:flex;flex-direction:column;gap:12px;padding:14px;background:var(--gd-face);border-radius:14px} .ds-band{display:flex;justify-content:space-between;gap:12px} .ds-name{margin:0;font:800 2rem/1 'Barlow Condensed',Barlow,sans-serif;letter-spacing:-0.01em} .ds-mc{min-width:44px;padding:4px 8px;border-radius:8px;background:#157347;color:#fff;font:800 1.6rem/1 'Barlow Condensed',sans-serif;text-align:center} .ds-art{aspect-ratio:4/3;border-radius:10px;background:var(--gd-ground);box-shadow:inset 0 0 0 1px var(--gd-rule)} .ds-type{margin:0;font:600 .9rem Barlow,sans-serif;color:var(--gd-ink-2)} .ds-stats{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:6px;margin:0} .ds-stats div{padding:8px 10px;border:1px solid var(--gd-rule);border-radius:8px} .ds-stats dt{font:600 .75rem Barlow,sans-serif;color:var(--gd-ink-3)} .ds-stats dd{margin:0;font:700 1.2rem/1.15 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap} .ds-set{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;padding-top:10px;border-top:1px solid var(--gd-rule);font-size:.8rem;color:var(--gd-ink-3)} .ds-no{font:700 .95rem 'Barlow Condensed',sans-serif;color:var(--gd-ink-2)} .ds-stamp{margin-left:auto;padding:3px 10px;border-radius:999px;background:var(--frame);color:var(--gd-on-frame);font-weight:700}"
+    },
+    {
+      "name": "Your Copy Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Ownership panel: 2px border in the frame hue over a 7% tint of it.",
+      "html": "<section class=\"ds-copy\"><h2 class=\"ds-h2\">Your copy</h2><p class=\"ds-hint\">Status becomes available once the game is released.</p></section>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-copy{--frame:var(--gd-playing);padding:20px 22px;border:2px solid var(--frame);border-radius:14px;background:color-mix(in srgb,var(--frame) 7%,var(--gd-face));transition:border-color 320ms var(--ease-out),background-color 320ms var(--ease-out)} .ds-h2{margin:0 0 14px;font:700 1.45rem/1.1 'Barlow Condensed',Barlow,sans-serif} .ds-hint{margin:0;font-size:.875rem;color:var(--gd-ink-3)}"
+    },
+    {
+      "name": "Rare Achievement Tile",
+      "kind": "custom",
+      "refersTo": "achievement-tile",
+      "description": "Rarity as card frame: rare gets a 3px holo gradient border over a 6% tint.",
+      "html": "<div class=\"ds-ach\"><span class=\"ds-ach-img\"></span><span class=\"ds-ach-name\">Steel Soul</span><span class=\"ds-ach-pct\">2.1% of players</span></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-ach{display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:12px;align-items:center;width:260px;padding:10px;border-radius:12px;border:3px solid transparent;background:linear-gradient(color-mix(in srgb,var(--gd-rare) 6%,var(--gd-face)),color-mix(in srgb,var(--gd-rare) 6%,var(--gd-face))) padding-box,linear-gradient(120deg,var(--gd-rare) 0%,hsl(45,95%,62%) 30%,hsl(290,70%,70%) 50%,hsl(185,75%,55%) 70%,var(--gd-rare) 100%) border-box} .ds-ach-img{grid-row:span 2;width:48px;height:48px;border-radius:8px;background:var(--gd-ground)} .ds-ach-name{font:600 .9rem/1.25 Barlow,sans-serif} .ds-ach-pct{font-size:.8rem;color:var(--gd-ink-3);font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Series Mini Card",
+      "kind": "card",
+      "refersTo": "mini-card-frame",
+      "description": "Series entry as a small neutral-framed card; lifts 3px on hover.",
+      "html": "<a class=\"ds-mini\" href=\"#\"><span class=\"ds-mini-face\"><span class=\"ds-mini-name\">Hollow Knight: Silksong</span><span class=\"ds-mini-art\"></span><span class=\"ds-mini-set\"><span>No. 58175</span><span>2025</span></span></span></a>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-mini{display:block;width:200px;padding:6px;border-radius:16px;background:var(--gd-frame-neutral);box-shadow:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);color:var(--gd-ink);text-decoration:none;transition:transform 200ms var(--ease-out)} .ds-mini:hover{transform:translateY(-3px)} .ds-mini:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-mini-face{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:11px;background:var(--gd-face)} .ds-mini-name{font:800 1.1rem/1.05 'Barlow Condensed',sans-serif} .ds-mini-art{aspect-ratio:4/3;border-radius:7px;background:var(--gd-ground)} .ds-mini-set{display:flex;justify-content:space-between;font-size:.8rem;color:var(--gd-ink-3);font-variant-numeric:tabular-nums}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Collectible Card",
+    "overview": "Every game is a trading card. RAWG prints the facts on the card face (name, art, genres, release, platforms, Metacritic, set number); the player's collection status colors the frame and their rating and review sit beside it. The world is a cool card-stock ground, white card faces and near-black ink, with one thick rounded frame as the only large field of color. That frame is neutral ink while the game is not in the player's collection and takes one solid status hue when it is.\n\nDensity is moderate and editorial: a sticky card column next to a working column of panels, then full-width sections separated by generous vertical space. Surfaces are flat white faces on a pale ground, held apart by hairline rules rather than shadows; only card objects (the main card and series mini cards) are lifted. Motion is quiet everywhere except one signature: when the player changes status, a holographic band sweeps once across the card art.\n\nThe world rejects the category default of a blurred-cover banner with a score badge and tabs. Facts are framed as card stats, not as a hero banner.",
+    "keyCharacteristics": [
+      "Card object first: thick rounded frame, inset 4:3 art box, ruled stat cells, set-number footer with RAWG credit.",
+      "One large color, and it means collection status.",
+      "Condensed display type for names and numbers, plain Barlow for everything else.",
+      "Hairline rules and tonal ground instead of shadows for non-card surfaces.",
+      "One signature motion (holo sweep), removed under reduced motion.",
+      "Light theme default; dark theme is a full token remap, not an inversion filter."
+    ],
+    "rules": [
+      {
+        "name": "The One Frame Rule",
+        "body": "The card frame is the only large field of color on the surface. Every other colored element (Metacritic seal, stamp, stars, rarity marks) is small. A new surface does not add a second large color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Frame Means Ownership Rule",
+        "body": "The frame stays neutral until the game is in the player's collection with a status; only then does it take the status hue, and the \"Your copy\" panel takes the same hue with it. Status hue never decorates anything unrelated to the player's copy except the focus ring, which uses the Pending blue as the system focus color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Condensed Prints Facts Rule",
+        "body": "Barlow Condensed is reserved for card names, section and panel headings, and numbers (stats, scores, ratings, set numbers). Running text, labels and controls stay in Barlow.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "Every number that can change or be compared (stats, scores, counts, percentages, character counter) uses tabular numerals.",
+        "section": "typography"
+      },
+      {
+        "name": "The Only Cards Float Rule",
+        "body": "Panels, tiles, chips and inputs are flat with a hairline border. Only card objects (main card, mini cards) carry the lift shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the card frame as the only large color, and tie it to collection status: neutral until the game has a status, then exactly one status hue.",
+      "Do recolor frame, stamp and \"Your copy\" together on the same 320ms ease-out transition.",
+      "Do print names, headings and numbers in Barlow Condensed and keep labels and prose in Barlow, sentence case.",
+      "Do use tabular numerals for every stat, score, count and percentage.",
+      "Do nest radii from outside in (22, 14, 10, 8) and separate flat surfaces with 1px rules.",
+      "Do reserve the lift shadow for card objects.",
+      "Do keep the RAWG credit printed on the card face.",
+      "Do remove the holo sweep under reduced motion and keep every other transition to opacity and color there.",
+      "Do define both themes for every new token; dark lifts status hues and flips on-frame text to the dark ground."
+    ],
+    "donts": [
+      "Don't add a second signature motion; the holo sweep is the only one, and it runs only on a player-made status change.",
+      "Don't add a second large color field or tint panels other than \"Your copy\".",
+      "Don't lay holographic foil over achievement badges or card art at rest; foil lives on the rare tile's frame and in the one-time sweep.",
+      "Don't open a game page with a blurred-cover banner, a floating score badge and tabs; the card is the hero.",
+      "Don't use uppercase tracked labels; labels are sentence case.",
+      "Don't apply shadows to panels, tiles, chips or inputs."
+    ]
+  }
+}
