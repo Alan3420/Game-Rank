@@ -17,9 +17,9 @@
           <span v-if="game.release_date || game.id">{{ game.release_date ? game.release_date.split('-')[0] : 'TBA' }}</span>
         </span>
         <span class="mini__set-line mini__set-line--stamp">
-          <span v-if="status" class="mini__stamp">
+          <span v-if="status" class="mini__stamp" :title="STATUS_META[status].label">
             <i aria-hidden="true" :class="'pi ' + STATUS_META[status].icon"></i>
-            {{ STATUS_META[status].label }}
+            <span class="mini__stamp-label">{{ STATUS_META[status].label }}</span>
           </span>
         </span>
       </span>
@@ -307,6 +307,21 @@ onBeforeUnmount(function () {
 
   .mini__name {
     font-size: 0.95rem;
+  }
+
+  /* en la carta estrecha el sello queda solo con el icono: el marco ya
+     dice el estado y las acciones necesitan su sitio */
+  .mini__stamp-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .mini__stamp {
+    padding: 3px 7px;
   }
 
   .mini__mc {

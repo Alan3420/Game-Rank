@@ -503,10 +503,10 @@ th[aria-sort="descending"] .cat-sort {
 
     .cat-row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-columns: auto minmax(0, 1fr) auto;
         grid-template-areas:
-            "game actions"
-            "meta actions";
+            "game game actions"
+            "mc owned actions";
         align-items: center;
         column-gap: 8px;
         padding: 10px 10px 10px 12px;
@@ -531,15 +531,25 @@ th[aria-sort="descending"] .cat-sort {
         min-width: 0;
     }
 
-    .cat-row__mc,
-    .cat-row__owned {
-        grid-area: meta;
+    .cat-row__mc {
+        grid-area: mc;
         margin-top: 6px;
         padding-left: 68px !important;
     }
 
     .cat-row__owned {
-        padding-left: 112px !important;
+        grid-area: owned;
+        margin-top: 6px;
+        padding-left: 8px !important;
+    }
+
+    /* el tinte de las filas propias se pinta una vez, en la fila */
+    .cat-row[class*="cw-frame--"] {
+        background: color-mix(in srgb, var(--gd-frame) 6%, var(--gd-face));
+    }
+
+    .cat-row[class*="cw-frame--"] td {
+        background: none;
     }
 
     .cat-row__actions {

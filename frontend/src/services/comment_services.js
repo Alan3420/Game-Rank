@@ -78,3 +78,9 @@ export async function obtenerPromedioDeCalificacion(idJuego) {
         return null;
     }
 }
+
+// Reseñas del usuario con sesion (solo traen id_game_api, no el nombre)
+export async function obtenerMisComentarios() {
+    const respuesta = await api.get('/comment/user');
+    return respuesta.data;
+}

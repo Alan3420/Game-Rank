@@ -6,6 +6,8 @@ import { notificaciones } from '../../store/notificaciones';
 import { confirmacion } from '../../store/confirmacion';
 import { useRouter } from 'vue-router';
 import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
+import { obtenerMisComentarios } from '../../services/comment_services';
+import { formatearFechaCorta } from '../../utils/formatoFecha.js';
 
 export default {
   name: "perfil",
@@ -30,6 +32,13 @@ export default {
 
       stats: null,
       statsLoading: true,
+
+      // Reseñas propias (el backend solo da el id del juego)
+      misResenas: [],
+      resenasLoading: true,
+
+      // Panel lateral con los datos y opciones de la cuenta
+      panelCuenta: false,
 
       mostrarModalEditar: false,
       mostrarModalCambiarContraseña: false,
@@ -56,6 +65,46 @@ export default {
   },
 
   computed: {
+
+    // Nombre de juego por id, a partir de lo que ya tenemos cargado
+    // (favoritos y coleccion); evita pedir cada juego a RAWG
+    nombrePorJuego() {
+      var mapa = {};
+      for (var i = 0; i < this.favoritos.length; i++) {
+        mapa[this.favoritos[i].id] = this.favoritos[i].name;
+      }
+      for (var j = 0; j < this.coleccion.length; j++) {
+        if (this.coleccion[j].game) {
+          mapa[this.coleccion[j].game.id] = this.coleccion[j].game.name;
+        }
+      }
+      return mapa;
+    },
+
+    // Reparto de la coleccion para la barra de avance
+    repartoColeccion() {
+      var total = this.coleccion.length;
+      var partes = [];
+      var orden = ['completado', 'jugando', 'pausado', 'pendiente'];
+      for (var i = 0; i < orden.length; i++) {
+        var n = this.coleccionPorEstado[orden[i]].length;
+        partes.push({
+          key: orden[i],
+          n: n,
+          pct: total ? (n / total) * 100 : 0
+        });
+      }
+      return partes;
+    },
+
+    resumenReparto() {
+      var textos = [];
+      for (var i = 0; i < this.repartoColeccion.length; i++) {
+        var p = this.repartoColeccion[i];
+        textos.push(p.n + ' ' + STATUS_META[p.key].label.toLowerCase());
+      }
+      return this.coleccion.length + ' games in your album: ' + textos.join(', ');
+    },
 
     esAdministrador() {
       if (!estadoAutenticacion.usuario) {
@@ -129,7 +178,8 @@ export default {
       this.cargarFavoritos(),
       this.cargarEstadosDeColeccion(),
       this.cargarColeccion(),
-      this.cargarEstadisticas()
+      this.cargarEstadisticas(),
+      this.cargarResenas()
     ]);
 
     document.addEventListener('mousedown', this.manejarClicFueraDelMenu);
@@ -140,6 +190,58 @@ export default {
   },
 
   methods: {
+
+    formatearFecha(valor) {
+      return formatearFechaCorta(valor);
+    },
+
+    async cargarResenas() {
+      this.resenasLoading = true;
+      try {
+        var data = await obtenerMisComentarios();
+        var lista = (data && data.comments) ? data.comments.slice() : [];
+        // Las mas recientes primero
+        lista.sort(function (a, b) {
+          return new Date(b.date_of_update || b.date_of_comment) - new Date(a.date_of_update || a.date_of_comment);
+        });
+        this.misResenas = lista;
+      } catch (error) {
+        this.misResenas = [];
+      } finally {
+        this.resenasLoading = false;
+      }
+    },
+
+    abrirPanelCuenta() {
+      this.panelCuenta = true;
+      this.$nextTick(function () {
+        var cerrar = document.getElementById('pf-panel-close');
+        if (cerrar) {
+          cerrar.focus();
+        }
+      });
+    },
+
+    cerrarPanelCuenta() {
+      this.panelCuenta = false;
+      this.$nextTick(function () {
+        var boton = document.getElementById('pf-settings-btn');
+        if (boton) {
+          boton.focus();
+        }
+      });
+    },
+
+    // Desde el panel se abren los modales: el panel se cierra primero
+    editarDesdePanel() {
+      this.panelCuenta = false;
+      this.abrirModalEditar();
+    },
+
+    contrasenaDesdePanel() {
+      this.panelCuenta = false;
+      this.abrirModalCambiarContraseña();
+    },
 
     async cargarEstadisticas() {
       this.statsLoading = true;
@@ -464,6 +566,9 @@ export default {
           }
         }
         this.favoritos = nuevaLista;
+
+        // Quitar el favorito borra tambien su estado: sale de la coleccion
+        this.manejarActualizacionEstado({ gameId: idGame, status: null });
 
         if (this.paginaFavoritos > this.totalPaginasFavoritos) {
           this.paginaFavoritos = this.totalPaginasFavoritos;
