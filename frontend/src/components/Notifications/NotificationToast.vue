@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div class="toast-stack" aria-live="polite" aria-atomic="true">
+    <div class="toast-stack cw-scope" aria-live="polite" aria-atomic="true">
       <TransitionGroup name="toast">
         <div v-for="item in notificaciones.state.items" :key="item.id" class="toast" :class="`toast-${item.type}`"
           role="status">

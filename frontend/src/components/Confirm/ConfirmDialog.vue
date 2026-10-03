@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="modal">
-      <div v-if="confirmacion.state.open" class="ext-modal-overlay" @click.self="confirmacion.responder(false)"
+      <div v-if="confirmacion.state.open" class="ext-modal-overlay cw-scope" @click.self="confirmacion.responder(false)"
         @keydown.esc="confirmacion.responder(false)">
         <div class="ext-modal" role="alertdialog" aria-modal="true" aria-labelledby="confirm-dialog-title"
           aria-describedby="confirm-dialog-body">

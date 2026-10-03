@@ -4,6 +4,9 @@ import { agregarAFavoritos, consultarSiEsFavorito, quitarDeFavoritos } from "../
 import { listarEstadosDeJuego } from "../../services/user_game_status";
 import { notificaciones } from "../../store/notificaciones";
 import { estadoAutenticacion } from "../../store/autenticacion";
+import { STATUS_META } from "../../utils/statusMeta.js";
+import { claseMetacritic } from "../../utils/metacritic.js";
+import { formatearFechaCorta } from "../../utils/formatoFecha.js";
 
 const POR_PAGINA = 20;
 
@@ -20,7 +23,14 @@ export default {
             currentPage: 1,
             totalCount: 0,
             loading: false,
-            filterPanelOpen: false,
+            STATUS_META,
+            // "grid" (album de cartas) o "checklist" (tabla del set); vive
+            // en la URL (?view=checklist) para poder compartirlo
+            vista: 'grid',
+            // en movil la barra de filtros se despliega como cajon
+            filtrosAbiertos: false,
+            // id del juego cuyo menu de estado esta abierto en la checklist
+            menuEstadoAbierto: null,
             filters: {
                 ordering: '',
                 genres: [],
@@ -33,11 +43,42 @@ export default {
 
     computed: {
 
+        titulo() {
+            if (this.game_name) {
+                return 'Results for "' + this.game_name + '"';
+            }
+            if (this.tieneFiltrosActivos) {
+                return 'Filtered catalog';
+            }
+            return 'Game catalog';
+        },
+
+        etiquetaOrden() {
+            var nombres = {
+                '': 'relevance',
+                '-rating': 'top rated',
+                '-metacritic': 'Metacritic, high to low',
+                'metacritic': 'Metacritic, low to high',
+                '-released': 'newest',
+                'released': 'oldest',
+                'name': 'name, A to Z',
+                '-name': 'name, Z to A',
+                '-added': 'popularity'
+            };
+            var etiqueta = nombres[this.filters.ordering];
+            return etiqueta || 'relevance';
+        },
+
+        textoTotal() {
+            if (!this.totalCount) {
+                return 'No games';
+            }
+            var total = Number(this.totalCount).toLocaleString('en');
+            return total + (this.totalCount === 1 ? ' game' : ' games');
+        },
+
         tieneFiltrosActivos() {
             var f = this.filters;
-            if (f.ordering !== '') {
-                return true;
-            }
             if (f.genres.length > 0) {
                 return true;
             }
@@ -54,9 +95,6 @@ export default {
             var total = 0;
             var f = this.filters;
 
-            if (f.ordering) {
-                total = total + 1;
-            }
             total = total + f.genres.length;
             total = total + f.platforms.length;
             // El rango de fechas cuenta como uno, no como dos
@@ -66,8 +104,10 @@ export default {
             return total;
         },
 
+        // Usa el endpoint de filtros si hay filtros, busqueda o un orden
+        // distinto del de por defecto (el orden no cuenta como filtro)
         estaFiltrando() {
-            if (this.tieneFiltrosActivos) {
+            if (this.tieneFiltrosActivos || this.filters.ordering) {
                 return true;
             }
             if (this.game_name) {
@@ -95,6 +135,9 @@ export default {
         if (this.$route.query.q) {
             this.game_name = this.$route.query.q;
         }
+        if (this.$route.query.view === 'checklist') {
+            this.vista = 'checklist';
+        }
 
         var paginaInicial = parseInt(this.$route.query.page);
         if (!paginaInicial || isNaN(paginaInicial)) {
@@ -106,15 +149,15 @@ export default {
 
         await this.cargarPagina(paginaInicial);
 
-        document.addEventListener('mousedown', this.manejarClicFueraDeFiltros);
+        document.addEventListener('mousedown', this.cerrarMenuEstadoSiFuera);
 
-        if (estadoAutenticacion.usuario) {
+        if (this.haySesion()) {
             await this.cargarEstadosDeColeccion();
         }
     },
 
     beforeUnmount() {
-        document.removeEventListener('mousedown', this.manejarClicFueraDeFiltros);
+        document.removeEventListener('mousedown', this.cerrarMenuEstadoSiFuera);
     },
 
     watch: {
@@ -201,7 +244,7 @@ export default {
                 // cargandose por detras para que la UI no espere
                 this.loading = false;
 
-                if (estadoAutenticacion.usuario) {
+                if (this.haySesion()) {
                     this.favorites = new Set();
                     var tareas = [];
                     for (var i = 0; i < this.games.length; i++) {
@@ -250,7 +293,7 @@ export default {
                 dateFrom: nuevosFiltros.dateFrom,
                 dateTo: nuevosFiltros.dateTo
             };
-            this.filterPanelOpen = false;
+            this.filtrosAbiertos = false;
             this.cargarPagina(1);
         },
 
@@ -262,7 +305,7 @@ export default {
                 dateFrom: '',
                 dateTo: ''
             };
-            this.filterPanelOpen = false;
+            this.filtrosAbiertos = false;
             this.cargarPagina(1);
         },
 
@@ -302,17 +345,82 @@ export default {
             }
         },
 
-        manejarClicFueraDeFiltros(e) {
-            if (!this.filterPanelOpen) {
+        claseMetacritic,
+
+        // Al entrar directo por URL la sesion aun se esta restaurando y
+        // estadoAutenticacion.usuario llega tarde: el token ya basta
+        haySesion() {
+            return !!(estadoAutenticacion.usuario || localStorage.getItem('token'));
+        },
+
+        formatearFecha(valor) {
+            return formatearFechaCorta(valor);
+        },
+
+        // Un juego que aun no ha salido no puede estar "jugando" ni
+        // "completado": el estado solo se ofrece a favoritos ya lanzados
+        juegoYaSalio(juego) {
+            if (!juego.release_date) {
+                return false;
+            }
+            return new Date(juego.release_date + 'T00:00:00') <= new Date();
+        },
+
+        puedeCambiarEstado(juego) {
+            return this.favorites.has(juego.id) && this.juegoYaSalio(juego);
+        },
+
+        cambiarVista(nueva) {
+            this.vista = nueva;
+            var consulta = {};
+            for (var clave in this.$route.query) {
+                consulta[clave] = this.$route.query[clave];
+            }
+            if (nueva === 'checklist') {
+                consulta.view = 'checklist';
+            } else {
+                delete consulta.view;
+            }
+            this.$router.replace({ query: consulta });
+        },
+
+        // Orden desde la cabecera de la checklist: alterna descendente y
+        // ascendente sobre la misma columna (RAWG acepta "campo"/"-campo")
+        ordenarPor(campo) {
+            var actual = this.filters.ordering;
+            var nuevo;
+            if (campo === 'name') {
+                nuevo = actual === 'name' ? '-name' : 'name';
+            } else {
+                nuevo = actual === '-' + campo ? campo : '-' + campo;
+            }
+            this.filters = Object.assign({}, this.filters, { ordering: nuevo });
+            this.cargarPagina(1);
+        },
+
+        ariaSort(campo) {
+            var actual = this.filters.ordering;
+            if (actual === campo) {
+                return 'ascending';
+            }
+            if (actual === '-' + campo) {
+                return 'descending';
+            }
+            return 'none';
+        },
+
+        alternarMenuEstado(gameId) {
+            this.menuEstadoAbierto = this.menuEstadoAbierto === gameId ? null : gameId;
+        },
+
+        cerrarMenuEstadoSiFuera(evento) {
+            if (this.menuEstadoAbierto === null) {
                 return;
             }
-            if (e.target.closest('.filter-panel')) {
+            if (evento.target.closest('.cat-row__status')) {
                 return;
             }
-            if (e.target.closest('.filter-toggle-btn')) {
-                return;
-            }
-            this.filterPanelOpen = false;
+            this.menuEstadoAbierto = null;
         },
 
         irADetalle(gameId) {

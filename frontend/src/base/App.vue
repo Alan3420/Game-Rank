@@ -1,7 +1,7 @@
 <template>
   <a href="#contenido" class="skip-link">Skip to content</a>
 
-  <header class="main-header">
+  <header class="main-header cw-scope">
     <div class="header-container">
       <router-link to="/" class="logo-link">
         <picture>
@@ -20,7 +20,7 @@
       </div>
 
       <nav class="nav-menu">
-        <button class="theme-toggle" @click="cambiarTema" :title="tema === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        <button type="button" class="theme-toggle" @click="cambiarTema" :title="tema === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
           :aria-label="tema === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'">
           <i aria-hidden="true" class="pi" :class="tema === 'dark' ? 'pi-sun' : 'pi-moon'"></i>
         </button>
@@ -43,7 +43,9 @@
           </router-link>
 
           <div class="user-menu" ref="userMenuRef">
-            <button @click="menuAbierto = !menuAbierto" class="options-user" :class="{ 'is-active': menuAbierto }">
+            <button type="button" @click="menuAbierto = !menuAbierto" class="options-user" :class="{ 'is-active': menuAbierto }"
+              aria-haspopup="menu" :aria-expanded="menuAbierto"
+              :aria-label="estadoAutenticacion.usuario.name + ', account menu'">
               <div class="user-avatar-btn">
                 {{ estadoAutenticacion.usuario.name?.charAt(0)?.toUpperCase() }}
               </div>
@@ -65,100 +67,35 @@
                   </div>
                 </div>
 
-                <div class="dropdown-divider"></div>
-
-                <p class="dropdown-section-label">Explore</p>
-
-                <router-link to="/" class="dropdown-item" @click="menuAbierto = false">
-                  <div class="dropdown-item-icon">
-                    <i aria-hidden="true" class="pi pi-home"></i>
-                  </div>
-                  <div class="dropdown-item-text">
-                    <span class="dropdown-item-title">Home</span>
-                    <span class="dropdown-item-desc">Back to the main page</span>
-                  </div>
-                </router-link>
-
-                <router-link to="/content/overview" class="dropdown-item" @click="menuAbierto = false">
-                  <div class="dropdown-item-icon">
-                    <i aria-hidden="true" class="pi pi-th-large"></i>
-                  </div>
-                  <div class="dropdown-item-text">
-                    <span class="dropdown-item-title">Catalog</span>
-                    <span class="dropdown-item-desc">Explore all games</span>
-                  </div>
-                </router-link>
-
-                <router-link to="/tendencias" class="dropdown-item" @click="menuAbierto = false">
-                  <div class="dropdown-item-icon">
-                    <i aria-hidden="true" class="pi pi-chart-line"></i>
-                  </div>
-                  <div class="dropdown-item-text">
-                    <span class="dropdown-item-title">Trends</span>
-                    <span class="dropdown-item-desc">Most popular in the community</span>
-                  </div>
-                </router-link>
-
-                <div class="dropdown-divider"></div>
-
-                <p class="dropdown-section-label">MY ACCOUNT</p>
-
-                <router-link to="/user/profile" class="dropdown-item" @click="menuAbierto = false">
-                  <div class="dropdown-item-icon">
-                    <i aria-hidden="true" class="pi pi-id-card"></i>
-                  </div>
-                  <div class="dropdown-item-text">
+                <div class="dropdown-group">
+                  <router-link to="/user/profile" class="dropdown-item" @click="menuAbierto = false">
+                    <i aria-hidden="true" class="pi pi-id-card dropdown-item-icon"></i>
                     <span class="dropdown-item-title">Profile</span>
-                    <span class="dropdown-item-desc">View and edit your information</span>
-                  </div>
-                </router-link>
+                  </router-link>
+                </div>
 
-                <div v-if="esAdministrador" class="dropdown-divider"></div>
+                <div v-if="esAdministrador" class="dropdown-group">
+                  <p class="dropdown-section-label">Administration</p>
+                  <router-link to="/admin/users" class="dropdown-item" @click="menuAbierto = false">
+                    <i aria-hidden="true" class="pi pi-users dropdown-item-icon"></i>
+                    <span class="dropdown-item-title">Manage users</span>
+                  </router-link>
+                  <button type="button" class="dropdown-item" @click="irAModeracion">
+                    <i aria-hidden="true" class="pi pi-comments dropdown-item-icon"></i>
+                    <span class="dropdown-item-title">Moderate comments</span>
+                  </button>
+                </div>
 
-                <p v-if="esAdministrador" class="dropdown-section-label">ADMINISTRATION</p>
-
-                <router-link v-if="esAdministrador" to="/admin/users" class="dropdown-item" @click="menuAbierto = false">
-                  <div class="dropdown-item-icon">
-                    <i aria-hidden="true" class="pi pi-users"></i>
-                  </div>
-                  <div class="dropdown-item-text">
-                    <span class="dropdown-item-title">Manage Users</span>
-                    <span class="dropdown-item-desc">View and edit users</span>
-                  </div>
-                </router-link>
-
-                <button v-if="esAdministrador" class="dropdown-item" @click="irAModeracion">
-                  <div class="dropdown-item-icon">
-                    <i aria-hidden="true" class="pi pi-comments"></i>
-                  </div>
-                  <div class="dropdown-item-text">
-                    <span class="dropdown-item-title">Moderation</span>
-                    <span class="dropdown-item-desc">Manage comments</span>
-                  </div>
-                </button>
-
-                <div class="dropdown-divider"></div>
-
-                <p class="dropdown-section-label">OPTIONS</p>
-
-                <button class="dropdown-item dropdown-danger" @click="abrirConfirmEliminar">
-                  <div class="dropdown-item-icon dropdown-danger-icon">
-                    <i aria-hidden="true" class="pi pi-trash"></i>
-                  </div>
-                  <div class="dropdown-item-text">
+                <div class="dropdown-group">
+                  <button type="button" class="dropdown-item dropdown-danger" @click="abrirConfirmEliminar">
+                    <i aria-hidden="true" class="pi pi-trash dropdown-item-icon"></i>
                     <span class="dropdown-item-title">Delete account</span>
-                    <span class="dropdown-item-desc">Permanently delete your account</span>
-                  </div>
-                </button>
-
-                <div class="dropdown-divider"></div>
-
-                <button class="dropdown-item dropdown-logout" @click="manejarCierreSesion">
-                  <div class="dropdown-item-icon dropdown-logout-icon">
-                    <i aria-hidden="true" class="pi pi-sign-out"></i>
-                  </div>
-                  <span class="dropdown-item-title">Sign out</span>
-                </button>
+                  </button>
+                  <button type="button" class="dropdown-item" @click="manejarCierreSesion">
+                    <i aria-hidden="true" class="pi pi-sign-out dropdown-item-icon"></i>
+                    <span class="dropdown-item-title">Sign out</span>
+                  </button>
+                </div>
               </div>
             </Transition>
           </div>
@@ -186,7 +123,7 @@
   <ConfirmDialog />
 
   <Transition name="modal-fade">
-    <div v-if="confirmEliminarAbierto" class="confirm-overlay" @click.self="cerrarConfirmEliminar">
+    <div v-if="confirmEliminarAbierto" class="confirm-overlay cw-scope" @click.self="cerrarConfirmEliminar">
       <div class="confirm-modal" role="alertdialog" aria-modal="true" aria-labelledby="delete-account-title">
         <div class="confirm-icon-wrap">
           <i aria-hidden="true" class="pi pi-exclamation-triangle"></i>
@@ -217,7 +154,7 @@
     </div>
   </Transition>
 
-  <footer class="main-footer">
+  <footer class="main-footer cw-scope">
     <div class="footer-container">
       <div class="footer-brand">
         <h3>Game Rank</h3>

@@ -1,5 +1,6 @@
 <template>
-  <div class="mini cw-frame" :class="status ? `cw-frame--${status}` : ''">
+  <div ref="raiz" class="mini cw-frame" :class="[status ? `cw-frame--${status}` : '', { 'mini--menu': menuAbierto, 'mini--two-actions': showFavorite && canChangeStatus }]"
+    @keydown.esc="menuAbierto = false">
     <component :is="game.id ? 'router-link' : 'div'" :to="game.id ? '/game/' + game.id : undefined" class="mini__link">
       <span class="mini__band">
         <span class="mini__name" :title="game.name">{{ game.name }}</span>
@@ -11,18 +12,43 @@
         <GameImage :src="game.imge_url" alt="" width="640" height="480" />
       </span>
       <span class="mini__set">
-        <span v-if="game.id" class="mini__number">No. {{ game.id }}</span>
-        <span v-if="status" class="mini__stamp">
-          <i aria-hidden="true" :class="'pi ' + STATUS_META[status].icon"></i>
-          {{ STATUS_META[status].label }}
+        <span class="mini__set-line">
+          <span v-if="game.id" class="mini__number">No. {{ game.id }}</span>
+          <span v-if="game.release_date || game.id">{{ game.release_date ? game.release_date.split('-')[0] : 'TBA' }}</span>
         </span>
-        <span v-else>{{ game.release_date ? game.release_date.split('-')[0] : 'TBA' }}</span>
+        <span class="mini__set-line mini__set-line--stamp">
+          <span v-if="status" class="mini__stamp">
+            <i aria-hidden="true" :class="'pi ' + STATUS_META[status].icon"></i>
+            {{ STATUS_META[status].label }}
+          </span>
+        </span>
       </span>
     </component>
     <button
+      v-if="canChangeStatus"
+      type="button"
+      class="mini__action mini__status-btn"
+      aria-haspopup="menu"
+      :aria-expanded="menuAbierto"
+      :aria-label="'Change status of ' + game.name"
+      @click="menuAbierto = !menuAbierto"
+    >
+      <i aria-hidden="true" class="pi pi-bookmark"></i>
+    </button>
+    <Transition name="gsd">
+      <div v-if="menuAbierto" class="mini__menu">
+        <GameStatusDropdown
+          :game-id="game.id"
+          :current-status="status"
+          @close="menuAbierto = false"
+          @update:status="$emit('update:status', $event)"
+        />
+      </div>
+    </Transition>
+    <button
       v-if="showFavorite"
       type="button"
-      class="mini__fav"
+      class="mini__action mini__fav"
       :aria-pressed="favorite"
       :aria-label="(favorite ? 'Remove ' : 'Add ') + game.name + (favorite ? ' from favorites' : ' to favorites')"
       @click="$emit('toggle-favorite', game.id)"
@@ -33,7 +59,9 @@
 </template>
 
 <script setup>
+import { ref, watch, onBeforeUnmount } from 'vue';
 import GameImage from '../Image/GameImage.vue';
+import GameStatusDropdown from '../Cards/GameStatusDropdown.vue';
 import { STATUS_META } from '../../utils/statusMeta.js';
 import { claseMetacritic } from '../../utils/metacritic.js';
 
@@ -45,10 +73,34 @@ defineProps({
   game: { type: Object, required: true },
   status: { type: String, default: null },
   favorite: { type: Boolean, default: false },
-  showFavorite: { type: Boolean, default: false }
+  showFavorite: { type: Boolean, default: false },
+  // Muestra el boton y el menu de estado (solo favoritos ya lanzados)
+  canChangeStatus: { type: Boolean, default: false }
 });
 
-defineEmits(['toggle-favorite']);
+defineEmits(['toggle-favorite', 'update:status']);
+
+const raiz = ref(null);
+const menuAbierto = ref(false);
+
+// El menu se cierra al pulsar fuera de la carta
+function cerrarSiFuera(evento) {
+  if (raiz.value && !raiz.value.contains(evento.target)) {
+    menuAbierto.value = false;
+  }
+}
+
+watch(menuAbierto, function (abierto) {
+  if (abierto) {
+    document.addEventListener('mousedown', cerrarSiFuera);
+  } else {
+    document.removeEventListener('mousedown', cerrarSiFuera);
+  }
+});
+
+onBeforeUnmount(function () {
+  document.removeEventListener('mousedown', cerrarSiFuera);
+});
 
 </script>
 
@@ -111,17 +163,31 @@ defineEmits(['toggle-favorite']);
   object-fit: cover;
 }
 
+/* pie de set fijo de dos lineas: todas las cartas miden lo mismo tengan
+   o no sello, y las acciones se alinean con la segunda linea */
 .mini__set {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 24px;
-  padding-right: 30px;
+  flex-direction: column;
+  gap: 4px;
   font-size: 0.8rem;
   color: var(--gd-ink-3);
   font-variant-numeric: tabular-nums;
+}
+
+.mini__set-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mini__set-line--stamp {
+  min-height: 24px;
+  padding-right: 34px;
+}
+
+.mini--two-actions .mini__set-line--stamp {
+  padding-right: 68px;
 }
 
 .mini__number {
@@ -148,7 +214,40 @@ defineEmits(['toggle-favorite']);
   font-size: 0.65rem;
 }
 
-.mini__fav {
+.mini--menu {
+  z-index: 30;
+}
+
+.mini__status-btn {
+  right: 44px;
+}
+
+.mini__menu {
+  position: absolute;
+  right: 6px;
+  bottom: 46px;
+  z-index: 40;
+  transform-origin: bottom right;
+}
+
+.gsd-enter-active {
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out);
+}
+
+.gsd-leave-active {
+  transition: opacity 100ms var(--ease-out);
+}
+
+.gsd-enter-from {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.gsd-leave-to {
+  opacity: 0;
+}
+
+.mini__action {
   position: absolute;
   right: 12px;
   bottom: 10px;
@@ -165,11 +264,21 @@ defineEmits(['toggle-favorite']);
   transition: background-color 150ms ease, color 150ms ease, transform 160ms var(--ease-out);
 }
 
-.mini__fav[aria-pressed="true"] {
+.mini__fav[aria-pressed="true"],
+.mini__status-btn[aria-expanded="true"] {
   color: var(--gd-ink);
 }
 
-.mini__fav:active {
+.mini__status-btn {
+  right: 44px;
+  color: var(--gd-frame);
+}
+
+.mini:not([class*="cw-frame--"]) .mini__status-btn {
+  color: var(--gd-ink-3);
+}
+
+.mini__action:active {
   transform: scale(0.92);
 }
 
@@ -178,7 +287,7 @@ defineEmits(['toggle-favorite']);
     transform: translateY(-3px);
   }
 
-  .mini__fav:hover {
+  .mini__action:hover {
     background: var(--gd-ground);
     color: var(--gd-ink);
   }

@@ -1,102 +1,88 @@
 <template>
-  <Transition name="filter-slide">
-    <div v-if="open" class="filter-panel">
+  <section class="fp" aria-labelledby="fp-title">
+    <h2 id="fp-title" class="fp__title">Filters</h2>
 
-      <div class="filter-section">
-        <p class="filter-section-title">Sort by</p>
-        <div class="filter-chips">
-          <button
-            v-for="opt in opcionesDeOrden"
-            :key="opt.value"
-            class="filter-chip"
-            :class="{ 'is-active': ordenLocal === opt.value }"
-            @click="alternarOrden(opt.value)"
-          >
-            <i aria-hidden="true" class="pi" :class="opt.icon"></i>
-            {{ opt.label }}
-          </button>
-        </div>
+    <fieldset class="fp__group">
+      <legend class="fp__legend">Sort by</legend>
+      <div class="fp__chips">
+        <button
+          v-for="opt in opcionesDeOrden"
+          :key="opt.value"
+          type="button"
+          class="fp__chip"
+          :aria-pressed="ordenLocal === opt.value"
+          @click="alternarOrden(opt.value)"
+        >{{ opt.label }}</button>
       </div>
+    </fieldset>
 
-      <div class="filter-section">
-        <p class="filter-section-title">Genres</p>
-        <div class="filter-chips">
-          <button
-            v-for="genre in opcionesDeGenero"
-            :key="genre.value"
-            class="filter-chip"
-            :class="{ 'is-active': generosLocales.includes(genre.value) }"
-            @click="alternarGenero(genre.value)"
-          >
-            {{ genre.label }}
-          </button>
-        </div>
+    <fieldset class="fp__group">
+      <legend class="fp__legend">Genres</legend>
+      <div class="fp__chips">
+        <button
+          v-for="genre in opcionesDeGenero"
+          :key="genre.value"
+          type="button"
+          class="fp__chip"
+          :aria-pressed="generosLocales.includes(genre.value)"
+          @click="alternarGenero(genre.value)"
+        >{{ genre.label }}</button>
       </div>
+    </fieldset>
 
-      <div class="filter-section">
-        <p class="filter-section-title">Platforms</p>
-        <div class="filter-chips">
-          <button
-            v-for="plat in opcionesDePlataforma"
-            :key="plat.value"
-            class="filter-chip"
-            :class="{ 'is-active': plataformasLocales.includes(plat.value) }"
-            @click="alternarPlataforma(plat.value)"
-          >
-            <i aria-hidden="true" v-if="plat.icon" class="pi" :class="plat.icon"></i>
-            {{ plat.label }}
-          </button>
-        </div>
+    <fieldset class="fp__group">
+      <legend class="fp__legend">Platforms</legend>
+      <div class="fp__chips">
+        <button
+          v-for="plat in opcionesDePlataforma"
+          :key="plat.value"
+          type="button"
+          class="fp__chip"
+          :aria-pressed="plataformasLocales.includes(plat.value)"
+          @click="alternarPlataforma(plat.value)"
+        >{{ plat.label }}</button>
       </div>
+    </fieldset>
 
-      <div class="filter-section">
-        <p class="filter-section-title">Release Year</p>
-        <div class="filter-year-range">
-          <div class="filter-year-input">
-            <label for="filtro-anio-desde">From</label>
-            <input
-              id="filtro-anio-desde"
-              name="year_from"
-              type="number"
-              inputmode="numeric"
-              autocomplete="off"
-              v-model.number="fechaDesdeLocal"
-              min="1980"
-              :max="anioActual"
-              placeholder="1980"
-            />
-          </div>
-          <div class="filter-year-sep">—</div>
-          <div class="filter-year-input">
-            <label for="filtro-anio-hasta">To</label>
-            <input
-              id="filtro-anio-hasta"
-              name="year_to"
-              type="number"
-              inputmode="numeric"
-              autocomplete="off"
-              v-model.number="fechaHastaLocal"
-              min="1980"
-              :max="anioActual"
-              :placeholder="String(anioActual)"
-            />
-          </div>
-        </div>
+    <fieldset class="fp__group">
+      <legend class="fp__legend">Release year</legend>
+      <div class="fp__years">
+        <label class="fp__year">
+          <span>From</span>
+          <input
+            id="filtro-anio-desde"
+            name="year_from"
+            type="number"
+            inputmode="numeric"
+            autocomplete="off"
+            v-model.number="fechaDesdeLocal"
+            min="1980"
+            :max="anioActual"
+            placeholder="1980"
+          />
+        </label>
+        <label class="fp__year">
+          <span>To</span>
+          <input
+            id="filtro-anio-hasta"
+            name="year_to"
+            type="number"
+            inputmode="numeric"
+            autocomplete="off"
+            v-model.number="fechaHastaLocal"
+            min="1980"
+            :max="anioActual"
+            :placeholder="String(anioActual)"
+          />
+        </label>
       </div>
+    </fieldset>
 
-      <div class="filter-actions">
-        <button class="filter-btn-clear" @click="manejarLimpiar">
-          <i aria-hidden="true" class="pi pi-times"></i>
-          Clear filters
-        </button>
-        <button class="filter-btn-apply" @click="manejarAplicar">
-          <i aria-hidden="true" class="pi pi-check"></i>
-          Apply filters
-        </button>
-      </div>
-
+    <div class="fp__actions">
+      <button type="button" class="fp__btn fp__btn--ghost" @click="manejarLimpiar">Clear</button>
+      <button type="button" class="fp__btn fp__btn--primary" @click="manejarAplicar">Apply filters</button>
     </div>
-  </Transition>
+  </section>
 </template>
 
 <script>
@@ -105,15 +91,25 @@
 // el usuario va marcando opciones; cuando pulsa "Apply" emite el objeto
 // completo al padre con @apply, y este decide cuando recargar la lista.
 //
-// El panel no se cierra solo: el padre (contenido.vue) lo controla via
-// la prop "open".
+// Se muestra como barra lateral del catalogo; en movil el padre la
+// despliega como cajon. "ordering" llega del padre para que el orden
+// elegido desde la cabecera de la checklist se refleje aqui.
 export default {
   name: 'FilterPanel',
 
   props: {
-    open: {
-      type: Boolean,
-      default: false
+    ordering: {
+      type: String,
+      default: ''
+    }
+  },
+
+  watch: {
+    ordering: {
+      immediate: true,
+      handler(valor) {
+        this.ordenLocal = valor || '';
+      }
     }
   },
 
@@ -135,8 +131,10 @@ export default {
       // Opciones disponibles del select de ordenacion (mapeadas al param
       // que espera RAWG en su API).
       opcionesDeOrden: [
+        { value: '', label: 'Relevance', icon: 'pi-sparkles' },
         { value: '-rating', label: 'Top Rated', icon: 'pi-star-fill' },
         { value: '-metacritic', label: 'Metacritic', icon: 'pi-chart-bar' },
+        { value: '-released', label: 'Newest', icon: 'pi-calendar' },
         { value: 'name', label: 'A–Z', icon: 'pi-sort-alpha-down' },
         { value: '-added', label: 'Popular', icon: 'pi-bolt' }
       ],
@@ -179,11 +177,7 @@ export default {
     // Selecciona el orden indicado. Si el usuario hace click en el orden
     // que ya estaba activo, lo desactiva (toggle).
     alternarOrden(valor) {
-      if (this.ordenLocal === valor) {
-        this.ordenLocal = '';
-      } else {
-        this.ordenLocal = valor;
-      }
+      this.ordenLocal = valor;
     },
 
     // Anade o quita un genero de la seleccion local segun si ya estaba.

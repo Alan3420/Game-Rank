@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-03T09:08:22+00:00",
+  "generatedAt": "2026-10-03T09:30:42+00:00",
   "title": "Design System: Game Rank",
   "extensions": {
-    "scope": "Migrated surfaces: game detail (/game/:id) and Home (/). Tokens are --gd-* custom properties on .card-world (light) and [data-theme=\"dark\"] .card-world (dark) in frontend/src/styles/card-world.css, together with the shared classes .cw-frame / .cw-frame--{pendiente|jugando|pausado|completado}, .cw-h2, .cw-count and .cw-mc. Each migrated view puts card-world on its root. Fonts are imported globally in frontend/src/main.js; mini card in frontend/src/components/CardWorld/MiniCard.vue; Metacritic thresholds in frontend/src/utils/metacritic.js. The other eight views still run the previous system.",
+    "scope": "Migrated: the shared app shell (frontend/src/base/App.vue + style_app.css: header, user menu, footer, delete-account modal; global .ext-modal confirm/external-link modal and themed scrollbar in frontend/src/style.css; toasts in frontend/src/components/Notifications/; status menu in frontend/src/components/Cards/GameStatusDropdown.vue), the game detail (/game/:id) and the Home (/). Still on the previous system (their bodies only): catalog, profile, trends, login, register, admin users, admin comments, terms, 404. Tokens are global --gd-* custom properties in frontend/src/styles/card-world.css: :root (light) and [data-theme=\"dark\"] (dark). .card-world is the page base of a migrated view (min-height, ground, ink, Barlow, neutral frame default); .cw-scope is the Barlow typography scope with selection and focus ring for loose shell pieces (header, footer, toasts, status menu, delete-account modal). Shared classes: .cw-frame / .cw-frame--{pendiente|jugando|pausado|completado}, .cw-h2, .cw-count, .cw-mc. Fonts imported globally in frontend/src/main.js; mini card in frontend/src/components/CardWorld/MiniCard.vue; Metacritic thresholds in frontend/src/utils/metacritic.js.",
     "colorMeta": {
       "ground": {
         "role": "neutral",
@@ -356,6 +356,22 @@
           "oklch(85% 0.0 89.9)",
           "oklch(95% 0.0 89.9)"
         ]
+      },
+      "on-frame-neutral": {
+        "role": "primary",
+        "displayName": "On Neutral Frame",
+        "canonical": "#FFFFFF",
+        "darkValue": "#F1F0F6",
+        "tonalRamp": [
+          "oklch(15% 0.0 89.9)",
+          "oklch(26% 0.0 89.9)",
+          "oklch(38% 0.0 89.9)",
+          "oklch(50% 0.0 89.9)",
+          "oklch(62% 0.0 89.9)",
+          "oklch(74% 0.0 89.9)",
+          "oklch(85% 0.0 89.9)",
+          "oklch(95% 0.0 89.9)"
+        ]
       }
     },
     "typographyMeta": {
@@ -400,12 +416,12 @@
       {
         "name": "card-lift",
         "value": "0 1px 2px rgba(22, 20, 29, 0.06), 0 10px 28px rgba(22, 20, 29, 0.10)",
-        "purpose": "Main card, mini cards, guest trailer card, and the Home album spread as one object (removed when the spread stacks at 1024px) (light)."
+        "purpose": "Token --gd-raise (light). Main card, mini cards, guest trailer card, and the Home album spread as one object (removed when the spread stacks at 1024px)."
       },
       {
         "name": "card-lift-dark",
         "value": "0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px rgba(0, 0, 0, 0.45)",
-        "purpose": "Card lift in dark theme."
+        "purpose": "Token --gd-raise in dark theme."
       },
       {
         "name": "art-inset-rule",
@@ -416,6 +432,16 @@
         "name": "seal-on-art",
         "value": "0 1px 3px rgba(0, 0, 0, 0.3)",
         "purpose": "Small Metacritic seal placed over mini card art at 480px and below."
+      },
+      {
+        "name": "overlay-lift",
+        "value": "var(--gd-raise)",
+        "purpose": "Overlay-elevation exception to The Only Cards Float Rule: user menu, status menu, toasts, delete-account modal and the confirm / external-link modal."
+      },
+      {
+        "name": "modal-scrim",
+        "value": "background: rgba(14, 15, 21, 0.55); no backdrop blur",
+        "purpose": "Plain scrim behind every modal."
       }
     ],
     "motion": [
@@ -458,6 +484,21 @@
         "name": "tab-recolor",
         "value": "200ms var(--ease-out)",
         "purpose": "Home status tab fill, border and text changes."
+      },
+      {
+        "name": "menu-enter",
+        "value": "opacity + scale(0.96) 160ms var(--ease-out); leave opacity 100ms",
+        "purpose": "User menu (top-right origin) and status menu (top-left origin)."
+      },
+      {
+        "name": "toast",
+        "value": "enter 220ms, leave 160ms var(--ease-out); translateX(16px), translateY(16px) at 640px and below; reflow 220ms",
+        "purpose": "Toasts enter and leave through the same edge."
+      },
+      {
+        "name": "modal",
+        "value": "enter 220ms (panel translateY(8px) scale(0.97)), leave 150ms (scale(0.97)) var(--ease-out)",
+        "purpose": "Delete-account modal and the shared .ext-modal."
       }
     ],
     "breakpoints": [
@@ -466,8 +507,16 @@
         "value": "1024px"
       },
       {
+        "name": "shell-search-narrow",
+        "value": "900px"
+      },
+      {
         "name": "single-column",
         "value": "860px"
+      },
+      {
+        "name": "shell-header-tight",
+        "value": "768px"
       },
       {
         "name": "two-column-pockets",
@@ -476,6 +525,13 @@
       {
         "name": "mobile",
         "value": "480px"
+      }
+    ],
+    "openDecisions": [
+      {
+        "name": "Header logo",
+        "status": "pending the user",
+        "detail": "The header still shows the legacy raster wordmark (frontend/src/assets/game_rank_logo.png, compact mark logo_GR.png at narrow widths). Whether it is redrawn for the collectible-card world is undecided; recorded as current state, not a rule."
       }
     ]
   },
@@ -575,16 +631,56 @@
       "description": "Numbered hairline row of the Home checklists: rank, thumb, name, \"No. {id}\" with date and owned pill, value on the right.",
       "html": "<ol class=\"ds-rows\"><li><a class=\"ds-row\" href=\"#\"><span class=\"ds-rank\">1</span><span class=\"ds-thumb\"></span><span class=\"ds-text\"><span class=\"ds-name\">Hades II</span><span class=\"ds-meta\"><span class=\"ds-no\">No. 963218</span>Sep 25, 2025<span class=\"ds-owned\">Playing</span></span></span><span class=\"ds-score\">4.6</span></a></li><li><a class=\"ds-row\" href=\"#\"><span class=\"ds-rank\">2</span><span class=\"ds-thumb\"></span><span class=\"ds-text\"><span class=\"ds-name\">Hollow Knight: Silksong</span><span class=\"ds-meta\"><span class=\"ds-no\">No. 58175</span>Sep 4, 2025</span></span><span class=\"ds-score\">4.5</span></a></li></ol>",
       "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--gd-completed:#6D3FD6;--gd-mc-green:#157347;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-rows{width:420px;margin:0;padding:0;list-style:none} .ds-rows>li+li{border-top:1px solid var(--gd-rule)} .ds-row{display:flex;align-items:center;gap:12px;padding:10px 6px;border-radius:8px;color:var(--gd-ink);text-decoration:none;transition:background-color 150ms ease} .ds-row:hover{background:var(--gd-ground)} .ds-row:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-rank{width:20px;text-align:center;font:800 1.4rem 'Barlow Condensed',sans-serif;color:var(--gd-ink-3);font-variant-numeric:tabular-nums} .ds-thumb{flex-shrink:0;width:64px;height:48px;border-radius:6px;background:var(--gd-ground)} .ds-text{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0} .ds-name{overflow:hidden;font:600 .95rem/1.25 Barlow,sans-serif;text-overflow:ellipsis;white-space:nowrap} .ds-meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:.8rem;color:var(--gd-ink-3)} .ds-no{font:700 .85rem 'Barlow Condensed',sans-serif;color:var(--gd-ink-2);font-variant-numeric:tabular-nums} .ds-owned{padding:1px 7px;border-radius:999px;background:var(--gd-playing);color:var(--gd-on-frame);font-size:.7rem;font-weight:700} .ds-score{font:700 1.15rem 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums} .ds-score::before{content:\"\\2605 \";font-size:.75rem;color:var(--gd-star)}"
+    },
+    {
+      "name": "Site Header",
+      "kind": "nav",
+      "refersTo": "site-header",
+      "description": "Shell header: flat face band with a 1px bottom rule and no shadow; ground-filled search field, ghost theme toggle, nav links with a 2px ink bar on the current route, pill account button with a neutral-frame avatar initial.",
+      "html": "<header class=\"ds-hd\"><span class=\"ds-logo\">Game Rank</span><label class=\"ds-search\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg><input type=\"search\" placeholder=\"Search a game…\" aria-label=\"Search games\"></label><nav class=\"ds-nav\"><button class=\"ds-toggle\" aria-label=\"Switch to dark mode\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z\"/></svg></button><a class=\"ds-link is-active\" href=\"#\" aria-current=\"page\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/></svg>Catalog</a><a class=\"ds-link\" href=\"#\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M3 17l6-6 4 4 8-8\"/></svg>Trends</a><button class=\"ds-account\"><span class=\"ds-avatar\">A</span>Alan<svg width=\"10\" height=\"10\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></button></nav></header>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-on-frame-neutral:#FFFFFF;--gd-pending:#2563EB;--gd-playing:#0E7A3F;--gd-paused:#9A5B00;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-hd{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:64px;padding:0 24px;background:var(--gd-face);border-bottom:1px solid var(--gd-rule)} .ds-logo{font:800 1.4rem 'Barlow Condensed',Barlow,sans-serif} .ds-search{display:flex;flex:1;align-items:center;gap:10px;max-width:440px;height:40px;padding:0 14px;border:1px solid var(--gd-rule-strong);border-radius:10px;background:var(--gd-ground);color:var(--gd-ink-3);transition:border-color 150ms ease,background-color 150ms ease} .ds-search:focus-within{border-color:var(--gd-ink);background:var(--gd-face);outline:2px solid var(--gd-pending);outline-offset:2px} .ds-search input{flex:1;min-width:0;border:none;background:transparent;color:var(--gd-ink);font:400 .95rem Barlow,sans-serif;outline:none} .ds-search input::placeholder{color:var(--gd-ink-3)} .ds-nav{display:flex;align-items:center;gap:6px} .ds-toggle{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid var(--gd-rule-strong);border-radius:10px;background:var(--gd-face);color:var(--gd-ink-2);cursor:pointer;transition:background-color 150ms ease,color 150ms ease,transform 160ms var(--ease-out)} .ds-toggle:hover{background:var(--gd-ground);color:var(--gd-ink)} .ds-toggle:active{transform:scale(.95)} .ds-link{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 12px;border-radius:10px;color:var(--gd-ink-2);font:600 .95rem Barlow,sans-serif;text-decoration:none;transition:background-color 150ms ease,color 150ms ease} .ds-link:hover{background:var(--gd-ground);color:var(--gd-ink)} .ds-link.is-active{color:var(--gd-ink);box-shadow:inset 0 -2px 0 var(--gd-ink);border-radius:10px 10px 0 0} .ds-account{display:flex;align-items:center;gap:8px;height:42px;padding:3px 10px 3px 3px;border:1px solid var(--gd-rule-strong);border-radius:999px;background:var(--gd-face);color:var(--gd-ink);font:600 .95rem Barlow,sans-serif;cursor:pointer;transition:border-color 150ms ease} .ds-account:hover{border-color:var(--gd-ink-3)} .ds-account svg{color:var(--gd-ink-3)} .ds-avatar{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--gd-frame-neutral);color:var(--gd-on-frame-neutral);font:800 1.05rem 'Barlow Condensed',Barlow,sans-serif} .ds-toggle:focus-visible,.ds-link:focus-visible,.ds-account:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px}"
+    },
+    {
+      "name": "User Menu",
+      "kind": "custom",
+      "refersTo": "menu-panel",
+      "description": "Account menu: face panel, 1px rule, 14px radius, overlay lift; groups split by hairlines, plain ink-3 icons, only Delete account in danger.",
+      "html": "<div class=\"ds-menu\"><div class=\"ds-menu-hd\"><span class=\"ds-av\">AN</span><span class=\"ds-who\"><span class=\"ds-name\">Alan Novas</span><span class=\"ds-mail\">alan@example.com</span></span></div><div class=\"ds-grp\"><a class=\"ds-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"/><circle cx=\"9\" cy=\"12\" r=\"2\"/><path d=\"M14 10h4M14 14h4\"/></svg>Profile</a></div><div class=\"ds-grp\"><button class=\"ds-item ds-danger\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14\"/></svg>Delete account</button><button class=\"ds-item\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9\"/></svg>Sign out</button></div></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-on-frame-neutral:#FFFFFF;--gd-pending:#2563EB;--gd-playing:#0E7A3F;--gd-paused:#9A5B00;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-menu{width:290px;overflow:hidden;border:1px solid var(--gd-rule);border-radius:14px;background:var(--gd-face);box-shadow:var(--gd-raise)} .ds-menu-hd{display:flex;align-items:center;gap:12px;padding:16px} .ds-av{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--gd-frame-neutral);color:var(--gd-on-frame-neutral);font:800 1.15rem 'Barlow Condensed',Barlow,sans-serif} .ds-who{display:flex;flex-direction:column;min-width:0} .ds-name{font:800 1.15rem/1.2 'Barlow Condensed',Barlow,sans-serif} .ds-mail{font-size:.8rem;color:var(--gd-ink-3)} .ds-grp{padding:6px} .ds-grp+.ds-grp{border-top:1px solid var(--gd-rule)} .ds-item{display:flex;align-items:center;gap:12px;width:100%;min-height:40px;padding:8px 10px;border:none;border-radius:8px;background:none;color:var(--gd-ink);font:600 .95rem Barlow,sans-serif;text-align:left;text-decoration:none;cursor:pointer;transition:background-color 150ms ease} .ds-item svg{flex-shrink:0;color:var(--gd-ink-3)} .ds-item:hover{background:var(--gd-ground)} .ds-item:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-danger,.ds-danger svg{color:var(--gd-danger)}"
+    },
+    {
+      "name": "Status Menu",
+      "kind": "custom",
+      "refersTo": "status-menu",
+      "description": "Status picker: each option's icon in its status hue; the selected option fills with the hue like a frame; Remove status in danger.",
+      "html": "<div class=\"ds-gsd\" role=\"menu\"><button class=\"ds-opt\" style=\"--hue:var(--gd-pending)\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg><span>Pending</span></button><button class=\"ds-opt is-active\" style=\"--hue:var(--gd-playing)\" aria-checked=\"true\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg><span>Playing</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg></button><button class=\"ds-opt\" style=\"--hue:var(--gd-paused)\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg><span>Paused</span></button><button class=\"ds-opt\" style=\"--hue:var(--gd-completed)\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg><span>Completed</span></button><div class=\"ds-div\"></div><button class=\"ds-rm\">Remove status</button></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-on-frame-neutral:#FFFFFF;--gd-pending:#2563EB;--gd-playing:#0E7A3F;--gd-paused:#9A5B00;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-gsd{display:flex;flex-direction:column;gap:2px;width:200px;padding:4px;border:1px solid var(--gd-rule);border-radius:12px;background:var(--gd-face);box-shadow:var(--gd-raise)} .ds-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border:none;border-radius:8px;background:transparent;color:var(--gd-ink);font:600 .92rem Barlow,sans-serif;text-align:left;cursor:pointer;transition:background-color 150ms ease,color 150ms ease} .ds-opt>svg:first-child{color:var(--hue)} .ds-opt span{flex:1} .ds-opt:not(.is-active):hover{background:var(--gd-ground)} .ds-opt.is-active{background:var(--hue);color:var(--gd-on-frame)} .ds-opt.is-active svg{color:inherit} .ds-opt:focus-visible,.ds-rm:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-div{height:1px;margin:4px 0;background:var(--gd-rule)} .ds-rm{padding:8px 10px;border:none;border-radius:8px;background:transparent;color:var(--gd-danger);font:600 .9rem Barlow,sans-serif;cursor:pointer} .ds-rm:hover{background:var(--gd-ground)}"
+    },
+    {
+      "name": "Toast",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Face card with rule and overlay lift; icon chip in ink, only errors in danger. Status hues are never used.",
+      "html": "<div class=\"ds-toasts\"><div class=\"ds-toast\"><span class=\"ds-chip\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg></span><span class=\"ds-tb\"><span class=\"ds-tt\">Status saved</span><span class=\"ds-tm\">Status updated to \"Playing\".</span></span><button class=\"ds-x\" aria-label=\"Close notification\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg></button></div><div class=\"ds-toast ds-toast--error\"><span class=\"ds-chip\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg></span><span class=\"ds-tb\"><span class=\"ds-tt\">Error</span><span class=\"ds-tm\">Status wasn't saved. Check your connection and try again.</span></span><button class=\"ds-x\" aria-label=\"Close notification\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg></button></div></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-on-frame-neutral:#FFFFFF;--gd-pending:#2563EB;--gd-playing:#0E7A3F;--gd-paused:#9A5B00;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-toasts{display:flex;flex-direction:column;gap:10px;width:380px} .ds-toast{--c:var(--gd-ink);--on:var(--gd-face);display:flex;align-items:flex-start;gap:12px;padding:12px 12px 12px 14px;border:1px solid var(--gd-rule);border-radius:14px;background:var(--gd-face);box-shadow:var(--gd-raise)} .ds-toast--error{--c:var(--gd-danger);--on:#FFFFFF} .ds-chip{display:flex;flex-shrink:0;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--c);color:var(--on)} .ds-tb{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0} .ds-tt{font:800 1.1rem/1.2 'Barlow Condensed',Barlow,sans-serif} .ds-tm{font-size:.9rem;line-height:1.4;color:var(--gd-ink-2)} .ds-x{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:none;border-radius:7px;background:none;color:var(--gd-ink-3);cursor:pointer;transition:background-color 150ms ease,color 150ms ease} .ds-x:hover{background:var(--gd-ground);color:var(--gd-ink)} .ds-x:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px}"
+    },
+    {
+      "name": "Modal",
+      "kind": "custom",
+      "refersTo": "modal",
+      "description": "Delete-account and shared .ext-modal: face, 1px rule, 18px radius, overlay lift on a plain scrim; plain icon above the title; ghost Cancel beside primary or danger.",
+      "html": "<div class=\"ds-scrim\"><div class=\"ds-modal\" role=\"alertdialog\" aria-labelledby=\"ds-mt\"><span class=\"ds-mi\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M12 3 2 20h20L12 3z\"/><path d=\"M12 10v4M12 17h.01\"/></svg></span><h2 id=\"ds-mt\" class=\"ds-mt\">Delete your account?</h2><p class=\"ds-mb\">This action is permanent. All your comments, ratings and favorites will be deleted.</p><div class=\"ds-ma\"><button class=\"ds-mbtn ds-ghost\">Cancel</button><button class=\"ds-mbtn ds-del\">Delete account</button></div></div></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-on-frame-neutral:#FFFFFF;--gd-pending:#2563EB;--gd-playing:#0E7A3F;--gd-paused:#9A5B00;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-scrim{display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(14,15,21,.55)} .ds-modal{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:420px;padding:28px;border:1px solid var(--gd-rule);border-radius:18px;background:var(--gd-face);box-shadow:var(--gd-raise);text-align:center} .ds-mi{color:var(--gd-danger)} .ds-mt{margin:0;font:800 1.6rem/1.1 'Barlow Condensed',Barlow,sans-serif} .ds-mb{margin:0;font-size:.95rem;line-height:1.55;color:var(--gd-ink-2)} .ds-ma{display:flex;gap:10px;width:100%;margin-top:8px} .ds-mbtn{flex:1;height:42px;border:1px solid transparent;border-radius:10px;font:600 .95rem Barlow,sans-serif;cursor:pointer;transition:background-color 150ms ease,transform 160ms var(--ease-out)} .ds-mbtn:active{transform:scale(.97)} .ds-mbtn:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-ghost{border-color:var(--gd-rule-strong);background:var(--gd-face);color:var(--gd-ink)} .ds-ghost:hover{background:var(--gd-ground)} .ds-del{background:var(--gd-danger);color:#FFFFFF} .ds-del:hover{filter:brightness(1.08)}"
     }
   ],
   "narrative": {
     "northStar": "The Collectible Card",
-    "overview": "Every game is a trading card. RAWG prints the facts on the card face (name, art, genres, release, platforms, Metacritic, set number); the player's collection status colors the frame and their rating and review sit beside it. The world is a cool card-stock ground, white card faces and near-black ink, with one thick rounded frame as the only large field of color on a card. That frame is neutral ink while the game is not in the player's collection and takes one solid status hue when it is. Surfaces that hold the player's own copies (the \"Your copy\" panel, the Home album page) take the same status hue as a light tint and a 2px frame.\n\nDensity is moderate and editorial. The game detail sets a sticky card column next to a working column of panels; the Home opens as a card album, the player's binder of owned cards on the left page and the world's checklists on the right. Surfaces are flat white faces on a pale ground, held apart by hairline rules rather than shadows; only card objects (the main card, mini cards, the trailer card) and the open album spread as one object are lifted. Motion is quiet everywhere except one signature: when the player changes status, a holographic band sweeps once across the card art.\n\nThe world rejects the category default of a blurred-cover banner with a score badge and tabs, and of a full-width hero over identical carousels. Facts are framed as card stats and checklist entries, not as banners.",
+    "overview": "Every game is a trading card. RAWG prints the facts on the card face (name, art, genres, release, platforms, Metacritic, set number); the player's collection status colors the frame and their rating and review sit beside it. The world is a cool card-stock ground, white card faces and near-black ink, with one thick rounded frame as the only large field of color on a card. That frame is neutral ink while the game is not in the player's collection and takes one solid status hue when it is. Surfaces that hold the player's own copies (the \"Your copy\" panel, the Home album page) take the same status hue as a light tint and a 2px frame.\n\nDensity is moderate and editorial. The game detail sets a sticky card column next to a working column of panels; the Home opens as a card album, the player's binder of owned cards on the left page and the world's checklists on the right. Surfaces are flat white faces on a pale ground, held apart by hairline rules rather than shadows; only card objects (the main card, mini cards, the trailer card) and the open album spread as one object are lifted, plus the transient overlays (menus, toasts, modals) that sit above the page. The shell is structure, not an object: the header and footer are flat face bands ruled off from the ground by one hairline. Motion is quiet everywhere except one signature: when the player changes status, a holographic band sweeps once across the card art.\n\nThe world rejects the category default of a blurred-cover banner with a score badge and tabs, and of a full-width hero over identical carousels. Facts are framed as card stats and checklist entries, not as banners.",
     "keyCharacteristics": [
       "Card object first: thick rounded frame, inset 4:3 art box, ruled stat cells, set-number footer with RAWG credit.",
       "One large color, and it means collection status.",
       "Condensed display type for names and numbers, plain Barlow for everything else.",
-      "Hairline rules and tonal ground instead of shadows for non-card surfaces.",
+      "Hairline rules and tonal ground instead of shadows for non-card surfaces, including the header and footer bands.",
       "One signature motion (holo sweep), removed under reduced motion.",
       "Light theme default; dark theme is a full token remap, not an inversion filter."
     ],
@@ -596,12 +692,12 @@
       },
       {
         "name": "The Frame Means Ownership Rule",
-        "body": "A frame stays neutral until the game is in the player's collection with a status; only then does it take the status hue, and the ownership surface takes the same hue with it. A mini card shows a status frame only when it is given the player's status for that game. Status hue never decorates anything unrelated to the player's collection, with two exceptions: the focus ring, which uses the Pending blue as the system focus color, and the guest \"Your status is the frame\" demo, which shows one card in all four status frames to explain the rule.",
+        "body": "A frame stays neutral until the game is in the player's collection with a status; only then does it take the status hue, and the ownership surface takes the same hue with it. A mini card shows a status frame only when it is given the player's status for that game. Status hue never decorates anything unrelated to the player's collection, with two exceptions: the focus ring, which uses the Pending blue as the system focus color, and the guest \"Your status is the frame\" demo, which shows one card in all four status frames to explain the rule. In the shell, status hues appear only in the status menu, where the player is choosing a status; feedback never borrows them. Toasts print their icon chip in ink whatever their type (success, info, warning), and only errors take danger.",
         "section": "colors"
       },
       {
         "name": "The Condensed Prints Facts Rule",
-        "body": "Barlow Condensed is reserved for card names, page titles, section and panel headings, and numbers (stats, scores, ratings, set numbers, ranks, dates, totals). Running text, labels, row names and controls stay in Barlow.",
+        "body": "Barlow Condensed is reserved for card names, page titles, section, panel, modal, toast and footer headings, the account name and initial, and numbers (stats, scores, ratings, set numbers, ranks, dates, totals). Running text, labels, row names and controls stay in Barlow.",
         "section": "typography"
       },
       {
@@ -611,7 +707,12 @@
       },
       {
         "name": "The Only Cards Float Rule",
-        "body": "Panels, pages, tiles, chips, tabs and inputs are flat with a hairline border. Only card objects (main card, mini cards, trailer card) carry the lift shadow, plus the album spread as a single bound object.",
+        "body": "Panels, pages, tiles, chips, tabs, inputs and the header and footer bands are flat with a hairline border. Only card objects (main card, mini cards, trailer card) carry the lift shadow, plus the album spread as a single bound object.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Overlay Lift Rule",
+        "body": "The one exception to The Only Cards Float Rule is a transient overlay: menus, toasts and modals take the same lift (`--gd-raise`) because they sit above the page and leave it. Each still keeps its 1px rule border, and modal scrims stay plain, never blurred.",
         "section": "elevation"
       }
     ],
@@ -620,11 +721,13 @@
       "Do give a surface a status tint (7%) and 2px status frame only when it holds the player's own copies, as \"Your copy\" and the Home album page do.",
       "Do pass the player's status to every mini card where it is known; leave the frame neutral where it is not.",
       "Do recolor frame, stamp and ownership surfaces together on the same 320ms ease-out transition.",
-      "Do join a new view to the world with the `card-world` root class and reuse the shared frame, heading, count and seal classes and the mini card component instead of copying them.",
+      "Do join a new view to the world with the `card-world` root class, put `cw-scope` on loose pieces that live outside a migrated view (shell parts, anything teleported to the body), and reuse the shared frame, heading, count and seal classes and the mini card component instead of copying them.",
       "Do print names, headings and numbers in Barlow Condensed and keep labels and prose in Barlow, sentence case.",
       "Do use tabular numerals for every stat, score, count, rank and percentage.",
       "Do nest radii from outside in (22, 14, 10, 8) and separate flat surfaces with 1px rules.",
-      "Do reserve the lift shadow for card objects and the album spread as one object.",
+      "Do reserve the lift shadow for card objects, the album spread as one object, and transient overlays (menus, toasts, modals).",
+      "Do keep feedback in ink: toast icon chips are ink, and only errors and destructive actions take danger.",
+      "Do mark the current route in the header with the 2px ink bar, not a filled pill.",
       "Do keep the RAWG credit printed on the card face, and label RAWG-sourced figures as such (\"Player ratings on RAWG\").",
       "Do build in-page view switches as WAI-ARIA tablists with arrow-key, Home and End navigation.",
       "Do remove the holo sweep under reduced motion and keep every other transition to opacity and color there.",
@@ -636,7 +739,9 @@
       "Don't lay holographic foil over achievement badges or card art at rest; foil lives on the rare tile's frame and in the one-time sweep.",
       "Don't open a game page with a blurred-cover banner, a floating score badge and tabs; the card is the hero.",
       "Don't use uppercase tracked labels; labels are sentence case.",
-      "Don't apply shadows to panels, pages, tiles, chips, tabs or inputs, or give each album page its own shadow."
+      "Don't apply shadows to panels, pages, tiles, chips, tabs, inputs or the header and footer bands, or give each album page its own shadow.",
+      "Don't use status hues for notifications, avatars or other shell feedback; they belong to the player's collection.",
+      "Don't blur the scrim behind a modal."
     ]
   }
 }

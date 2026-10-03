@@ -1,11 +1,12 @@
 /* ─────────────────────────────────────────
    MUNDO "CARTA COLECCIONABLE" · tokens compartidos
-   Lo usan todas las vistas migradas (ficha del juego, Home...). Cada
-   vista anade la clase "card-world" a su raiz: asi comparten paleta,
-   tipografia y semantica del marco (color de estado = propiedad).
+   Los tokens son globales (:root) para que tambien los usen la cabecera,
+   el pie y lo que se teletransporta al body (toasts, modales). Cada vista
+   migrada anade "card-world" a su raiz (fondo y tipografia de pagina) y
+   las piezas sueltas usan "cw-scope" (solo tipografia).
 ───────────────────────────────────────── */
 
-.card-world {
+:root {
     /* superficie */
     --gd-ground: #EEF0F4;
     --gd-face: #FFFFFF;
@@ -35,16 +36,9 @@
     --gd-mc-green: #157347;
     --gd-mc-yellow: #8C5A00;
     --gd-mc-red: #B3261E;
-
-    min-height: 100vh;
-    background: var(--gd-ground);
-    color: var(--gd-ink);
-    font-family: 'Barlow', system-ui, sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
 }
 
-[data-theme="dark"] .card-world {
+[data-theme="dark"] {
     --gd-ground: #0E0F15;
     --gd-face: #181922;
     --gd-ink: #F1F0F6;
@@ -70,19 +64,36 @@
     --gd-danger: #F07A72;
 }
 
+/* pagina de una vista migrada */
+.card-world {
+    min-height: 100vh;
+    background: var(--gd-ground);
+    color: var(--gd-ink);
+}
+
+.card-world,
+.cw-scope {
+    font-family: 'Barlow', system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
 /* style.css fija Sora en "*": dentro del mundo todo hereda Barlow salvo
    los iconos. :where() deja la especificidad en la del contenedor para
    que las reglas de cada vista (Barlow Condensed) sigan ganando. */
-.card-world :where(*:not(.pi)) {
+.card-world :where(*:not(.pi)),
+.cw-scope :where(*:not(.pi)) {
     font-family: inherit;
 }
 
-.card-world *::selection {
+.card-world *::selection,
+.cw-scope *::selection {
     background: var(--gd-ink);
     color: var(--gd-face);
 }
 
-.card-world :focus-visible {
+.card-world :focus-visible,
+.cw-scope :focus-visible {
     outline: 2px solid var(--gd-pending);
     outline-offset: 2px;
 }

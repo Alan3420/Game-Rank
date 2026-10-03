@@ -89,13 +89,6 @@
   --color-skeleton-base: #e6e8f0;
   --color-skeleton-highlight: rgba(255, 255, 255, 0.65);
 
-  /* === NEUMORPHISM (header / footer) === */
-  --neu-bg: #eceff5;
-  --neu-shadow-dark: rgba(163, 174, 196, 0.55);
-  --neu-shadow-light: rgba(255, 255, 255, 0.95);
-  --neu-raised: 5px 5px 10px var(--neu-shadow-dark), -5px -5px 10px var(--neu-shadow-light);
-  --neu-raised-sm: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
-  --neu-pressed: inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light);
 
   /* === MOTION === */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -108,10 +101,6 @@
   --color-skeleton-base: #262c3a;
   --color-skeleton-highlight: rgba(255, 255, 255, 0.06);
 
-  /* === NEUMORPHISM (header / footer) === */
-  --neu-bg: #1a1e27;
-  --neu-shadow-dark: rgba(0, 0, 0, 0.55);
-  --neu-shadow-light: rgba(255, 255, 255, 0.045);
 
   /* === BRAND === */
   --color-primary: #6B5FE0;
@@ -229,7 +218,7 @@ a,
 [role="button"],
 [role="link"] {
   touch-action: manipulation;
-  -webkit-tap-highlight-color: rgba(99, 102, 241, 0.15);
+  -webkit-tap-highlight-color: rgba(22, 20, 29, 0.08);
 }
 
 h1,
@@ -240,7 +229,7 @@ h3 {
 
 /* foco visible por defecto en todo lo interactivo */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--gd-pending);
   outline-offset: 2px;
 }
 
@@ -252,8 +241,8 @@ h3 {
   z-index: 3000;
   padding: 10px 16px;
   border-radius: 10px;
-  background: var(--color-primary);
-  color: var(--color-text-on-dark);
+  background: var(--gd-ink);
+  color: var(--gd-face);
   font-weight: 700;
   font-size: 0.9rem;
   text-decoration: none;
@@ -301,7 +290,7 @@ input[type="search"] {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--color-bg);
+  background-color: var(--gd-ground);
 }
 
 main {
@@ -314,16 +303,16 @@ main {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-scrollbar);
+  background: var(--gd-ground);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-scrollbar-thumb);
+  background: var(--gd-rule-strong);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-border-dark);
+  background: var(--gd-ink-3);
 }
 
 /* ── TRANSICION DE MODALES ──
@@ -368,127 +357,121 @@ main {
 .ext-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 15, 30, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    z-index: 2000;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2000;
     padding: 20px;
+    background: rgba(14, 15, 21, 0.55);
     overscroll-behavior: contain;
+    font-family: 'Barlow', system-ui, sans-serif;
 }
 
+.ext-modal-overlay :where(*:not(.pi)) {
+    font-family: inherit;
+}
 
 .ext-modal {
-    background: var(--color-surface);
-    border-radius: 20px;
-    width: 100%;
-    max-width: 420px;
-    padding: 2rem;
-    box-shadow: 0 25px 60px rgba(20, 21, 63, 0.25);
-    border: 1px solid var(--color-border-light);
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 420px;
+    padding: 28px;
+    border: 1px solid var(--gd-rule);
+    border-radius: 18px;
+    background: var(--gd-face);
+    box-shadow: var(--gd-raise);
+    color: var(--gd-ink);
     text-align: center;
-    gap: 1rem;
 }
 
-
 .ext-modal__icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    background: var(--color-primary-light, rgba(124, 111, 255, 0.1));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-    color: var(--color-primary);
+    color: var(--gd-ink-2);
+    font-size: 1.5rem;
+}
+
+.ext-modal__icon--danger {
+    color: var(--gd-danger);
 }
 
 .ext-modal__title {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--color-text);
     margin: 0;
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.1;
 }
 
 .ext-modal__body {
-    font-size: 0.9rem;
-    color: var(--color-text-light);
-    line-height: 1.6;
     margin: 0;
+    color: var(--gd-ink-2);
+    font-size: 0.95rem;
+    line-height: 1.55;
 }
 
 .ext-modal__body strong {
-    color: var(--color-text);
+    color: var(--gd-ink);
     font-weight: 700;
 }
 
 .ext-modal__actions {
     display: flex;
-    gap: 0.75rem;
+    gap: 10px;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 8px;
 }
 
 .ext-modal__btn {
-    flex: 1;
-    padding: 0.65rem 1rem;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    font-family: inherit;
-    cursor: pointer;
-    border: none;
-    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
+    gap: 8px;
+    height: 42px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease, transform 160ms var(--ease-out);
+}
+
+.ext-modal__btn:active {
+    transform: scale(0.97);
 }
 
 .ext-modal__btn--cancel {
-    background: var(--color-surface-hover, #f0f0f8);
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-border);
-}
-
-.ext-modal__btn--cancel:hover {
-    background: var(--color-border);
+    border-color: var(--gd-rule-strong);
+    background: var(--gd-face);
+    color: var(--gd-ink);
 }
 
 .ext-modal__btn--confirm {
-    background: var(--color-primary);
-    color: #fff;
-}
-
-.ext-modal__btn--confirm:hover {
-    filter: brightness(1.1);
+    background: var(--gd-ink);
+    color: var(--gd-face);
 }
 
 .ext-modal__btn--danger {
-    background: var(--color-danger);
-    color: #fff;
+    background: var(--gd-danger);
+    color: #FFFFFF;
 }
 
-.ext-modal__btn--danger:hover {
-    background: var(--color-danger-hover);
+[data-theme="dark"] .ext-modal__btn--danger {
+    color: #0E0F15;
 }
 
-.ext-modal__icon--danger {
-    background: var(--color-danger-light);
-    color: var(--color-danger);
-}
+@media (hover: hover) and (pointer: fine) {
+    .ext-modal__btn--cancel:hover {
+        background: var(--gd-ground);
+    }
 
-[data-theme="dark"] .ext-modal__btn--cancel {
-    background: var(--color-surface-alt);
-    border-color: var(--color-border);
-    color: var(--color-text-secondary);
-}
+    .ext-modal__btn--confirm:hover {
+        background: var(--gd-ink-2);
+    }
 
-[data-theme="dark"] .ext-modal__btn--cancel:hover {
-    background: var(--color-surface-hover);
+    .ext-modal__btn--danger:hover {
+        filter: brightness(1.08);
+    }
 }
