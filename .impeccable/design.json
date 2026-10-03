@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-02T23:25:18+00:00",
+  "generatedAt": "2026-10-03T09:08:22+00:00",
   "title": "Design System: Game Rank",
   "extensions": {
-    "scope": "Pilot: game detail route (/game/:id). Tokens are scoped as --gd-* custom properties on .game-detail-page (light) and [data-theme=\"dark\"] .game-detail-page (dark) in frontend/src/components/GameDetail/styles_GameDetail.css. The other eight views still run the previous system.",
+    "scope": "Migrated surfaces: game detail (/game/:id) and Home (/). Tokens are --gd-* custom properties on .card-world (light) and [data-theme=\"dark\"] .card-world (dark) in frontend/src/styles/card-world.css, together with the shared classes .cw-frame / .cw-frame--{pendiente|jugando|pausado|completado}, .cw-h2, .cw-count and .cw-mc. Each migrated view puts card-world on its root. Fonts are imported globally in frontend/src/main.js; mini card in frontend/src/components/CardWorld/MiniCard.vue; Metacritic thresholds in frontend/src/utils/metacritic.js. The other eight views still run the previous system.",
     "colorMeta": {
       "ground": {
         "role": "neutral",
@@ -338,7 +338,8 @@
           "oklch(74% 0.178 28.7)",
           "oklch(85% 0.178 28.7)",
           "oklch(95% 0.178 28.7)"
-        ]
+        ],
+        "darkValue": "#F07A72"
       },
       "on-frame": {
         "role": "primary",
@@ -364,7 +365,7 @@
       },
       "headline": {
         "displayName": "Section Heading",
-        "purpose": "Full-width section headings."
+        "purpose": "Full-width section headings (shared .cw-h2); 1.6rem on Home checklists."
       },
       "title": {
         "displayName": "Panel Heading",
@@ -372,7 +373,7 @@
       },
       "stat-value": {
         "displayName": "Stat Value",
-        "purpose": "Stat cells; same face for scores, ratings and set numbers."
+        "purpose": "Stat cells; same face for scores, ratings, set numbers, ranks, totals and dates."
       },
       "body": {
         "displayName": "Body",
@@ -399,7 +400,7 @@
       {
         "name": "card-lift",
         "value": "0 1px 2px rgba(22, 20, 29, 0.06), 0 10px 28px rgba(22, 20, 29, 0.10)",
-        "purpose": "Main card and series mini cards only (light)."
+        "purpose": "Main card, mini cards, guest trailer card, and the Home album spread as one object (removed when the spread stacks at 1024px) (light)."
       },
       {
         "name": "card-lift-dark",
@@ -409,7 +410,12 @@
       {
         "name": "art-inset-rule",
         "value": "inset 0 0 0 1px var(--gd-rule)",
-        "purpose": "Edge of the card art box."
+        "purpose": "Edge of the main card's art box."
+      },
+      {
+        "name": "seal-on-art",
+        "value": "0 1px 3px rgba(0, 0, 0, 0.3)",
+        "purpose": "Small Metacritic seal placed over mini card art at 480px and below."
       }
     ],
     "motion": [
@@ -426,12 +432,12 @@
       {
         "name": "ease-drawer",
         "value": "cubic-bezier(0.32, 0.72, 0, 1)",
-        "purpose": "Shared global token; not used on the pilot surface."
+        "purpose": "Shared global token; not used on the migrated surfaces."
       },
       {
         "name": "frame-recolor",
         "value": "320ms var(--ease-out)",
-        "purpose": "Frame, stamp and Your copy recolor on status change."
+        "purpose": "Frame, stamps, Your copy panel, Home album page and mini card frames recolor on status or tab change."
       },
       {
         "name": "holo-sweep",
@@ -447,6 +453,11 @@
         "name": "press",
         "value": "scale(0.97) 160ms var(--ease-out)",
         "purpose": "Button press; rating stars press to scale(0.9)."
+      },
+      {
+        "name": "tab-recolor",
+        "value": "200ms var(--ease-out)",
+        "purpose": "Home status tab fill, border and text changes."
       }
     ],
     "breakpoints": [
@@ -457,6 +468,10 @@
       {
         "name": "single-column",
         "value": "860px"
+      },
+      {
+        "name": "two-column-pockets",
+        "value": "640px"
       },
       {
         "name": "mobile",
@@ -509,7 +524,7 @@
       "name": "Metacritic Seal",
       "kind": "chip",
       "refersTo": "metacritic-high",
-      "description": "Score seal in the card name band; green 80+, amber 50-79, red under 50.",
+      "description": "Card-size score seal on the main card; green 80+, amber 50-79, red under 50 (shared thresholds).",
       "html": "<span class=\"ds-mc ds-mc-high\"><span class=\"ds-mc-l\">MC</span><span class=\"ds-mc-v\">92</span></span> <span class=\"ds-mc ds-mc-mid\"><span class=\"ds-mc-l\">MC</span><span class=\"ds-mc-v\">68</span></span> <span class=\"ds-mc ds-mc-low\"><span class=\"ds-mc-l\">MC</span><span class=\"ds-mc-v\">41</span></span>",
       "css": ".ds-mc{display:inline-flex;flex-direction:column;align-items:center;min-width:54px;padding:4px 8px 6px;border-radius:8px;color:#fff;font-variant-numeric:tabular-nums} .ds-mc-l{font:700 0.7rem/1.2 Barlow,sans-serif;opacity:.9} .ds-mc-v{font:800 1.6rem/1 'Barlow Condensed',Barlow,sans-serif} .ds-mc-high{background:#157347} .ds-mc-mid{background:#8C5A00} .ds-mc-low{background:#B3261E}"
     },
@@ -538,17 +553,33 @@
       "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-ach{display:grid;grid-template-columns:48px minmax(0,1fr);column-gap:12px;align-items:center;width:260px;padding:10px;border-radius:12px;border:3px solid transparent;background:linear-gradient(color-mix(in srgb,var(--gd-rare) 6%,var(--gd-face)),color-mix(in srgb,var(--gd-rare) 6%,var(--gd-face))) padding-box,linear-gradient(120deg,var(--gd-rare) 0%,hsl(45,95%,62%) 30%,hsl(290,70%,70%) 50%,hsl(185,75%,55%) 70%,var(--gd-rare) 100%) border-box} .ds-ach-img{grid-row:span 2;width:48px;height:48px;border-radius:8px;background:var(--gd-ground)} .ds-ach-name{font:600 .9rem/1.25 Barlow,sans-serif} .ds-ach-pct{font-size:.8rem;color:var(--gd-ink-3);font-variant-numeric:tabular-nums}"
     },
     {
-      "name": "Series Mini Card",
+      "name": "Mini Card",
       "kind": "card",
       "refersTo": "mini-card-frame",
-      "description": "Series entry as a small neutral-framed card; lifts 3px on hover.",
-      "html": "<a class=\"ds-mini\" href=\"#\"><span class=\"ds-mini-face\"><span class=\"ds-mini-name\">Hollow Knight: Silksong</span><span class=\"ds-mini-art\"></span><span class=\"ds-mini-set\"><span>No. 58175</span><span>2025</span></span></span></a>",
-      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-mini{display:block;width:200px;padding:6px;border-radius:16px;background:var(--gd-frame-neutral);box-shadow:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);color:var(--gd-ink);text-decoration:none;transition:transform 200ms var(--ease-out)} .ds-mini:hover{transform:translateY(-3px)} .ds-mini:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-mini-face{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:11px;background:var(--gd-face)} .ds-mini-name{font:800 1.1rem/1.05 'Barlow Condensed',sans-serif} .ds-mini-art{aspect-ratio:4/3;border-radius:7px;background:var(--gd-ground)} .ds-mini-set{display:flex;justify-content:space-between;font-size:.8rem;color:var(--gd-ink-3);font-variant-numeric:tabular-nums}"
+      "description": "Shared small card (detail series, Home). Neutral frame without a status; with the player's status the frame takes its hue and the set line ends in a status stamp. Lifts 3px on hover.",
+      "html": "<div style=\"display:flex;gap:16px\"><a class=\"ds-mini\" href=\"#\"><span class=\"ds-mini-face\"><span class=\"ds-mini-band\"><span class=\"ds-mini-name\">Hollow Knight: Silksong</span><span class=\"ds-mc-sm\">91</span></span><span class=\"ds-mini-art\"></span><span class=\"ds-mini-set\"><span class=\"ds-mini-no\">No. 58175</span><span>2025</span></span></span></a><a class=\"ds-mini ds-mini--owned\" href=\"#\"><span class=\"ds-mini-face\"><span class=\"ds-mini-band\"><span class=\"ds-mini-name\">Hades II</span><span class=\"ds-mc-sm\">95</span></span><span class=\"ds-mini-art\"></span><span class=\"ds-mini-set\"><span class=\"ds-mini-no\">No. 963218</span><span class=\"ds-mini-stamp\">Playing</span></span></span></a></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--gd-completed:#6D3FD6;--gd-mc-green:#157347;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-mini{--frame:var(--gd-frame-neutral);display:block;width:200px;padding:6px;border-radius:16px;background:var(--frame);box-shadow:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);color:var(--gd-ink);text-decoration:none;transition:transform 200ms var(--ease-out),background-color 320ms var(--ease-out)} .ds-mini--owned{--frame:var(--gd-playing)} .ds-mini:hover{transform:translateY(-3px)} .ds-mini:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-mini-face{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:11px;background:var(--gd-face)} .ds-mini-band{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;height:2.35rem} .ds-mini-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font:800 1.1rem/1.05 'Barlow Condensed',sans-serif} .ds-mc-sm{flex-shrink:0;min-width:30px;padding:2px 6px;border-radius:6px;background:var(--gd-mc-green);color:#fff;font:800 .95rem/1.3 'Barlow Condensed',sans-serif;text-align:center;font-variant-numeric:tabular-nums} .ds-mini-art{aspect-ratio:4/3;border-radius:7px;background:var(--gd-ground)} .ds-mini-set{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:24px;font-size:.8rem;color:var(--gd-ink-3);font-variant-numeric:tabular-nums} .ds-mini-no{font:700 .9rem 'Barlow Condensed',sans-serif;color:var(--gd-ink-2)} .ds-mini-stamp{padding:2px 8px;border-radius:999px;background:var(--frame);color:var(--gd-on-frame);font-size:.72rem;font-weight:700}"
+    },
+    {
+      "name": "Album Page with Status Tabs",
+      "kind": "nav",
+      "refersTo": "album-page",
+      "description": "Home album page: a tinted ownership surface in the active tab's hue (7% tint, 2px frame) with a WAI-ARIA status tablist.",
+      "html": "<section class=\"ds-album\"><h2 class=\"ds-h2\">Your album</h2><div class=\"ds-tabs\" role=\"tablist\" aria-label=\"Collection status\"><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\" style=\"--hue:var(--gd-pending)\">Pending <span class=\"ds-count\">4</span></button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"true\" style=\"--hue:var(--gd-playing)\">Playing <span class=\"ds-count\">2</span></button><button class=\"ds-tab\" role=\"tab\" aria-selected=\"false\" style=\"--hue:var(--gd-completed)\">Completed <span class=\"ds-count\">11</span></button></div><div class=\"ds-sleeve\"></div></section>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--gd-completed:#6D3FD6;--gd-mc-green:#157347;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-album{--frame:var(--gd-playing);padding:22px;border:2px solid var(--frame);border-radius:18px;background:color-mix(in srgb,var(--frame) 7%,var(--gd-face));transition:border-color 320ms var(--ease-out),background-color 320ms var(--ease-out)} .ds-h2{margin:0;font:800 2rem/1.05 'Barlow Condensed',Barlow,sans-serif;letter-spacing:-.01em} .ds-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 18px} .ds-tab{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 8px 0 14px;border:1px solid var(--gd-rule-strong);border-radius:999px;background:var(--gd-face);color:var(--gd-ink);font:600 .9rem Barlow,sans-serif;cursor:pointer;transition:background-color 200ms var(--ease-out),border-color 200ms var(--ease-out),color 200ms var(--ease-out)} .ds-tab[aria-selected=\"false\"]:hover{border-color:var(--hue)} .ds-tab:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-tab[aria-selected=\"true\"]{background:var(--hue);border-color:var(--hue);color:var(--gd-on-frame)} .ds-count{min-width:24px;padding:1px 7px;border-radius:999px;background:var(--gd-ground);font-size:.8rem;text-align:center;font-variant-numeric:tabular-nums} .ds-tab[aria-selected=\"true\"] .ds-count{background:color-mix(in srgb,var(--gd-on-frame) 20%,transparent)} .ds-sleeve{width:140px;min-height:180px;border:1px dashed color-mix(in srgb,var(--frame) 35%,var(--gd-rule-strong));border-radius:16px;background:color-mix(in srgb,var(--gd-face) 55%,transparent)}"
+    },
+    {
+      "name": "Checklist Row",
+      "kind": "custom",
+      "refersTo": "checklist-row",
+      "description": "Numbered hairline row of the Home checklists: rank, thumb, name, \"No. {id}\" with date and owned pill, value on the right.",
+      "html": "<ol class=\"ds-rows\"><li><a class=\"ds-row\" href=\"#\"><span class=\"ds-rank\">1</span><span class=\"ds-thumb\"></span><span class=\"ds-text\"><span class=\"ds-name\">Hades II</span><span class=\"ds-meta\"><span class=\"ds-no\">No. 963218</span>Sep 25, 2025<span class=\"ds-owned\">Playing</span></span></span><span class=\"ds-score\">4.6</span></a></li><li><a class=\"ds-row\" href=\"#\"><span class=\"ds-rank\">2</span><span class=\"ds-thumb\"></span><span class=\"ds-text\"><span class=\"ds-name\">Hollow Knight: Silksong</span><span class=\"ds-meta\"><span class=\"ds-no\">No. 58175</span>Sep 4, 2025</span></span><span class=\"ds-score\">4.5</span></a></li></ol>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--gd-completed:#6D3FD6;--gd-mc-green:#157347;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-rows{width:420px;margin:0;padding:0;list-style:none} .ds-rows>li+li{border-top:1px solid var(--gd-rule)} .ds-row{display:flex;align-items:center;gap:12px;padding:10px 6px;border-radius:8px;color:var(--gd-ink);text-decoration:none;transition:background-color 150ms ease} .ds-row:hover{background:var(--gd-ground)} .ds-row:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-rank{width:20px;text-align:center;font:800 1.4rem 'Barlow Condensed',sans-serif;color:var(--gd-ink-3);font-variant-numeric:tabular-nums} .ds-thumb{flex-shrink:0;width:64px;height:48px;border-radius:6px;background:var(--gd-ground)} .ds-text{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0} .ds-name{overflow:hidden;font:600 .95rem/1.25 Barlow,sans-serif;text-overflow:ellipsis;white-space:nowrap} .ds-meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:.8rem;color:var(--gd-ink-3)} .ds-no{font:700 .85rem 'Barlow Condensed',sans-serif;color:var(--gd-ink-2);font-variant-numeric:tabular-nums} .ds-owned{padding:1px 7px;border-radius:999px;background:var(--gd-playing);color:var(--gd-on-frame);font-size:.7rem;font-weight:700} .ds-score{font:700 1.15rem 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums} .ds-score::before{content:\"\\2605 \";font-size:.75rem;color:var(--gd-star)}"
     }
   ],
   "narrative": {
     "northStar": "The Collectible Card",
-    "overview": "Every game is a trading card. RAWG prints the facts on the card face (name, art, genres, release, platforms, Metacritic, set number); the player's collection status colors the frame and their rating and review sit beside it. The world is a cool card-stock ground, white card faces and near-black ink, with one thick rounded frame as the only large field of color. That frame is neutral ink while the game is not in the player's collection and takes one solid status hue when it is.\n\nDensity is moderate and editorial: a sticky card column next to a working column of panels, then full-width sections separated by generous vertical space. Surfaces are flat white faces on a pale ground, held apart by hairline rules rather than shadows; only card objects (the main card and series mini cards) are lifted. Motion is quiet everywhere except one signature: when the player changes status, a holographic band sweeps once across the card art.\n\nThe world rejects the category default of a blurred-cover banner with a score badge and tabs. Facts are framed as card stats, not as a hero banner.",
+    "overview": "Every game is a trading card. RAWG prints the facts on the card face (name, art, genres, release, platforms, Metacritic, set number); the player's collection status colors the frame and their rating and review sit beside it. The world is a cool card-stock ground, white card faces and near-black ink, with one thick rounded frame as the only large field of color on a card. That frame is neutral ink while the game is not in the player's collection and takes one solid status hue when it is. Surfaces that hold the player's own copies (the \"Your copy\" panel, the Home album page) take the same status hue as a light tint and a 2px frame.\n\nDensity is moderate and editorial. The game detail sets a sticky card column next to a working column of panels; the Home opens as a card album, the player's binder of owned cards on the left page and the world's checklists on the right. Surfaces are flat white faces on a pale ground, held apart by hairline rules rather than shadows; only card objects (the main card, mini cards, the trailer card) and the open album spread as one object are lifted. Motion is quiet everywhere except one signature: when the player changes status, a holographic band sweeps once across the card art.\n\nThe world rejects the category default of a blurred-cover banner with a score badge and tabs, and of a full-width hero over identical carousels. Facts are framed as card stats and checklist entries, not as banners.",
     "keyCharacteristics": [
       "Card object first: thick rounded frame, inset 4:3 art box, ruled stat cells, set-number footer with RAWG credit.",
       "One large color, and it means collection status.",
@@ -560,48 +591,52 @@
     "rules": [
       {
         "name": "The One Frame Rule",
-        "body": "The card frame is the only large field of color on the surface. Every other colored element (Metacritic seal, stamp, stars, rarity marks) is small. A new surface does not add a second large color.",
+        "body": "On a card, the frame is the only large field of color. Beyond cards, the only large colored surfaces are tinted ownership surfaces: a 7% status tint with a 2px status frame on a surface that holds the player's own copy (\"Your copy\" on the detail, the album page on the Home). Every other colored element (Metacritic seal, stamps, owned pills, stars, rarity marks) is small. A new surface does not add a large color that is not the player's status.",
         "section": "colors"
       },
       {
         "name": "The Frame Means Ownership Rule",
-        "body": "The frame stays neutral until the game is in the player's collection with a status; only then does it take the status hue, and the \"Your copy\" panel takes the same hue with it. Status hue never decorates anything unrelated to the player's copy except the focus ring, which uses the Pending blue as the system focus color.",
+        "body": "A frame stays neutral until the game is in the player's collection with a status; only then does it take the status hue, and the ownership surface takes the same hue with it. A mini card shows a status frame only when it is given the player's status for that game. Status hue never decorates anything unrelated to the player's collection, with two exceptions: the focus ring, which uses the Pending blue as the system focus color, and the guest \"Your status is the frame\" demo, which shows one card in all four status frames to explain the rule.",
         "section": "colors"
       },
       {
         "name": "The Condensed Prints Facts Rule",
-        "body": "Barlow Condensed is reserved for card names, section and panel headings, and numbers (stats, scores, ratings, set numbers). Running text, labels and controls stay in Barlow.",
+        "body": "Barlow Condensed is reserved for card names, page titles, section and panel headings, and numbers (stats, scores, ratings, set numbers, ranks, dates, totals). Running text, labels, row names and controls stay in Barlow.",
         "section": "typography"
       },
       {
         "name": "The Tabular Numbers Rule",
-        "body": "Every number that can change or be compared (stats, scores, counts, percentages, character counter) uses tabular numerals.",
+        "body": "Every number that can change or be compared (stats, scores, counts, ranks, percentages, totals, page numbers, character counter) uses tabular numerals.",
         "section": "typography"
       },
       {
         "name": "The Only Cards Float Rule",
-        "body": "Panels, tiles, chips and inputs are flat with a hairline border. Only card objects (main card, mini cards) carry the lift shadow.",
+        "body": "Panels, pages, tiles, chips, tabs and inputs are flat with a hairline border. Only card objects (main card, mini cards, trailer card) carry the lift shadow, plus the album spread as a single bound object.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do keep the card frame as the only large color, and tie it to collection status: neutral until the game has a status, then exactly one status hue.",
-      "Do recolor frame, stamp and \"Your copy\" together on the same 320ms ease-out transition.",
+      "Do keep the card frame as the only large color on a card, and tie it to collection status: neutral until the game has a status, then exactly one status hue.",
+      "Do give a surface a status tint (7%) and 2px status frame only when it holds the player's own copies, as \"Your copy\" and the Home album page do.",
+      "Do pass the player's status to every mini card where it is known; leave the frame neutral where it is not.",
+      "Do recolor frame, stamp and ownership surfaces together on the same 320ms ease-out transition.",
+      "Do join a new view to the world with the `card-world` root class and reuse the shared frame, heading, count and seal classes and the mini card component instead of copying them.",
       "Do print names, headings and numbers in Barlow Condensed and keep labels and prose in Barlow, sentence case.",
-      "Do use tabular numerals for every stat, score, count and percentage.",
+      "Do use tabular numerals for every stat, score, count, rank and percentage.",
       "Do nest radii from outside in (22, 14, 10, 8) and separate flat surfaces with 1px rules.",
-      "Do reserve the lift shadow for card objects.",
-      "Do keep the RAWG credit printed on the card face.",
+      "Do reserve the lift shadow for card objects and the album spread as one object.",
+      "Do keep the RAWG credit printed on the card face, and label RAWG-sourced figures as such (\"Player ratings on RAWG\").",
+      "Do build in-page view switches as WAI-ARIA tablists with arrow-key, Home and End navigation.",
       "Do remove the holo sweep under reduced motion and keep every other transition to opacity and color there.",
       "Do define both themes for every new token; dark lifts status hues and flips on-frame text to the dark ground."
     ],
     "donts": [
       "Don't add a second signature motion; the holo sweep is the only one, and it runs only on a player-made status change.",
-      "Don't add a second large color field or tint panels other than \"Your copy\".",
+      "Don't add a large color field that is not the player's status, or tint panels that do not hold the player's own copies.",
       "Don't lay holographic foil over achievement badges or card art at rest; foil lives on the rare tile's frame and in the one-time sweep.",
       "Don't open a game page with a blurred-cover banner, a floating score badge and tabs; the card is the hero.",
       "Don't use uppercase tracked labels; labels are sentence case.",
-      "Don't apply shadows to panels, tiles, chips or inputs."
+      "Don't apply shadows to panels, pages, tiles, chips, tabs or inputs, or give each album page its own shadow."
     ]
   }
 }

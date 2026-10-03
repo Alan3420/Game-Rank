@@ -5,6 +5,7 @@ import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
 import { confirmacion } from '../../store/confirmacion';
 import { formatearFechaCorta } from '../../utils/formatoFecha.js';
+import { claseMetacritic } from '../../utils/metacritic.js';
 import { STATUS_META } from '../../utils/statusMeta.js';
 import DOMPurify from 'dompurify';
 
@@ -203,6 +204,8 @@ export default {
     },
 
     methods: {
+        claseMetacritic,
+
 
         async cargarDetalleDelJuego(id) {
 
@@ -689,18 +692,6 @@ export default {
             return 'rareza-comun';
         },
 
-        claseMetacritic(score) {
-            if (!score && score !== 0) {
-                return 'mc-na';
-            }
-            if (score >= 80) {
-                return 'mc-green';
-            }
-            if (score >= 50) {
-                return 'mc-yellow';
-            }
-            return 'mc-red';
-        },
 
         // Antes de abrir un enlace externo mostramos un modal para que el
         // usuario sepa que va a salir de la app a un sitio que no controlamos
