@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Game Rank · Guía de estilos</title>
+<!-- Fuente de Game-Rank-Guia-Estilos.pdf. Se regenera desde DESIGN.md y
+     card-world.css; las capturas salen de .impeccable/review/. -->
+<link rel="stylesheet" href="../../frontend/node_modules/primeicons/primeicons.css">
+<style>
+@font-face{font-family:'Barlow';font-weight:400;src:url(../../frontend/node_modules/@fontsource/barlow/files/barlow-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow';font-weight:500;src:url(../../frontend/node_modules/@fontsource/barlow/files/barlow-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow';font-weight:600;src:url(../../frontend/node_modules/@fontsource/barlow/files/barlow-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow';font-weight:700;src:url(../../frontend/node_modules/@fontsource/barlow/files/barlow-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow Condensed';font-weight:700;src:url(../../frontend/node_modules/@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Barlow Condensed';font-weight:800;src:url(../../frontend/node_modules/@fontsource/barlow-condensed/files/barlow-condensed-latin-800-normal.woff2) format('woff2')}
+
+:root{
+  --ground:#EEF0F4;--face:#FFFFFF;--ink:#16141D;--ink2:#4B4858;--ink3:#64616F;--rule:#DCDFE7;--rule-s:#C3C7D2;
+  --neutral:#2A2733;--pending:#2563EB;--playing:#0E7A3F;--paused:#9A5B00;--completed:#6D3FD6;
+  --star:#C98A00;--danger:#B3261E;--mcg:#157347;--mcy:#8C5A00;--mcr:#B3261E;
+  --raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);
+  --c:'Barlow Condensed','Barlow',sans-serif;
+}
+@page{size:960px 540px;margin:0}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#888}
+body{font-family:'Barlow',sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.slide{position:relative;width:960px;height:540px;overflow:hidden;background:var(--ground);padding:40px 48px;page-break-after:always;break-after:page}
+.slide:last-child{page-break-after:auto}
+.num{font-family:var(--c);font-weight:800;font-size:15px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.kick{display:flex;gap:10px;align-items:baseline;margin-bottom:6px}
+.kick span:last-child{font-size:13px;font-weight:600;color:var(--ink3)}
+h1{font-family:var(--c);font-weight:800;font-size:40px;line-height:.98;letter-spacing:-.015em}
+h2{font-family:var(--c);font-weight:800;font-size:22px;line-height:1.05;margin-bottom:8px}
+p,li{font-size:13.5px;line-height:1.5;color:var(--ink2)}
+.lede{margin-top:8px;max-width:62ch}
+.foot{position:absolute;left:48px;right:48px;bottom:18px;display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:8px;font-size:11px;color:var(--ink3)}
+.foot b{font-family:var(--c);font-weight:700;font-size:12px;color:var(--ink2)}
+.row{display:flex;gap:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.panel{background:var(--face);border:1px solid var(--rule);border-radius:14px;padding:16px}
+.dark{background:#0E0F15;color:#F1F0F6}
+.mt{margin-top:22px}.mt-s{margin-top:12px}
+code{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;color:var(--ink2)}
+.tn{font-variant-numeric:tabular-nums}
+
+/* portada */
+.cover{display:grid;grid-template-columns:1.15fr 1fr;gap:40px;align-items:center;padding:48px 56px}
+.cover h1{font-size:76px}
+.cover .sub{font-family:var(--c);font-weight:700;font-size:26px;color:var(--ink2);margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{border:1px solid var(--rule-s);border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:600;background:var(--face)}
+
+/* carta */
+.card{width:250px;padding:10px;border-radius:22px;background:var(--frame,var(--neutral));box-shadow:var(--raise)}
+.card .face{background:var(--face);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.card .band{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card .name{font-family:var(--c);font-weight:800;font-size:24px;line-height:1}
+.art{border-radius:10px;aspect-ratio:4/3;overflow:hidden;background:var(--ground);box-shadow:inset 0 0 0 1px var(--rule)}
+.art img{width:100%;height:100%;object-fit:cover;display:block}
+.cells{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.cell{border:1px solid var(--rule);border-radius:8px;padding:5px 7px}
+.cell small{display:block;font-size:10px;font-weight:600;color:var(--ink3)}
+.cell b{font-family:var(--c);font-weight:700;font-size:15px}
+.set{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--rule);padding-top:8px;font-size:11px;color:var(--ink3)}
+.set b{font-family:var(--c);font-weight:700;font-size:13px;color:var(--ink2)}
+.mc{font-family:var(--c);font-weight:800;color:#fff;border-radius:6px;padding:2px 7px;font-size:15px;line-height:1.3}
+.stamp{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;background:var(--frame,var(--neutral));color:#fff;font-size:11px;font-weight:700}
+.mini{width:150px;padding:6px;border-radius:16px;background:var(--frame,var(--neutral));box-shadow:var(--raise)}
+.mini .face{background:var(--face);border-radius:11px;padding:8px;display:flex;flex-direction:column;gap:6px}
+.mini .nm{font-family:var(--c);font-weight:800;font-size:14px;line-height:1.05;height:30px}
+.mini .art{border-radius:7px}
+.mini .ln{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3)}
+.mini .ln b{font-family:var(--c);font-size:11.5px;color:var(--ink2)}
+.f-pending{--frame:var(--pending)}.f-playing{--frame:var(--playing)}.f-paused{--frame:var(--paused)}.f-completed{--frame:var(--completed)}
+
+/* muestras de color */
+.sw{display:flex;flex-direction:column;gap:6px}
+.sw i{display:block;height:46px;border-radius:10px;border:1px solid rgba(0,0,0,.08)}
+.sw b{font-family:var(--c);font-weight:700;font-size:14px}
+.sw span{font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.dark .sw span{color:#A09DB0}
+.dark .sw i{border-color:rgba(255,255,255,.14)}
+
+/* vistas */
+.views{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.view{background:var(--face);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.view .shot{height:104px;overflow:hidden;background:var(--ground);border-bottom:1px solid var(--rule)}
+.view .shot img{width:100%;display:block}
+.view .cap{padding:7px 10px}
+.view .cap b{font-family:var(--c);font-weight:800;font-size:15px;display:block}
+.view .cap span{font-size:11px;color:var(--ink3)}
+.view.nocap .shot{display:flex;align-items:center;justify-content:center;border-bottom:1px dashed var(--rule-s);font-size:11px;color:var(--ink3)}
+
+/* controles */
+.btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 15px;border-radius:10px;font-weight:600;font-size:13.5px;border:1px solid transparent}
+.btn.pri{background:var(--ink);color:#fff}.btn.gh{background:var(--face);border-color:var(--rule-s)}.btn.qt{color:var(--ink2)}
+.btn.sm{height:32px;padding:0 11px;font-size:12.5px}
+.seg{display:inline-flex;gap:2px;padding:3px;border:1px solid var(--rule);border-radius:10px;background:var(--face)}
+.seg span{height:30px;display:inline-flex;align-items:center;padding:0 12px;border-radius:7px;font-size:12.5px;font-weight:600;color:var(--ink2)}
+.seg span.on{background:var(--ink);color:#fff}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 7px 0 12px;border:1px solid var(--rule-s);border-radius:999px;background:var(--face);font-size:12.5px;font-weight:600}
+.tab .pi{color:var(--frame);font-size:11px}
+.tab em{font-style:normal;background:var(--ground);border-radius:999px;padding:0 6px;font-size:11px}
+.tab.on{background:var(--frame);border-color:var(--frame);color:#fff}.tab.on .pi{color:#fff}.tab.on em{background:rgba(255,255,255,.2)}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:600;color:var(--ink2)}
+.field .in{height:40px;border:1px solid var(--rule-s);border-radius:10px;background:var(--face);padding:0 12px;display:flex;align-items:center;font-size:13.5px;color:var(--ink3)}
+.field .in.focus{border-color:var(--ink);outline:2px solid var(--pending);outline-offset:2px;color:var(--ink)}
+.field .in.err{border-color:var(--danger);color:var(--ink)}
+.field small{font-size:11px;color:var(--ink3)}.field small.e{color:var(--danger)}
+.lbl{font-size:11px;font-weight:600;color:var(--ink3);margin-bottom:6px}
+
+/* filas */
+.rows{background:var(--face);border:1px solid var(--rule);border-radius:14px;overflow:hidden}
+.rr{display:grid;grid-template-columns:30px 54px 1fr 150px;gap:12px;align-items:center;padding:9px 14px}
+.rr+.rr{border-top:1px solid var(--rule)}
+.rr .rk{font-family:var(--c);font-weight:800;font-size:24px;text-align:center}
+.rr .th{width:54px;height:40px;border-radius:6px;overflow:hidden;background:var(--ground)}
+.rr .th img{width:100%;height:100%;object-fit:cover}
+.rr .nm{font-weight:700;font-size:13px}
+.rr .mt2{font-size:11px;color:var(--ink3);display:flex;gap:8px;align-items:center}
+.rr .mt2 b{font-family:var(--c);color:var(--ink2);font-size:12px}
+.rr .val{text-align:right;font-family:var(--c);font-weight:800;font-size:17px}
+.rr .val small{font-family:'Barlow';font-size:10.5px;color:var(--ink3);font-weight:600}
+.bar{height:5px;border-radius:999px;background:var(--ground);margin-top:5px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ink2);border-radius:inherit}
+.owned{background:color-mix(in srgb,var(--frame) 7%,var(--face))}
+
+/* overlays */
+.modal{background:var(--face);border:1px solid var(--rule);border-radius:18px;box-shadow:var(--raise);padding:18px;width:300px}
+.toast{display:flex;gap:10px;align-items:flex-start;background:var(--face);border:1px solid var(--rule);border-radius:14px;box-shadow:var(--raise);padding:11px 12px;width:290px}
+.toast .ic{width:30px;height:30px;border-radius:9px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.toast b{font-family:var(--c);font-weight:800;font-size:15px;display:block}
+.menu{background:var(--face);border:1px solid var(--rule);border-radius:14px;box-shadow:var(--raise);padding:6px;width:200px}
+.menu div{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;font-size:12.5px;font-weight:600}
+.menu div .pi{color:var(--frame);font-size:11px}
+.menu div.on{background:var(--frame);color:#fff}.menu div.on .pi{color:#fff}
+
+/* forma */
+.nest{display:flex;align-items:center;justify-content:center;background:var(--neutral);border-radius:22px;width:230px;height:170px;padding:10px}
+.nest>div{background:var(--face);border-radius:14px;width:100%;height:100%;padding:12px}
+.nest>div>div{background:var(--ground);border-radius:10px;height:100%;padding:12px;display:flex;align-items:flex-end}
+.nest>div>div>div{border:1px solid var(--rule-s);border-radius:8px;height:40px;width:70%;background:var(--face)}
+.rad{display:flex;gap:10px;align-items:flex-end}
+.rad div{width:52px;height:52px;border:2px solid var(--ink2);background:var(--face)}
+.rad span{display:block;text-align:center;font-family:var(--c);font-weight:700;font-size:13px;margin-top:4px}
+.rule-list li{list-style:none;padding:7px 0;border-top:1px solid var(--rule);font-size:12.5px}
+.rule-list li b{font-family:var(--c);font-weight:700;font-size:14px;color:var(--ink);margin-right:6px}
+table.t{width:100%;border-collapse:collapse;font-size:12.5px}
+table.t th{text-align:left;font-size:11px;font-weight:600;color:var(--ink3);padding:6px 8px;border-bottom:1px solid var(--rule-s)}
+table.t td{padding:6px 8px;border-top:1px solid var(--rule);color:var(--ink2)}
+table.t td:first-child{font-family:var(--c);font-weight:700;font-size:14px;color:var(--ink)}
+table.t td code{white-space:nowrap}
+</style>
+</head>
+<body>
+
+<!-- 1 · PORTADA -->
+<section class="slide cover">
+  <div>
+    <img src="../../frontend/src/assets/brand/game-rank-lockup.svg" alt="Game Rank" style="height:34px;display:block;margin-bottom:18px">
+    <div class="kick"><span>Identidad visual del frontend</span></div>
+    <h1>Guía de estilos</h1>
+    <p class="sub">El mundo «carta coleccionable»</p>
+    <p class="lede">Cada juego es una carta: RAWG imprime los datos y el estado y la nota del jugador la hacen suya. Un sistema de tokens, una tipografía y un conjunto de componentes para todas las vistas, en tema claro y oscuro.</p>
+    <div class="chips"><span class="chip">10 vistas</span><span class="chip">Tokens <code>--gd-*</code></span><span class="chip">Barlow · Barlow Condensed</span><span class="chip">PrimeIcons</span><span class="chip">WCAG 2.1 AA</span></div>
+  </div>
+  <div style="display:flex;justify-content:center">
+    <div class="card f-completed">
+      <div class="face">
+        <div class="band"><span class="name">The Witcher 3: Wild Hunt</span><span class="mc" style="background:var(--mcg)">92</span></div>
+        <div class="art"><img src="https://media.rawg.io/media/games/618/618c2031a07bbff6b4f611f10b6bcdbc.jpg" alt=""></div>
+        <div class="cells"><div class="cell"><small>Community</small><b>★ 4.81</b></div><div class="cell"><small>Release</small><b>2015</b></div><div class="cell"><small>Platforms</small><b>7</b></div></div>
+        <div class="set"><span><b>No. 3328</b> · Data by RAWG</span><span class="stamp"><i class="pi pi-check-circle"></i>Completed</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><b>Game Rank · Guía de estilos</b><span>Fuente: DESIGN.md y frontend/src/styles/card-world.css · octubre 2026</span></div>
+</section>
+
+<!-- 2 · PRINCIPIO -->
+<section class="slide">
+  <div class="kick"><span class="num">01</span><span>Principio</span></div>
+  <h1>La carta coleccionable</h1>
+  <p class="lede">El marco sólido de una carta rodea una cara blanca. Ese marco es el único campo grande de color y significa propiedad: neutro si el juego no es tuyo, en el tono de su estado si lo es. Los datos se imprimen en condensada, los números en cifras tabulares y solo las cartas flotan.</p>
+  <ul class="rule-list mt grid2" style="gap:0 28px">
+    <li><b>One Frame</b>En una carta, el marco es el único campo grande de color.</li>
+    <li><b>Frame Means Ownership</b>El tono de estado solo aparece si el jugador tiene el juego con ese estado.</li>
+    <li><b>Owned Row</b>En listas mixtas, la fila propia lleva un tinte del 7 % de su estado.</li>
+    <li><b>Ink Bars</b>Las barras de datos son de tinta, nunca de un tono de estado.</li>
+    <li><b>Condensed Prints Facts</b>Nombres, títulos y cifras en Barlow Condensed; la interfaz en Barlow.</li>
+    <li><b>Tabular Numbers</b>Toda cifra comparable usa cifras tabulares.</li>
+    <li><b>Only Cards Float</b>Paneles, tablas y bandas son planos con regla fina; solo las cartas tienen relieve.</li>
+    <li><b>Overlay Lift</b>Menús, toasts, modales y el panel lateral comparten el relieve de la carta.</li>
+    <li><b>Empty Slot</b>Lo vacío es una ranura discontinua, sin marco, sin tono y sin relieve.</li>
+    <li><b>Sentence case</b>Etiquetas y botones en minúscula de frase; nada en mayúsculas espaciadas.</li>
+  </ul>
+  <div class="foot"><b>01 · Principio</b><span>Reglas con nombre en DESIGN.md</span></div>
+</section>
+
+<!-- 3 · MARCA -->
+<section class="slide">
+  <div class="kick"><span class="num">02</span><span>Marca</span></div>
+  <h1>Logo «Card G»</h1>
+  <p class="lede">El propio marco de la carta dibuja la G: la abertura arriba a la derecha y el travesaño entra hacia la cara. Una sola tinta, sin tonos de estado. Wordmark «GAME RANK» en Barlow Condensed 800 convertido a trazos, tracking 0.02em.</p>
+  <div class="grid3 mt" style="grid-template-columns:1.4fr 1fr 1fr">
+    <div class="panel" style="display:flex;align-items:center;justify-content:center;height:112px"><img src="../../frontend/src/assets/brand/game-rank-lockup.svg" alt="" style="height:44px"></div>
+    <div class="panel dark" style="background:#181922;border-color:#2A2B38;display:flex;align-items:center;justify-content:center;height:112px"><img src="../../frontend/src/assets/brand/game-rank-lockup-white.svg" alt="" style="height:40px"></div>
+    <div class="panel" style="display:flex;align-items:center;justify-content:center;gap:18px;height:112px"><img src="../../frontend/src/assets/brand/game-rank-symbol.svg" alt="" style="height:64px"><img src="../../frontend/src/assets/brand/game-rank-symbol-small.svg" alt="" style="height:24px"><img src="../../frontend/src/assets/brand/game-rank-symbol-app-icon.svg" alt="" style="height:56px"></div>
+  </div>
+  <ul class="rule-list mt-s grid2" style="gap:0 28px">
+    <li><b>Color</b>currentColor en tinta: #16141D en claro, #F1F0F6 en oscuro. Versiones blancas solo sobre fondos oscuros sin tokens.</li>
+    <li><b>Geometría</b>viewBox 256: carta 172×236, radios 32 / 8, trazos 36 vertical y 34 horizontal (corrección óptica).</li>
+    <li><b>Header</b>Lockup de 40px (38px en ≤ 480px); el wordmark se oculta en ≤ 599px y entre 641 y 840px.</li>
+    <li><b>Mínimos</b>Lockup 24px de alto; símbolo 16px con el corte pequeño (trazos 44/42), también en el favicon.</li>
+    <li><b>Zona de respeto</b>El grosor del marco vertical (36/256 del alto) a cada lado.</li>
+    <li><b>Archivos</b>frontend/src/assets/brand/ y el juego de favicons en frontend/public/.</li>
+  </ul>
+  <div class="foot"><b>02 · Marca</b><span>Accesible: aria-label «Game Rank home» en el enlace del logo</span></div>
+</section>
+
+<!-- 3 · ARQUITECTURA -->
+<section class="slide">
+  <div class="kick"><span class="num">03</span><span>Arquitectura visual</span></div>
+  <h1>Una composición por vista, un mismo mundo</h1>
+  <div class="views">
+    <div class="view"><div class="shot"><img src="../review/cleanup/home.png" alt=""></div><div class="cap"><b>Home</b><span>Álbum abierto y checklists</span></div></div>
+    <div class="view"><div class="shot"><img src="../review/cleanup/detail.png" alt=""></div><div class="cap"><b>Detalle</b><span>Carta principal y «Your copy»</span></div></div>
+    <div class="view"><div class="shot"><img src="../review/catalog/desktop-grid.png" alt=""></div><div class="cap"><b>Catálogo</b><span>Filtros, rejilla o checklist</span></div></div>
+    <div class="view"><div class="shot"><img src="../review/profile/desktop-viewport.png" alt=""></div><div class="cap"><b>Perfil</b><span>Vitrina de trofeos</span></div></div>
+    <div class="view"><div class="shot"><img src="../review/trends/rated.png" alt=""></div><div class="cap"><b>Tendencias</b><span>Tabla de clasificación</span></div></div>
+    <div class="view"><div class="shot"><img src="../review/auth/login.png" alt=""></div><div class="cap"><b>Acceso</b><span>Carta de socio</span></div></div>
+    <div class="view"><div class="shot"><img src="../review/rest/terms.png" alt=""></div><div class="cap"><b>Términos</b><span>Reglamento con índice</span></div></div>
+    <div class="view"><div class="shot"><img src="../review/rest/404.png" alt=""></div><div class="cap"><b>404</b><span>La carta que falta</span></div></div>
+  </div>
+  <p class="mt-s" style="font-size:12px">Administración (Users y Comments) usa el formato «libro de registro»: sin cartas ni tonos de estado. Se omite aquí porque sus tablas muestran datos personales de usuarios; capturas en .impeccable/review/admin/.</p>
+  <div class="foot"><b>03 · Arquitectura visual</b><span>Capturas reales de .impeccable/review/</span></div>
+</section>
+
+<!-- 4 · TEMAS -->
+<section class="slide">
+  <div class="kick"><span class="num">04</span><span>Sistema de temas</span></div>
+  <h1>Superficie: claro y oscuro</h1>
+  <p class="lede">Fondo de cartulina fría, caras blancas, tinta casi negra en tres pasos y dos grises de regla. El tema oscuro reasigna cada token; nunca se escribe un color fuera de ellos.</p>
+  <div class="grid2 mt">
+    <div class="panel"><div class="lbl">Tema claro · :root</div>
+      <div class="grid4">
+        <div class="sw"><i style="background:#EEF0F4"></i><b>ground</b><span>#EEF0F4</span></div>
+        <div class="sw"><i style="background:#FFFFFF"></i><b>face</b><span>#FFFFFF</span></div>
+        <div class="sw"><i style="background:#16141D"></i><b>ink</b><span>#16141D</span></div>
+        <div class="sw"><i style="background:#4B4858"></i><b>ink-2</b><span>#4B4858</span></div>
+        <div class="sw"><i style="background:#64616F"></i><b>ink-3</b><span>#64616F</span></div>
+        <div class="sw"><i style="background:#DCDFE7"></i><b>rule</b><span>#DCDFE7</span></div>
+        <div class="sw"><i style="background:#C3C7D2"></i><b>rule-strong</b><span>#C3C7D2</span></div>
+        <div class="sw"><i style="background:#2A2733"></i><b>frame</b><span>#2A2733</span></div>
+      </div>
+    </div>
+    <div class="panel dark" style="border-color:#2A2B38;background:#181922"><div class="lbl" style="color:#A09DB0">Tema oscuro · [data-theme="dark"]</div>
+      <div class="grid4">
+        <div class="sw"><i style="background:#0E0F15"></i><b>ground</b><span>#0E0F15</span></div>
+        <div class="sw"><i style="background:#181922"></i><b>face</b><span>#181922</span></div>
+        <div class="sw"><i style="background:#F1F0F6"></i><b>ink</b><span>#F1F0F6</span></div>
+        <div class="sw"><i style="background:#BCB9CA"></i><b>ink-2</b><span>#BCB9CA</span></div>
+        <div class="sw"><i style="background:#A09DB0"></i><b>ink-3</b><span>#A09DB0</span></div>
+        <div class="sw"><i style="background:#2A2B38"></i><b>rule</b><span>#2A2B38</span></div>
+        <div class="sw"><i style="background:#3B3C4C"></i><b>rule-strong</b><span>#3B3C4C</span></div>
+        <div class="sw"><i style="background:#4A4757"></i><b>frame</b><span>#4A4757</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><b>04 · Sistema de temas</b><span>Tokens <code>--gd-*</code> en frontend/src/styles/card-world.css</span></div>
+</section>
+
+<!-- 5 · ESTADOS -->
+<section class="slide">
+  <div class="kick"><span class="num">05</span><span>Paleta de estado</span></div>
+  <h1>El color significa propiedad</h1>
+  <p class="lede">Los cuatro estados de colección son los únicos tonos que pueden llenar un marco. Se usan solo cuando el jugador tiene el juego en ese estado; en oscuro se aclaran y el texto sobre el marco pasa al fondo oscuro.</p>
+  <div class="grid4 mt">
+    <div class="sw"><i style="background:#2563EB"></i><b>Pending</b><span>#2563EB · oscuro #7AA2FF</span></div>
+    <div class="sw"><i style="background:#0E7A3F"></i><b>Playing</b><span>#0E7A3F · oscuro #3DD68C</span></div>
+    <div class="sw"><i style="background:#9A5B00"></i><b>Paused</b><span>#9A5B00 · oscuro #F2B544</span></div>
+    <div class="sw"><i style="background:#6D3FD6"></i><b>Completed</b><span>#6D3FD6 · oscuro #B096FF</span></div>
+  </div>
+  <div class="row mt" style="align-items:flex-end">
+    <div class="mini"><div class="face"><div class="nm">Portal</div><div class="art"><img src="https://media.rawg.io/media/games/7fa/7fa0b586293c5861ee32490e953a4996.jpg" alt=""></div><div class="ln"><b>No. 13536</b><span>2007</span></div></div></div>
+    <div class="mini f-pending"><div class="face"><div class="nm">Cyberpunk 2077</div><div class="art"><img src="https://media.rawg.io/media/games/26d/26d4437715bee60138dab4a7c8c59c92.jpg" alt=""></div><div class="ln"><span class="stamp"><i class="pi pi-clock"></i>Pending</span></div></div></div>
+    <div class="mini f-playing"><div class="face"><div class="nm">Elden Ring</div><div class="art"><img src="https://media.rawg.io/media/games/b29/b294fdd866dcdb643e7bab370a552855.jpg" alt=""></div><div class="ln"><span class="stamp"><i class="pi pi-play"></i>Playing</span></div></div></div>
+    <div class="mini f-paused"><div class="face"><div class="nm">Skyrim</div><div class="art"><img src="https://media.rawg.io/media/games/7cf/7cfc9220b401b7a300e409e539c9afd5.jpg" alt=""></div><div class="ln"><span class="stamp"><i class="pi pi-pause"></i>Paused</span></div></div></div>
+    <div class="mini f-completed"><div class="face"><div class="nm">God of War</div><div class="art"><img src="https://media.rawg.io/media/games/4be/4be6a6ad0364751a96229c56bf69be59.jpg" alt=""></div><div class="ln"><span class="stamp"><i class="pi pi-check-circle"></i>Completed</span></div></div></div>
+  </div>
+  <div class="foot"><b>05 · Paleta de estado</b><span>Clases <code>cw-frame</code> y <code>cw-frame--pendiente|jugando|pausado|completado</code></span></div>
+</section>
+
+<!-- 6 · ACENTOS -->
+<section class="slide">
+  <div class="kick"><span class="num">06</span><span>Acentos</span></div>
+  <h1>Los únicos colores pequeños</h1>
+  <p class="lede">Fuera del marco, el color solo aparece en piezas pequeñas: el sello de Metacritic, las estrellas, la rareza de los logros y el peligro. Nunca ocupan una superficie grande.</p>
+  <div class="grid3 mt">
+    <div class="panel"><div class="lbl">Sello de Metacritic</div>
+      <div class="row" style="gap:10px;align-items:center"><span class="mc" style="background:var(--mcg)">92</span><span class="mc" style="background:var(--mcy)">68</span><span class="mc" style="background:var(--mcr)">41</span><span class="mc" style="background:var(--ground);color:var(--ink2);border:1px solid var(--rule)">—</span></div>
+      <p class="mt-s" style="font-size:12px">≥ 80 #157347 · ≥ 50 #8C5A00 · menos #B3261E · sin nota: sello vacío o se omite.</p>
+    </div>
+    <div class="panel"><div class="lbl">Estrella y rareza</div>
+      <div class="row" style="gap:14px;align-items:center;font-family:var(--c);font-weight:800;font-size:22px"><span><span style="color:var(--star)">★</span> 4.8</span></div>
+      <p class="mt-s" style="font-size:12px">star #C98A00 (oscuro #F2B544) · rare #B45309 · uncommon #2563EB · common #8A8796.</p>
+    </div>
+    <div class="panel"><div class="lbl">Peligro</div>
+      <span class="btn sm" style="border-color:color-mix(in srgb,#B3261E 40%,#DCDFE7);color:#B3261E"><i class="pi pi-trash"></i>Delete account</span>
+      <p class="mt-s" style="font-size:12px">danger #B3261E (oscuro #F07A72): solo acciones destructivas y errores de validación.</p>
+    </div>
+  </div>
+  <div class="foot"><b>06 · Acentos</b><span>utils/metacritic.js · claseMetacritic(score)</span></div>
+</section>
+
+<!-- 7 · TIPOGRAFÍA -->
+<section class="slide">
+  <div class="kick"><span class="num">07</span><span>Tipografía</span></div>
+  <h1>Barlow Condensed imprime los hechos</h1>
+  <div class="grid2 mt">
+    <div class="panel">
+      <div class="lbl">Barlow Condensed · 700 / 800</div>
+      <div style="font-family:var(--c);font-weight:800;font-size:46px;line-height:.9">Aa 0123</div>
+      <p class="mt-s" style="font-size:12.5px">Nombres de juego, títulos, cifras, sellos y números de set; cifras tabulares en datos comparables.</p>
+    </div>
+    <div class="panel">
+      <div class="lbl">Barlow · 400 / 500 / 600 / 700</div>
+      <div style="font-weight:600;font-size:38px;line-height:.95">Aa 0123</div>
+      <p class="mt-s" style="font-size:12.5px">Texto, etiquetas, botones y controles, en minúscula de frase. Ambas con @fontsource en main.js.</p>
+    </div>
+  </div>
+  <table class="t mt-s">
+    <tr><th>Rol</th><th>Familia</th><th>Tamaño</th><th>Peso</th><th>Uso</th></tr>
+    <tr><td>Título de página</td><td>Condensed</td><td class="tn">2.75–3.4rem</td><td>800</td><td>h1 de cada vista</td></tr>
+    <tr><td>Sección</td><td>Condensed</td><td class="tn">2rem</td><td>800</td><td>.cw-h2</td></tr>
+    <tr><td>Dato</td><td>Condensed</td><td class="tn">1.2rem</td><td>700</td><td>celdas de estadística, «No. {id}»</td></tr>
+    <tr><td>Cuerpo / prosa</td><td>Barlow</td><td class="tn">1rem · 1.5 / 1.65</td><td>400</td><td>texto y lectura larga</td></tr>
+    <tr><td>Etiqueta / botón</td><td>Barlow</td><td class="tn">0.875 / 0.95rem</td><td>600</td><td>labels, botones, chips</td></tr>
+  </table>
+  <div class="foot"><b>07 · Tipografía</b><span>Sora queda retirada del proyecto</span></div>
+</section>
+
+<!-- 8 · ICONOGRAFÍA -->
+<section class="slide">
+  <div class="kick"><span class="num">08</span><span>Iconografía</span></div>
+  <h1>Una librería: PrimeIcons</h1>
+  <p class="lede">Iconos de trazo de PrimeIcons, siempre con <code>aria-hidden="true"</code> y con el nombre en el texto o en un <code>aria-label</code>. Cada estado tiene su icono fijo; el marcapáginas representa la colección en todas las vistas.</p>
+  <div class="grid4 mt" style="font-size:13px">
+    <div class="panel" style="text-align:center"><i class="pi pi-clock" style="font-size:26px;color:var(--pending)"></i><p class="mt-s"><b>Pending</b><br><code>pi-clock</code></p></div>
+    <div class="panel" style="text-align:center"><i class="pi pi-play" style="font-size:26px;color:var(--playing)"></i><p class="mt-s"><b>Playing</b><br><code>pi-play</code></p></div>
+    <div class="panel" style="text-align:center"><i class="pi pi-pause" style="font-size:26px;color:var(--paused)"></i><p class="mt-s"><b>Paused</b><br><code>pi-pause</code></p></div>
+    <div class="panel" style="text-align:center"><i class="pi pi-check-circle" style="font-size:26px;color:var(--completed)"></i><p class="mt-s"><b>Completed</b><br><code>pi-check-circle</code></p></div>
+  </div>
+  <div class="row mt" style="gap:26px;font-size:22px;color:var(--ink2)">
+    <span title="bookmark"><i class="pi pi-bookmark"></i></span><span><i class="pi pi-heart"></i></span><span><i class="pi pi-comments"></i></span><span><i class="pi pi-star"></i></span><span><i class="pi pi-trash"></i></span><span><i class="pi pi-search"></i></span><span><i class="pi pi-user"></i></span>
+  </div>
+  <p class="mt-s" style="font-size:12px">Colección (bookmark) · favorito (heart) · reseñas (comments) · nota (star) · eliminar (trash) · buscar (search) · usuario (user).</p>
+  <div class="foot"><b>08 · Iconografía</b><span>utils/statusMeta.js fija etiqueta e icono por estado</span></div>
+</section>
+
+<!-- 9 · CARTA -->
+<section class="slide">
+  <div class="kick"><span class="num">09</span><span>Componente · Carta</span></div>
+  <h1>Anatomía de la carta</h1>
+  <div class="row mt" style="gap:36px;align-items:flex-start">
+    <div class="card f-playing">
+      <div class="face">
+        <div class="band"><span class="name">Elden Ring</span><span class="mc" style="background:var(--mcg)">95</span></div>
+        <div class="art"><img src="https://media.rawg.io/media/games/b29/b294fdd866dcdb643e7bab370a552855.jpg" alt=""></div>
+        <div class="cells"><div class="cell"><small>Community</small><b>★ 4.8</b></div><div class="cell"><small>Release</small><b>2022</b></div><div class="cell"><small>Platforms</small><b>4</b></div></div>
+        <div class="set"><span><b>No. 326243</b> · Data by RAWG</span><span class="stamp"><i class="pi pi-play"></i>Playing</span></div>
+      </div>
+    </div>
+    <ul class="rule-list" style="flex:1">
+      <li><b>Marco</b>22px de radio, 10px de canto, color neutro o del estado. Relieve de carta.</li>
+      <li><b>Cara</b>Blanca, 14px de radio. Banda de nombre en Condensed 800 con el sello de Metacritic.</li>
+      <li><b>Arte</b>4:3, 10px de radio, regla interior de 1px.</li>
+      <li><b>Celdas</b>Datos con regla fina y 8px de radio; cifras tabulares.</li>
+      <li><b>Pie de set</b>«No. {id}» como número de set, crédito «Data by RAWG» y el sello del estado.</li>
+      <li><b>Mini carta</b>MiniCard.vue: 16 / 11 / 7px, pie de set de dos líneas, sello solo icono en ≤ 480px.</li>
+      <li><b>Variantes</b>Carta campeona (Tendencias), carta de socio (Acceso), placa de trofeo (Perfil).</li>
+    </ul>
+  </div>
+  <div class="foot"><b>09 · Carta</b><span>GameDetail y components/CardWorld/MiniCard.vue</span></div>
+</section>
+
+<!-- 10 · FILAS Y SELLOS -->
+<section class="slide">
+  <div class="kick"><span class="num">10</span><span>Componente · Listas</span></div>
+  <h1>Checklists y clasificaciones</h1>
+  <p class="lede">Las listas son páginas planas con reglas finas. El puesto en Condensed, el número de set, el sello del estado si el juego es tuyo y la barra del dato en tinta.</p>
+  <div class="rows mt">
+    <div class="rr f-playing owned"><span class="rk">1</span><span class="th"><img src="https://media.rawg.io/media/games/b29/b294fdd866dcdb643e7bab370a552855.jpg" alt=""></span><div><div class="nm">Elden Ring</div><div class="mt2"><b>No. 326243</b>2022<span class="stamp"><i class="pi pi-play"></i>Playing</span></div></div><div class="val">4.8 <small>/ 5 · 5 reviews</small><div class="bar"><i style="width:96%"></i></div></div></div>
+    <div class="rr"><span class="rk">3</span><span class="th"><img src="https://media.rawg.io/media/games/fc1/fc1307a2774506b5bd65d7e8424664a7.jpg" alt=""></span><div><div class="nm">BioShock Infinite</div><div class="mt2"><b>No. 4062</b>2013</div></div><div class="val">4.7 <small>/ 5 · 3 reviews</small><div class="bar"><i style="width:94%"></i></div></div></div>
+    <div class="rr f-completed owned"><span class="rk">3</span><span class="th"><img src="https://media.rawg.io/media/games/4be/4be6a6ad0364751a96229c56bf69be59.jpg" alt=""></span><div><div class="nm">God of War (2018)</div><div class="mt2"><b>No. 58175</b>2018<span class="stamp"><i class="pi pi-check-circle"></i>Completed</span></div></div><div class="val">4.7 <small>/ 5 · 7 reviews</small><div class="bar"><i style="width:94%"></i></div></div></div>
+  </div>
+  <p class="mt-s" style="font-size:12px">Empates: los valores iguales comparten puesto y el siguiente salta (1, 3, 3, 5). Fila propia: tinte del 7 % de su estado; al pasar, 13 %.</p>
+  <div class="foot"><b>10 · Listas</b><span>Owned Row Rule · Ink Bars Rule</span></div>
+</section>
+
+<!-- 11 · CONTROLES -->
+<section class="slide">
+  <div class="kick"><span class="num">11</span><span>Componente · Controles</span></div>
+  <h1>Botones, pestañas y selectores</h1>
+  <div class="grid2 mt">
+    <div class="panel"><div class="lbl">Botones · 42px · 10px de radio</div>
+      <div class="row" style="gap:10px;flex-wrap:wrap"><span class="btn pri"><i class="pi pi-check"></i>Save changes</span><span class="btn gh"><i class="pi pi-cog"></i>Account settings</span><span class="btn qt"><i class="pi pi-arrow-left"></i>Go back</span></div>
+      <p class="mt-s" style="font-size:12px">Primario en tinta (hover ink-2), fantasma en cara con regla fuerte, discreto sin borde. Pulsado: escala 0.97 en 160ms.</p>
+    </div>
+    <div class="panel"><div class="lbl">Control segmentado · 10 / 3 / 32 / 7px</div>
+      <span class="seg"><span class="on">Users</span><span>Comments</span></span>
+      <span class="seg" style="margin-left:8px"><span class="on">Grid</span><span>Checklist</span></span>
+      <p class="mt-s" style="font-size:12px">Para cambiar de vista o de tabla. Selección en tinta; aria-current o aria-pressed según el caso.</p>
+    </div>
+    <div class="panel" style="grid-column:1/-1"><div class="lbl">Pestañas de estado · pill · flechas, Inicio y Fin</div>
+      <div class="tabs"><span class="tab on" style="--frame:var(--ink)">All <em>6</em></span><span class="tab f-pending"><i class="pi pi-clock"></i>Pending <em>0</em></span><span class="tab f-playing on"><i class="pi pi-play"></i>Playing <em>1</em></span><span class="tab f-paused"><i class="pi pi-pause"></i>Paused <em>0</em></span><span class="tab f-completed"><i class="pi pi-check-circle"></i>Completed <em>5</em></span></div>
+      <p class="mt-s" style="font-size:12px">En reposo el icono lleva el tono; seleccionada, la pestaña se llena del marco. Roving tabindex y aria-selected.</p>
+    </div>
+  </div>
+  <div class="foot"><b>11 · Controles</b><span>Foco visible: anillo de 2px en azul Pending con 2px de separación</span></div>
+</section>
+
+<!-- 12 · FORMULARIOS -->
+<section class="slide">
+  <div class="kick"><span class="num">12</span><span>Componente · Formularios</span></div>
+  <h1>Campos y validación</h1>
+  <div class="grid3 mt">
+    <div class="field"><label>Email</label><div class="in">your@email.com</div><small>Reposo: regla fuerte, marcador ink-3.</small></div>
+    <div class="field"><label>Nickname</label><div class="in focus">@pixel_hunter</div><small>Foco: borde de tinta y anillo del sistema.</small></div>
+    <div class="field"><label>Password</label><div class="in err">••••</div><small class="e">Use at least 8 characters.</small></div>
+  </div>
+  <div class="grid2 mt">
+    <ul class="rule-list">
+      <li><b>Altura</b>42px (40px en los años del filtro), 10px de radio, relleno 0 12px.</li>
+      <li><b>Validación</b>Al enviar se nombra cada error en su campo y el foco va al primero; nunca un botón deshabilitado sin motivo.</li>
+      <li><b>Accesibilidad</b>aria-invalid y aria-describedby siempre apuntan a una pista existente.</li>
+    </ul>
+    <div class="card" style="width:auto"><div class="face" style="gap:8px"><div class="band" style="border-bottom:1px solid var(--rule);padding-bottom:8px;align-items:baseline"><span class="name" style="font-size:20px">Create account</span><span style="font-family:var(--c);font-weight:700;font-size:13px;color:var(--ink3)">New member</span></div><div class="field"><div class="in" style="height:34px">@pixel_hunter</div></div><div class="set"><b>@pixel_hunter</b><span>Member since 2026</span></div></div></div>
+  </div>
+  <div class="foot"><b>12 · Formularios</b><span>Carta de socio: LoginRegister/style_auth.css</span></div>
+</section>
+
+<!-- 13 · OVERLAYS -->
+<section class="slide">
+  <div class="kick"><span class="num">13</span><span>Componente · Capas</span></div>
+  <h1>Modales, menús, toasts y panel</h1>
+  <div class="row mt" style="gap:22px;align-items:flex-start">
+    <div class="modal"><h2>Remove from favorites?</h2><p>Portal will leave your favorites. You can add it again from the catalog.</p><div class="row mt-s" style="justify-content:flex-end;gap:8px"><span class="btn gh sm">Cancel</span><span class="btn sm" style="background:#B3261E;color:#fff">Remove</span></div></div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="toast"><span class="ic"><i class="pi pi-check"></i></span><div><b>Favorite added</b><p style="font-size:12px">Game added to your favorites.</p></div></div>
+      <div class="menu"><div class="f-pending"><i class="pi pi-clock"></i>Pending</div><div class="f-playing on"><i class="pi pi-play"></i>Playing</div><div class="f-paused"><i class="pi pi-pause"></i>Paused</div><div class="f-completed"><i class="pi pi-check-circle"></i>Completed</div></div>
+    </div>
+    <ul class="rule-list" style="flex:1">
+      <li><b>Modal</b>18px de radio, regla fina, relieve de capa, velo rgba(14,15,21,.55) sin desenfoque.</li>
+      <li><b>Toast</b>Chip de tinta; solo los errores usan el tono de peligro.</li>
+      <li><b>Menú de estado</b>role="menu", opciones menuitemradio; la activa se llena de su estado.</li>
+      <li><b>Panel lateral</b>Ajustes de cuenta: entra por la derecha en 260ms; editar y contraseña son pasos dentro del panel.</li>
+    </ul>
+  </div>
+  <div class="foot"><b>13 · Capas</b><span>Overlay Lift Rule</span></div>
+</section>
+
+<!-- 14 · FORMA -->
+<section class="slide">
+  <div class="kick"><span class="num">14</span><span>Tokens de forma</span></div>
+  <h1>Radios anidados y relieve</h1>
+  <div class="row mt" style="gap:40px;align-items:flex-start">
+    <div><div class="nest"><div><div><div></div></div></div></div><p class="mt-s" style="font-size:12px">22 → 14 → 10 → 8px: cada radio, menor que su contenedor.</p></div>
+    <div style="flex:1">
+      <div class="rad"><div style="border-radius:22px"></div><div style="border-radius:18px"></div><div style="border-radius:16px"></div><div style="border-radius:14px"></div><div style="border-radius:10px"></div><div style="border-radius:8px"></div><div style="border-radius:6px"></div><div style="border-radius:26px;width:70px"></div></div>
+      <div class="rad" style="margin-top:2px"><span style="width:52px">22</span><span style="width:52px">18</span><span style="width:52px">16</span><span style="width:52px">14</span><span style="width:52px">10</span><span style="width:52px">8</span><span style="width:52px">6</span><span style="width:70px">999</span></div>
+      <table class="t mt-s">
+        <tr><td>card 22</td><td>carta principal, campeona, socio</td><td>album 18</td><td>álbum, páginas, modales</td></tr>
+        <tr><td>mini 16</td><td>mini carta, ranuras</td><td>panel 14</td><td>paneles, tablas, vacíos</td></tr>
+        <tr><td>control 10</td><td>botones, campos</td><td>cell 8 · seal 6</td><td>celdas, sello Metacritic</td></tr>
+      </table>
+      <p class="mt-s" style="font-size:12px">Relieve <code>--gd-raise</code>: 0 1px 2px / 0 10px 28px en tinta al 6 % y 10 %; solo cartas y capas. Espaciado: 6 · 10 · 16 · 28 · 72px; márgenes 24px (14px en móvil).</p>
+    </div>
+  </div>
+  <div class="foot"><b>14 · Tokens de forma</b><span>Only Cards Float Rule</span></div>
+</section>
+
+<!-- 15 · MOVIMIENTO Y ACCESIBILIDAD -->
+<section class="slide">
+  <div class="kick"><span class="num">15</span><span>Movimiento y accesibilidad</span></div>
+  <h1>Movimiento con propósito, AA en ambos temas</h1>
+  <div class="grid2 mt">
+    <table class="t">
+      <tr><th>Curva</th><th>Valor</th><th>Uso</th></tr>
+      <tr><td><code style="font-size:12px;color:var(--ink)">--ease-out</code></td><td><code>cubic-bezier(.23,1,.32,1)</code></td><td>recolor de marco 320ms, menús 160ms, elevación 200ms</td></tr>
+      <tr><td><code style="font-size:12px;color:var(--ink)">--ease-in-out</code></td><td><code>cubic-bezier(.77,0,.175,1)</code></td><td>barrido holográfico 900ms</td></tr>
+      <tr><td><code style="font-size:12px;color:var(--ink)">--ease-drawer</code></td><td><code>cubic-bezier(.32,.72,0,1)</code></td><td>panel de cuenta 260ms</td></tr>
+    </table>
+    <ul class="rule-list">
+      <li><b>Firma</b>Un único movimiento de firma: el barrido holográfico al cambiar el estado de una carta.</li>
+      <li><b>Reduced motion</b>Se elimina el barrido, el crecimiento de barras y las elevaciones; solo quedan opacidad y color.</li>
+      <li><b>Contraste</b>WCAG 2.1 AA en claro y oscuro; el texto sobre el marco neutro oscuro llega a 7.95:1.</li>
+      <li><b>Teclado</b>Foco visible, skip link al contenido, pestañas con flechas, Escape cierra capas y devuelve el foco.</li>
+      <li><b>Idioma</b>Interfaz en inglés en todas las vistas y etiquetas ARIA.</li>
+    </ul>
+  </div>
+  <div class="foot"><b>15 · Movimiento y accesibilidad</b><span>Curvas en frontend/src/style.css</span></div>
+</section>
+
+<!-- 16 · FIN -->
+<section class="slide cover" style="grid-template-columns:1fr">
+  <div>
+    <div class="kick"><span class="num">FIN</span><span>Game Rank</span></div>
+    <h1 style="font-size:64px">Un mundo, dos temas,<br>diez vistas.</h1>
+    <p class="lede">Los mismos tokens, la misma carta y las mismas reglas mantienen Game Rank coherente de extremo a extremo. Cuando el código y esta guía difieren, se corrige la guía desde DESIGN.md.</p>
+    <div class="chips"><span class="chip">Vue 3 · Vite</span><span class="chip">Barlow · Barlow Condensed</span><span class="chip">PrimeIcons</span><span class="chip">Datos de juegos: RAWG</span><span class="chip">Logo «Card G»</span></div>
+  </div>
+  <div class="foot"><b>Game Rank · Guía de estilos</b><span>Generada desde .impeccable/guide/guia-estilos.html</span></div>
+</section>
+
+</body>
+</html>

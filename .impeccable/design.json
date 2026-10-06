@@ -1,9 +1,9 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-03T09:30:42+00:00",
+  "generatedAt": "2026-10-06T17:40:00+02:00",
   "title": "Design System: Game Rank",
   "extensions": {
-    "scope": "Migrated: the shared app shell (frontend/src/base/App.vue + style_app.css: header, user menu, footer, delete-account modal; global .ext-modal confirm/external-link modal and themed scrollbar in frontend/src/style.css; toasts in frontend/src/components/Notifications/; status menu in frontend/src/components/Cards/GameStatusDropdown.vue), the game detail (/game/:id) and the Home (/). Still on the previous system (their bodies only): catalog, profile, trends, login, register, admin users, admin comments, terms, 404. Tokens are global --gd-* custom properties in frontend/src/styles/card-world.css: :root (light) and [data-theme=\"dark\"] (dark). .card-world is the page base of a migrated view (min-height, ground, ink, Barlow, neutral frame default); .cw-scope is the Barlow typography scope with selection and focus ring for loose shell pieces (header, footer, toasts, status menu, delete-account modal). Shared classes: .cw-frame / .cw-frame--{pendiente|jugando|pausado|completado}, .cw-h2, .cw-count, .cw-mc. Fonts imported globally in frontend/src/main.js; mini card in frontend/src/components/CardWorld/MiniCard.vue; Metacritic thresholds in frontend/src/utils/metacritic.js.",
+    "scope": "All views run the card world: the shared app shell (frontend/src/base/App.vue + style_app.css: header, user menu, footer, delete-account modal; global .ext-modal confirm/external-link modal and themed scrollbar in frontend/src/style.css; toasts in components/Notifications/; status menu in components/Cards/GameStatusDropdown.vue) and every view: game detail (components/GameDetail/), Home (components/Home/), catalog (components/Content/ + Filters/ + Pagination/), profile (components/User/), Trends (components/Tendencias/), sign in and register (components/LoginRegister/, style_auth.css), admin users and comments (components/Admin/, style_admin.css), terms (components/Legal/) and 404 (components/NotFound/). The previous system (Sora, --color-* tokens) is gone from the source; style.css sets Barlow on the body. Tokens are global --gd-* custom properties in frontend/src/styles/card-world.css: :root (light) and [data-theme=\"dark\"] (dark). .card-world is the page base of every view (min-height, ground, ink, Barlow, neutral frame default); .cw-scope is the Barlow typography scope with selection and focus ring for loose pieces outside a view root (header, footer, toasts, status menu, delete-account modal, account drawer). Shared classes: .cw-frame / .cw-frame--{pendiente|jugando|pausado|completado}, .cw-h2, .cw-count, .cw-mc. Shared parts: mini card (components/CardWorld/MiniCard.vue; props game, status, favorite, showFavorite, canChangeStatus), Metacritic thresholds (utils/metacritic.js, claseMetacritic), status labels and icons (utils/statusMeta.js), pagination (components/Pagination/). Visual evidence in .impeccable/review/ (catalog, profile, trends, auth, rest); admin is not captured and is documented from code only; profile captures other than desktop-viewport.png predate the last profile stylesheet change.",
     "colorMeta": {
       "ground": {
         "role": "neutral",
@@ -385,11 +385,11 @@
       },
       "title": {
         "displayName": "Panel Heading",
-        "purpose": "Your copy, About, Details."
+        "purpose": "Panel headings: Your copy, About, Details, the catalog Filters rail, the profile Favorites panel."
       },
       "stat-value": {
         "displayName": "Stat Value",
-        "purpose": "Stat cells; same face for scores, ratings, set numbers, ranks, totals and dates."
+        "purpose": "Stat cells; same face for scores, ratings, set numbers, ranks, totals, dates and page numbers. Big figures go larger: plate values 2.4rem/800, champion value 3.6rem/800, standings ranks 2.1rem/800, terms numerals 1.8rem/800."
       },
       "body": {
         "displayName": "Body",
@@ -401,11 +401,11 @@
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Definition terms and rating label; sentence case."
+        "purpose": "Definition terms, rating label, form labels, filter legends and table headers; sentence case."
       },
       "label-sm": {
         "displayName": "Small Label",
-        "purpose": "Stat-cell terms."
+        "purpose": "Stat-cell terms, row metadata and field hints."
       },
       "button": {
         "displayName": "Button",
@@ -416,7 +416,7 @@
       {
         "name": "card-lift",
         "value": "0 1px 2px rgba(22, 20, 29, 0.06), 0 10px 28px rgba(22, 20, 29, 0.10)",
-        "purpose": "Token --gd-raise (light). Main card, mini cards, guest trailer card, and the Home album spread as one object (removed when the spread stacks at 1024px)."
+        "purpose": "Token --gd-raise (light). Main card, mini cards, guest trailer card, trophy plates (not empty ones), the Trends champion card, the member card, and the Home album spread as one object (removed when the spread stacks at 1024px)."
       },
       {
         "name": "card-lift-dark",
@@ -426,7 +426,7 @@
       {
         "name": "art-inset-rule",
         "value": "inset 0 0 0 1px var(--gd-rule)",
-        "purpose": "Edge of the main card's art box."
+        "purpose": "Edge of the main card's and the champion card's art box; also rings the active terms contents item."
       },
       {
         "name": "seal-on-art",
@@ -436,12 +436,12 @@
       {
         "name": "overlay-lift",
         "value": "var(--gd-raise)",
-        "purpose": "Overlay-elevation exception to The Only Cards Float Rule: user menu, status menu, toasts, delete-account modal and the confirm / external-link modal."
+        "purpose": "Overlay-elevation exception to The Only Cards Float Rule: user menu, status menu, toasts, delete-account modal, the confirm / external-link modal and the profile account drawer."
       },
       {
         "name": "modal-scrim",
         "value": "background: rgba(14, 15, 21, 0.55); no backdrop blur",
-        "purpose": "Plain scrim behind every modal."
+        "purpose": "Plain scrim behind every modal and the profile account drawer."
       }
     ],
     "motion": [
@@ -458,7 +458,7 @@
       {
         "name": "ease-drawer",
         "value": "cubic-bezier(0.32, 0.72, 0, 1)",
-        "purpose": "Shared global token; not used on the migrated surfaces."
+        "purpose": "Account drawer slide on the profile (260ms)."
       },
       {
         "name": "frame-recolor",
@@ -488,7 +488,7 @@
       {
         "name": "menu-enter",
         "value": "opacity + scale(0.96) 160ms var(--ease-out); leave opacity 100ms",
-        "purpose": "User menu (top-right origin) and status menu (top-left origin)."
+        "purpose": "User menu (top-right origin) and status menu (top-left on the detail, top-right from the catalog checklist, bottom-right from a mini card)."
       },
       {
         "name": "toast",
@@ -499,12 +499,40 @@
         "name": "modal",
         "value": "enter 220ms (panel translateY(8px) scale(0.97)), leave 150ms (scale(0.97)) var(--ease-out)",
         "purpose": "Delete-account modal and the shared .ext-modal."
+      },
+      {
+        "name": "account-drawer",
+        "value": "drawer translateX(100%) 260ms var(--ease-drawer); scrim opacity 220ms var(--ease-out); leaves the same way",
+        "purpose": "Profile account settings drawer enters and leaves through its right edge."
+      },
+      {
+        "name": "board-swap",
+        "value": "enter opacity + translateY(6px) 220ms var(--ease-out); leave opacity 120ms",
+        "purpose": "Trends board change; translate removed under reduced motion."
+      },
+      {
+        "name": "data-bar-grow",
+        "value": "scaleX(0) to 1, 420ms var(--ease-out), left origin, once",
+        "purpose": "Trends data bars; static under reduced motion."
+      },
+      {
+        "name": "card-hover-lift",
+        "value": "translateY(-3px) 200ms var(--ease-out), fine pointers only",
+        "purpose": "Mini cards and the Trends champion card."
       }
     ],
     "breakpoints": [
       {
+        "name": "profile-shelf-stack",
+        "value": "1100px"
+      },
+      {
         "name": "compact-desktop",
         "value": "1024px"
+      },
+      {
+        "name": "terms-single-column",
+        "value": "960px"
       },
       {
         "name": "shell-search-narrow",
@@ -519,7 +547,11 @@
         "value": "768px"
       },
       {
-        "name": "two-column-pockets",
+        "name": "not-found-stack",
+        "value": "760px"
+      },
+      {
+        "name": "two-column-grids",
         "value": "640px"
       },
       {
@@ -527,13 +559,15 @@
         "value": "480px"
       }
     ],
-    "openDecisions": [
-      {
-        "name": "Header logo",
-        "status": "pending the user",
-        "detail": "The header still shows the legacy raster wordmark (frontend/src/assets/game_rank_logo.png, compact mark logo_GR.png at narrow widths). Whether it is redrawn for the collectible-card world is undecided; recorded as current state, not a rule."
+    "openDecisions": [],
+    "brand": {
+      "logo": {
+        "name": "Card G",
+        "description": "Single-ink letter-symbol: the card frame draws the G (opening top right, crossbar stepping toward the face) plus a GAME RANK wordmark in Barlow Condensed 800 outlined, tracking 0.02em. Inline SVG in App.vue, currentColor = ink (#16141D light, #F1F0F6 dark); never a status hue.",
+        "files": "frontend/src/assets/brand/*.svg; favicon set in frontend/public/ (favicon.svg/.ico, apple-touch, 192/512/maskable, site.webmanifest)",
+        "sizes": "header lockup 40px (38px at <=480px); wordmark hidden at <=599px and 641-840px; minimum lockup 24px, symbol 16px (small cut); clear space 36/256 of height"
       }
-    ]
+    }
   },
   "components": [
     {
@@ -612,9 +646,9 @@
       "name": "Mini Card",
       "kind": "card",
       "refersTo": "mini-card-frame",
-      "description": "Shared small card (detail series, Home). Neutral frame without a status; with the player's status the frame takes its hue and the set line ends in a status stamp. Lifts 3px on hover.",
-      "html": "<div style=\"display:flex;gap:16px\"><a class=\"ds-mini\" href=\"#\"><span class=\"ds-mini-face\"><span class=\"ds-mini-band\"><span class=\"ds-mini-name\">Hollow Knight: Silksong</span><span class=\"ds-mc-sm\">91</span></span><span class=\"ds-mini-art\"></span><span class=\"ds-mini-set\"><span class=\"ds-mini-no\">No. 58175</span><span>2025</span></span></span></a><a class=\"ds-mini ds-mini--owned\" href=\"#\"><span class=\"ds-mini-face\"><span class=\"ds-mini-band\"><span class=\"ds-mini-name\">Hades II</span><span class=\"ds-mc-sm\">95</span></span><span class=\"ds-mini-art\"></span><span class=\"ds-mini-set\"><span class=\"ds-mini-no\">No. 963218</span><span class=\"ds-mini-stamp\">Playing</span></span></span></a></div>",
-      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-on-frame:#FFFFFF;--gd-star:#C98A00;--gd-rare:#B45309;--gd-uncommon:#2563EB;--gd-completed:#6D3FD6;--gd-mc-green:#157347;--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-mini{--frame:var(--gd-frame-neutral);display:block;width:200px;padding:6px;border-radius:16px;background:var(--frame);box-shadow:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);color:var(--gd-ink);text-decoration:none;transition:transform 200ms var(--ease-out),background-color 320ms var(--ease-out)} .ds-mini--owned{--frame:var(--gd-playing)} .ds-mini:hover{transform:translateY(-3px)} .ds-mini:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-mini-face{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:11px;background:var(--gd-face)} .ds-mini-band{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;height:2.35rem} .ds-mini-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font:800 1.1rem/1.05 'Barlow Condensed',sans-serif} .ds-mc-sm{flex-shrink:0;min-width:30px;padding:2px 6px;border-radius:6px;background:var(--gd-mc-green);color:#fff;font:800 .95rem/1.3 'Barlow Condensed',sans-serif;text-align:center;font-variant-numeric:tabular-nums} .ds-mini-art{aspect-ratio:4/3;border-radius:7px;background:var(--gd-ground)} .ds-mini-set{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:24px;font-size:.8rem;color:var(--gd-ink-3);font-variant-numeric:tabular-nums} .ds-mini-no{font:700 .9rem 'Barlow Condensed',sans-serif;color:var(--gd-ink-2)} .ds-mini-stamp{padding:2px 8px;border-radius:999px;background:var(--frame);color:var(--gd-on-frame);font-size:.72rem;font-weight:700}"
+      "description": "Shared small card (detail series, Home, catalog grid, profile collection). Two-line set block: 'No. {id}' and year, then a reserved stamp line; with the player's status the frame takes its hue and line two holds the stamp. Corner actions: status bookmark in the frame hue and favorite heart. Stamp is icon-only at 480px and below. Lifts 3px on hover.",
+      "html": "<div style=\"display:flex;gap:16px\"><div class=\"ds-mini\"><a class=\"ds-mini-face\" href=\"#\"><span class=\"ds-mini-band\"><span class=\"ds-mini-name\">Hollow Knight: Silksong</span><span class=\"ds-mc-sm\">91</span></span><span class=\"ds-mini-art\"></span><span class=\"ds-mini-set\"><span class=\"ds-mini-line\"><span class=\"ds-mini-no\">No. 58175</span><span>2025</span></span><span class=\"ds-mini-line ds-mini-slot\"></span></span></a><button class=\"ds-mini-act\" aria-pressed=\"false\" aria-label=\"Add to favorites\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M12 21s-7.5-4.6-9.6-9.2C1 8.7 3 5 6.6 5c2 0 3.4 1.1 4.4 2.6C12 6.1 13.4 5 15.4 5 19 5 21 8.7 19.6 11.8 17.5 16.4 12 21 12 21z\"/></svg></button></div><div class=\"ds-mini ds-mini--owned\"><a class=\"ds-mini-face\" href=\"#\"><span class=\"ds-mini-band\"><span class=\"ds-mini-name\">Hades II</span><span class=\"ds-mc-sm\">95</span></span><span class=\"ds-mini-art\"></span><span class=\"ds-mini-set\"><span class=\"ds-mini-line\"><span class=\"ds-mini-no\">No. 963218</span><span>2025</span></span><span class=\"ds-mini-line ds-mini-slot\"><span class=\"ds-mini-stamp\">Playing</span></span></span></a><button class=\"ds-mini-act ds-mini-status\" aria-label=\"Change status\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M6 3h12v18l-6-4-6 4z\"/></svg></button><button class=\"ds-mini-act\" aria-pressed=\"true\" aria-label=\"Remove from favorites\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 21s-7.5-4.6-9.6-9.2C1 8.7 3 5 6.6 5c2 0 3.4 1.1 4.4 2.6C12 6.1 13.4 5 15.4 5 19 5 21 8.7 19.6 11.8 17.5 16.4 12 21 12 21z\"/></svg></button></div></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-on-frame-neutral:#FFFFFF;--gd-star:#C98A00;--gd-mc-green:#157347;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-mc-sm{flex-shrink:0;min-width:30px;padding:2px 6px;border-radius:6px;background:var(--gd-mc-green);color:#fff;font:800 .95rem/1.3 'Barlow Condensed',sans-serif;text-align:center;font-variant-numeric:tabular-nums} .ds-mini{--frame:var(--gd-frame-neutral);position:relative;width:200px;padding:6px;border-radius:16px;background:var(--frame);box-shadow:var(--gd-raise);transition:transform 200ms var(--ease-out),background-color 320ms var(--ease-out)} .ds-mini--owned{--frame:var(--gd-playing)} .ds-mini:hover{transform:translateY(-3px)} .ds-mini-face{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:11px;background:var(--gd-face);color:var(--gd-ink);text-decoration:none} .ds-mini-face:focus-visible,.ds-mini-act:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-mini-band{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;height:2.35rem} .ds-mini-name{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font:800 1.1rem/1.05 'Barlow Condensed',sans-serif} .ds-mini-art{aspect-ratio:4/3;border-radius:7px;background:var(--gd-ground)} .ds-mini-set{display:flex;flex-direction:column;gap:4px;font-size:.8rem;color:var(--gd-ink-3);font-variant-numeric:tabular-nums} .ds-mini-line{display:flex;justify-content:space-between;align-items:center;gap:8px} .ds-mini-slot{min-height:24px;padding-right:68px} .ds-mini-no{font:700 .9rem 'Barlow Condensed',sans-serif;color:var(--gd-ink-2)} .ds-mini-stamp{padding:2px 8px;border-radius:999px;background:var(--frame);color:var(--gd-on-frame);font-size:.72rem;font-weight:700} .ds-mini-act{position:absolute;right:12px;bottom:10px;display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:0;border-radius:8px;background:transparent;color:var(--gd-ink-3);cursor:pointer;transition:background-color 150ms ease,color 150ms ease,transform 160ms var(--ease-out)} .ds-mini-act[aria-pressed=true]{color:var(--gd-ink)} .ds-mini-status{right:44px;color:var(--frame)} .ds-mini-act:hover{background:var(--gd-ground);color:var(--gd-ink)} .ds-mini-act:active{transform:scale(.92)}"
     },
     {
       "name": "Album Page with Status Tabs",
@@ -652,7 +686,7 @@
       "name": "Status Menu",
       "kind": "custom",
       "refersTo": "status-menu",
-      "description": "Status picker: each option's icon in its status hue; the selected option fills with the hue like a frame; Remove status in danger.",
+      "description": "Status picker behind the status button (detail, mini card, catalog checklist): each option's icon in its status hue; the selected option fills with the hue like a frame; Remove status in danger.",
       "html": "<div class=\"ds-gsd\" role=\"menu\"><button class=\"ds-opt\" style=\"--hue:var(--gd-pending)\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg><span>Pending</span></button><button class=\"ds-opt is-active\" style=\"--hue:var(--gd-playing)\" aria-checked=\"true\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg><span>Playing</span><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"/></svg></button><button class=\"ds-opt\" style=\"--hue:var(--gd-paused)\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg><span>Paused</span></button><button class=\"ds-opt\" style=\"--hue:var(--gd-completed)\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"6\"/></svg><span>Completed</span></button><div class=\"ds-div\"></div><button class=\"ds-rm\">Remove status</button></div>",
       "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-on-frame-neutral:#FFFFFF;--gd-pending:#2563EB;--gd-playing:#0E7A3F;--gd-paused:#9A5B00;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-gsd{display:flex;flex-direction:column;gap:2px;width:200px;padding:4px;border:1px solid var(--gd-rule);border-radius:12px;background:var(--gd-face);box-shadow:var(--gd-raise)} .ds-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border:none;border-radius:8px;background:transparent;color:var(--gd-ink);font:600 .92rem Barlow,sans-serif;text-align:left;cursor:pointer;transition:background-color 150ms ease,color 150ms ease} .ds-opt>svg:first-child{color:var(--hue)} .ds-opt span{flex:1} .ds-opt:not(.is-active):hover{background:var(--gd-ground)} .ds-opt.is-active{background:var(--hue);color:var(--gd-on-frame)} .ds-opt.is-active svg{color:inherit} .ds-opt:focus-visible,.ds-rm:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-div{height:1px;margin:4px 0;background:var(--gd-rule)} .ds-rm{padding:8px 10px;border:none;border-radius:8px;background:transparent;color:var(--gd-danger);font:600 .9rem Barlow,sans-serif;cursor:pointer} .ds-rm:hover{background:var(--gd-ground)}"
     },
@@ -671,13 +705,61 @@
       "description": "Delete-account and shared .ext-modal: face, 1px rule, 18px radius, overlay lift on a plain scrim; plain icon above the title; ghost Cancel beside primary or danger.",
       "html": "<div class=\"ds-scrim\"><div class=\"ds-modal\" role=\"alertdialog\" aria-labelledby=\"ds-mt\"><span class=\"ds-mi\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M12 3 2 20h20L12 3z\"/><path d=\"M12 10v4M12 17h.01\"/></svg></span><h2 id=\"ds-mt\" class=\"ds-mt\">Delete your account?</h2><p class=\"ds-mb\">This action is permanent. All your comments, ratings and favorites will be deleted.</p><div class=\"ds-ma\"><button class=\"ds-mbtn ds-ghost\">Cancel</button><button class=\"ds-mbtn ds-del\">Delete account</button></div></div></div>",
       "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-on-frame-neutral:#FFFFFF;--gd-pending:#2563EB;--gd-playing:#0E7A3F;--gd-paused:#9A5B00;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-scrim{display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(14,15,21,.55)} .ds-modal{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;max-width:420px;padding:28px;border:1px solid var(--gd-rule);border-radius:18px;background:var(--gd-face);box-shadow:var(--gd-raise);text-align:center} .ds-mi{color:var(--gd-danger)} .ds-mt{margin:0;font:800 1.6rem/1.1 'Barlow Condensed',Barlow,sans-serif} .ds-mb{margin:0;font-size:.95rem;line-height:1.55;color:var(--gd-ink-2)} .ds-ma{display:flex;gap:10px;width:100%;margin-top:8px} .ds-mbtn{flex:1;height:42px;border:1px solid transparent;border-radius:10px;font:600 .95rem Barlow,sans-serif;cursor:pointer;transition:background-color 150ms ease,transform 160ms var(--ease-out)} .ds-mbtn:active{transform:scale(.97)} .ds-mbtn:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-ghost{border-color:var(--gd-rule-strong);background:var(--gd-face);color:var(--gd-ink)} .ds-ghost:hover{background:var(--gd-ground)} .ds-del{background:var(--gd-danger);color:#FFFFFF} .ds-del:hover{filter:brightness(1.08)}"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Catalog filter rail toggle (aria-pressed): face pill with rule-strong border; selected fills ink. Never a status hue.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-fchip\" aria-pressed=\"true\">Relevance</button><button class=\"ds-fchip\" aria-pressed=\"false\">Top Rated</button><button class=\"ds-fchip\" aria-pressed=\"false\">Metacritic</button><button class=\"ds-fchip\" aria-pressed=\"true\">RPG</button></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-on-frame-neutral:#FFFFFF;--gd-star:#C98A00;--gd-mc-green:#157347;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-chips{display:flex;flex-wrap:wrap;gap:6px;width:240px} .ds-fchip{height:32px;padding:0 11px;border:1px solid var(--gd-rule-strong);border-radius:999px;background:var(--gd-face);color:var(--gd-ink);font:500 .875rem Barlow,sans-serif;cursor:pointer;transition:background-color 150ms ease,border-color 150ms ease,color 150ms ease} .ds-fchip[aria-pressed=true]{border-color:var(--gd-ink);background:var(--gd-ink);color:var(--gd-face);font-weight:600} .ds-fchip[aria-pressed=false]:hover{background:var(--gd-ground);border-color:var(--gd-ink-3)} .ds-fchip:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px}"
+    },
+    {
+      "name": "Trophy Plate",
+      "kind": "card",
+      "refersTo": "trophy-plate",
+      "description": "Profile shelf plate: a small card with the stamp printed on an open-topped frame over a white face holding one figure. Status plates take their hue only above 0; at 0 they are a dashed empty slot. Activity plates stay neutral.",
+      "html": "<ul class=\"ds-plates\"><li class=\"ds-plate ds-plate--completed\"><span class=\"ds-plate-stamp\">Completed</span><span class=\"ds-plate-face\"><span class=\"ds-plate-val\">5</span></span></li><li class=\"ds-plate ds-plate--empty\"><span class=\"ds-plate-stamp\">Paused</span><span class=\"ds-plate-face\"><span class=\"ds-plate-val\">0</span></span></li><li class=\"ds-plate\"><span class=\"ds-plate-stamp\">Favorites</span><span class=\"ds-plate-face\"><span class=\"ds-plate-val\">6</span></span></li></ul>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-on-frame-neutral:#FFFFFF;--gd-star:#C98A00;--gd-mc-green:#157347;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-plates{display:grid;grid-template-columns:repeat(3,130px);gap:12px;margin:0;padding:0;list-style:none} .ds-plate{--frame:var(--gd-frame-neutral);display:flex;flex-direction:column;padding:0 5px 5px;border-radius:14px;background:var(--frame);box-shadow:var(--gd-raise)} .ds-plate--completed{--frame:var(--gd-completed)} .ds-plate-stamp{display:flex;align-items:center;min-height:32px;padding:0 7px;color:var(--gd-on-frame);font:700 1rem 'Barlow Condensed',sans-serif;white-space:nowrap} .ds-plate-face{display:flex;align-items:flex-end;min-height:62px;padding:10px 12px;border-radius:10px;background:var(--gd-face)} .ds-plate-val{font:800 2.4rem/1 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums} .ds-plate--empty{padding:0 4px 4px;border:1px dashed var(--gd-rule-strong);background:transparent;box-shadow:none} .ds-plate--empty .ds-plate-stamp,.ds-plate--empty .ds-plate-val{color:var(--gd-ink-3)} .ds-plate--empty .ds-plate-face{background:transparent}"
+    },
+    {
+      "name": "Champion Card",
+      "kind": "card",
+      "refersTo": "champion-frame",
+      "description": "Trends No. 1: the main card radii (22/14/10) with the band on the frame ('No. 1' and the lead over No. 2), 4:3 art, name, big value and set footer. Neutral frame unless the player owns the game.",
+      "html": "<a class=\"ds-champ\" href=\"#\"><span class=\"ds-champ-band\"><span class=\"ds-champ-rank\">No. 1</span><span class=\"ds-champ-lead\">+3 over No. 2</span></span><span class=\"ds-champ-face\"><span class=\"ds-champ-art\"></span><span class=\"ds-champ-name\">Elden Ring</span><span class=\"ds-champ-stat\"><strong>14</strong><span>players</span></span><span class=\"ds-champ-foot\"><span class=\"ds-champ-no\">No. 326243</span><span>2022</span><span class=\"ds-mc-sm\">95</span></span></span></a>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-on-frame-neutral:#FFFFFF;--gd-star:#C98A00;--gd-mc-green:#157347;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-mc-sm{flex-shrink:0;min-width:30px;padding:2px 6px;border-radius:6px;background:var(--gd-mc-green);color:#fff;font:800 .95rem/1.3 'Barlow Condensed',sans-serif;text-align:center;font-variant-numeric:tabular-nums} .ds-champ{display:flex;flex-direction:column;width:300px;padding:0 7px 7px;border-radius:22px;background:var(--gd-frame-neutral);box-shadow:var(--gd-raise);color:var(--gd-ink);text-decoration:none;transition:transform 200ms var(--ease-out)} .ds-champ:hover{transform:translateY(-3px)} .ds-champ:hover .ds-champ-name{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px} .ds-champ:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-champ-band{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:10px 8px 9px;color:var(--gd-on-frame-neutral);font-family:'Barlow Condensed',sans-serif} .ds-champ-rank{font-size:1.6rem;font-weight:800;line-height:1} .ds-champ-lead{font-size:1.05rem;font-weight:700;font-variant-numeric:tabular-nums} .ds-champ-face{display:flex;flex-direction:column;gap:12px;padding:12px;border-radius:14px;background:var(--gd-face)} .ds-champ-art{aspect-ratio:4/3;border-radius:10px;background:var(--gd-ground);box-shadow:inset 0 0 0 1px var(--gd-rule)} .ds-champ-name{font:800 1.9rem/1 'Barlow Condensed',sans-serif} .ds-champ-stat{display:flex;align-items:baseline;gap:8px;padding-top:10px;border-top:1px solid var(--gd-rule)} .ds-champ-stat strong{font:800 3.6rem/.9 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums} .ds-champ-stat span{color:var(--gd-ink-2);font-weight:600} .ds-champ-foot{display:flex;align-items:center;gap:6px 10px;color:var(--gd-ink-3);font-size:.85rem} .ds-champ-foot .ds-mc-sm{margin-left:auto} .ds-champ-no{color:var(--gd-ink-2);font:700 .92rem 'Barlow Condensed',sans-serif}"
+    },
+    {
+      "name": "Ranked Row",
+      "kind": "custom",
+      "refersTo": "ranked-row",
+      "description": "Trends standings row: competition-ranked place (ties share it), thumb, identity with stamp, value with unit over an ink-only data bar. Owned rows take a 7% status tint.",
+      "html": "<ol class=\"ds-standings\"><li class=\"ds-rrow ds-rrow--owned\"><a href=\"#\" class=\"ds-rrow-link\"><span class=\"ds-rrow-rank\">2</span><span class=\"ds-rrow-thumb\"></span><span class=\"ds-rrow-id\"><span class=\"ds-rrow-name\">God of War (2018)</span><span class=\"ds-rrow-meta\"><span class=\"ds-rrow-no\">No. 58175</span>2018<span class=\"ds-rrow-stamp\">Playing</span></span></span><span class=\"ds-rrow-stat\"><span class=\"ds-rrow-val\">4.7 <span class=\"ds-rrow-unit\">/ 5 · 7 reviews</span></span><span class=\"ds-bar\"><span style=\"width:94%\"></span></span></span></a></li><li class=\"ds-rrow\"><a href=\"#\" class=\"ds-rrow-link\"><span class=\"ds-rrow-rank\">2</span><span class=\"ds-rrow-thumb\"></span><span class=\"ds-rrow-id\"><span class=\"ds-rrow-name\">BioShock Infinite</span><span class=\"ds-rrow-meta\"><span class=\"ds-rrow-no\">No. 4062</span>2013</span></span><span class=\"ds-rrow-stat\"><span class=\"ds-rrow-val\">4.7 <span class=\"ds-rrow-unit\">/ 5 · 3 reviews</span></span><span class=\"ds-bar\"><span style=\"width:94%\"></span></span></span></a></li></ol>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-on-frame-neutral:#FFFFFF;--gd-star:#C98A00;--gd-mc-green:#157347;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-standings{width:560px;margin:0;padding:0;overflow:hidden;border:1px solid var(--gd-rule);border-radius:18px;background:var(--gd-face);list-style:none} .ds-rrow{--frame:var(--gd-frame-neutral);transition:background-color 150ms ease} .ds-rrow+.ds-rrow{border-top:1px solid var(--gd-rule)} .ds-rrow--owned{--frame:var(--gd-playing);background:color-mix(in srgb,var(--frame) 7%,var(--gd-face))} .ds-rrow:hover{background:var(--gd-ground)} .ds-rrow--owned:hover{background:color-mix(in srgb,var(--frame) 13%,var(--gd-face))} .ds-rrow-link{display:grid;grid-template-columns:44px 72px minmax(0,1fr) 170px;align-items:center;gap:14px;padding:12px 16px;color:var(--gd-ink);text-decoration:none} .ds-rrow-link:focus-visible{outline:2px solid var(--gd-pending);outline-offset:-2px} .ds-rrow-rank{font:800 2.1rem/1 'Barlow Condensed',sans-serif;text-align:center;font-variant-numeric:tabular-nums} .ds-rrow-thumb{width:72px;height:54px;border-radius:7px;background:var(--gd-ground)} .ds-rrow-id{display:flex;flex-direction:column;gap:3px;min-width:0} .ds-rrow-name{overflow:hidden;font-weight:700;text-overflow:ellipsis;white-space:nowrap} .ds-rrow-meta{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;color:var(--gd-ink-3);font-size:.82rem} .ds-rrow-no{color:var(--gd-ink-2);font:700 .92rem 'Barlow Condensed',sans-serif} .ds-rrow-stamp{padding:2px 8px;border-radius:999px;background:var(--frame);color:var(--gd-on-frame);font-size:.72rem;font-weight:700} .ds-rrow-stat{display:flex;flex-direction:column;gap:6px} .ds-rrow-val{font:800 1.35rem/1 'Barlow Condensed',sans-serif;text-align:right;font-variant-numeric:tabular-nums} .ds-rrow-unit{color:var(--gd-ink-3);font:600 .8rem Barlow,sans-serif} .ds-bar{display:block;height:6px;overflow:hidden;border-radius:999px;background:var(--gd-ground)} .ds-bar span{display:block;height:100%;border-radius:inherit;background:var(--gd-ink-2)}"
+    },
+    {
+      "name": "Member Card",
+      "kind": "card",
+      "refersTo": "member-card-frame",
+      "description": "Sign in / register: the form on the face of a neutral-frame card (even 10px rim, 22px radius), name band inside the face, ruled set footer ('@handle · Member since {year}' on register, 'Game Rank · Game data by RAWG' on sign in). Per-field errors after submit.",
+      "html": "<section class=\"ds-member\"><div class=\"ds-member-face\"><div class=\"ds-member-band\"><h2>Sign in</h2><span>Returning</span></div><label class=\"ds-field\"><span>Email</span><input type=\"email\" placeholder=\"your@email.com\"></label><label class=\"ds-field ds-field--error\"><span>Password</span><input type=\"password\" aria-invalid=\"true\" placeholder=\"Your password\"><em>Enter your password.</em></label><button class=\"ds-submit\">Sign in</button><div class=\"ds-member-foot\"><span class=\"ds-member-no\">Game Rank</span><span>Game data by RAWG</span></div></div></section>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-on-frame-neutral:#FFFFFF;--gd-star:#C98A00;--gd-mc-green:#157347;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-member{width:380px;padding:10px;border-radius:22px;background:var(--gd-frame-neutral);box-shadow:var(--gd-raise)} .ds-member-face{display:flex;flex-direction:column;gap:18px;padding:20px 22px 16px;border-radius:14px;background:var(--gd-face)} .ds-member-band{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--gd-rule)} .ds-member-band h2{margin:0;font:800 1.9rem/1 'Barlow Condensed',sans-serif} .ds-member-band span{color:var(--gd-ink-3);font:700 1rem 'Barlow Condensed',sans-serif} .ds-field{display:flex;flex-direction:column;gap:6px;color:var(--gd-ink-2);font-size:.875rem;font-weight:600} .ds-field input{height:42px;padding:0 12px;border:1px solid var(--gd-rule-strong);border-radius:10px;background:var(--gd-face);color:var(--gd-ink);font:400 1rem Barlow,sans-serif;transition:border-color 150ms ease} .ds-field input::placeholder{color:var(--gd-ink-3)} .ds-field input:focus{border-color:var(--gd-ink);outline:none} .ds-field input:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-field--error input{border-color:var(--gd-danger)} .ds-field em{color:var(--gd-danger);font-size:.8rem;font-style:normal;font-weight:400} .ds-submit{height:46px;border:0;border-radius:10px;background:var(--gd-ink);color:var(--gd-face);font:700 1rem Barlow,sans-serif;cursor:pointer;transition:background-color 150ms ease,transform 160ms var(--ease-out)} .ds-submit:hover{background:var(--gd-ink-2)} .ds-submit:active{transform:scale(.98)} .ds-submit:focus-visible{outline:2px solid var(--gd-pending);outline-offset:2px} .ds-member-foot{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid var(--gd-rule);color:var(--gd-ink-3);font-size:.85rem} .ds-member-no{color:var(--gd-ink-2);font:700 1.1rem 'Barlow Condensed',sans-serif}"
+    },
+    {
+      "name": "Missing Card",
+      "kind": "custom",
+      "refersTo": "missing-card-sleeve",
+      "description": "404: the missing card's empty sleeve. 1px dashed outline, no fill, frame or lift; 'Missing card', 'No. 404 · Not in the set'.",
+      "html": "<div class=\"ds-sleeve\" aria-hidden=\"true\"><span class=\"ds-sleeve-art\">?</span><span class=\"ds-sleeve-name\">Missing card</span><span class=\"ds-sleeve-set\"><span class=\"ds-sleeve-no\">No. 404</span><span>Not in the set</span></span></div>",
+      "css": ":host{--gd-ground:#EEF0F4;--gd-face:#FFFFFF;--gd-ink:#16141D;--gd-ink-2:#4B4858;--gd-ink-3:#64616F;--gd-rule:#DCDFE7;--gd-rule-strong:#C3C7D2;--gd-frame-neutral:#2A2733;--gd-playing:#0E7A3F;--gd-pending:#2563EB;--gd-completed:#6D3FD6;--gd-on-frame:#FFFFFF;--gd-on-frame-neutral:#FFFFFF;--gd-star:#C98A00;--gd-mc-green:#157347;--gd-danger:#B3261E;--gd-raise:0 1px 2px rgba(22,20,29,.06),0 10px 28px rgba(22,20,29,.10);--ease-out:cubic-bezier(0.23,1,0.32,1);font-family:Barlow,system-ui,sans-serif;color:var(--gd-ink)} .ds-sleeve{display:flex;flex-direction:column;gap:10px;width:230px;padding:14px;border:1px dashed color-mix(in srgb,var(--gd-frame-neutral) 35%,var(--gd-rule-strong));border-radius:16px;color:var(--gd-ink-3)} .ds-sleeve-art{display:flex;align-items:center;justify-content:center;aspect-ratio:4/3;border-radius:8px;background:color-mix(in srgb,var(--gd-face) 60%,transparent);font-size:2.4rem} .ds-sleeve-name{font:800 1.3rem 'Barlow Condensed',sans-serif} .ds-sleeve-set{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:.82rem} .ds-sleeve-no{color:var(--gd-ink-2);font:700 1rem 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums}"
     }
   ],
   "narrative": {
     "northStar": "The Collectible Card",
-    "overview": "Every game is a trading card. RAWG prints the facts on the card face (name, art, genres, release, platforms, Metacritic, set number); the player's collection status colors the frame and their rating and review sit beside it. The world is a cool card-stock ground, white card faces and near-black ink, with one thick rounded frame as the only large field of color on a card. That frame is neutral ink while the game is not in the player's collection and takes one solid status hue when it is. Surfaces that hold the player's own copies (the \"Your copy\" panel, the Home album page) take the same status hue as a light tint and a 2px frame.\n\nDensity is moderate and editorial. The game detail sets a sticky card column next to a working column of panels; the Home opens as a card album, the player's binder of owned cards on the left page and the world's checklists on the right. Surfaces are flat white faces on a pale ground, held apart by hairline rules rather than shadows; only card objects (the main card, mini cards, the trailer card) and the open album spread as one object are lifted, plus the transient overlays (menus, toasts, modals) that sit above the page. The shell is structure, not an object: the header and footer are flat face bands ruled off from the ground by one hairline. Motion is quiet everywhere except one signature: when the player changes status, a holographic band sweeps once across the card art.\n\nThe world rejects the category default of a blurred-cover banner with a score badge and tabs, and of a full-width hero over identical carousels. Facts are framed as card stats and checklist entries, not as banners.",
+    "overview": "Every game is a trading card. RAWG prints the facts on the card face (name, art, genres, release, platforms, Metacritic, set number); the player's collection status colors the frame and their rating and review sit beside it. The world is a cool card-stock ground, white card faces and near-black ink, with one thick rounded frame as the only large field of color on a card. That frame is neutral ink while the game is not in the player's collection and takes one solid status hue when it is. Surfaces that hold the player's own copies (the \"Your copy\" panel, the Home album page) take the same status hue as a light tint and a 2px frame.\n\nDensity is moderate and editorial. The game detail sets a sticky card column next to a working column of panels; the Home opens as a card album, the player's binder of owned cards on the left page and the world's checklists on the right. The other views take one collectible metaphor each: the catalog is an album page of mini cards that switches to the set checklist; the profile is a trophy shelf of plates over the player's collection; Trends is a standings board with a champion card; sign in and register are a member card; the admin pages are a ledger; the terms are a rulebook; the 404 is the missing card's empty sleeve. Surfaces are flat white faces on a pale ground, held apart by hairline rules rather than shadows; only card objects (the main card, mini cards, the trailer card, trophy plates, the champion card, the member card) and the open album spread as one object are lifted, plus the transient overlays (menus, toasts, modals, the account drawer) that sit above the page. The shell is structure, not an object: the header and footer are flat face bands ruled off from the ground by one hairline. Motion is quiet everywhere except one signature: when the player changes status, a holographic band sweeps once across the card art.\n\nThe world rejects the category default of a blurred-cover banner with a score badge and tabs, and of a full-width hero over identical carousels. Facts are framed as card stats and checklist entries, not as banners.",
     "keyCharacteristics": [
-      "Card object first: thick rounded frame, inset 4:3 art box, ruled stat cells, set-number footer with RAWG credit.",
+      "Card object first: thick rounded frame, inset 4:3 art box, ruled stat cells, set-number footer with RAWG credit. Every view borrows one collectible object (album page, set checklist, trophy plate, champion card, member card, ledger, rulebook, empty sleeve).",
       "One large color, and it means collection status.",
       "Condensed display type for names and numbers, plain Barlow for everything else.",
       "Hairline rules and tonal ground instead of shadows for non-card surfaces, including the header and footer bands.",
@@ -687,49 +769,70 @@
     "rules": [
       {
         "name": "The One Frame Rule",
-        "body": "On a card, the frame is the only large field of color. Beyond cards, the only large colored surfaces are tinted ownership surfaces: a 7% status tint with a 2px status frame on a surface that holds the player's own copy (\"Your copy\" on the detail, the album page on the Home). Every other colored element (Metacritic seal, stamps, owned pills, stars, rarity marks) is small. A new surface does not add a large color that is not the player's status.",
+        "body": "On a card (main card, mini card, trophy plate, champion card, member card), the frame is the only large field of color. Beyond cards, the only large colored surfaces are tinted ownership surfaces: a 7% status tint with a 2px status frame on a surface that holds the player's own copy (\"Your copy\" on the detail, the album page on the Home). Every other colored element (Metacritic seal, stamps, owned pills, stars, rarity marks) is small. A new surface does not add a large color that is not the player's status.",
         "section": "colors"
       },
       {
         "name": "The Frame Means Ownership Rule",
-        "body": "A frame stays neutral until the game is in the player's collection with a status; only then does it take the status hue, and the ownership surface takes the same hue with it. A mini card shows a status frame only when it is given the player's status for that game. Status hue never decorates anything unrelated to the player's collection, with two exceptions: the focus ring, which uses the Pending blue as the system focus color, and the guest \"Your status is the frame\" demo, which shows one card in all four status frames to explain the rule. In the shell, status hues appear only in the status menu, where the player is choosing a status; feedback never borrows them. Toasts print their icon chip in ink whatever their type (success, info, warning), and only errors take danger.",
+        "body": "A frame stays neutral until the game is in the player's collection with a status; only then does it take the status hue, and the ownership surface takes the same hue with it. A mini card or the Trends champion card shows a status frame only when it is given the player's status for that game. A profile status plate takes its hue only when the player has at least one game in that status; the Activity plates (favorites, reviews, average rating) and the member card always stay in the neutral frame. Status hue never decorates anything unrelated to the player's collection, with two exceptions: the focus ring, which uses the Pending blue as the system focus color, and the guest \"Your status is the frame\" demo, which shows one card in all four status frames to explain the rule. In the shell, status hues appear only in the status menu, where the player is choosing a status; feedback never borrows them. Toasts print their icon chip in ink whatever their type (success, info, warning), and only errors take danger. The tools that are not about the player's collection (filter chips, view switch, board tabs, pagination, the admin ledger, the terms) select in ink, never in a status hue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Owned Row Rule",
+        "body": "In a list or table that mixes the player's games with others, a row the player owns takes a 7% tint of its status hue over the face (Trends standings and the catalog checklist; on Trends hover deepens to 13%), with no frame; the hue at full strength stays on the row's stamp or pill. The Home checklists and the profile favorites do not tint owned rows; they mark ownership with the pill alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Bars Rule",
+        "body": "A bar that measures a community value (the Trends data bars) is ink-2 on a ground track, never a status hue. Status hues fill a bar only when it splits the player's own album by status (the profile split bar), where each segment is that status.",
         "section": "colors"
       },
       {
         "name": "The Condensed Prints Facts Rule",
-        "body": "Barlow Condensed is reserved for card names, page titles, section, panel, modal, toast and footer headings, the account name and initial, and numbers (stats, scores, ratings, set numbers, ranks, dates, totals). Running text, labels, row names and controls stay in Barlow.",
+        "body": "Barlow Condensed is reserved for card names, page titles, section, panel, modal, toast and footer headings, card-face headings and shelf group labels, plate stamps, the account name and initial, the member card's handle, and numbers (stats, scores, ratings, set numbers, ranks, dates, totals, page numbers, terms numerals). Running text, labels, row names and controls stay in Barlow.",
         "section": "typography"
       },
       {
         "name": "The Tabular Numbers Rule",
-        "body": "Every number that can change or be compared (stats, scores, counts, ranks, percentages, totals, page numbers, character counter) uses tabular numerals.",
+        "body": "Every number that can change or be compared (stats, scores, counts, ranks, percentages, totals, page numbers, dates in tables, year inputs, character counter) uses tabular numerals.",
         "section": "typography"
       },
       {
         "name": "The Only Cards Float Rule",
-        "body": "Panels, pages, tiles, chips, tabs, inputs and the header and footer bands are flat with a hairline border. Only card objects (main card, mini cards, trailer card) carry the lift shadow, plus the album spread as a single bound object.",
+        "body": "Panels, pages (album, facing, standings, ledger, rulebook), tables, tiles, chips, tabs, inputs, the profile shelf and the header and footer bands are flat with a hairline border. Only card objects (main card, mini cards, trailer card, trophy plates, champion card, member card) carry the lift shadow, plus the album spread as a single bound object.",
         "section": "elevation"
       },
       {
         "name": "The Overlay Lift Rule",
-        "body": "The one exception to The Only Cards Float Rule is a transient overlay: menus, toasts and modals take the same lift (`--gd-raise`) because they sit above the page and leave it. Each still keeps its 1px rule border, and modal scrims stay plain, never blurred.",
+        "body": "The one exception to The Only Cards Float Rule is a transient overlay: menus, toasts, modals and the account drawer take the same lift (`--gd-raise`) because they sit above the page and leave it. Each still keeps its 1px rule border, and scrims stay plain, never blurred.",
         "section": "elevation"
+      },
+      {
+        "name": "The Empty Slot Rule",
+        "body": "A slot with nothing in it (a status plate at 0, an empty album sleeve, the 404's missing card) is a dashed outline with a transparent or half-transparent face, ink-3 text, no solid frame and no lift. It keeps the shape of the card it is missing, so the page shows where a card would go.",
+        "section": "shapes"
       }
     ],
     "dos": [
       "Do keep the card frame as the only large color on a card, and tie it to collection status: neutral until the game has a status, then exactly one status hue.",
-      "Do give a surface a status tint (7%) and 2px status frame only when it holds the player's own copies, as \"Your copy\" and the Home album page do.",
-      "Do pass the player's status to every mini card where it is known; leave the frame neutral where it is not.",
+      "Do give a surface a status tint (7%) and 2px status frame only when it holds the player's own copies, as \"Your copy\" and the Home album page do; in a mixed list, tint an owned row 7% with no frame.",
+      "Do pass the player's status to every mini card and champion card where it is known; leave the frame neutral where it is not.",
+      "Do show a count of zero as an empty slot (dashed, no fill, no lift, ink-3), not as a colored card with a 0.",
+      "Do select tools (filter chips, view switch, board tabs, admin nav, current page) in ink; keep status hues for the collection.",
+      "Do keep a view's sharable state in the URL with `router.replace` (`?view=checklist`, `?board=rated`), dropping the parameter for the default.",
+      "Do rank with competition ranking (ties share a place, the next place skips) and say so in the source note.",
       "Do recolor frame, stamp and ownership surfaces together on the same 320ms ease-out transition.",
-      "Do join a new view to the world with the `card-world` root class, put `cw-scope` on loose pieces that live outside a migrated view (shell parts, anything teleported to the body), and reuse the shared frame, heading, count and seal classes and the mini card component instead of copying them.",
+      "Do join a new view to the world with the `card-world` root class, put `cw-scope` on loose pieces that live outside a view root (shell parts, anything teleported to the body, such as the account drawer), and reuse the shared frame, heading, count and seal classes and the mini card component instead of copying them.",
       "Do print names, headings and numbers in Barlow Condensed and keep labels and prose in Barlow, sentence case.",
       "Do use tabular numerals for every stat, score, count, rank and percentage.",
-      "Do nest radii from outside in (22, 14, 10, 8) and separate flat surfaces with 1px rules.",
-      "Do reserve the lift shadow for card objects, the album spread as one object, and transient overlays (menus, toasts, modals).",
+      "Do nest radii from outside in (22, 14, 10, 8) and separate flat surfaces with 1px rules; reuse the existing radius steps for new surfaces instead of adding one.",
+      "Do reserve the lift shadow for card objects (including trophy plates, the champion card and the member card), the album spread as one object, and transient overlays (menus, toasts, modals, the account drawer).",
       "Do keep feedback in ink: toast icon chips are ink, and only errors and destructive actions take danger.",
       "Do mark the current route in the header with the 2px ink bar, not a filled pill.",
       "Do keep the RAWG credit printed on the card face, and label RAWG-sourced figures as such (\"Player ratings on RAWG\").",
-      "Do build in-page view switches as WAI-ARIA tablists with arrow-key, Home and End navigation.",
+      "Do build in-page switches between different content as WAI-ARIA tablists with arrow-key, Home and End navigation; use `aria-pressed` toggles when the switch only re-presents the same content, and `aria-sort` on sortable table headers.",
+      "Do validate forms on submit: per-field danger border, `aria-invalid` and message under the field, focus on the first invalid field.",
+      "Do collapse a data table into stacked rows on narrow screens (catalog checklist at 640px, admin ledger at 860px), keeping the header for screen readers only.",
       "Do remove the holo sweep under reduced motion and keep every other transition to opacity and color there.",
       "Do define both themes for every new token; dark lifts status hues and flips on-frame text to the dark ground."
     ],
@@ -741,7 +844,9 @@
       "Don't use uppercase tracked labels; labels are sentence case.",
       "Don't apply shadows to panels, pages, tiles, chips, tabs, inputs or the header and footer bands, or give each album page its own shadow.",
       "Don't use status hues for notifications, avatars or other shell feedback; they belong to the player's collection.",
-      "Don't blur the scrim behind a modal."
+      "Don't fill a community data bar with a status hue; community figures are ink.",
+      "Don't put card objects, lift or status hue on the admin ledger; it is a tool.",
+      "Don't blur the scrim behind a modal or the account drawer."
     ]
   }
 }

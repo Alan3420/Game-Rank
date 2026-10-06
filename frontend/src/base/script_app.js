@@ -41,7 +41,7 @@ export default {
       document.documentElement.setAttribute('data-theme', this.tema);
       var meta = document.querySelector('meta[name="theme-color"]');
       if (meta) {
-        meta.setAttribute('content', this.tema === 'dark' ? '#0F1115' : '#f1f5f9');
+        meta.setAttribute('content', this.tema === 'dark' ? '#0E0F15' : '#EEF0F4');
       }
     },
 

@@ -241,7 +241,7 @@ th[aria-sort="descending"] .cat-sort {
 
 /* fila de un juego tuyo: tinte suave del color de su estado */
 .cat-row[class*="cw-frame--"] td {
-    background: color-mix(in srgb, var(--gd-frame) 6%, var(--gd-face));
+    background: color-mix(in srgb, var(--gd-frame) 7%, var(--gd-face));
 }
 
 .cat-row__no {
@@ -545,7 +545,7 @@ th[aria-sort="descending"] .cat-sort {
 
     /* el tinte de las filas propias se pinta una vez, en la fila */
     .cat-row[class*="cw-frame--"] {
-        background: color-mix(in srgb, var(--gd-frame) 6%, var(--gd-face));
+        background: color-mix(in srgb, var(--gd-frame) 7%, var(--gd-face));
     }
 
     .cat-row[class*="cw-frame--"] td {

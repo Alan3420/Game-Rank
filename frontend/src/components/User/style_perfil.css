@@ -655,7 +655,7 @@
     z-index: 1500;
     display: flex;
     justify-content: flex-end;
-    background: rgba(14, 15, 21, 0.45);
+    background: rgba(14, 15, 21, 0.55);
     overscroll-behavior: contain;
 }
 

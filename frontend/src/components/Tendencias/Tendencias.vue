@@ -79,7 +79,7 @@
               <li v-for="(juego, i) in resto" :key="juego.id" class="tr-row cw-frame"
                 :class="estadoDe(juego.id) ? ['tr-row--owned', 'cw-frame--' + estadoDe(juego.id)] : ''">
                 <router-link :to="'/game/' + juego.id" class="tr-row__link">
-                  <span class="tr-row__rank" :class="{ 'tr-row__rank--tie': empatado(i + 1) }">
+                  <span class="tr-row__rank">
                     <span class="sr-only">Place </span>{{ puestos[i + 1] }}
                   </span>
                   <span class="tr-row__thumb"><GameImage :src="juego.imge_url" alt="" width="160" height="120" /></span>

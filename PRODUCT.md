@@ -41,9 +41,8 @@ Not confirmed. The product combines catalog discovery, personal backlog tracking
 
 ## Brand Commitments
 
-- **Name:** Game Rank. Logos at `frontend/src/assets/game_rank_logo.png` and `frontend/src/assets/logo_GR.png`.
+- **Name:** Game Rank. Logo "Card G" (single-ink letter-symbol and Barlow Condensed wordmark) in `frontend/src/assets/brand/`; favicon set in `frontend/public/`.
 - **Design system:** the visual identity is the "collectible card" world, documented in `DESIGN.md` (tokens in `frontend/src/styles/card-world.css`). `DESIGN.md` and the code are the source of truth; `Game-Rank-Guia-Estilos.pdf` is regenerated from them and must not diverge. The previous identity (indigo, Sora, neumorphic shell) is retired.
-- **Logo:** open decision. The header still uses the legacy raster wordmark.
 - **UI language:** English only, across every view, label, message and ARIA string, even though documentation, code comments and stored values are in Spanish.
 - **RAWG attribution is mandatory** wherever RAWG data is presented as a product surface; it currently lives in the footer (`App.vue`) and in Terms section 06.
 

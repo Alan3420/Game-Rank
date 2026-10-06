@@ -35,10 +35,25 @@
   text-decoration: none;
 }
 
-#logo {
+/* logo "Card G": simbolo + wordmark en tinta, cambian de tema con currentColor.
+   Los dos SVG comparten alto 256 en el viewBox para que la proporcion del lockup se mantenga */
+.logo-link {
+  gap: 7px;
+  color: var(--gd-ink);
+}
+
+.logo-symbol,
+.logo-wordmark {
   display: block;
   width: auto;
-  height: 34px;
+  height: 40px;
+}
+
+/* en anchos intermedios el header no tiene sitio para el wordmark */
+@media (max-width: 599px), (min-width: 641px) and (max-width: 840px) {
+  .logo-wordmark {
+    display: none;
+  }
 }
 
 /* buscador: campo estandar del mundo */
@@ -77,6 +92,11 @@
   background: transparent;
   color: var(--gd-ink);
   font-size: 0.95rem;
+  outline: none;
+}
+
+/* el anillo de foco lo pinta el contenedor (focus-within), no el input */
+.header-search .header-search-input:focus-visible {
   outline: none;
 }
 
@@ -741,8 +761,8 @@
 }
 
 @media (max-width: 480px) {
-  #logo {
-    height: 32px;
+  .logo-symbol {
+    height: 38px;
   }
 
   .user-btn-name {

@@ -173,11 +173,6 @@ export default {
       }
     },
 
-    empatado(indice) {
-      var p = this.puestos;
-      return (indice > 0 && p[indice] === p[indice - 1]) || (indice + 1 < p.length && p[indice] === p[indice + 1]);
-    },
-
     resenas(n) {
       return n + (n === 1 ? ' review' : ' reviews');
     },
