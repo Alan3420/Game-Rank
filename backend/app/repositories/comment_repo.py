@@ -102,20 +102,26 @@ def obtener_promedio_por_juego(id_juego) -> float:
 
 def obtener_top_comentados(limite):
     total = func.count(Comment.id_comment).label("total")
+    # desempate fijo por id para que el orden no cambie entre peticiones
     return (db.session.query(Comment.id_game_api, total)
             .group_by(Comment.id_game_api)
-            .order_by(total.desc())
+            .order_by(total.desc(), Comment.id_game_api.asc())
             .limit(limite)
             .all())
 
 
-def obtener_top_valorados(limite):
+MIN_RESENAS_VALORADOS = 3
+
+
+def obtener_top_valorados(limite, minimo=MIN_RESENAS_VALORADOS):
+    # con una sola reseña de 5 un juego no puede quedar primero: se exige
+    # un minimo de reseñas y a igual media gana el que tiene mas
     promedio = func.round(func.avg(Comment.rating), 1).label("avg_rating")
     votos = func.count(Comment.id_comment).label("votes")
     return (db.session.query(Comment.id_game_api, promedio, votos)
             .group_by(Comment.id_game_api)
-            .having(func.count(Comment.id_comment) >= 1)
-            .order_by(func.avg(Comment.rating).desc())
+            .having(func.count(Comment.id_comment) >= minimo)
+            .order_by(promedio.desc(), votos.desc(), Comment.id_game_api.asc())
             .limit(limite)
             .all())
 

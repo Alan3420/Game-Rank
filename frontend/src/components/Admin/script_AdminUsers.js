@@ -50,9 +50,11 @@ export default {
         if (u.email) {
           email = u.email.toLowerCase();
         }
+        var apodo = u.nickname ? u.nickname.toLowerCase() : '';
 
         if (nombre.indexOf(busqueda) !== -1 ||
             apellido.indexOf(busqueda) !== -1 ||
+            apodo.indexOf(busqueda) !== -1 ||
             email.indexOf(busqueda) !== -1) {
           resultado.push(u);
         }

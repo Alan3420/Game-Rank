@@ -55,7 +55,7 @@ def obtener_top_favoritos(limite):
     return (db.session.query(Favorite.id_game_api, total)
             .join(AddFavorite, Favorite.fav_id == AddFavorite.fav_id)
             .group_by(Favorite.id_game_api)
-            .order_by(total.desc())
+            .order_by(total.desc(), Favorite.id_game_api.asc())
             .limit(limite)
             .all())
 
@@ -66,7 +66,7 @@ def obtener_top_coleccion(limite):
             .join(AddFavorite, Favorite.fav_id == AddFavorite.fav_id)
             .filter(Favorite.status.isnot(None))
             .group_by(Favorite.id_game_api)
-            .order_by(total.desc())
+            .order_by(total.desc(), Favorite.id_game_api.asc())
             .limit(limite)
             .all())
 

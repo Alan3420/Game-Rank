@@ -1,118 +1,181 @@
-.notfound-page {
-  min-height: calc(100vh - 140px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--color-bg-gradient-start) 0%, var(--color-bg-gradient-end) 100%);
-  padding: 2rem;
+/* ─────────────────────────────────────────
+   404 · la carta que falta
+   Mundo "carta coleccionable" (tokens en styles/card-world.css).
+   Una ranura vacia del album (discontinua, sin marco ni relieve).
+───────────────────────────────────────── */
+
+.nf-shell {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 56px;
+    align-items: center;
+    max-width: 900px;
+    min-height: calc(100vh - 260px);
+    margin: 0 auto;
+    padding: 48px 24px 88px;
 }
 
-.notfound-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 1.5rem;
-  padding: 3.5rem 4rem;
-  text-align: center;
-  max-width: 520px;
-  width: 100%;
-  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.08);
+/* ── ranura vacia ── */
+.nf-sleeve {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border: 2px dashed color-mix(in srgb, var(--gd-frame-neutral) 35%, var(--gd-rule-strong));
+    border-radius: 16px;
+    color: var(--gd-ink-3);
 }
 
-.notfound-code {
-  font-size: 7rem;
-  font-weight: 800;
-  line-height: 1;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -4px;
-  margin-bottom: 0.25rem;
+.nf-sleeve__art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--gd-face) 60%, transparent);
 }
 
-.notfound-icon {
-  font-size: 2.5rem;
-  color: var(--color-text-light);
-  margin-bottom: 1.25rem;
+.nf-sleeve__art .pi {
+    font-size: 2.4rem;
 }
 
-.notfound-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-text);
-  margin: 0 0 0.75rem;
+.nf-sleeve__name {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
 }
 
-.notfound-description {
-  font-size: 0.95rem;
-  color: var(--color-text-medium);
-  line-height: 1.6;
-  margin: 0 0 2rem;
+.nf-sleeve__set {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.82rem;
 }
 
-.notfound-path {
-  display: inline-block;
-  background: var(--color-surface-alt);
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-  padding: 0.3rem 0.75rem;
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  font-family: monospace;
-  margin-bottom: 2rem;
-  word-break: break-all;
+.nf-sleeve__no {
+    color: var(--gd-ink-2);
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
 }
 
-.notfound-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: center;
-  flex-wrap: wrap;
+/* ── texto ── */
+.nf-title {
+    margin: 0;
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 3.2rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
 }
 
-.notfound-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.5rem;
-  border-radius: 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: background 0.2s, transform 0.15s;
-  text-decoration: none;
+.nf-lede {
+    max-width: 44ch;
+    margin: 14px 0 0;
+    color: var(--gd-ink-2);
+    font-size: 1.05rem;
+    line-height: 1.55;
 }
 
-.notfound-btn:active {
-  transform: scale(0.97);
+.nf-path {
+    margin: 16px 0 0;
 }
 
-.notfound-btn--primary {
-  background: var(--color-primary);
-  color: #fff;
+.nf-path code {
+    display: inline-block;
+    max-width: 100%;
+    padding: 4px 10px;
+    overflow: hidden;
+    border: 1px solid var(--gd-rule);
+    border-radius: 8px;
+    background: var(--gd-face);
+    color: var(--gd-ink-2);
+    font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+    font-size: 0.88rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
 }
 
-.notfound-btn--primary:hover {
-  background: var(--color-primary-hover);
+.nf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 26px;
 }
 
-.notfound-btn--secondary {
-  background: var(--color-surface-alt);
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border);
+.nf-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 16px;
+    border: 1px solid var(--gd-rule-strong);
+    border-radius: 10px;
+    background: var(--gd-face);
+    color: var(--gd-ink);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease, transform 160ms var(--ease-out);
 }
 
-.notfound-btn--secondary:hover {
-  background: var(--color-surface-hover);
+.nf-btn:active {
+    transform: scale(0.97);
 }
 
-@media (max-width: 480px) {
-  .notfound-card {
-    padding: 2.5rem 1.75rem;
-  }
+.nf-btn--primary {
+    border-color: var(--gd-ink);
+    background: var(--gd-ink);
+    color: var(--gd-face);
+}
 
-  .notfound-code {
-    font-size: 5rem;
-  }
+.nf-btn--quiet {
+    padding: 0 6px;
+    border-color: transparent;
+    background: transparent;
+    color: var(--gd-ink-2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .nf-btn:hover {
+        background: var(--gd-ground);
+        border-color: var(--gd-ink-3);
+    }
+
+    .nf-btn--primary:hover {
+        background: var(--gd-ink-2);
+        border-color: var(--gd-ink-2);
+    }
+
+    .nf-btn--quiet:hover {
+        border-color: transparent;
+        color: var(--gd-ink);
+    }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 760px) {
+    .nf-shell {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+        min-height: 0;
+        padding: 32px 14px 64px;
+    }
+
+    .nf-sleeve {
+        width: min(220px, 70%);
+    }
+
+    .nf-title {
+        font-size: 2.5rem;
+    }
+
+    /* al bajar de linea, el texto queda alineado con el borde */
+    .nf-btn--quiet {
+        padding: 0;
+    }
 }

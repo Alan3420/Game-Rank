@@ -1,0 +1,477 @@
+/* ─────────────────────────────────────────
+   ADMINISTRACION · libro de registro
+   Mundo "carta coleccionable" (tokens en styles/card-world.css).
+   Herramienta: sin cartas ni tonos de estado; una pagina con reglas finas.
+───────────────────────────────────────── */
+
+.ad-shell {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 32px 24px 88px;
+}
+
+/* ── cabecera ── */
+.ad-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--gd-rule);
+}
+
+.ad-title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0;
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+}
+
+.ad-title .cw-count {
+    font-size: 1rem;
+}
+
+.ad-nav {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--gd-rule);
+    border-radius: 10px;
+    background: var(--gd-face);
+}
+
+.ad-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 7px;
+    color: var(--gd-ink-2);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out);
+}
+
+.ad-nav__link .pi {
+    font-size: 0.8rem;
+}
+
+.ad-nav__link[aria-current="page"] {
+    background: var(--gd-ink);
+    color: var(--gd-face);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ad-nav__link:not([aria-current="page"]):hover {
+        background: var(--gd-ground);
+        color: var(--gd-ink);
+    }
+}
+
+/* ── busqueda ── */
+.ad-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 22px 0 14px;
+}
+
+.ad-search {
+    position: relative;
+    flex: 0 1 420px;
+}
+
+.ad-search .pi {
+    position: absolute;
+    top: 50%;
+    left: 13px;
+    color: var(--gd-ink-3);
+    font-size: 0.85rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.ad-search input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px 0 36px;
+    border: 1px solid var(--gd-rule-strong);
+    border-radius: 10px;
+    background: var(--gd-face);
+    color: var(--gd-ink);
+    font-size: 0.95rem;
+}
+
+.ad-search input::placeholder {
+    color: var(--gd-ink-3);
+}
+
+.ad-search input:focus {
+    border-color: var(--gd-ink);
+    outline: none;
+}
+
+.ad-search input:focus-visible {
+    outline: 2px solid var(--gd-pending);
+    outline-offset: 2px;
+}
+
+.ad-tools__count {
+    margin: 0;
+    color: var(--gd-ink-3);
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* ── pagina del registro ── */
+.ad-page {
+    overflow: hidden;
+    border: 1px solid var(--gd-rule);
+    border-radius: 14px;
+    background: var(--gd-face);
+}
+
+.ad-skel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+}
+
+.ad-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ad-table th {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--gd-rule-strong);
+    color: var(--gd-ink-3);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.ad-table td {
+    padding: 12px 16px;
+    border-top: 1px solid var(--gd-rule);
+    color: var(--gd-ink);
+    font-size: 0.92rem;
+    vertical-align: middle;
+}
+
+.ad-table tbody tr:first-child td {
+    border-top: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ad-table tbody tr:hover {
+        background: color-mix(in srgb, var(--gd-ground) 60%, transparent);
+    }
+}
+
+.ad-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.ad-avatar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--gd-frame-neutral);
+    color: var(--gd-on-frame-neutral);
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+.ad-who {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ad-who__name {
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.ad-who__handle {
+    color: var(--gd-ink-3);
+    font-size: 0.82rem;
+}
+
+.ad-cell-email {
+    color: var(--gd-ink-2);
+    overflow-wrap: anywhere;
+}
+
+.ad-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 10px;
+    border: 1px solid var(--gd-rule-strong);
+    border-radius: 999px;
+    color: var(--gd-ink-2);
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.ad-role .pi {
+    font-size: 0.7rem;
+}
+
+.ad-role--admin {
+    border-color: var(--gd-ink);
+    background: var(--gd-ink);
+    color: var(--gd-face);
+}
+
+.ad-cell-date {
+    color: var(--gd-ink-2);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.ad-cell-actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.ad-btn {
+    height: 34px;
+    padding: 0 12px;
+    border: 1px solid var(--gd-rule-strong);
+    border-radius: 10px;
+    background: var(--gd-face);
+    color: var(--gd-ink);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.ad-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin-left: 6px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--gd-ink-3);
+    vertical-align: middle;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ad-btn:hover {
+        background: var(--gd-ground);
+        border-color: var(--gd-ink-3);
+    }
+
+    .ad-icon-btn--danger:hover {
+        background: color-mix(in srgb, var(--gd-danger) 10%, transparent);
+        color: var(--gd-danger);
+    }
+}
+
+/* comentarios */
+.ad-game {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--gd-ink);
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.ad-game .pi {
+    color: var(--gd-ink-3);
+    font-size: 0.7rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .ad-game:hover {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+}
+
+.ad-cell-text {
+    width: 46%;
+}
+
+.ad-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin-right: 8px;
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.ad-rating .pi {
+    color: var(--gd-star);
+    font-size: 0.68rem;
+}
+
+.ad-excerpt {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    color: var(--gd-ink-2);
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+
+/* ── vacio ── */
+.ad-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 56px 16px;
+    border: 1px dashed var(--gd-rule-strong);
+    border-radius: 14px;
+    color: var(--gd-ink-2);
+    text-align: center;
+}
+
+.ad-empty .pi {
+    color: var(--gd-ink-3);
+    font-size: 1.4rem;
+}
+
+.ad-empty p {
+    margin: 0;
+}
+
+/* ── RESPONSIVE: filas apiladas ── */
+@media (max-width: 860px) {
+    .ad-table thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+
+    .ad-table,
+    .ad-table tbody {
+        display: block;
+    }
+
+    .ad-table tbody tr {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 6px 12px;
+        padding: 14px 16px;
+        border-top: 1px solid var(--gd-rule);
+    }
+
+    .ad-table tbody tr:first-child {
+        border-top: none;
+    }
+
+    .ad-table td {
+        padding: 0;
+        border: none;
+    }
+
+    .ad-cell-user {
+        grid-column: 1;
+    }
+
+    .ad-cell-actions {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: center;
+    }
+
+    .ad-cell-email,
+    .ad-cell-role,
+    .ad-cell-date,
+    .ad-cell-game,
+    .ad-cell-text {
+        grid-column: 1 / -1;
+        width: auto;
+    }
+
+    .ad-cell-email,
+    .ad-cell-text,
+    .ad-cell-role,
+    .ad-cell-game {
+        padding-left: 50px !important;
+    }
+
+    .ad-cell-date {
+        padding-left: 50px !important;
+        font-size: 0.82rem;
+    }
+
+    .ad-table--users .ad-cell-role {
+        display: inline-flex;
+    }
+}
+
+@media (max-width: 640px) {
+    .ad-shell {
+        padding: 22px 14px 64px;
+    }
+
+    .ad-title {
+        font-size: 2.4rem;
+    }
+
+    .ad-nav {
+        width: 100%;
+    }
+
+    .ad-nav__link {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .ad-tools {
+        flex-wrap: wrap;
+    }
+
+    .ad-search {
+        flex-basis: 100%;
+    }
+
+    .ad-btn {
+        padding: 0 10px;
+    }
+}

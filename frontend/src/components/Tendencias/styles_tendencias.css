@@ -1,353 +1,579 @@
-* {
-    font-family: 'Sora', sans-serif;
+/* ─────────────────────────────────────────
+   TENDENCIAS · tabla de clasificacion
+   Mundo "carta coleccionable" (tokens en styles/card-world.css).
+   Un ranking a la vez: el numero 1 como carta campeona y los puestos
+   2 a 8 como filas con barra del dato.
+───────────────────────────────────────── */
+
+.tr-shell {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 32px 24px 88px;
 }
 
-.tendencias-page {
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--color-bg);
-    padding: 2rem;
-}
-
-/* ── CABECERA ── */
-.tendencias-header {
-    margin-bottom: 2rem;
-}
-
-.tendencias-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-primary);
-    background: var(--color-primary-light);
-    padding: 5px 14px;
-    border-radius: 999px;
-    margin-bottom: 0.75rem;
-}
-
-.tendencias-header h1 {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 900;
-    color: var(--color-text);
-    margin: 0 0 0.35rem 0;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
-}
-
-.tendencias-header p {
-    font-size: 0.9rem;
-    color: var(--color-text-light);
-    margin: 0;
-}
-
-/* ── NAV DE SCROLL ── */
-.tendencias-tabs {
+/* ── titulo + selector ── */
+.tr-head {
     display: flex;
-    gap: 0.5rem;
-    margin-bottom: 3rem;
     flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px 32px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--gd-rule);
 }
 
-.tab-btn {
+.tr-head__text {
+    min-width: 0;
+}
+
+.tr-title {
+    margin: 0;
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 3.4rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+}
+
+.tr-lede {
+    max-width: 52ch;
+    min-height: 1.5em;
+    margin: 8px 0 0;
+    color: var(--gd-ink-2);
+    font-size: 1.02rem;
+}
+
+.tr-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--gd-rule);
+    border-radius: 999px;
+    background: var(--gd-face);
+}
+
+.tr-tab {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.55rem 1.1rem;
-    border-radius: 10px;
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    color: var(--color-text-secondary);
-    font-size: 0.85rem;
+    justify-content: center;
+    gap: 7px;
+    height: 38px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--gd-ink-2);
+    font-size: 0.92rem;
     font-weight: 600;
-    cursor: pointer;
-    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
-    font-family: 'Sora', sans-serif;
     white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 180ms var(--ease-out), color 180ms var(--ease-out), transform 160ms var(--ease-out);
 }
 
-.tab-btn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background: var(--color-primary-light);
-}
-
-.tab-btn i {
+.tr-tab .pi {
     font-size: 0.8rem;
 }
 
-/* ── SECCIONES ── */
-.tendencias-seccion {
-    margin-bottom: 4rem;
-    scroll-margin-top: 5rem;
+.tr-tab:active {
+    transform: scale(0.97);
 }
 
-@media (max-width: 640px) {
-    .tendencias-seccion {
-        scroll-margin-top: 11rem;
+.tr-tab[aria-selected="true"] {
+    background: var(--gd-ink);
+    color: var(--gd-face);
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .tr-tab[aria-selected="false"]:hover {
+        background: var(--gd-ground);
+        color: var(--gd-ink);
     }
 }
 
-.seccion-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
+/* ── tablero ── */
+.tr-board {
+    margin-top: 28px;
 }
 
-.seccion-header__icono {
-    font-size: 1.4rem;
-    color: var(--color-primary);
-    flex-shrink: 0;
-}
-
-.seccion-header__titulo {
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
-    font-weight: 800;
-    color: var(--color-text);
-    margin: 0 0 0.2rem 0;
-    letter-spacing: -0.02em;
-}
-
-/* ── SUBTÍTULO DE SECCIÓN ── */
-.seccion-subtitulo {
-    font-size: 0.85rem;
-    color: var(--color-text-light);
-    margin: 0;
-}
-
-/* ── GRID BENTO ── */
-.trend-grid {
+.tr-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 200px;
-    gap: 0.85rem;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 28px;
+    align-items: start;
 }
 
-/* Primera card: grande (2 cols × 2 filas) */
-.trend-card:first-child {
-    grid-column: span 2;
-    grid-row: span 2;
+/* carta campeona: misma anatomia que la mini carta, a mayor escala */
+.tr-champ {
+    display: flex;
+    flex-direction: column;
+    padding: 0 7px 7px;
+    border-radius: 22px;
+    background: var(--gd-frame);
+    box-shadow: var(--gd-raise);
+    color: var(--gd-ink);
+    text-decoration: none;
+    transition: transform 200ms var(--ease-out);
 }
 
-/* ── CARD ── */
-.trend-card {
+.tr-champ__band {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 8px 9px;
+    color: var(--gd-on-frame-now);
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+}
+
+.tr-champ__rank {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.tr-champ__lead {
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.tr-champ__face {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    background: var(--gd-face);
+}
+
+.tr-champ__art {
     position: relative;
-    border-radius: 16px;
+    display: block;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
-    cursor: pointer;
-    border: 1px solid var(--color-border);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border-radius: 10px;
+    background: var(--gd-ground);
 }
 
-.trend-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
-    border-color: transparent;
+/* regla interior del arte, como en la carta principal */
+.tr-champ__art::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px var(--gd-rule);
+    pointer-events: none;
 }
 
-/* Imagen */
-.trend-card__img {
+.tr-champ__art :deep(img) {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
 }
 
-.trend-card:hover .trend-card__img {
-    transform: scale(1.06);
-}
-
-/* Placeholder sin imagen */
-.trend-card__placeholder {
-    width: 100%;
-    height: 100%;
-    background: var(--color-surface-hover);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text-light);
-    font-size: 2rem;
-}
-
-/* Gradiente overlay */
-.trend-card__overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(10, 10, 20, 0.82) 0%, rgba(10, 10, 20, 0.15) 55%, transparent 100%);
-    pointer-events: none;
-    transition: background 0.25s ease;
-}
-
-.trend-card:hover .trend-card__overlay {
-    background: linear-gradient(to top, rgba(10, 10, 20, 0.9) 0%, rgba(10, 10, 20, 0.25) 60%, transparent 100%);
-}
-
-/* Cuerpo: texto encima del overlay */
-.trend-card__body {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 0.85rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-
-.trend-card__name {
-    color: #ffffff;
-    font-size: 0.9rem;
-    font-weight: 700;
-    margin: 0;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-}
-
-.trend-card:first-child .trend-card__name {
-    font-size: 1.3rem;
+.tr-champ__name {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 1.9rem;
     font-weight: 800;
+    line-height: 1;
+    overflow-wrap: anywhere;
 }
 
-.trend-card__meta {
+.tr-champ__stat {
     display: flex;
-    align-items: center;
-    gap: 0.45rem;
     flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--gd-rule);
 }
 
-.trend-card__stat {
-  font-variant-numeric: tabular-nums;
-    font-size: 0.76rem;
+.tr-champ__stat strong {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 3.6rem;
+    font-weight: 800;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+}
+
+.tr-champ__stat span {
+    color: var(--gd-ink-2);
+    font-size: 1rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.75);
-    white-space: nowrap;
 }
 
-.trend-card:first-child .trend-card__stat {
+.tr-champ__stat .tr-champ__count {
+    color: var(--gd-ink-3);
+    font-size: 0.88rem;
+}
+
+.tr-champ__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 10px;
+    color: var(--gd-ink-3);
     font-size: 0.85rem;
 }
 
-/* ── MC BADGE ── */
-.mc-badge {
-  font-variant-numeric: tabular-nums;
+.tr-champ__foot .cw-mc {
+    margin-left: auto;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .tr-champ:hover {
+        transform: translateY(-3px);
+    }
+
+    .tr-champ:hover .tr-champ__name {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+    }
+}
+
+/* datos de set compartidos por carta y filas */
+.tr-no {
+    color: var(--gd-ink-2);
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.tr-year {
+    font-variant-numeric: tabular-nums;
+}
+
+.tr-stamp {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--gd-frame);
+    color: var(--gd-on-frame-now);
     font-size: 0.72rem;
-    font-weight: 800;
-    border-radius: 6px;
-    padding: 0.13rem 0.48rem;
-    min-width: 32px;
-    color: #ffffff;
-    flex-shrink: 0;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
-.mc-badge.mc-green  { background: #1a9e62; }
-.mc-badge.mc-yellow { background: #c97d0c; }
-.mc-badge.mc-red    { background: #c03030; }
-.mc-badge.mc-na     { background: rgba(255, 255, 255, 0.15); color: rgba(255,255,255,0.6); }
+.tr-stamp .pi {
+    font-size: 0.65rem;
+}
 
-/* ── SKELETON ── */
-.trend-skel {
+/* puestos 2 a 8: pagina de checklist con reglas finas */
+.tr-rows {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--gd-rule);
+    border-radius: 18px;
+    background: var(--gd-face);
+    list-style: none;
+}
+
+.tr-row {
+    transition: background-color 150ms ease;
+}
+
+.tr-row + .tr-row {
+    border-top: 1px solid var(--gd-rule);
+}
+
+/* fila propia: tinte del marco de su estado (7%, como toda propiedad) */
+.tr-row--owned {
+    background: color-mix(in srgb, var(--gd-frame) 7%, var(--gd-face));
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .tr-row:hover {
+        background: var(--gd-ground);
+    }
+
+    .tr-row--owned:hover {
+        background: color-mix(in srgb, var(--gd-frame) 13%, var(--gd-face));
+    }
+}
+
+.tr-row__link {
+    display: grid;
+    grid-template-columns: 44px 72px minmax(0, 1fr) minmax(170px, 32%);
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    color: var(--gd-ink);
+    text-decoration: none;
+}
+
+.tr-row__rank {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 2.1rem;
+    font-weight: 800;
+    line-height: 1;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.tr-row__thumb {
+    width: 72px;
+    height: 54px;
+    overflow: hidden;
+    border-radius: 7px;
+    background: var(--gd-ground);
+}
+
+.tr-row__thumb :deep(img) {
+    display: block;
     width: 100%;
     height: 100%;
+    object-fit: cover;
 }
 
-.trend-skel:first-child {
-    grid-column: span 2;
-    grid-row: span 2;
-}
-
-.trend-skel-header-text {
+.tr-row__id {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    max-width: 100%;
+    gap: 3px;
+    min-width: 0;
 }
 
-/* ── ESTADOS ── */
-.tendencias-error {
+.tr-row__name {
+    overflow: hidden;
+    font-size: 1rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tr-row__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 10px;
+    color: var(--gd-ink-3);
+    font-size: 0.82rem;
+}
+
+.tr-row__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tr-row__value {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.tr-row__unit {
+    color: var(--gd-ink-3);
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.tr-row__count {
+    margin-left: 4px;
+}
+
+/* barra del dato: tinta, nunca un tono de estado */
+.tr-bar {
+    display: block;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--gd-ground);
+}
+
+.tr-bar__fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--gd-ink-2);
+    transform-origin: left center;
+    animation: tr-bar-in 420ms var(--ease-out) both;
+}
+
+@keyframes tr-bar-in {
+    from {
+        transform: scaleX(0);
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .tr-row__link:hover .tr-row__name {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+}
+
+.tr-note {
+    margin: 16px 0 0;
+    color: var(--gd-ink-3);
+    font-size: 0.85rem;
+}
+
+/* ── cargando / vacio ── */
+.tr-champ-skel {
+    width: 100%;
+    height: 520px;
+}
+
+.tr-rows-skel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tr-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 5rem 2rem;
-    color: var(--color-text-light);
-    font-size: 0.95rem;
+    gap: 10px;
+    padding: 56px 16px;
+    border: 1px dashed var(--gd-rule-strong);
+    border-radius: 16px;
+    color: var(--gd-ink-2);
     text-align: center;
 }
 
-.tendencias-error { color: var(--color-danger); }
+.tr-empty .pi {
+    font-size: 1.4rem;
+    color: var(--gd-ink-3);
+}
 
-.tendencias-error i { font-size: 2rem; }
+.tr-empty p {
+    margin: 0;
+}
 
-.seccion-vacia {
-    padding: 3rem 2rem;
-    text-align: center;
-    background: var(--color-surface);
-    border-radius: 16px;
-    border: 1px dashed var(--color-border);
-    color: var(--color-text-light);
-    font-size: 0.88rem;
+/* cambio de ranking: el tablero se sustituye sin saltos */
+.tr-swap-enter-active {
+    transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
+}
+
+.tr-swap-leave-active {
+    transition: opacity 120ms var(--ease-out);
+}
+
+.tr-swap-enter-from {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.tr-swap-leave-to {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tr-swap-enter-from {
+        transform: none;
+    }
+
+    .tr-bar__fill {
+        animation: none;
+    }
+
+    .tr-champ:hover {
+        transform: none;
+    }
 }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) {
-    .trend-grid {
-        grid-template-columns: repeat(3, 1fr);
-        grid-auto-rows: 190px;
+    .tr-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* la campeona pasa a horizontal: arte a la izquierda, datos seguidos */
+    .tr-champ__face {
+        display: grid;
+        grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+        align-content: start;
+        column-gap: 18px;
+    }
+
+    .tr-champ__art {
+        grid-row: 1 / span 4;
+        aspect-ratio: 16 / 10;
     }
 }
 
-@media (max-width: 768px) {
-    .tendencias-page { padding: 1.5rem 1.25rem; }
-
-    .trend-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: 170px;
-        gap: 0.65rem;
+@media (max-width: 640px) {
+    .tr-shell {
+        padding: 22px 14px 64px;
     }
 
-    .trend-card:first-child,
-    .trend-skel:first-child {
-        grid-column: span 2;
-        grid-row: span 1;
-    }
-}
-
-@media (max-width: 480px) {
-    .tendencias-page { padding: 1rem; }
-
-    .tendencias-tabs { gap: 0.35rem; }
-
-    .tab-btn {
-        padding: 0.45rem 0.85rem;
-        font-size: 0.8rem;
+    .tr-title {
+        font-size: 2.6rem;
     }
 
-    .trend-grid {
-        grid-template-columns: 1fr 1fr;
-        grid-auto-rows: 150px;
-        gap: 0.55rem;
+    .tr-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+        border-radius: 14px;
     }
 
-    .trend-card:first-child,
-    .trend-skel:first-child {
-        grid-column: span 2;
-        grid-row: span 1;
+    .tr-tab {
+        border-radius: 10px;
     }
 
-    .trend-card__name { font-size: 0.8rem; }
-    .trend-card:first-child .trend-card__name { font-size: 1rem; }
+    .tr-champ__face {
+        display: flex;
+    }
+
+    .tr-champ__name {
+        font-size: 1.6rem;
+    }
+
+    .tr-champ__stat strong {
+        font-size: 3rem;
+    }
+
+    .tr-row__link {
+        grid-template-columns: 30px 56px minmax(0, 1fr);
+        grid-template-areas:
+            "rank thumb id"
+            "rank thumb stat";
+        column-gap: 10px;
+        row-gap: 6px;
+        padding: 12px;
+    }
+
+    .tr-row__rank {
+        grid-area: rank;
+        font-size: 1.7rem;
+    }
+
+    .tr-row__thumb {
+        grid-area: thumb;
+        width: 56px;
+        height: 42px;
+    }
+
+    .tr-row__id {
+        grid-area: id;
+    }
+
+    .tr-row__stat {
+        grid-area: stat;
+        flex-direction: row-reverse;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .tr-row__value {
+        flex-shrink: 0;
+        font-size: 1.1rem;
+    }
+
+    .tr-bar {
+        flex: 1;
+    }
 }

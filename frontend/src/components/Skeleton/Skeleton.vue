@@ -48,7 +48,7 @@ const estilo = computed(function () {
   position: relative;
   overflow: hidden;
   border-radius: 8px;
-  background: var(--color-skeleton-base);
+  background: var(--gd-skel);
   flex-shrink: 0;
   max-width: 100%;
 }
@@ -61,7 +61,7 @@ const estilo = computed(function () {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--color-skeleton-highlight) 50%,
+    var(--gd-skel-shine) 50%,
     transparent 100%
   );
   animation: skeleton-shimmer 1.4s ease-in-out infinite;

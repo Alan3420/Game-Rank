@@ -17,10 +17,6 @@ export default {
 
   methods: {
 
-    irAlInicio() {
-      this.router.push('/');
-    },
-
     // Boton "Go back": intenta volver atras en el historial del navegador.
     // Si la pestana se abrio directamente en la URL 404 no hay historial
     // al que volver, asi que en ese caso lo llevamos al inicio igualmente.

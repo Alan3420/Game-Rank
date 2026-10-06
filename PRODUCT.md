@@ -36,12 +36,14 @@ Not confirmed. The product combines catalog discovery, personal backlog tracking
 - **RAWG limits:** pagination is capped at 500 pages regardless of the reported count; images may be missing or invalid (a placeholder exists).
 - **Collection statuses:** `pendiente`, `jugando`, `pausado`, `completado` (stored in Spanish), shown as Pending, Playing, Paused, Completed.
 - **Comments:** text description (max 255 chars) plus an integer rating; editable (tracks update date); moderated by admins.
-- **Roles:** `user` and `admin`.
+- **Roles:** `user` and `admin`. The seed data has no admin account.
+- **Community trends:** four rankings of up to 8 games (most collected, top rated, most reviewed, most favorited). Top rated requires at least 3 reviews (`MIN_RESENAS_VALORADOS`); ties share a place and are ordered deterministically.
 
 ## Brand Commitments
 
 - **Name:** Game Rank. Logos at `frontend/src/assets/game_rank_logo.png` and `frontend/src/assets/logo_GR.png`.
-- **Style guide is binding:** `Game-Rank-Guia-Estilos.pdf` is the source of truth for visual identity. When code and guide diverge, the code is brought into line with the guide, not the reverse.
+- **Design system:** the visual identity is the "collectible card" world, documented in `DESIGN.md` (tokens in `frontend/src/styles/card-world.css`). `DESIGN.md` and the code are the source of truth; `Game-Rank-Guia-Estilos.pdf` is regenerated from them and must not diverge. The previous identity (indigo, Sora, neumorphic shell) is retired.
+- **Logo:** open decision. The header still uses the legacy raster wordmark.
 - **UI language:** English only, across every view, label, message and ARIA string, even though documentation, code comments and stored values are in Spanish.
 - **RAWG attribution is mandatory** wherever RAWG data is presented as a product surface; it currently lives in the footer (`App.vue`) and in Terms section 06.
 

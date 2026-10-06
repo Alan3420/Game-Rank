@@ -1,108 +1,92 @@
 <template>
-  <div class="admin-users-page">
-    <div class="admin-topbar">
-      <div class="topbar-content">
-        <button class="back-btn" @click="volver">
-          <i aria-hidden="true" class="pi pi-arrow-left"></i>
-          Back
-        </button>
-        <div class="topbar-title">
-          <i aria-hidden="true" class="pi pi-users"></i>
-          <h1>User Management</h1>
+  <div class="admin card-world">
+    <div class="ad-shell">
+
+      <header class="ad-head">
+        <div class="ad-head__text">
+          <h1 class="ad-title">Users <span class="cw-count">{{ usuarios.length }}</span></h1>
         </div>
-        <div class="topbar-stats">
-          <span class="stat-badge">{{ usuarios.length }} registered users</span>
+        <nav class="ad-nav" aria-label="Administration">
+          <router-link to="/admin/users" class="ad-nav__link" aria-current="page">
+            <i aria-hidden="true" class="pi pi-users"></i> Users
+          </router-link>
+          <router-link to="/admin/comments" class="ad-nav__link">
+            <i aria-hidden="true" class="pi pi-comments"></i> Comments
+          </router-link>
+        </nav>
+      </header>
+
+      <div class="ad-tools">
+        <label class="ad-search">
+          <i aria-hidden="true" class="pi pi-search"></i>
+          <input v-model="filtro" type="search" name="filtro_usuarios" autocomplete="off"
+            aria-label="Search users by name, nickname or email" placeholder="Search by name, nickname or email…" />
+        </label>
+        <p class="ad-tools__count" aria-live="polite">
+          <template v-if="!loading">{{ usuariosFiltrados.length }} of {{ usuarios.length }}</template>
+        </p>
+      </div>
+
+      <div v-if="loading" class="ad-page" aria-busy="true">
+        <div class="ad-skel">
+          <Skeleton v-for="n in 6" :key="n" width="100%" height="52px" radius="8px" />
         </div>
       </div>
-    </div>
 
-    <div class="admin-container">
-      <div class="users-section">
-        <div class="section-header">
-          <h2>User List</h2>
-          <div class="filter-group">
-            <input
-              v-model="filtro"
-              type="search"
-              name="filtro_usuarios"
-              autocomplete="off"
-              aria-label="Search users by name or email"
-              placeholder="Search by name or email…"
-              class="search-input"
-            />
-          </div>
-        </div>
-
-        <TableSkeleton v-if="loading" :columns="5" aria-busy="true" />
-
-        <div v-else-if="usuarios.length > 0" class="users-table-wrap">
-          <table class="users-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Registration Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="usuario in usuariosFiltrados" :key="usuario.id_user" class="user-row">
-                <td class="user-name-cell">
-                  <div class="user-avatar">
+      <div v-else-if="usuariosFiltrados.length > 0" class="ad-page">
+        <table role="table" class="ad-table ad-table--users">
+          <thead role="rowgroup">
+            <tr role="row">
+              <th scope="col" role="columnheader">User</th>
+              <th scope="col" role="columnheader">Email</th>
+              <th scope="col" role="columnheader">Role</th>
+              <th scope="col" role="columnheader">Joined</th>
+              <th scope="col" role="columnheader"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            <tr role="row" v-for="usuario in usuariosFiltrados" :key="usuario.id_user">
+              <td role="cell" class="ad-cell-user">
+                <span class="ad-user">
+                  <span class="ad-avatar" aria-hidden="true">
                     {{ usuario.name?.charAt(0)?.toUpperCase() }}{{ usuario.last_name?.charAt(0)?.toUpperCase() }}
-                  </div>
-                  <div class="user-info">
-                    <span class="user-fullname">{{ usuario.name }} {{ usuario.last_name }}</span>
-                    <span class="user-nickname">@{{ usuario.nickname }}</span>
-                  </div>
-                </td>
-                <td class="user-email">{{ usuario.email }}</td>
-                <td class="user-role">
-                  <span class="role-badge" :class="{ 'role-admin': usuario.role === 'admin' }">
-                    {{ usuario.role === 'admin' ? 'Administrator' : 'User' }}
                   </span>
-                </td>
-                <td class="user-date">{{ formatearFecha(usuario.date_of_registration) }}</td>
-                <td class="user-actions">
-                  <button
-                    v-if="usuario.role !== 'admin'"
-                    class="action-btn promote-btn"
-                    @click="promoverAdmin(usuario)"
-                    title="Promote to admin"
-                    :aria-label="'Promote ' + usuario.name + ' to admin'"
-                  >
-                    <i aria-hidden="true" class="pi pi-arrow-up"></i>
-                  </button>
-                  <button
-                    v-else
-                    class="action-btn demote-btn"
-                    @click="degradarAdmin(usuario)"
-                    title="Demote to user"
-                    :aria-label="'Demote ' + usuario.name + ' to user'"
-                  >
-                    <i aria-hidden="true" class="pi pi-arrow-down"></i>
-                  </button>
-                  <button
-                    class="action-btn delete-btn"
-                    @click="eliminarUsuario(usuario)"
-                    title="Delete user"
-                    :aria-label="'Delete ' + usuario.name"
-                  >
-                    <i aria-hidden="true" class="pi pi-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  <span class="ad-who">
+                    <span class="ad-who__name">{{ usuario.name }} {{ usuario.last_name }}</span>
+                    <span class="ad-who__handle">@{{ usuario.nickname }}</span>
+                  </span>
+                </span>
+              </td>
+              <td role="cell" class="ad-cell-email">{{ usuario.email }}</td>
+              <td role="cell" class="ad-cell-role">
+                <span class="ad-role" :class="{ 'ad-role--admin': usuario.role === 'admin' }">
+                  <i aria-hidden="true" :class="usuario.role === 'admin' ? 'pi pi-crown' : 'pi pi-user'"></i>
+                  {{ usuario.role === 'admin' ? 'Administrator' : 'Player' }}
+                </span>
+              </td>
+              <td role="cell" class="ad-cell-date">{{ formatearFecha(usuario.date_of_registration) }}</td>
+              <td role="cell" class="ad-cell-actions">
+                <button v-if="usuario.role !== 'admin'" type="button" class="ad-btn" @click="promoverAdmin(usuario)"
+                  :aria-label="'Make ' + usuario.name + ' an administrator'">
+                  Make admin
+                </button>
+                <button v-else type="button" class="ad-btn" @click="degradarAdmin(usuario)"
+                  :aria-label="'Remove administrator role from ' + usuario.name">
+                  Remove admin
+                </button>
+                <button type="button" class="ad-icon-btn ad-icon-btn--danger" @click="eliminarUsuario(usuario)"
+                  :aria-label="'Delete ' + usuario.name + ' ' + usuario.last_name">
+                  <i aria-hidden="true" class="pi pi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-        <div v-else-if="!loading" class="users-empty">
-          <div class="empty-icon">
-            <i aria-hidden="true" class="pi pi-users"></i>
-          </div>
-          <p>No users match the search</p>
-        </div>
+      <div v-else class="ad-empty">
+        <i aria-hidden="true" class="pi pi-users"></i>
+        <p>{{ filtro ? 'No users match "' + filtro + '".' : 'No users yet.' }}</p>
       </div>
     </div>
   </div>
@@ -110,13 +94,13 @@
 
 <script>
 import jsAdminUsers from "./script_AdminUsers.js";
-import TableSkeleton from "../Skeleton/TableSkeleton.vue";
+import Skeleton from "../Skeleton/Skeleton.vue";
 
 export default {
   name: 'AdminUsers',
-  components: { TableSkeleton },
+  components: { Skeleton },
   mixins: [jsAdminUsers]
 };
 </script>
 
-<style scoped src="./style_AdminUsers.css"></style>
+<style scoped src="./style_admin.css"></style>

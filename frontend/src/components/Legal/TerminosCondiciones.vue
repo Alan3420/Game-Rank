@@ -1,30 +1,25 @@
 <template>
-  <div class="terminos-page">
+  <div class="terminos-page card-world">
 
-    <!-- Hero -->
-    <div class="terminos-hero">
-      <div class="terminos-hero-inner">
-        <span class="terminos-eyebrow">
-          <i aria-hidden="true" class="pi pi-shield"></i>
-          Legal
-        </span>
-        <h1>Terms and Conditions</h1>
-        <p>Last updated: May 15, 2026</p>
-      </div>
-    </div>
+    <!-- Cabecera -->
+    <header class="terminos-hero">
+      <h1>Terms and Conditions</h1>
+      <p>Last updated May 15, 2026 · 11 sections</p>
+    </header>
 
     <div class="terminos-layout">
 
       <!-- TOC lateral -->
       <aside class="terminos-toc">
-        <p class="toc-title">Contents</p>
-        <nav>
+        <p id="toc-title" class="toc-title">Contents</p>
+        <nav aria-labelledby="toc-title">
           <a
             v-for="seccion in secciones"
             :key="seccion.id"
             :href="'#' + seccion.id"
             class="toc-link"
             :class="{ 'is-active': seccionActiva === seccion.id }"
+            :aria-current="seccionActiva === seccion.id ? 'location' : null"
             @click.prevent="desplazarASeccion(seccion.id)"
           >
             <span class="toc-num">{{ seccion.num }}</span>
@@ -61,7 +56,7 @@
             <li>Exploration of an extensive video game catalogue with detailed information.</li>
             <li>Community-driven scoring and review system.</li>
             <li>Management of personal collections and favorites lists.</li>
-            <li>Game status tracking (playing, completed, pending, abandoned, wishlist).</li>
+            <li>Game status tracking (pending, playing, paused and completed).</li>
             <li>Information on upcoming industry releases.</li>
           </ul>
           <p>
@@ -109,7 +104,7 @@
           </ul>
         </section>
 
-        <section id="contenido" class="terminos-section">
+        <section id="contenido-usuario" class="terminos-section">
           <div class="section-num">05</div>
           <h2>User Content</h2>
           <p>
@@ -265,14 +260,15 @@ export default {
 
   data() {
     return {
-      seccionActiva: '',
+      seccionActiva: 'aceptacion',
       observador: null,
+      observadorTamano: null,
       secciones: [
         { id: 'aceptacion',      num: '01', titulo: 'Acceptance' },
         { id: 'descripcion',     num: '02', titulo: 'Description of Service' },
         { id: 'cuenta',          num: '03', titulo: 'Registration & Account' },
         { id: 'uso-aceptable',   num: '04', titulo: 'Acceptable Use' },
-        { id: 'contenido',       num: '05', titulo: 'User Content' },
+        { id: 'contenido-usuario', num: '05', titulo: 'User Content' },
         { id: 'propiedad',       num: '06', titulo: 'Intellectual Property' },
         { id: 'privacidad',      num: '07', titulo: 'Privacy & Data' },
         { id: 'responsabilidad', num: '08', titulo: 'Limitation of Liability' },
@@ -303,12 +299,23 @@ export default {
           self.observador.observe(el);
         }
       }
+
+      // Si la maqueta cambia de alto (fuentes, transicion de ruta) las
+      // secciones se mueven sin cruzar la banda: recalculamos igualmente
+      var articulo = document.querySelector('.terminos-content');
+      if (articulo && window.ResizeObserver) {
+        self.observadorTamano = new ResizeObserver(self.alIntersectar);
+        self.observadorTamano.observe(articulo);
+      }
     });
   },
 
   beforeUnmount() {
     if (this.observador) {
       this.observador.disconnect();
+    }
+    if (this.observadorTamano) {
+      this.observadorTamano.disconnect();
     }
   },
 
@@ -318,20 +325,25 @@ export default {
     desplazarASeccion(id) {
       var el = document.getElementById(id);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        el.scrollIntoView({ behavior: reducir ? 'auto' : 'smooth', block: 'start' });
       }
     },
 
-    // Callback del IntersectionObserver. Por cada seccion que entra en la
-    // "ventana" visible, marcamos su id como activa para resaltarla en la
-    // TOC lateral.
-    alIntersectar(entries) {
-      for (var i = 0; i < entries.length; i++) {
-        var entry = entries[i];
-        if (entry.isIntersecting) {
-          this.seccionActiva = entry.target.id;
+    // Callback del IntersectionObserver. No nos fiamos solo de las
+    // entradas: al cargar, con la maqueta sin asentar, entran varias a la
+    // vez. Recalculamos con la posicion real: la activa es la ultima
+    // seccion cuyo inicio ya ha pasado el 35% superior de la ventana.
+    alIntersectar() {
+      var limite = window.innerHeight * 0.35;
+      var activa = this.secciones[0].id;
+      for (var i = 0; i < this.secciones.length; i++) {
+        var el = document.getElementById(this.secciones[i].id);
+        if (el && el.getBoundingClientRect().top <= limite) {
+          activa = this.secciones[i].id;
         }
       }
+      this.seccionActiva = activa;
     }
   }
 };

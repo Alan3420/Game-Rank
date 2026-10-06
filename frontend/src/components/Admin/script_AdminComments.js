@@ -50,8 +50,13 @@ export default {
           descripcion = c.description.toLowerCase();
         }
 
+        var apodo = c.nickname ? c.nickname.toLowerCase() : '';
+        var juego = String(c.id_game_api || '');
+
         if (nombre.indexOf(busqueda) !== -1 ||
             apellido.indexOf(busqueda) !== -1 ||
+            apodo.indexOf(busqueda) !== -1 ||
+            juego.indexOf(busqueda) !== -1 ||
             descripcion.indexOf(busqueda) !== -1) {
           resultado.push(c);
         }

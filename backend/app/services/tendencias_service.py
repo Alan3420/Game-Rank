@@ -8,12 +8,15 @@ from concurrent.futures import ThreadPoolExecutor
 LIMITE_POR_SECCION = 8
 
 
-def _enriquecer_juego(id_juego, valor_estadistico, etiqueta_estadistica):
+def _enriquecer_juego(id_juego, valor_estadistico, etiqueta_estadistica, conteo=None):
     try:
         datos = get_game_by_id_api(id_juego)
         resultado = formatear_resumen_juego(datos)
         resultado["stat_value"] = valor_estadistico
         resultado["stat_label"] = etiqueta_estadistica
+        # en "mejor valorados" el numero de reseñas que respalda la media
+        if conteo is not None:
+            resultado["stat_count"] = conteo
         return resultado
     except Exception:
         return None
@@ -26,8 +29,7 @@ def _enriquecer_lista(tareas):
         return []
 
     def procesar(tarea):
-        id_juego, valor, etiqueta = tarea
-        return _enriquecer_juego(id_juego, valor, etiqueta)
+        return _enriquecer_juego(*tarea)
 
     with ThreadPoolExecutor(max_workers=len(tareas)) as executor:
         resultados = list(executor.map(procesar, tareas))
@@ -62,8 +64,9 @@ def obtener_tendencias():
         promedio = 0.0
         if fila[1]:
             promedio = float(fila[1])
+        votos = int(fila[2])
         etiqueta = f"{round(promedio, 1)} / 5"
-        tareas_valoradas.append((id_juego, promedio, etiqueta))
+        tareas_valoradas.append((id_juego, promedio, etiqueta, votos))
 
     tareas_comentados = []
     for fila in top_comentados:

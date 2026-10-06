@@ -19,5 +19,5 @@
     <path d="M -32 15 L -10 -5 L 5 8 L 32 -10 L 32 18" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
   </g>
 
-  <text x="230" y="165" font-family="Sora, sans-serif" font-size="13" fill="#9ca3af" text-anchor="middle" font-weight="500">Sin imagen disponible</text>
+  <text x="230" y="165" font-family="Barlow, sans-serif" font-size="13" fill="#9ca3af" text-anchor="middle" font-weight="500">Sin imagen disponible</text>
 </svg>

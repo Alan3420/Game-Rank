@@ -11,12 +11,23 @@ export default {
       email: "",
       password: "",
       mostrarPassword: false,
+      intentado: false,
       loading: false,
       errorMessage: ""
     };
   },
 
   computed: {
+
+    errorVisible() {
+      if (!this.intentado) {
+        return { email: '', password: '' };
+      }
+      return {
+        email: this.email.length < 1 ? 'Enter your email.' : '',
+        password: this.password.length < 8 ? 'Your password has at least 8 characters.' : ''
+      };
+    },
 
     formularioValido() {
 
@@ -40,6 +51,16 @@ export default {
   methods: {
 
     async manejarInicioSesion() {
+
+      if (!this.formularioValido) {
+        this.intentado = true;
+        var campo = this.email.length < 1 ? 'email' : 'passwd';
+        var el = document.getElementById(campo);
+        if (el) {
+          el.focus();
+        }
+        return;
+      }
 
       try {
         this.loading = true;

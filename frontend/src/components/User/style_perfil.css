@@ -158,77 +158,125 @@
     font-size: 0.72rem;
 }
 
-/* ── vitrina: placas de trofeo ── */
-.pf-cabinet {
-    padding: 20px;
-    border: 1px solid var(--gd-rule);
-    border-radius: 18px;
-    background: var(--gd-face);
-    box-shadow: var(--gd-raise);
+/* ── vitrina: estante de placas sobre el fondo ──
+   El estante no es una carta: lo delimitan reglas finas; las placas son
+   los objetos. Album (estados) y Activity (registro) separados por una regla. */
+.pf-shelf {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 3fr);
+    gap: 18px 28px;
+    padding: 20px 0 22px;
+    border-top: 1px solid var(--gd-rule);
+    border-bottom: 1px solid var(--gd-rule);
+}
+
+.pf-shelf--skel {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+    border: none;
+}
+
+.pf-shelf__group--record {
+    padding-left: 28px;
+    border-left: 1px solid var(--gd-rule);
+}
+
+.pf-shelf__label {
+    margin: 0 0 10px;
+    color: var(--gd-ink-2);
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 .pf-plates {
     display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 12px;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.pf-plates--skel {
-    margin: 24px 0;
+.pf-plates--record {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-/* placa = carta pequena: marco del estado (o neutro) y cara blanca */
+/* placa = carta pequeña: banda del marco con el sello impreso y cara
+   blanca con el numero; mismo lenguaje que la mini carta */
 .pf-plate {
-    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 0 5px 5px;
     border-radius: 14px;
     background: var(--gd-frame);
+    box-shadow: var(--gd-raise);
+}
+
+.pf-plate__stamp {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 32px;
+    padding: 0 7px;
+    overflow: hidden;
+    color: var(--gd-on-frame-now);
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.pf-plate__stamp .pi {
+    font-size: 0.75rem;
+}
+
+.pf-plate__star {
+    color: var(--gd-star);
 }
 
 .pf-plate__face {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
-    height: 100%;
-    padding: 12px 12px 10px;
+    flex: 1;
+    align-items: flex-end;
+    min-height: 62px;
+    padding: 10px 12px;
     border-radius: 10px;
     background: var(--gd-face);
 }
 
-.pf-plate__icon {
-    font-size: 0.85rem;
-    color: var(--gd-frame);
-}
-
-.pf-plate:not([class*="cw-frame--"]) .pf-plate__icon {
-    color: var(--gd-ink-3);
-}
-
-.pf-plate__icon--star {
-    color: var(--gd-star) !important;
-}
-
 .pf-plate__value {
-    margin-top: 4px;
     font-family: 'Barlow Condensed', 'Barlow', sans-serif;
-    font-size: 2.2rem;
+    font-size: 2.4rem;
     font-weight: 800;
     line-height: 1;
     font-variant-numeric: tabular-nums;
 }
 
-.pf-plate__label {
-    color: var(--gd-ink-2);
-    font-size: 0.85rem;
-    font-weight: 600;
+/* ranura vacia: estado sin juegos, sin tono ni relieve */
+.pf-plate--empty {
+    padding: 0 4px 4px;
+    border: 1px dashed var(--gd-rule-strong);
+    background: transparent;
+    box-shadow: none;
+}
+
+.pf-plate--empty .pf-plate__stamp {
+    color: var(--gd-ink-3);
+}
+
+.pf-plate--empty .pf-plate__face {
+    background: transparent;
+}
+
+.pf-plate--empty .pf-plate__value {
+    color: var(--gd-ink-3);
 }
 
 /* reparto del album: una barra en los cuatro tonos de estado */
 .pf-split {
-    margin-top: 20px;
+    grid-column: 1 / -1;
     padding-top: 18px;
     border-top: 1px solid var(--gd-rule);
 }
@@ -295,12 +343,31 @@
 }
 
 /* ── coleccion + lateral ── */
+/* coleccion y reseñas en la columna ancha; favoritos al lado */
 .pf-lower {
     display: grid;
     grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-    gap: 28px;
+    grid-template-areas:
+        "col fav"
+        "rev fav";
+    grid-template-rows: auto 1fr;
+    gap: 40px 28px;
     align-items: start;
-    margin-top: 48px;
+    margin-top: 40px;
+}
+
+.pf-collection {
+    grid-area: col;
+}
+
+.pf-panel--fav {
+    position: sticky;
+    top: 88px;
+    grid-area: fav;
+}
+
+.pf-reviews-block {
+    grid-area: rev;
 }
 
 .pf-tabs {
@@ -389,12 +456,6 @@
 .pf-empty p {
     max-width: 44ch;
     margin: 0;
-}
-
-.pf-side {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
 }
 
 .pf-panel {
@@ -511,18 +572,18 @@
     }
 }
 
-/* reseñas propias */
+/* reseñas propias: dos columnas de notas bajo la coleccion */
 .pf-reviews {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 28px;
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
 .pf-review {
-    padding: 10px 0;
-}
-
-.pf-review + .pf-review {
+    padding: 12px 0;
     border-top: 1px solid var(--gd-rule);
 }
 
@@ -570,6 +631,10 @@
     font-size: 0.9rem;
     line-height: 1.5;
     overflow-wrap: anywhere;
+}
+
+.pf-reviews-more {
+    margin-top: 12px;
 }
 
 .pf-review__date {
@@ -716,50 +781,24 @@
     transform: translateX(100%);
 }
 
-/* ── modales de editar y contraseña ── */
-.edit-modal-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 1600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    background: rgba(14, 15, 21, 0.55);
-    overscroll-behavior: contain;
-}
-
-.edit-modal {
-    width: 100%;
-    max-width: 460px;
-    overflow: hidden;
-    border: 1px solid var(--gd-rule);
-    border-radius: 18px;
-    background: var(--gd-face);
-    box-shadow: var(--gd-raise);
-    color: var(--gd-ink);
-}
-
-.edit-modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 18px 22px 0;
-}
-
-.edit-modal-title {
-    margin: 0;
-    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
-    font-size: 1.6rem;
-    font-weight: 800;
-}
-
-.edit-modal-body {
+/* ── formularios dentro del panel ── */
+.pf-form {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 18px 22px;
+}
+
+.pf-form__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gd-rule);
+}
+
+.pf-drawer__title {
+    flex: 1;
+    outline: none;
 }
 
 .form-group {
@@ -839,25 +878,31 @@
     font-size: 0.9rem;
 }
 
-.edit-modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    padding: 14px 22px 18px;
-    border-top: 1px solid var(--gd-rule);
-}
-
 /* ── RESPONSIVE ── */
 @media (max-width: 1100px) {
-    .pf-plates {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+    .pf-shelf {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pf-shelf__group--record {
+        padding-left: 0;
+        border-left: none;
     }
 }
 
 @media (max-width: 1024px) {
     .pf-lower {
         grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            "col"
+            "fav"
+            "rev";
+        grid-template-rows: none;
         gap: 32px;
+    }
+
+    .pf-panel--fav {
+        position: static;
     }
 }
 
@@ -874,45 +919,46 @@
         width: 100%;
     }
 
-    .pf-cabinet {
-        padding: 14px;
+    .pf-shelf {
+        gap: 16px;
+        padding: 16px 0 18px;
     }
 
+    .pf-shelf--skel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* estados en 2x2; registro en una fila de 3 */
     .pf-plates {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 8px;
     }
 
-    /* placas compactas en horizontal: la vitrina no se come la pantalla */
+    .pf-plates--record {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .pf-plate__stamp {
+        min-height: 28px;
+        padding: 0 5px;
+        font-size: 0.82rem;
+    }
+
     .pf-plate__face {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        grid-template-areas:
-            "value icon"
-            "value label";
-        align-items: center;
-        column-gap: 10px;
-        row-gap: 0;
+        min-height: 46px;
         padding: 8px 10px;
     }
 
     .pf-plate__value {
-        grid-area: value;
-        margin: 0;
-        font-size: 1.8rem;
+        font-size: 1.85rem;
     }
 
-    .pf-plate__icon {
-        grid-area: icon;
+    .pf-plates--record .pf-plate__stamp .pi {
+        display: none;
     }
 
-    .pf-plate__label {
-        grid-area: label;
-        font-size: 0.8rem;
-    }
-
-    .pf-plate:last-child {
-        grid-column: 1 / -1;
+    .pf-reviews {
+        grid-template-columns: minmax(0, 1fr);
     }
 
     .pf-grid {

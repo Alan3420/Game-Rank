@@ -36,13 +36,12 @@ export default {
       // Reseñas propias (el backend solo da el id del juego)
       misResenas: [],
       resenasLoading: true,
+      verTodasResenas: false,
 
-      // Panel lateral con los datos y opciones de la cuenta
+      // Panel lateral con los datos y opciones de la cuenta;
+      // 'info', 'editar' o 'contrasena' dentro del mismo panel
       panelCuenta: false,
-
-      mostrarModalEditar: false,
-      mostrarModalCambiarContraseña: false,
-      mostrarMenuEditar: false,
+      vistaPanel: 'info',
 
       formularioCambiarContraseña: {
         actual: '',
@@ -65,6 +64,27 @@ export default {
   },
 
   computed: {
+
+    resenasVisibles() {
+      if (this.verTodasResenas) {
+        return this.misResenas;
+      }
+      return this.misResenas.slice(0, 4);
+    },
+
+    pestanas() {
+      return ['todos'].concat(STATUS_LIST);
+    },
+
+    tituloPanel() {
+      if (this.vistaPanel === 'editar') {
+        return 'Edit profile';
+      }
+      if (this.vistaPanel === 'contrasena') {
+        return 'Change password';
+      }
+      return 'Account settings';
+    },
 
     // Nombre de juego por id, a partir de lo que ya tenemos cargado
     // (favoritos y coleccion); evita pedir cada juego a RAWG
@@ -181,12 +201,6 @@ export default {
       this.cargarEstadisticas(),
       this.cargarResenas()
     ]);
-
-    document.addEventListener('mousedown', this.manejarClicFueraDelMenu);
-  },
-
-  beforeUnmount() {
-    document.removeEventListener('mousedown', this.manejarClicFueraDelMenu);
   },
 
   methods: {
@@ -212,35 +226,88 @@ export default {
       }
     },
 
-    abrirPanelCuenta() {
-      this.panelCuenta = true;
+    // Placa de estado sin juegos: ranura vacia, sin el tono del estado
+    placaVacia(key) {
+      if (this.statsLoading) {
+        return false;
+      }
+      var n = 0;
+      if (this.stats && this.stats.coleccion && this.stats.coleccion[key]) {
+        n = this.stats.coleccion[key];
+      }
+      return n === 0;
+    },
+
+    // Flechas, Inicio y Fin mueven el foco y la seleccion entre pestañas
+    moverPestana(e) {
+      var lista = this.pestanas;
+      var actual = lista.indexOf(this.filtroColeccion);
+      var siguiente = -1;
+      if (e.key === 'ArrowRight') {
+        siguiente = (actual + 1) % lista.length;
+      } else if (e.key === 'ArrowLeft') {
+        siguiente = (actual - 1 + lista.length) % lista.length;
+      } else if (e.key === 'Home') {
+        siguiente = 0;
+      } else if (e.key === 'End') {
+        siguiente = lista.length - 1;
+      }
+      if (siguiente === -1) {
+        return;
+      }
+      e.preventDefault();
+      this.filtroColeccion = lista[siguiente];
       this.$nextTick(function () {
-        var cerrar = document.getElementById('pf-panel-close');
-        if (cerrar) {
-          cerrar.focus();
+        var tab = document.getElementById('pf-tab-' + lista[siguiente]);
+        if (tab) {
+          tab.focus();
         }
       });
+    },
+
+    enfocar(id) {
+      this.$nextTick(function () {
+        var el = document.getElementById(id);
+        if (el) {
+          el.focus();
+        }
+      });
+    },
+
+    abrirPanelCuenta() {
+      this.vistaPanel = 'info';
+      this.panelCuenta = true;
+      this.enfocar('pf-panel-close');
     },
 
     cerrarPanelCuenta() {
+      if (this.guardandoEditar || this.cambiandoContraseña) {
+        return;
+      }
       this.panelCuenta = false;
-      this.$nextTick(function () {
-        var boton = document.getElementById('pf-settings-btn');
-        if (boton) {
-          boton.focus();
-        }
-      });
+      this.limpiarFormularios();
+      this.enfocar('pf-settings-btn');
     },
 
-    // Desde el panel se abren los modales: el panel se cierra primero
-    editarDesdePanel() {
-      this.panelCuenta = false;
-      this.abrirModalEditar();
+    limpiarFormularios() {
+      this.vistaPanel = 'info';
+      this.errorEditar = '';
+      this.errorCambiarContraseña = '';
+      this.formularioCambiarContraseña = {
+        actual: '',
+        nueva: '',
+        confirmar: ''
+      };
     },
 
-    contrasenaDesdePanel() {
-      this.panelCuenta = false;
-      this.abrirModalCambiarContraseña();
+    // Vuelve a los datos de la cuenta y deja el foco en el boton de origen
+    volverAInfo() {
+      if (this.guardandoEditar || this.cambiandoContraseña) {
+        return;
+      }
+      var origen = this.vistaPanel === 'contrasena' ? 'pf-pwd-btn' : 'pf-edit-btn';
+      this.limpiarFormularios();
+      this.enfocar(origen);
     },
 
     async cargarEstadisticas() {
@@ -286,9 +353,7 @@ export default {
       return juego.release_date <= hoyIso;
     },
 
-    abrirModalEditar() {
-      this.mostrarMenuEditar = false;
-
+    abrirEdicion() {
       var usuario = estadoAutenticacion.usuario;
       var datosIniciales = {
         name: '',
@@ -309,15 +374,19 @@ export default {
       this.formularioEditar = datosIniciales;
 
       this.errorEditar = '';
-      this.mostrarModalEditar = true;
+      this.vistaPanel = 'editar';
+      this.enfocar('perfil-name');
     },
 
-    cerrarModalEditar() {
-      if (this.guardandoEditar) {
-        return;
-      }
-      this.mostrarModalEditar = false;
-      this.errorEditar = '';
+    abrirCambioContrasena() {
+      this.errorCambiarContraseña = '';
+      this.formularioCambiarContraseña = {
+        actual: '',
+        nueva: '',
+        confirmar: ''
+      };
+      this.vistaPanel = 'contrasena';
+      this.enfocar('pwd-actual');
     },
 
     async guardarCambiosPerfil() {
@@ -398,7 +467,8 @@ export default {
           nickname: nicknameFinal
         });
 
-        this.mostrarModalEditar = false;
+        this.vistaPanel = 'info';
+        this.enfocar('pf-edit-btn');
         notificaciones.success("Your information has been updated.", {
           title: "Profile updated"
         });
@@ -598,34 +668,6 @@ export default {
       this.router.push('/admin/comments');
     },
 
-    abrirModalCambiarContraseña() {
-      this.mostrarMenuEditar = false;
-      this.mostrarModalCambiarContraseña = true;
-      this.errorCambiarContraseña = '';
-      this.formularioCambiarContraseña = {
-        actual: '',
-        nueva: '',
-        confirmar: ''
-      };
-    },
-
-    cerrarModalCambiarContraseña() {
-      this.mostrarModalCambiarContraseña = false;
-      this.formularioCambiarContraseña = {
-        actual: '',
-        nueva: '',
-        confirmar: ''
-      };
-      this.errorCambiarContraseña = '';
-    },
-
-    manejarClicFueraDelMenu(e) {
-      var menuRef = this.$refs.menuEditarRef;
-      if (menuRef && !menuRef.contains(e.target)) {
-        this.mostrarMenuEditar = false;
-      }
-    },
-
     async guardarCambioContraseña() {
 
       var actual = this.formularioCambiarContraseña.actual;
@@ -652,7 +694,8 @@ export default {
 
       try {
         await cambiarContrasena(actual, nueva);
-        this.cerrarModalCambiarContraseña();
+        this.limpiarFormularios();
+        this.enfocar('pf-pwd-btn');
         notificaciones.success("Your password has been updated successfully.", {
           title: "Password changed"
         });
