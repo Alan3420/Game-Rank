@@ -347,19 +347,19 @@ table.t td code{white-space:nowrap}
 <!-- 8 · ICONOGRAFÍA -->
 <section class="slide">
   <div class="kick"><span class="num">08</span><span>Iconografía</span></div>
-  <h1>Una librería: PrimeIcons</h1>
-  <p class="lede">Iconos de trazo de PrimeIcons, siempre con <code>aria-hidden="true"</code> y con el nombre en el texto o en un <code>aria-label</code>. Cada estado tiene su icono fijo; el marcapáginas representa la colección en todas las vistas.</p>
+  <h1>Iconos de estado propios</h1>
+  <p class="lede">Los cuatro estados usan una familia propia de iconos sólidos (StatusIcon.vue, retícula de 24, currentColor); el resto de la interfaz usa PrimeIcons. Siempre con <code>aria-hidden="true"</code> y el nombre en el texto o en un <code>aria-label</code>.</p>
   <div class="grid4 mt" style="font-size:13px">
-    <div class="panel" style="text-align:center"><i class="pi pi-clock" style="font-size:26px;color:var(--pending)"></i><p class="mt-s"><b>Pending</b><br><code>pi-clock</code></p></div>
-    <div class="panel" style="text-align:center"><i class="pi pi-play" style="font-size:26px;color:var(--playing)"></i><p class="mt-s"><b>Playing</b><br><code>pi-play</code></p></div>
-    <div class="panel" style="text-align:center"><i class="pi pi-pause" style="font-size:26px;color:var(--paused)"></i><p class="mt-s"><b>Paused</b><br><code>pi-pause</code></p></div>
-    <div class="panel" style="text-align:center"><i class="pi pi-check-circle" style="font-size:26px;color:var(--completed)"></i><p class="mt-s"><b>Completed</b><br><code>pi-check-circle</code></p></div>
+    <div class="panel" style="text-align:center"><i class="pi pi-clock" style="font-size:26px;color:var(--pending)"></i><p class="mt-s"><b>Pending</b><br><code>pendiente</code> · reloj de arena</p></div>
+    <div class="panel" style="text-align:center"><i class="pi pi-play" style="font-size:26px;color:var(--playing)"></i><p class="mt-s"><b>Playing</b><br><code>jugando</code> · mando</p></div>
+    <div class="panel" style="text-align:center"><i class="pi pi-pause" style="font-size:26px;color:var(--paused)"></i><p class="mt-s"><b>Paused</b><br><code>pausado</code> · dos barras</p></div>
+    <div class="panel" style="text-align:center"><i class="pi pi-check-circle" style="font-size:26px;color:var(--completed)"></i><p class="mt-s"><b>Completed</b><br><code>completado</code> · check</p></div>
   </div>
   <div class="row mt" style="gap:26px;font-size:22px;color:var(--ink2)">
     <span title="bookmark"><i class="pi pi-bookmark"></i></span><span><i class="pi pi-heart"></i></span><span><i class="pi pi-comments"></i></span><span><i class="pi pi-star"></i></span><span><i class="pi pi-trash"></i></span><span><i class="pi pi-search"></i></span><span><i class="pi pi-user"></i></span>
   </div>
   <p class="mt-s" style="font-size:12px">Colección (bookmark) · favorito (heart) · reseñas (comments) · nota (star) · eliminar (trash) · buscar (search) · usuario (user).</p>
-  <div class="foot"><b>08 · Iconografía</b><span>utils/statusMeta.js fija etiqueta e icono por estado</span></div>
+  <div class="foot"><b>08 · Iconografía</b><span>components/CardWorld/StatusIcon.vue</span></div>
 </section>
 
 <!-- 9 · CARTA -->
@@ -517,5 +517,10 @@ table.t td code{white-space:nowrap}
   <div class="foot"><b>Game Rank · Guía de estilos</b><span>Generada desde .impeccable/guide/guia-estilos.html</span></div>
 </section>
 
+<script>
+// Sustituye los glifos de estado por los iconos propios (StatusIcon.vue)
+(function(){var F={"pendiente": "M5.5 2h13a1 1 0 0 1 0 2H18v2.4a5 5 0 0 1-2.3 4.2L13.6 12l2.1 1.4a5 5 0 0 1 2.3 4.2V20h.5a1 1 0 0 1 0 2h-13a1 1 0 0 1 0-2H6v-2.4a5 5 0 0 1 2.3-4.2l2.1-1.4-2.1-1.4A5 5 0 0 1 6 6.4V4h-.5a1 1 0 0 1 0-2zM8 4v2.4a3 3 0 0 0 1.4 2.5L12 10.6l2.6-1.7A3 3 0 0 0 16 6.4V4z", "jugando": "M7 5h10a5 5 0 0 1 4.9 4l1.1 5.6a3.3 3.3 0 0 1-5.7 2.8L15.3 15.2H8.7l-2 2.2a3.3 3.3 0 0 1-5.7-2.8L2.1 9A5 5 0 0 1 7 5zM6.9 8v1.5H5.4v1.8h1.5v1.5h1.8v-1.5h1.5V9.5H8.7V8zm9.5 0a1.2 1.2 0 1 0 0 2.4a1.2 1.2 0 0 0 0-2.4zm2.2 2.6a1.2 1.2 0 1 0 0 2.4a1.2 1.2 0 0 0 0-2.4z", "pausado": "M7.2 4h2.6A1.2 1.2 0 0 1 11 5.2v13.6a1.2 1.2 0 0 1-1.2 1.2H7.2A1.2 1.2 0 0 1 6 18.8V5.2A1.2 1.2 0 0 1 7.2 4zm7 0h2.6A1.2 1.2 0 0 1 18 5.2v13.6a1.2 1.2 0 0 1-1.2 1.2h-2.6a1.2 1.2 0 0 1-1.2-1.2V5.2A1.2 1.2 0 0 1 14.2 4z", "completado": "M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20zm4.3 6.2l-5.6 5.6-2.9-2.9-1.5 1.5 4.4 4.4 7.1-7.1z"};var M={'pi-clock':'pendiente','pi-play':'jugando','pi-pause':'pausado','pi-check-circle':'completado'};
+document.querySelectorAll('i.pi').forEach(function(i){for(var c in M){if(i.classList.contains(c)){var k=M[c];var sz=i.style.fontSize?'width:calc('+i.style.fontSize+' * 1.3);height:calc('+i.style.fontSize+' * 1.3)':'width:1.3em;height:1.3em';i.outerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" style="display:inline-block;vertical-align:-0.28em;margin:-0.15em 0;'+sz+';'+(i.style.color?'color:'+i.style.color:'')+'"><path fill="currentColor" fill-rule="evenodd" d="'+F[k]+'"/></svg>';}}});})();
+</script>
 </body>
 </html>

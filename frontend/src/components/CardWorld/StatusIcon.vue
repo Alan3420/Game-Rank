@@ -1,6 +1,6 @@
 <template>
   <!-- Iconos propios de los estados: una sola familia solida sobre la
-       misma reticula de 24. Mide 1em y usa currentColor, asi que hereda
+       misma reticula de 24. Se escala con la fuente y usa currentColor, asi que hereda
        tamaño y color de cada vista igual que un icono de PrimeIcons. -->
   <svg class="status-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
     <path fill="currentColor" fill-rule="evenodd" :d="FORMAS[status] || FORMAS.pendiente" />
@@ -25,11 +25,14 @@ const FORMAS = {
 </script>
 
 <style scoped>
+/* los tamaños de cada vista estan pensados para los glifos de PrimeIcons,
+   que llenan mas su caja: a 1.3em el icono pesa lo mismo que el texto */
 .status-icon {
   display: inline-block;
   flex-shrink: 0;
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.125em;
+  width: 1.3em;
+  height: 1.3em;
+  margin: -0.15em 0;
+  vertical-align: -0.28em;
 }
 </style>
