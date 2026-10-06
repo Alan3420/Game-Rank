@@ -12,7 +12,7 @@
                 @click.stop="manejarSeleccionEstado(key)"
                 :disabled="loading"
             >
-                <i aria-hidden="true" :class="'pi ' + STATUS_META[key].icon + ' gsd-icon'"></i>
+                <StatusIcon :status="key" class="pi gsd-icon" />
                 <span class="gsd-label">{{ STATUS_META[key].label }}</span>
                 <i aria-hidden="true" v-if="currentStatus === key" class="pi pi-check gsd-check"></i>
             </button>
@@ -37,6 +37,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
+import StatusIcon from '../CardWorld/StatusIcon.vue';
 import { establecerEstadoDeJuego, eliminarEstadoDeJuego } from '../../services/user_game_status.js';
 import { notificaciones } from '../../store/notificaciones.js';
 

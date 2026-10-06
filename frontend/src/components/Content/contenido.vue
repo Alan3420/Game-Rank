@@ -125,7 +125,7 @@
                   </td>
                   <td class="cat-row__owned">
                     <span v-if="statuses.get(game.id)" class="cat-pill">
-                      <i aria-hidden="true" :class="'pi ' + STATUS_META[statuses.get(game.id)].icon"></i>
+                      <StatusIcon :status="statuses.get(game.id)" class="pi" />
                       {{ STATUS_META[statuses.get(game.id)].label }}
                     </span>
                     <span v-else-if="favorites.has(game.id)" class="cat-muted">Favorite</span>
@@ -180,10 +180,11 @@ import Skeleton from "../Skeleton/Skeleton.vue";
 import GameImage from "../Image/GameImage.vue";
 import MiniCard from "../CardWorld/MiniCard.vue";
 import GameStatusDropdown from "../Cards/GameStatusDropdown.vue";
+import StatusIcon from "../CardWorld/StatusIcon.vue";
 
 export default {
     name: "Catalog",
-    components: { FilterPanel, Pagination, Skeleton, GameImage, MiniCard, GameStatusDropdown },
+    components: { FilterPanel, Pagination, Skeleton, GameImage, MiniCard, GameStatusDropdown, StatusIcon },
     ...contenido
 };
 </script>

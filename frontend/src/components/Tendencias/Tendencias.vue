@@ -64,7 +64,7 @@
                   <span class="tr-no">No. {{ campeon.id }}</span>
                   <span v-if="anioDe(campeon)" class="tr-year">{{ anioDe(campeon) }}</span>
                   <span v-if="estadoDe(campeon.id)" class="tr-stamp">
-                    <i aria-hidden="true" :class="'pi ' + STATUS_META[estadoDe(campeon.id)].icon"></i>
+                    <StatusIcon :status="estadoDe(campeon.id)" class="pi" />
                     {{ STATUS_META[estadoDe(campeon.id)].label }}
                   </span>
                   <span v-if="campeon.metacritic" class="cw-mc" :class="claseMetacritic(campeon.metacritic)">
@@ -89,7 +89,7 @@
                       <span class="tr-no">No. {{ juego.id }}</span>
                       <span v-if="anioDe(juego)" class="tr-year">{{ anioDe(juego) }}</span>
                       <span v-if="estadoDe(juego.id)" class="tr-stamp">
-                        <i aria-hidden="true" :class="'pi ' + STATUS_META[estadoDe(juego.id)].icon"></i>
+                        <StatusIcon :status="estadoDe(juego.id)" class="pi" />
                         <span class="tr-stamp__label">{{ STATUS_META[estadoDe(juego.id)].label }}</span>
                       </span>
                     </span>
@@ -119,10 +119,11 @@
 import tendenciasScript from './script_tendencias.js';
 import Skeleton from '../Skeleton/Skeleton.vue';
 import GameImage from '../Image/GameImage.vue';
+import StatusIcon from '../CardWorld/StatusIcon.vue';
 
 export default {
   name: 'Tendencias',
-  components: { Skeleton, GameImage },
+  components: { Skeleton, GameImage, StatusIcon },
   mixins: [tendenciasScript]
 };
 </script>

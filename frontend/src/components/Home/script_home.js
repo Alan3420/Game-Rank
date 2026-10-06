@@ -8,9 +8,17 @@ import { estadoAutenticacion } from '../../store/autenticacion.js';
 import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
 import { claseMetacritic } from '../../utils/metacritic.js';
 import { formatearFechaCorta } from '../../utils/formatoFecha.js';
+import { obtenerListaDeFavoritos, agregarAFavoritos } from '../../services/favorites_area.js';
+import { notificaciones } from '../../store/notificaciones.js';
 
 const POR_PAGINA_PROXIMOS = 5;
-const CARTAS_POR_PAGINA_ALBUM = 6;
+const CARTAS_DESCUBRIR = 7;
+
+// Pestanas de Descubrir: orden de RAWG con el que se pide cada lista
+const PESTANAS_DESCUBRIR = [
+  { key: 'popular', label: 'Popular', ordering: '-added' },
+  { key: 'aclamados', label: 'Acclaimed', ordering: '-metacritic' }
+];
 
 // Secciones de tendencias en el orden en que se muestran las pestanas
 const SECCIONES_TENDENCIAS = [
@@ -35,17 +43,30 @@ export default {
       STATUS_META,
       STATUS_LIST,
       SECCIONES_TENDENCIAS,
+      PESTANAS_DESCUBRIR,
 
       // Invitado: trailer del hero
       heroVideo: null,
       heroVideoCargado: false,
       videoPausado: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      // Invitado: estado elegido en la prueba (ninguno al principio)
+      estadoDemo: null,
 
-      // Album del jugador
+      // Album del jugador (resumen)
       coleccion: [],
       coleccionLoading: true,
       stats: null,
-      tabActiva: 'jugando',
+      favoritosIds: [],
+      propiosCargados: false,
+
+      // Descubrir: juegos que el jugador aun no tiene
+      descubrir: [],
+      descubrirLoading: true,
+      tabDescubrir: 'popular',
+      paginaDescubrir: 1,
+      anadiendoId: null,
+      // los que anade aqui se quedan visibles (con el corazon lleno)
+      anadidosAqui: [],
 
       // Pagina derecha
       mejoresAnio: [],
@@ -71,7 +92,7 @@ export default {
     }
 
     // Todo en paralelo: cada zona tiene su propio skeleton
-    this.cargarColeccion();
+    this.cargarPropiosYDescubrir();
     this.cargarEstadisticas();
     this.cargarMejoresDelAnio();
     this.cargarNovedadesDelMes();
@@ -119,33 +140,40 @@ export default {
       return conteo;
     },
 
-    cartasDeLaPestana() {
-      var resultado = [];
+    // ids que el jugador ya tiene (coleccion o favoritos)
+    idsPropios() {
+      var ids = new Set(this.favoritosIds);
       for (var i = 0; i < this.coleccion.length; i++) {
-        if (this.coleccion[i].status === this.tabActiva) {
-          resultado.push(this.coleccion[i]);
+        if (this.coleccion[i].game) {
+          ids.add(this.coleccion[i].game.id);
         }
       }
-      return resultado;
+      return ids;
     },
 
-    cartasVisibles() {
-      return this.cartasDeLaPestana.slice(0, CARTAS_POR_PAGINA_ALBUM);
+    destacado() {
+      return this.descubrir.length ? this.descubrir[0] : null;
     },
 
-    // Una pagina de archivador son 3x2 fundas: las que no tienen carta se
-    // muestran vacias (solo en escritorio, en movil se ocultan por CSS) y
-    // la ultima es un bolsillo que lleva al catalogo. La pagina completa
-    // iguala la altura de la pagina enfrentada del album.
-    hayBolsilloCatalogo() {
-      return this.cartasVisibles.length < CARTAS_POR_PAGINA_ALBUM;
+    restoDescubrir() {
+      return this.descubrir.slice(1, CARTAS_DESCUBRIR);
     },
 
-    fundasVacias() {
-      if (!this.hayBolsilloCatalogo) {
-        return 0;
+    // Resumen del album: lo que esta jugando y, si no hay, lo pendiente
+    siguienteDelAlbum() {
+      var orden = [['jugando', 'Continue playing'], ['pendiente', 'Up next'], ['pausado', 'Paused for now']];
+      for (var i = 0; i < orden.length; i++) {
+        var lista = [];
+        for (var j = 0; j < this.coleccion.length; j++) {
+          if (this.coleccion[j].status === orden[i][0]) {
+            lista.push(this.coleccion[j]);
+          }
+        }
+        if (lista.length) {
+          return { titulo: orden[i][1], items: lista.slice(0, 3) };
+        }
       }
-      return CARTAS_POR_PAGINA_ALBUM - this.cartasVisibles.length - 1;
+      return { titulo: 'Continue playing', items: [] };
     },
 
     // Juego del trailer (el backend lo devuelve junto al video); sin el,
@@ -157,7 +185,7 @@ export default {
           name: this.heroVideo.name,
           metacritic: this.heroVideo.metacritic,
           imge_url: this.heroVideo.imge_url,
-          release_date: null
+          release_date: this.heroVideo.release_date || null
         };
       }
       return { id: null, name: 'Your next game', metacritic: null, imge_url: null, release_date: null };
@@ -197,6 +225,40 @@ export default {
       return valor ? Number(valor.split('-')[0]) : null;
     },
 
+    // "Oct 6", con el año solo si no es el actual
+    fechaLanzamiento(valor) {
+      if (!valor) {
+        return 'TBA';
+      }
+      var dia = Number(valor.split('-')[2]);
+      var texto = this.mesCorto(valor) + ' ' + dia;
+      if (this.anioDe(valor) !== this.anioActual) {
+        texto += ', ' + this.anioDe(valor);
+      }
+      return texto;
+    },
+
+    // Cuenta atras hasta la salida: Today, Tomorrow, In n days
+    cuentaAtras(valor) {
+      if (!valor) {
+        return '';
+      }
+      var hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+      var salida = new Date(valor + 'T00:00:00');
+      var dias = Math.round((salida - hoy) / 86400000);
+      if (dias < 0) {
+        return '';
+      }
+      if (dias === 0) {
+        return 'Today';
+      }
+      if (dias === 1) {
+        return 'Tomorrow';
+      }
+      return 'In ' + dias + ' days';
+    },
+
     alternarVideo() {
       var video = this.$refs.heroVideoRef;
       this.videoPausado = !this.videoPausado;
@@ -225,22 +287,94 @@ export default {
       try {
         var data = await listarEstadosDeJuegoCompletos();
         this.coleccion = (data && data.statuses) ? data.statuses : [];
-
-        // La pestana inicial es la primera que tenga cartas, empezando
-        // por lo que el jugador esta jugando
-        var orden = ['jugando', 'pendiente', 'pausado', 'completado'];
-        for (var i = 0; i < orden.length; i++) {
-          if (this.conteoPorEstado[orden[i]] > 0) {
-            this.tabActiva = orden[i];
-            break;
-          }
-        }
       } catch (error) {
         console.error('Error cargando la coleccion:', error);
         this.coleccion = [];
       } finally {
         this.coleccionLoading = false;
       }
+    },
+
+    async cargarFavoritos() {
+      try {
+        var data = await obtenerListaDeFavoritos();
+        var ids = [];
+        var lista = (data && data.favorites) ? data.favorites : [];
+        for (var i = 0; i < lista.length; i++) {
+          ids.push(lista[i].id);
+        }
+        this.favoritosIds = ids;
+      } catch (error) {
+        this.favoritosIds = [];
+      }
+    },
+
+    // Descubrir necesita saber antes que tiene el jugador para excluirlo
+    async cargarPropiosYDescubrir() {
+      await Promise.all([this.cargarColeccion(), this.cargarFavoritos()]);
+      this.propiosCargados = true;
+      this.cargarDescubrir(1);
+    },
+
+    async cargarDescubrir(pagina) {
+      this.descubrirLoading = true;
+      this.paginaDescubrir = pagina;
+      var pestana = PESTANAS_DESCUBRIR[0];
+      for (var i = 0; i < PESTANAS_DESCUBRIR.length; i++) {
+        if (PESTANAS_DESCUBRIR[i].key === this.tabDescubrir) {
+          pestana = PESTANAS_DESCUBRIR[i];
+        }
+      }
+      try {
+        var datos = await obtenerJuegosFiltrados(pagina, 20, { ordering: pestana.ordering });
+        var juegos = (datos && datos.games) ? datos.games : [];
+        var propios = this.idsPropios;
+        var anadidos = this.anadidosAqui;
+        // fuera lo que ya tiene (salvo lo que acaba de anadir aqui) y lo
+        // que no tiene imagen
+        this.descubrir = juegos.filter(function (j) {
+          return j.imge_url && (!propios.has(j.id) || anadidos.indexOf(j.id) !== -1);
+        }).slice(0, CARTAS_DESCUBRIR);
+      } catch (error) {
+        console.error('Error cargando descubrir:', error);
+        this.descubrir = [];
+      } finally {
+        this.descubrirLoading = false;
+      }
+    },
+
+    elegirDescubrir(key) {
+      if (this.tabDescubrir === key) {
+        return;
+      }
+      this.tabDescubrir = key;
+      this.anadidosAqui = [];
+      this.cargarDescubrir(1);
+    },
+
+    masDescubrir() {
+      this.anadidosAqui = [];
+      this.cargarDescubrir(this.paginaDescubrir + 1);
+    },
+
+    esFavorito(id) {
+      return this.favoritosIds.indexOf(id) !== -1;
+    },
+
+    async anadirAFavoritos(id) {
+      if (this.esFavorito(id) || this.anadiendoId) {
+        return;
+      }
+      this.anadiendoId = id;
+      var resultado = await agregarAFavoritos(id);
+      this.anadiendoId = null;
+      if (!resultado) {
+        notificaciones.error("Game wasn't added. Check your connection and try again.", { title: 'Favorites error' });
+        return;
+      }
+      this.favoritosIds = this.favoritosIds.concat([id]);
+      this.anadidosAqui = this.anadidosAqui.concat([id]);
+      notificaciones.success('Added to your favorites. Set its status from the game page.', { title: 'Favorite added' });
     },
 
     async cargarEstadisticas() {

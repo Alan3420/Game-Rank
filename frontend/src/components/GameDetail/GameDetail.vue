@@ -107,7 +107,8 @@
                                 <span class="gd-card__number">No. {{ game.id }}</span>
                                 <span class="gd-card__credit">Data by RAWG</span>
                                 <span v-if="isFavorite" class="gd-card__stamp">
-                                    <i aria-hidden="true" :class="'pi ' + (gameStatus ? STATUS_META[gameStatus]?.icon : 'pi-heart-fill')"></i>
+                                    <StatusIcon v-if="gameStatus" :status="gameStatus" class="pi" />
+                                    <i v-else aria-hidden="true" class="pi pi-heart-fill"></i>
                                     {{ gameStatus ? STATUS_META[gameStatus]?.label : 'Favorite' }}
                                 </span>
                             </footer>
@@ -146,7 +147,8 @@
                                     :aria-expanded="showStatusModal"
                                     @click.stop="showStatusModal = !showStatusModal"
                                 >
-                                    <i aria-hidden="true" :class="'pi ' + (gameStatus ? STATUS_META[gameStatus]?.icon : 'pi-bookmark')"></i>
+                                    <StatusIcon v-if="gameStatus" :status="gameStatus" class="pi" />
+                                    <i v-else aria-hidden="true" class="pi pi-bookmark"></i>
                                     {{ gameStatus ? STATUS_META[gameStatus]?.label : 'Set status' }}
                                     <i aria-hidden="true" class="pi pi-chevron-down gd-status__chev"></i>
                                 </button>
@@ -470,10 +472,11 @@ import Skeleton from '../Skeleton/Skeleton.vue';
 import GameImage from '../Image/GameImage.vue';
 import GameStatusDropdown from '../Cards/GameStatusDropdown.vue';
 import MiniCard from '../CardWorld/MiniCard.vue';
+import StatusIcon from '../CardWorld/StatusIcon.vue';
 
 export default {
     name: 'GameDetail',
-    components: { Skeleton, GameImage, GameStatusDropdown, MiniCard },
+    components: { Skeleton, GameImage, GameStatusDropdown, MiniCard, StatusIcon },
     mixins: [jsDetalles],
 
     data() {

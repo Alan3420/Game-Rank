@@ -147,155 +147,174 @@
     color: var(--gd-star);
 }
 
-/* ── EL ALBUM ABIERTO ── */
-/* las dos paginas forman un solo objeto: misma altura, sin hueco entre
-   ellas y el borde derecho del album hace de lomo */
-.hm-spread {
+/* ── DESCUBRIR + RESUMEN DEL ALBUM ──
+   Lo protagonista es lo que el jugador aun no tiene; su album queda
+   como resumen al lado */
+.hm-main {
     display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: 0;
-    align-items: stretch;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    gap: 28px;
+    align-items: start;
+}
+
+.hm-discover {
+    padding: 22px 24px 20px;
+    border: 1px solid var(--gd-rule);
     border-radius: 18px;
+    background: var(--gd-face);
+}
+
+.hm-discover__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px 20px;
+    margin-bottom: 18px;
+}
+
+.hm-discover__head .cw-h2 {
+    margin: 0;
+}
+
+.hm-discover__head .hm-muted {
+    margin: 4px 0 0;
+}
+
+/* juego destacado: carta de marco neutro (no es del jugador) */
+.hm-spot {
+    padding: 10px;
+    border-radius: 22px;
+    background: var(--gd-frame);
     box-shadow: var(--gd-raise);
 }
 
-/* pagina izquierda: toma el color de la pestana activa, igual que
-   "Your copy" toma el del marco en la ficha */
-.hm-album {
-    padding: 22px;
-    border: 2px solid var(--gd-frame);
-    border-radius: 18px 0 0 18px;
-    background: color-mix(in srgb, var(--gd-frame) 7%, var(--gd-face));
-    transition: border-color 320ms var(--ease-out), background-color 320ms var(--ease-out);
+.hm-spot__face {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 14px;
+    background: var(--gd-face);
 }
 
-.hm-album__head {
+.hm-spot__art {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--gd-ground);
+}
+
+.hm-spot__art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px var(--gd-rule);
+    pointer-events: none;
+}
+
+.hm-spot__art :deep(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hm-spot__band {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
+    gap: 10px;
 }
 
-.hm-album__head .cw-h2 {
+.hm-spot__name {
     margin: 0;
+    font-family: "Barlow Condensed", "Barlow", sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    overflow-wrap: anywhere;
 }
 
-.hm-tabs {
+.hm-spot__name a {
+    color: var(--gd-ink);
+    text-decoration: none;
+}
+
+.hm-spot__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin: 16px 0 18px;
-}
-
-.hm-tab {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 38px;
-    padding: 0 8px 0 14px;
-    border: 1px solid var(--gd-rule-strong);
-    border-radius: 999px;
-    background: var(--gd-face);
-    color: var(--gd-ink);
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out), color 200ms var(--ease-out);
-}
-
-.hm-tab .pi {
-    font-size: 0.8rem;
-    color: var(--gd-frame);
-}
-
-.hm-tab__count {
-    min-width: 24px;
-    padding: 1px 7px;
-    border-radius: 999px;
-    background: var(--gd-ground);
-    font-size: 0.8rem;
-    text-align: center;
+    align-items: baseline;
+    gap: 4px 14px;
+    margin: 10px 0 0;
+    color: var(--gd-ink-3);
+    font-size: 0.88rem;
     font-variant-numeric: tabular-nums;
 }
 
-.hm-tab[aria-selected="true"] {
-    background: var(--gd-frame);
-    border-color: var(--gd-frame);
-    color: var(--gd-on-frame-now);
+.hm-spot__rating {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    color: var(--gd-ink);
+    font-family: "Barlow Condensed", "Barlow", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
 }
 
-.hm-tab[aria-selected="true"] .pi {
-    color: inherit;
+.hm-spot__rating .pi {
+    font-size: 0.75rem;
+    color: var(--gd-star);
 }
 
-.hm-tab[aria-selected="true"] .hm-tab__count {
-    background: color-mix(in srgb, var(--gd-on-frame-now) 20%, transparent);
+.hm-spot__rating .hm-muted {
+    font-family: "Barlow", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.hm-spot__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .hm-tab[aria-selected="false"]:hover {
-        border-color: var(--gd-frame);
+    .hm-spot__name a:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
     }
 }
 
-.hm-pockets {
+.hm-spot-skel {
+    width: 100%;
+    height: 250px;
+}
+
+.hm-discover__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
-}
-
-.hm-pockets > ul,
-.hm-pockets > .hm-empty {
-    grid-column: 1 / -1;
-}
-
-.hm-pockets__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-    margin: 0;
+    margin: 20px 0 0;
     padding: 0;
     list-style: none;
 }
 
-/* funda vacia del archivador */
-.hm-sleeve {
-    min-height: 250px;
-    border: 1px dashed color-mix(in srgb, var(--gd-frame) 35%, var(--gd-rule-strong));
-    border-radius: 16px;
-    background: color-mix(in srgb, var(--gd-face) 55%, transparent);
-}
-
-.hm-sleeve--link {
+.hm-discover__foot {
     display: flex;
-}
-
-.hm-sleeve__link {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 16px;
-    border-radius: 16px;
-    color: var(--gd-ink-2);
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    transition: background-color 150ms ease, color 150ms ease;
-}
-
-.hm-sleeve__link .pi {
-    font-size: 1.1rem;
-    color: var(--gd-frame);
-}
-
-@media (hover: hover) and (pointer: fine) {
-    .hm-sleeve__link:hover {
-        background: var(--gd-face);
-        color: var(--gd-ink);
-    }
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gd-rule);
 }
 
 .hm-pocket-skel {
@@ -318,31 +337,138 @@
 
 .hm-empty .pi {
     font-size: 1.4rem;
-    color: var(--gd-frame);
+    color: var(--gd-ink-3);
 }
 
 .hm-empty p {
     margin: 0;
 }
 
-.hm-album__more {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 10px;
-    margin: 16px 0 0;
-    font-size: 0.9rem;
-    color: var(--gd-ink-2);
+/* resumen del album: secundario, fijo al hacer scroll */
+.hm-mine {
+    position: sticky;
+    top: 88px;
+    padding: 18px;
+    border: 1px solid var(--gd-rule);
+    border-radius: 14px;
+    background: var(--gd-face);
 }
 
-/* pagina derecha: listas de comprobacion como en un set de cartas */
-.hm-right {
+.hm-mine__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.hm-mine__title {
+    margin: 0;
+    font-family: "Barlow Condensed", "Barlow", sans-serif;
+    font-size: 1.45rem;
+    font-weight: 800;
+}
+
+/* el tono de estado solo si hay juegos con ese estado */
+.hm-mine__counts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hm-mine__counts li {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid var(--gd-frame);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--gd-frame) 7%, var(--gd-face));
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.hm-mine__counts li .pi {
+    font-size: 0.75rem;
+    color: var(--gd-frame);
+}
+
+.hm-mine__counts li strong {
+    margin-left: auto;
+    font-family: "Barlow Condensed", "Barlow", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.hm-mine__counts li.is-empty {
+    border: 1px dashed var(--gd-rule-strong);
+    background: transparent;
+    color: var(--gd-ink-3);
+}
+
+.hm-mine__counts li.is-empty .pi {
+    color: var(--gd-ink-3);
+}
+
+.hm-mine__sub {
+    margin: 18px 0 6px;
+    color: var(--gd-ink-2);
+    font-family: "Barlow Condensed", "Barlow", sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.hm-mine__skel {
     display: flex;
     flex-direction: column;
+    gap: 8px;
+}
+
+.hm-mine__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hm-mine__list li + li {
+    border-top: 1px solid var(--gd-rule);
+}
+
+.hm-mine__row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 4px;
+    border-radius: 8px;
+    color: var(--gd-ink);
+    text-decoration: none;
+    transition: background-color 150ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .hm-mine__row:hover {
+        background: var(--gd-ground);
+    }
+}
+
+/* ── ESTE AÑO Y ESTE MES ── */
+.hm-lists {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px;
-    padding: 22px 24px;
+    align-items: start;
+    margin-top: 48px;
+}
+
+.hm-lists > .hm-checklist {
+    padding: 20px 22px;
     border: 1px solid var(--gd-rule);
-    border-left: none;
-    border-radius: 0 18px 18px 0;
+    border-radius: 14px;
     background: var(--gd-face);
 }
 
@@ -597,48 +723,41 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 4px;
+    padding: 9px 4px;
     border-radius: 8px;
     color: var(--gd-ink);
     text-decoration: none;
     transition: background-color 150ms ease;
 }
 
-.hm-cal__date {
+/* la portada del juego lleva la fila; la fecha pasa a texto */
+.hm-cal__thumb {
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 52px;
-    padding: 5px 0;
-    border-radius: 8px;
+    width: 76px;
+    height: 57px;
+    overflow: hidden;
+    border-radius: 7px;
     background: var(--gd-ground);
-    font-variant-numeric: tabular-nums;
+    box-shadow: inset 0 0 0 1px var(--gd-rule);
 }
 
-.hm-cal__month {
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--gd-ink-3);
+.hm-cal__thumb :deep(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.hm-cal__day {
-    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
-    font-size: 1.45rem;
-    font-weight: 800;
-    line-height: 1;
-}
-
-.hm-cal__year {
-    font-size: 0.68rem;
-    font-weight: 600;
-    color: var(--gd-ink-3);
+.hm-cal__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
 }
 
 .hm-cal__name {
     display: -webkit-box;
-    flex: 1;
-    min-width: 0;
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -648,7 +767,34 @@
     line-height: 1.3;
 }
 
+.hm-cal__when {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 8px;
+}
+
+.hm-cal__date {
+    color: var(--gd-ink-2);
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 0.98rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.hm-cal__left {
+    color: var(--gd-ink-3);
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.hm-cal__left--now {
+    color: var(--gd-ink);
+}
+
 .hm-cal__go {
+    flex-shrink: 0;
     font-size: 0.7rem;
     color: var(--gd-ink-3);
 }
@@ -800,55 +946,100 @@
     color: var(--gd-ink-3);
 }
 
-.hm-frames {
-    margin-top: 64px;
+.hm-try {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 48px;
+    align-items: center;
+    max-width: 920px;
+    margin: 72px auto 0;
 }
 
-.hm-frames__lead {
-    max-width: 60ch;
-    margin: -8px 0 20px;
+.hm-try__text .cw-h2 {
+    margin-bottom: 8px;
+}
+
+.hm-try__lead {
+    margin: 0 0 18px;
     color: var(--gd-ink-2);
 }
 
-.hm-frames__list {
+/* opciones de estado: el tono aparece al elegir, como en el menu de estado */
+.hm-try__options {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
 }
 
-.hm-frames__item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.hm-try__opt {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--gd-rule-strong);
+    border-radius: 10px;
+    background: var(--gd-face);
+    color: var(--gd-ink);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out), color 200ms var(--ease-out), transform 160ms var(--ease-out);
 }
 
-.hm-frames__desc {
-    font-size: 0.875rem;
+.hm-try__opt .pi {
+    grid-row: 1 / span 2;
+    font-size: 0.95rem;
+    color: var(--gd-frame);
+}
+
+.hm-try__desc {
+    grid-column: 2;
     color: var(--gd-ink-3);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.hm-try__opt:active {
+    transform: scale(0.98);
+}
+
+.hm-try__opt[aria-pressed="true"] {
+    border-color: var(--gd-frame);
+    background: var(--gd-frame);
+    color: var(--gd-on-frame-now);
+}
+
+.hm-try__opt[aria-pressed="true"] .pi,
+.hm-try__opt[aria-pressed="true"] .hm-try__desc {
+    color: inherit;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .hm-try__opt[aria-pressed="false"]:hover {
+        border-color: var(--gd-frame);
+    }
+}
+
+.hm-try__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    margin: 22px 0 0;
 }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) {
-    .hm-spread,
+    .hm-main,
+    .hm-lists,
     .hm-lower {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .hm-spread {
-        gap: 20px;
-        box-shadow: none;
-    }
-
-    .hm-album {
-        border-radius: 18px;
-    }
-
-    .hm-right {
-        border-left: 1px solid var(--gd-rule);
-        border-radius: 18px;
+    .hm-mine {
+        position: static;
     }
 
     .hm-lower {
@@ -863,25 +1054,33 @@
         gap: 32px;
     }
 
-    .hm-frames__list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    .hm-try {
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 32px;
     }
 }
 
 @media (max-width: 640px) {
-    .hm-pockets,
-    .hm-pockets__grid,
+    .hm-discover__grid,
     .hm-trends__grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .hm-album {
+    .hm-discover {
         padding: 16px;
     }
 
-    /* en dos columnas las fundas decorativas sobran: solo el bolsillo */
-    .hm-sleeve:not(.hm-sleeve--link) {
-        display: none;
+    .hm-spot__face {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+    }
+
+    .hm-spot__name {
+        font-size: 1.7rem;
+    }
+
+    .hm-lists {
+        margin-top: 36px;
     }
 }
 
@@ -906,35 +1105,32 @@
         font-size: 2.5rem;
     }
 
-    .hm-tabs {
-        gap: 6px;
-    }
-
     .hm-seg {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         width: 100%;
     }
 
-    .hm-right {
+    .hm-discover__grid {
+        gap: 10px;
+    }
+
+    .hm-lists > .hm-checklist {
         padding: 18px 16px;
     }
 
-    .hm-tab {
-        padding: 0 6px 0 11px;
-        font-size: 0.85rem;
+    .hm-try {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+        gap: 24px;
+        margin-top: 48px;
     }
 
-    .hm-pockets,
-    .hm-pockets__grid {
-        gap: 10px;
+    .hm-try__card {
+        width: min(230px, 70%);
     }
 
-    .hm-sleeve {
-        min-height: 230px;
-    }
-
-    .hm-frames__list {
-        gap: 10px;
+    .hm-try__options {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

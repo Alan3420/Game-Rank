@@ -94,7 +94,8 @@ def obtener_video_aleatorio() -> dict | None:
                             "id": id_juego,
                             "name": juego.get("name"),
                             "metacritic": juego.get("metacritic"),
-                            "imge_url": juego.get("background_image")
+                            "imge_url": juego.get("background_image"),
+                            "release_date": juego.get("released")
                         }
 
             except Exception:

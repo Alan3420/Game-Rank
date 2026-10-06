@@ -48,15 +48,32 @@
         </figure>
       </section>
 
-      <section class="hm-frames" aria-labelledby="hm-frames-title">
-        <h2 id="hm-frames-title" class="cw-h2">Your status is the frame</h2>
-        <p class="hm-frames__lead">The same card changes its frame as your game moves through your album.</p>
-        <ul class="hm-frames__list">
-          <li v-for="key in STATUS_LIST" :key="key" class="hm-frames__item">
-            <MiniCard :game="juegoDemo" :status="key" />
-            <span class="hm-frames__desc">{{ STATUS_META[key].desc }}</span>
-          </li>
-        </ul>
+      <!-- prueba: el invitado coloca el juego del trailer en su lista -->
+      <section class="hm-try" aria-labelledby="hm-try-title">
+        <div class="hm-try__card">
+          <MiniCard :game="juegoDemo" :status="estadoDemo" />
+        </div>
+        <div class="hm-try__text">
+          <h2 id="hm-try-title" class="cw-h2">
+            {{ heroVideo && heroVideo.name ? 'Where is ' + heroVideo.name + ' on your list?' : 'Where is your next game on your list?' }}
+          </h2>
+          <p class="hm-try__lead">Mark every game you play and keep your list in order. Try it:</p>
+          <div class="hm-try__options" role="group" aria-label="Pick a status">
+            <button v-for="key in STATUS_LIST" :key="key" type="button" class="hm-try__opt cw-frame"
+              :class="'cw-frame--' + key" :aria-pressed="estadoDemo === key" @click="estadoDemo = key">
+              <StatusIcon :status="key" class="pi" />
+              {{ STATUS_META[key].label }}
+              <span class="hm-try__desc">{{ STATUS_META[key].desc }}</span>
+            </button>
+          </div>
+          <p class="hm-try__cta">
+            <button type="button" class="hm-btn hm-btn--primary" @click="irARegistro">
+              <i aria-hidden="true" class="pi pi-user-plus"></i>
+              Start your list
+            </button>
+            <span class="hm-muted">Sign up to save your list.</span>
+          </p>
+        </div>
       </section>
     </div>
 
@@ -88,75 +105,148 @@
         </dl>
       </header>
 
-      <!-- ── EL ALBUM ABIERTO ── -->
-      <div class="hm-spread">
+      <!-- ── DESCUBRIR (protagonista) + RESUMEN DEL ALBUM ── -->
+      <div class="hm-main">
 
-        <!-- pagina izquierda: tu archivador -->
-        <section class="hm-album cw-frame" :class="'cw-frame--' + tabActiva" aria-labelledby="hm-album-title">
-          <div class="hm-album__head">
-            <h2 id="hm-album-title" class="cw-h2">Your album</h2>
+        <section class="hm-discover" aria-labelledby="hm-discover-title">
+          <div class="hm-discover__head">
+            <div>
+              <h2 id="hm-discover-title" class="cw-h2">Discover</h2>
+              <p class="hm-muted">Games you haven't added yet. Add one, or rate what you've played.</p>
+            </div>
+            <div class="hm-seg" role="tablist" aria-label="Discover list"
+              @keydown="moverPestana($event, PESTANAS_DESCUBRIR.map(function (p) { return p.key; }), tabDescubrir, elegirDescubrir)">
+              <button
+                v-for="p in PESTANAS_DESCUBRIR"
+                :key="p.key"
+                :id="'hm-disc-' + p.key"
+                type="button"
+                role="tab"
+                class="hm-seg__btn"
+                :aria-selected="tabDescubrir === p.key"
+                :tabindex="tabDescubrir === p.key ? 0 : -1"
+                aria-controls="hm-discover-panel"
+                @click="elegirDescubrir(p.key)"
+              >{{ p.label }}</button>
+            </div>
+          </div>
+
+          <div id="hm-discover-panel" role="tabpanel" :aria-labelledby="'hm-disc-' + tabDescubrir" :aria-busy="descubrirLoading">
+            <template v-if="descubrirLoading">
+              <Skeleton class="hm-spot-skel" radius="22px" />
+              <div class="hm-discover__grid">
+                <Skeleton v-for="n in 6" :key="n" class="hm-pocket-skel" radius="16px" />
+              </div>
+            </template>
+
+            <div v-else-if="!destacado" class="hm-empty">
+              <i aria-hidden="true" class="pi pi-compass"></i>
+              <p>Nothing new to show here right now.</p>
+              <router-link to="/content/overview" class="hm-btn hm-btn--ghost hm-btn--sm">Browse the catalog</router-link>
+            </div>
+
+            <template v-else>
+              <!-- juego destacado: carta grande con las dos acciones -->
+              <article class="hm-spot cw-frame">
+                <div class="hm-spot__face">
+                  <router-link :to="'/game/' + destacado.id" class="hm-spot__art" tabindex="-1" aria-hidden="true">
+                    <GameImage :src="destacado.imge_url" alt="" width="640" height="360" />
+                  </router-link>
+                  <div class="hm-spot__info">
+                    <div class="hm-spot__band">
+                      <h3 class="hm-spot__name">
+                        <router-link :to="'/game/' + destacado.id">{{ destacado.name }}</router-link>
+                      </h3>
+                      <span v-if="destacado.metacritic" class="cw-mc" :class="claseMetacritic(destacado.metacritic)">
+                        <span class="sr-only">Metacritic </span>{{ destacado.metacritic }}
+                      </span>
+                    </div>
+                    <p class="hm-spot__meta">
+                      <span class="hm-row__no">No. {{ destacado.id }}</span>
+                      <span v-if="destacado.release_date">{{ anioDe(destacado.release_date) }}</span>
+                      <span v-if="destacado.rating" class="hm-spot__rating">
+                        <i aria-hidden="true" class="pi pi-star-fill"></i>{{ Number(destacado.rating).toFixed(1) }}
+                        <span class="hm-muted">on RAWG</span>
+                      </span>
+                    </p>
+                    <div class="hm-spot__actions">
+                      <button type="button" class="hm-btn" :class="esFavorito(destacado.id) ? 'hm-btn--ghost' : 'hm-btn--primary'"
+                        :disabled="anadiendoId === destacado.id || esFavorito(destacado.id)" @click="anadirAFavoritos(destacado.id)">
+                        <i aria-hidden="true" :class="anadiendoId === destacado.id ? 'pi pi-spin pi-spinner' : (esFavorito(destacado.id) ? 'pi pi-heart-fill' : 'pi pi-heart')"></i>
+                        {{ esFavorito(destacado.id) ? 'In your favorites' : 'Add to favorites' }}
+                      </button>
+                      <router-link :to="'/game/' + destacado.id + '#gd-reviews'" class="hm-btn hm-btn--ghost">
+                        <i aria-hidden="true" class="pi pi-star"></i>
+                        Rate &amp; review
+                      </router-link>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <ul class="hm-discover__grid">
+                <li v-for="juego in restoDescubrir" :key="juego.id">
+                  <MiniCard :game="juego" :favorite="esFavorito(juego.id)" show-favorite
+                    @toggle-favorite="anadirAFavoritos" />
+                </li>
+              </ul>
+
+              <div class="hm-discover__foot">
+                <button type="button" class="hm-btn hm-btn--ghost hm-btn--sm" @click="masDescubrir">
+                  <i aria-hidden="true" class="pi pi-refresh"></i>
+                  More picks
+                </button>
+                <router-link to="/content/overview" class="hm-link">
+                  Open the catalog
+                  <i aria-hidden="true" class="pi pi-arrow-right"></i>
+                </router-link>
+              </div>
+            </template>
+          </div>
+        </section>
+
+        <!-- resumen del album: secundario -->
+        <aside class="hm-mine" aria-labelledby="hm-mine-title">
+          <div class="hm-mine__head">
+            <h2 id="hm-mine-title" class="hm-mine__title">Your album</h2>
             <router-link to="/user/profile" class="hm-link">
-              Open profile
+              Open
               <i aria-hidden="true" class="pi pi-arrow-right"></i>
             </router-link>
           </div>
 
-          <div class="hm-tabs" role="tablist" aria-label="Collection status"
-            @keydown="moverPestana($event, STATUS_LIST, tabActiva, function (v) { tabActiva = v; })">
-            <button
-              v-for="key in STATUS_LIST"
-              :key="key"
-              :id="'hm-tab-' + key"
-              type="button"
-              role="tab"
-              class="hm-tab cw-frame"
-              :class="'cw-frame--' + key"
-              :aria-selected="tabActiva === key"
-              :tabindex="tabActiva === key ? 0 : -1"
-              aria-controls="hm-pockets"
-              @click="tabActiva = key"
-            >
-              <i aria-hidden="true" :class="'pi ' + STATUS_META[key].icon"></i>
-              {{ STATUS_META[key].label }}
-              <span class="hm-tab__count">{{ coleccionLoading ? '·' : conteoPorEstado[key] }}</span>
-            </button>
+          <ul class="hm-mine__counts">
+            <li v-for="key in ['jugando', 'pendiente', 'pausado', 'completado']" :key="key" class="cw-frame"
+              :class="[conteoPorEstado[key] > 0 ? 'cw-frame--' + key : '', { 'is-empty': !conteoPorEstado[key] }]">
+              <StatusIcon :status="key" class="pi" />
+              <span>{{ STATUS_META[key].label }}</span>
+              <strong>{{ coleccionLoading ? '·' : conteoPorEstado[key] }}</strong>
+            </li>
+          </ul>
+
+          <h3 class="hm-mine__sub">{{ siguienteDelAlbum.titulo }}</h3>
+          <div v-if="coleccionLoading" class="hm-mine__skel">
+            <Skeleton v-for="n in 3" :key="n" width="100%" height="48px" radius="8px" />
           </div>
-
-          <div id="hm-pockets" class="hm-pockets" role="tabpanel" :aria-labelledby="'hm-tab-' + tabActiva">
-            <template v-if="coleccionLoading">
-              <Skeleton v-for="n in 6" :key="n" class="hm-pocket-skel" radius="16px" />
-            </template>
-
-            <div v-else-if="cartasVisibles.length === 0" class="hm-empty">
-              <i aria-hidden="true" :class="'pi ' + STATUS_META[tabActiva].icon"></i>
-              <p>No games marked as {{ STATUS_META[tabActiva].label.toLowerCase() }} yet.</p>
-              <router-link to="/content/overview" class="hm-btn hm-btn--ghost hm-btn--sm">
-                Browse the catalog
-              </router-link>
-            </div>
-
-            <ul v-else class="hm-pockets__grid">
-              <li v-for="item in cartasVisibles" :key="item.game.id">
-                <MiniCard :game="item.game" :status="item.status" />
-              </li>
-              <li v-for="n in fundasVacias" :key="'funda-' + n" class="hm-sleeve" aria-hidden="true"></li>
-              <li v-if="hayBolsilloCatalogo" class="hm-sleeve hm-sleeve--link">
-                <router-link to="/content/overview" class="hm-sleeve__link">
-                  <i aria-hidden="true" class="pi pi-plus"></i>
-                  Find your next game
-                </router-link>
-              </li>
-            </ul>
-          </div>
-
-          <p v-if="!coleccionLoading && cartasDeLaPestana.length > cartasVisibles.length" class="hm-album__more">
-            Showing {{ cartasVisibles.length }} of {{ cartasDeLaPestana.length }}.
-            <router-link to="/user/profile" class="hm-link">See them all in your profile</router-link>
+          <p v-else-if="siguienteDelAlbum.items.length === 0" class="hm-muted">
+            Nothing in progress. Pick something from Discover.
           </p>
-        </section>
+          <ul v-else class="hm-mine__list">
+            <li v-for="item in siguienteDelAlbum.items" :key="item.game.id">
+              <router-link :to="'/game/' + item.game.id" class="hm-mine__row cw-frame" :class="'cw-frame--' + item.status">
+                <span class="hm-row__thumb"><GameImage :src="item.game.imge_url" alt="" width="160" height="120" /></span>
+                <span class="hm-row__text">
+                  <span class="hm-row__name">{{ item.game.name }}</span>
+                  <span class="hm-row__meta"><span class="hm-row__no">No. {{ item.game.id }}</span></span>
+                </span>
+              </router-link>
+            </li>
+          </ul>
+        </aside>
+      </div>
 
-        <!-- pagina derecha: lo que ofrece el mundo -->
-        <div class="hm-right" aria-label="This year and this month">
+      <!-- ── ESTE AÑO Y ESTE MES ── -->
+      <div class="hm-lists">
           <section class="hm-checklist" aria-labelledby="hm-best-title">
             <div class="hm-checklist__head">
               <h2 id="hm-best-title" class="cw-h2">Top rated of {{ anioActual }}</h2>
@@ -215,7 +305,6 @@
               </li>
             </ol>
           </section>
-        </div>
       </div>
 
       <!-- ── PARTE BAJA ── -->
@@ -261,18 +350,23 @@
           <h2 id="hm-upcoming-title" class="cw-h2">Coming soon</h2>
           <ul class="hm-cal" :aria-busy="proximosLoading">
             <template v-if="proximosLoading">
-              <li v-for="n in 5" :key="n"><Skeleton width="100%" height="56px" radius="10px" /></li>
+              <li v-for="n in 5" :key="n"><Skeleton width="100%" height="64px" radius="10px" /></li>
             </template>
             <li v-else-if="proximos.length === 0" class="hm-muted">No upcoming releases found.</li>
             <template v-else>
               <li v-for="juego in proximos" :key="juego.id">
                 <router-link :to="'/game/' + juego.id" class="hm-cal__item">
-                  <span class="hm-cal__date">
-                    <span class="hm-cal__month">{{ mesCorto(juego.release_date) }}</span>
-                    <span class="hm-cal__day">{{ juego.release_date ? Number(juego.release_date.split('-')[2]) : '—' }}</span>
-                    <span v-if="anioDe(juego.release_date) !== anioActual" class="hm-cal__year">{{ anioDe(juego.release_date) }}</span>
+                  <span class="hm-cal__thumb">
+                    <GameImage :src="juego.imge_url" alt="" width="160" height="120" />
                   </span>
-                  <span class="hm-cal__name">{{ juego.name }}</span>
+                  <span class="hm-cal__text">
+                    <span class="hm-cal__name">{{ juego.name }}</span>
+                    <span class="hm-cal__when">
+                      <span class="hm-cal__date">{{ fechaLanzamiento(juego.release_date) }}</span>
+                      <span v-if="cuentaAtras(juego.release_date)" class="hm-cal__left"
+                        :class="{ 'hm-cal__left--now': cuentaAtras(juego.release_date) === 'Today' }">{{ cuentaAtras(juego.release_date) }}</span>
+                    </span>
+                  </span>
                   <i aria-hidden="true" class="pi pi-chevron-right hm-cal__go"></i>
                 </router-link>
               </li>
@@ -300,10 +394,11 @@ import jsHome from "./script_home.js";
 import Skeleton from "../Skeleton/Skeleton.vue";
 import GameImage from "../Image/GameImage.vue";
 import MiniCard from "../CardWorld/MiniCard.vue";
+import StatusIcon from "../CardWorld/StatusIcon.vue";
 
 export default {
   name: 'Home',
-  components: { Skeleton, GameImage, MiniCard },
+  components: { Skeleton, GameImage, MiniCard, StatusIcon },
   mixins: [jsHome]
 };
 </script>

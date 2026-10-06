@@ -45,7 +45,7 @@
             <li v-for="key in ['completado', 'jugando', 'pausado', 'pendiente']" :key="key" class="pf-plate"
               :class="placaVacia(key) ? 'pf-plate--empty' : ['cw-frame', statsLoading ? '' : 'cw-frame--' + key]">
               <span class="pf-plate__stamp">
-                <i aria-hidden="true" :class="'pi ' + STATUS_META[key].icon"></i>
+                <StatusIcon :status="key" class="pi" />
                 {{ STATUS_META[key].label }}
               </span>
               <span class="pf-plate__face">
@@ -112,7 +112,7 @@
               class="pf-tab cw-frame" :class="key !== 'todos' ? 'cw-frame--' + key : ''"
               aria-controls="pf-col-panel" :aria-selected="filtroColeccion === key"
               :tabindex="filtroColeccion === key ? 0 : -1" @click="filtroColeccion = key">
-              <i v-if="key !== 'todos'" aria-hidden="true" :class="'pi ' + STATUS_META[key].icon"></i>
+              <StatusIcon v-if="key !== 'todos'" :status="key" class="pi" />
               {{ key === 'todos' ? 'All' : STATUS_META[key].label }}
               <span class="pf-tab__count">{{ key === 'todos' ? coleccion.length : coleccionPorEstado[key].length }}</span>
             </button>
@@ -130,7 +130,7 @@
             </div>
 
             <div v-else-if="coleccionFiltrada.length === 0" class="pf-empty">
-              <i aria-hidden="true" :class="'pi ' + STATUS_META[filtroColeccion]?.icon"></i>
+              <StatusIcon :status="filtroColeccion" class="pi" />
               <p>No games marked as {{ STATUS_META[filtroColeccion]?.label.toLowerCase() }}.</p>
             </div>
 
@@ -356,6 +356,7 @@
 
 <script>
 import jsPerfil from "./script_perfil.js";
+import StatusIcon from "../CardWorld/StatusIcon.vue";
 import Skeleton from "../Skeleton/Skeleton.vue";
 import GameImage from "../Image/GameImage.vue";
 import MiniCard from "../CardWorld/MiniCard.vue";
@@ -363,7 +364,7 @@ import Pagination from "../Pagination/Pagination.vue";
 
 export default {
   name: 'perfil',
-  components: { Skeleton, GameImage, MiniCard, Pagination },
+  components: { Skeleton, GameImage, MiniCard, Pagination, StatusIcon },
   mixins: [jsPerfil]
 };
 </script>

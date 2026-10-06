@@ -18,7 +18,7 @@
         </span>
         <span class="mini__set-line mini__set-line--stamp">
           <span v-if="status" class="mini__stamp" :title="STATUS_META[status].label">
-            <i aria-hidden="true" :class="'pi ' + STATUS_META[status].icon"></i>
+            <StatusIcon :status="status" class="pi" />
             <span class="mini__stamp-label">{{ STATUS_META[status].label }}</span>
           </span>
         </span>
@@ -62,6 +62,7 @@
 import { ref, watch, onBeforeUnmount } from 'vue';
 import GameImage from '../Image/GameImage.vue';
 import GameStatusDropdown from '../Cards/GameStatusDropdown.vue';
+import StatusIcon from './StatusIcon.vue';
 import { STATUS_META } from '../../utils/statusMeta.js';
 import { claseMetacritic } from '../../utils/metacritic.js';
 
