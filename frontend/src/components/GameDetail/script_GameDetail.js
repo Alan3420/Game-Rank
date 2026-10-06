@@ -8,6 +8,7 @@ import { formatearFechaCorta } from '../../utils/formatoFecha.js';
 import { claseMetacritic } from '../../utils/metacritic.js';
 import { STATUS_META } from '../../utils/statusMeta.js';
 import DOMPurify from 'dompurify';
+import { mensajeDeError } from '../../utils/mensajeError.js';
 
 
 export default {
@@ -375,10 +376,7 @@ export default {
             } catch (error) {
                 console.error('Error al agregar comentario:', error);
 
-                var mensajeError = "Review wasn't published. Check your connection and try again.";
-                if (error.response && error.response.data && error.response.data.message) {
-                    mensajeError = error.response.data.message;
-                }
+                var mensajeError = mensajeDeError(error, "Review wasn't published. Check your connection and try again.");
 
                 notificaciones.error(mensajeError, {
                     title: "Error posting comment"
@@ -448,10 +446,7 @@ export default {
             } catch (error) {
                 console.log("Error al actualizar el comentario");
 
-                var mensajeError = "Review wasn't updated. Check your connection and try again.";
-                if (error.response && error.response.data && error.response.data.message) {
-                    mensajeError = error.response.data.message;
-                }
+                var mensajeError = mensajeDeError(error, "Review wasn't updated. Check your connection and try again.");
 
                 notificaciones.error(mensajeError, {
                     title: "Error editing comment"

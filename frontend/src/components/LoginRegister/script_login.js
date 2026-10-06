@@ -1,6 +1,7 @@
 import { autenticarUsuario } from "../../services/user_service";
 import { estadoAutenticacion } from '../../store/autenticacion';
 import { notificaciones } from '../../store/notificaciones';
+import { mensajeDeError } from '../../utils/mensajeError.js';
 
 
 export default {
@@ -87,8 +88,8 @@ export default {
             setTimeout(resolve, 2000);
           });
 
-          this.errorMessage = error.response.data.message;
-          notificaciones.error(error.response.data.message, {
+          this.errorMessage = mensajeDeError(error, 'Incorrect email or password.');
+          notificaciones.error(this.errorMessage, {
             title: "Incorrect credentials"
           });
 

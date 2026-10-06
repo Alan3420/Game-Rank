@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router';
 import { STATUS_META, STATUS_LIST } from '../../utils/statusMeta.js';
 import { obtenerMisComentarios } from '../../services/comment_services';
 import { formatearFechaCorta } from '../../utils/formatoFecha.js';
+import { mensajeDeError } from '../../utils/mensajeError.js';
 
 export default {
   name: "perfil",
@@ -476,11 +477,7 @@ export default {
       } catch (error) {
         console.error('Error al actualizar perfil:', error);
 
-        var mensaje = "Profile wasn't updated. Check the fields and try again.";
-        if (error.response && error.response.data && error.response.data.message) {
-          mensaje = error.response.data.message;
-        }
-        this.errorEditar = mensaje;
+        this.errorEditar = mensajeDeError(error, "Profile wasn't updated. Check the fields and try again.");
 
       } finally {
         this.guardandoEditar = false;
@@ -703,11 +700,7 @@ export default {
       } catch (error) {
         console.error('Error al cambiar contrasena:', error);
 
-        var mensaje = "Password wasn't changed. Check your current password and try again.";
-        if (error.response && error.response.data && error.response.data.message) {
-          mensaje = error.response.data.message;
-        }
-        this.errorCambiarContraseña = mensaje;
+        this.errorCambiarContraseña = mensajeDeError(error, "Password wasn't changed. Check your current password and try again.");
 
       } finally {
         this.cambiandoContraseña = false;

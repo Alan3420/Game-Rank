@@ -1,5 +1,6 @@
 import { registrarUsuario } from "../../services/user_service";
 import { notificaciones } from '../../store/notificaciones';
+import { mensajeDeError } from '../../utils/mensajeError.js';
 
 
 export default {
@@ -184,8 +185,8 @@ export default {
             setTimeout(resolve, 2000);
           });
 
-          this.errorMessage = error.response.data.message;
-          notificaciones.error(error.response.data.message, {
+          this.errorMessage = mensajeDeError(error, 'That email or nickname is already in use.');
+          notificaciones.error(this.errorMessage, {
             title: "Registration failed"
           });
 

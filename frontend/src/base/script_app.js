@@ -1,6 +1,7 @@
 import { estadoAutenticacion } from '../store/autenticacion';
 import { notificaciones } from '../store/notificaciones';
 import { eliminarMiCuenta } from '../services/user_service';
+import { mensajeDeError } from '../utils/mensajeError.js';
 
 
 export default {
@@ -121,10 +122,7 @@ export default {
 
         console.error('Error al eliminar la cuenta:', error);
 
-        var mensaje = "Account wasn't deleted. Check your connection and try again.";
-        if (error.response && error.response.data && error.response.data.message) {
-          mensaje = error.response.data.message;
-        }
+        var mensaje = mensajeDeError(error, "Account wasn't deleted. Check your connection and try again.");
 
         notificaciones.error(mensaje, { title: "Error" });
 
