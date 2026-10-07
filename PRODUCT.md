@@ -27,7 +27,7 @@ Not confirmed. The product combines catalog discovery, personal backlog tracking
 - Public routes: Home (`/`), Login, Register, Terms (`/terminos`). Everything else requires a session; unauthenticated visitors are redirected to `/login`.
 - Authenticated routes: catalog with filters (`/content/overview`), game detail (`/game/:id`), profile with collection (`/profile`, `/user/profile`), trends (`/tendencias`).
 - Admin routes: user management (`/admin/users`), comment moderation (`/admin/comments`). Non-admins receive a 404 instead of a 403 to hide their existence.
-- Deployed at https://gamerk.netlify.app/ (frontend); backend FastAPI (uvicorn) + MySQL, also packaged with Docker Compose.
+- Deployed at https://game-rank-2h1.pages.dev/ (frontend, Cloudflare Pages); backend FastAPI (uvicorn) on Google Cloud Run (europe-west4) with MySQL on Aiven; also packaged with Docker Compose for local use.
 
 ## Capabilities and Constraints
 

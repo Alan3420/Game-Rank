@@ -70,10 +70,13 @@ async def sesion_y_cabeceras(request: Request, call_next):
     return respuesta
 
 
+# FRONTEND_ORIGIN admite varios origenes separados por comas
+# (p. ej. Cloudflare Pages y, mientras exista, Netlify)
 origenes_permitidos = ["https://gamerk.netlify.app"]
-origen_produccion = os.getenv("FRONTEND_ORIGIN")
-if origen_produccion:
-    origenes_permitidos.append(origen_produccion)
+for origen in (os.getenv("FRONTEND_ORIGIN") or "").split(","):
+    origen = origen.strip().rstrip("/")
+    if origen and origen not in origenes_permitidos:
+        origenes_permitidos.append(origen)
 
 # el CORS va el ultimo para envolver a todo lo demas (tambien los errores)
 app.add_middleware(

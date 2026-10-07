@@ -2,7 +2,7 @@
 
 Plataforma web para descubrir, valorar y organizar videojuegos. Los usuarios pueden explorar un catálogo extenso de juegos obtenido desde la API de RAWG, añadir juegos a favoritos, escribir comentarios, asignar valoraciones y gestionar su colección personal mediante estados de juego. El proyecto incluye un panel de administración para la gestión de usuarios y moderación de comentarios.
 
-Pagina web: https://gamerk.netlify.app/
+Pagina web: https://game-rank-2h1.pages.dev/
 
 ---
 
@@ -288,18 +288,40 @@ alembic -c migrations/alembic.ini current
 
 ---
 
-## Despliegue del backend
+## Despliegue
 
-El backend se publica como contenedor con el `Dockerfile` de `backend/`, que arranca uvicorn con 2 workers:
+| Parte | Dónde | URL |
+|---|---|---|
+| Frontend | Cloudflare Pages (proyecto `game-rank`) | https://game-rank-2h1.pages.dev |
+| Backend | Google Cloud Run (`game-rank-api`, región `europe-west4`, junto a la base de Aiven en Ámsterdam) | https://game-rank-api-931293666046.europe-west4.run.app |
+| Base de datos | Aiven MySQL | — |
 
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2 --proxy-headers
+### Backend (Cloud Run)
+
+Requisitos: [Google Cloud SDK](https://cloud.google.com/sdk) con sesión iniciada (`gcloud auth login`) y el proyecto activo (`gcloud config set project game-rank-91173`).
+
+```powershell
+# desde backend/
+powershell -ExecutionPolicy Bypass -File scripts\desplegar-cloudrun.ps1
 ```
 
-- **Render (servicio Docker):** no necesita comando de arranque propio; el puerto llega en `PORT`. Si el servicio no usa Docker, pon ese comando como *Start Command*.
-- **Variables:** las mismas de `backend/app/.env` (`DB_URI`, `SECRET_KEY`, `RAWG_API_KEY`, `FRONTEND_ORIGIN`). Opcionales: `WEB_CONCURRENCY` (número de workers) y `MOSTRAR_DOCS=false` para ocultar `/docs`.
+El script lee `DB_URI`, `SECRET_KEY` y `RAWG_API_KEY` de `backend/app/.env` (nunca se suben al repositorio; `.gcloudignore` también los excluye), construye la imagen con el `Dockerfile` y la publica. Cloud Run escala a cero sin tráfico: la primera petición tras un rato sin uso tarda unos segundos en arrancar el contenedor. Para que no se apague nunca: `gcloud run services update game-rank-api --region europe-west4 --min-instances 1` (tiene coste).
+
+- **Variables opcionales:** `FRONTEND_ORIGIN` (orígenes permitidos por CORS, separados por comas), `MOSTRAR_DOCS=false` para ocultar `/docs`, `WEB_CONCURRENCY` (workers de uvicorn).
 - **Base de datos:** con Aiven se usa el certificado `backend/app/ca.pem` automáticamente; con una MySQL local (por ejemplo la del `docker-compose`) no. `DB_SSL=true|false` lo fuerza.
 - **Sesiones:** los tokens emitidos por la versión anterior (Flask) siguen siendo válidos, así que desplegar no cierra la sesión de nadie.
+
+### Frontend (Cloudflare Pages)
+
+La URL del backend está en `frontend/.env.production` (`VITE_API_URL`). Desde `frontend/`:
+
+```bash
+pnpm deploy
+```
+
+Compila con Vite y publica `dist` con `wrangler pages deploy` (la primera vez pide iniciar sesión en Cloudflare). Las rutas de la SPA (`/game/123`, `/terminos`...) funcionan al recargar sin configuración extra.
+
+### Local con Docker
 
 Con `docker-compose up` se levantan juntos MySQL y el backend en `http://localhost:5000`.
 
