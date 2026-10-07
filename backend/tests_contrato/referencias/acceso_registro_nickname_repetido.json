@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "Ese nickname ya está en uso"
+  },
+  "status": 409
+}

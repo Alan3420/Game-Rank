@@ -1,0 +1,84 @@
+{
+  "cuerpo": {
+    "mas_coleccion": [
+      {
+        "id": 101,
+        "imge_url": "https://media.example/101.jpg",
+        "metacritic": 90,
+        "name": "Alpha Quest",
+        "rating": 4.5,
+        "release_date": "2020-05-01",
+        "stat_label": "3 usuarios",
+        "stat_value": 3.0
+      },
+      {
+        "id": 102,
+        "imge_url": "https://media.example/102.jpg",
+        "metacritic": 75,
+        "name": "Beta Racer",
+        "rating": 3.9,
+        "release_date": "2019-11-12",
+        "stat_label": "1 usuario",
+        "stat_value": 1.0
+      }
+    ],
+    "mas_comentados": [
+      {
+        "id": 101,
+        "imge_url": "https://media.example/101.jpg",
+        "metacritic": 90,
+        "name": "Alpha Quest",
+        "rating": 4.5,
+        "release_date": "2020-05-01",
+        "stat_label": "3 reseñas",
+        "stat_value": 3.0
+      },
+      {
+        "id": 102,
+        "imge_url": "https://media.example/102.jpg",
+        "metacritic": 75,
+        "name": "Beta Racer",
+        "rating": 3.9,
+        "release_date": "2019-11-12",
+        "stat_label": "1 reseña",
+        "stat_value": 1.0
+      }
+    ],
+    "mas_favoritos": [
+      {
+        "id": 101,
+        "imge_url": "https://media.example/101.jpg",
+        "metacritic": 90,
+        "name": "Alpha Quest",
+        "rating": 4.5,
+        "release_date": "2020-05-01",
+        "stat_label": "3 favoritos",
+        "stat_value": 3.0
+      },
+      {
+        "id": 102,
+        "imge_url": "https://media.example/102.jpg",
+        "metacritic": 75,
+        "name": "Beta Racer",
+        "rating": 3.9,
+        "release_date": "2019-11-12",
+        "stat_label": "1 favorito",
+        "stat_value": 1.0
+      }
+    ],
+    "mejor_valorados": [
+      {
+        "id": 101,
+        "imge_url": "https://media.example/101.jpg",
+        "metacritic": 90,
+        "name": "Alpha Quest",
+        "rating": 4.5,
+        "release_date": "2020-05-01",
+        "stat_count": 3,
+        "stat_label": "5.0 / 5",
+        "stat_value": 5.0
+      }
+    ]
+  },
+  "status": 200
+}

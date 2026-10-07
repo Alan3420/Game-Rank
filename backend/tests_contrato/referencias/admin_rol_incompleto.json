@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "id_user y new_role son obligatorios"
+  },
+  "status": 400
+}

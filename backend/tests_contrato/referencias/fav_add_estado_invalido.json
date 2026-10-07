@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "El status debe ser uno de: pendiente, jugando, pausado, completado"
+  },
+  "status": 409
+}

@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "Existe un usuario registrado con ese email"
+  },
+  "status": 409
+}

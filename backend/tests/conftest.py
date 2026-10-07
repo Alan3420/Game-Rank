@@ -2,13 +2,6 @@ import sys
 from unittest.mock import MagicMock
 
 _modulos_a_mockear = [
-    'flask',
-    'flask_sqlalchemy',
-    'flask_jwt_extended',
-    'flask_bcrypt',
-    'flask_cors',
-    'flask_migrate',
-    'flask_limiter',
     'dotenv',
     'sqlalchemy',
     'sqlalchemy.orm',
@@ -27,7 +20,6 @@ _modulos_a_mockear = [
     'app.client',
     'app.client.clientRAWG',
     'app.services.adapter',
-    'app.limiter',
 ]
 
 for nombre in _modulos_a_mockear:

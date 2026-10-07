@@ -1,0 +1,15 @@
+{
+  "cuerpo": {
+    "message": "Usuario actualizado exitosamente",
+    "user": {
+      "date_of_registration": "<hoy-rfc1123>",
+      "email": "jugador2@gmail.com",
+      "id_user": 2,
+      "last_name": "Por admin",
+      "name": "Editado",
+      "nickname": "jugador_2",
+      "role": "admin"
+    }
+  },
+  "status": 200
+}

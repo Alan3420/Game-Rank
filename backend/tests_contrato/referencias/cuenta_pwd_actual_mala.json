@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "La contraseña actual es incorrecta"
+  },
+  "status": 400
+}

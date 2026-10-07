@@ -1,0 +1,19 @@
+{
+  "cuerpo": [
+    {
+      "description": "Empieza",
+      "id": 11,
+      "image": null,
+      "name": "Primer paso",
+      "percent": 62.5
+    },
+    {
+      "description": "Termina",
+      "id": 12,
+      "image": null,
+      "name": "Leyenda",
+      "percent": 3.1
+    }
+  ],
+  "status": 200
+}

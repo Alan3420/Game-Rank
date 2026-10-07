@@ -1,0 +1,27 @@
+{
+  "cuerpo": {
+    "comments": [
+      {
+        "date_of_comment": "<hoy-iso>",
+        "date_of_update": null,
+        "description": "Muy bueno",
+        "id_comment": 1,
+        "id_game_api": 101,
+        "id_user": 1,
+        "nickname": "jugador_1",
+        "rating": 4,
+        "username": "Nombre1"
+      }
+    ],
+    "user": {
+      "date_of_registration": "<hoy-rfc1123>",
+      "email": "jugador1@gmail.com",
+      "id_user": 1,
+      "last_name": "Apellido1",
+      "name": "Nombre1",
+      "nickname": "jugador_1",
+      "role": "user"
+    }
+  },
+  "status": 200
+}

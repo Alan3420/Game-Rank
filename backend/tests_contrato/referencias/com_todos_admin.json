@@ -1,0 +1,19 @@
+{
+  "cuerpo": {
+    "comments": [
+      {
+        "date_of_comment": "<hoy-iso>",
+        "date_of_update": null,
+        "description": "Muy bueno",
+        "id_comment": 1,
+        "id_game_api": 101,
+        "id_user": 2,
+        "nickname": "jugador_2",
+        "rating": 4,
+        "user_last_name": "Apellido2",
+        "username": "Nombre2"
+      }
+    ]
+  },
+  "status": 200
+}

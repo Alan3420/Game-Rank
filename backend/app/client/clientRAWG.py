@@ -1,6 +1,7 @@
 import requests
 import os
 import time
+import threading
 from collections import OrderedDict
 
 
@@ -8,35 +9,45 @@ CLAVE_API_RAWG = os.getenv('RAWG_API_KEY')
 URL_BASE = "https://api.rawg.io/api"
 
 
+# Conexiones reutilizadas con RAWG (keep-alive): sin esto cada llamada abre
+# una conexion HTTPS nueva
+_sesion_http = requests.Session()
+
+
 class CacheConTTL:
+    # Se usa desde varios hilos a la vez (peticiones en paralelo), por eso
+    # cada operacion va con cerrojo
     def __init__(self, max_size=150, ttl=3600):
         self.cache = OrderedDict()
         self.max_size = max_size
         self.ttl = ttl
         self.timestamps = {}
+        self._cerrojo = threading.Lock()
 
     def get(self, clave):
-        if clave not in self.cache:
-            return None
+        with self._cerrojo:
+            if clave not in self.cache:
+                return None
 
-        if time.time() - self.timestamps[clave] > self.ttl:
-            del self.cache[clave]
-            del self.timestamps[clave]
-            return None
+            if time.time() - self.timestamps[clave] > self.ttl:
+                del self.cache[clave]
+                del self.timestamps[clave]
+                return None
 
-        return self.cache[clave]
+            return self.cache[clave]
 
     def set(self, clave, valor):
-        if clave in self.cache:
-            del self.cache[clave]
+        with self._cerrojo:
+            if clave in self.cache:
+                del self.cache[clave]
 
-        if len(self.cache) >= self.max_size:
-            clave_mas_antigua = next(iter(self.cache))
-            del self.cache[clave_mas_antigua]
-            del self.timestamps[clave_mas_antigua]
+            if len(self.cache) >= self.max_size:
+                clave_mas_antigua = next(iter(self.cache))
+                del self.cache[clave_mas_antigua]
+                del self.timestamps[clave_mas_antigua]
 
-        self.cache[clave] = valor
-        self.timestamps[clave] = time.time()
+            self.cache[clave] = valor
+            self.timestamps[clave] = time.time()
 
 
 cache = CacheConTTL(max_size=150, ttl=3600)
@@ -55,7 +66,7 @@ def _peticion_con_cache(endpoint, params=None):
             parametros_finales[clave] = params[clave]
     parametros_finales["key"] = CLAVE_API_RAWG
 
-    respuesta = requests.get(
+    respuesta = _sesion_http.get(
         f"{URL_BASE}{endpoint}",
         params=parametros_finales,
         timeout=5

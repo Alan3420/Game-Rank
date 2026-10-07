@@ -9,7 +9,7 @@ def obtener_todos_los_usuarios(excluir_id_usuario=None) -> list[User]:
 
 
 def obtener_usuario_por_id(id_usuario) -> User:
-    return User.query.get(id_usuario)
+    return db.session.get(User, id_usuario)
 
 
 def obtener_usuario_por_nickname(nickname) -> User:

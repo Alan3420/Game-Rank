@@ -1,0 +1,16 @@
+{
+  "cuerpo": {
+    "coleccion": {
+      "completado": 0,
+      "jugando": 1,
+      "pausado": 0,
+      "pendiente": 0,
+      "total": 1
+    },
+    "comentarios": 1,
+    "favoritos": 2,
+    "rating_medio": 4.0,
+    "valoraciones": 1
+  },
+  "status": 200
+}

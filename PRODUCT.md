@@ -27,11 +27,11 @@ Not confirmed. The product combines catalog discovery, personal backlog tracking
 - Public routes: Home (`/`), Login, Register, Terms (`/terminos`). Everything else requires a session; unauthenticated visitors are redirected to `/login`.
 - Authenticated routes: catalog with filters (`/content/overview`), game detail (`/game/:id`), profile with collection (`/profile`, `/user/profile`), trends (`/tendencias`).
 - Admin routes: user management (`/admin/users`), comment moderation (`/admin/comments`). Non-admins receive a 404 instead of a 403 to hide their existence.
-- Deployed at https://gamerk.netlify.app/ (frontend); backend Flask + MySQL, also packaged with Docker Compose.
+- Deployed at https://gamerk.netlify.app/ (frontend); backend FastAPI (uvicorn) + MySQL, also packaged with Docker Compose.
 
 ## Capabilities and Constraints
 
-- **Stack:** Vue 3 + Vite + Vue Router + PrimeVue/PrimeIcons + Axios + DOMPurify (frontend); Flask + SQLAlchemy + JWT + MySQL (backend).
+- **Stack:** Vue 3 + Vite + Vue Router + PrimeVue/PrimeIcons + Axios + DOMPurify (frontend); FastAPI + Pydantic + SQLAlchemy + Alembic + JWT (PyJWT) + MySQL (backend), interactive API docs at `/docs`.
 - **Game data is external.** There is no video game entity or table. Owned tables (`favorites`, `comments`) store only `id_game_api` as a reference attribute to RAWG. All titles, covers, genres, platforms, dates and Metacritic scores come from RAWG at request time.
 - **RAWG limits:** pagination is capped at 500 pages regardless of the reported count; images may be missing or invalid (a placeholder exists).
 - **Collection statuses:** `pendiente`, `jugando`, `pausado`, `completado` (stored in Spanish), shown as Pending, Playing, Paused, Completed.
@@ -49,8 +49,8 @@ Not confirmed. The product combines catalog discovery, personal backlog tracking
 ## Evidence on Hand
 
 - Real game data via RAWG (covers, Metacritic scores, release dates, background video on Home).
-- Seed data for local testing (`flask --app app.main db-seed`).
-- 48 backend unit tests covering comments, favorites and users.
+- Seed data for local testing (`python -m app.cli seed`).
+- 48 backend unit tests covering comments, favorites and users, plus 28 API contract tests over the 35 routes.
 - Terms and Conditions page with content attribution.
 - No testimonials, user counts, press, or usage metrics exist. Do not fabricate them.
 

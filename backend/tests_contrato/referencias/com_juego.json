@@ -1,0 +1,31 @@
+{
+  "cuerpo": {
+    "comments": [
+      {
+        "date_of_comment": "<hoy-iso>",
+        "date_of_update": null,
+        "description": "Regular",
+        "id_comment": 2,
+        "id_game_api": 101,
+        "id_user": 2,
+        "nickname": "jugador_2",
+        "rating": 2,
+        "username": "Nombre2"
+      },
+      {
+        "date_of_comment": "<hoy-iso>",
+        "date_of_update": null,
+        "description": "Muy bueno",
+        "id_comment": 1,
+        "id_game_api": 101,
+        "id_user": 1,
+        "nickname": "jugador_1",
+        "rating": 4,
+        "username": "Nombre1"
+      }
+    ],
+    "has_more": false,
+    "total": 2
+  },
+  "status": 200
+}

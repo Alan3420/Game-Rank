@@ -1,10 +1,10 @@
-from app.database.db import db
+from app.database.db import Base
 from sqlalchemy import Column, Integer, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
 
-class AddFavorite(db.Model):
+class AddFavorite(Base):
     __tablename__ = 'add_favorite'
 
     fav_id   = Column(Integer, ForeignKey('favorites.fav_id', ondelete='CASCADE'), primary_key=True)

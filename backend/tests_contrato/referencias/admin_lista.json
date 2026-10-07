@@ -1,0 +1,26 @@
+{
+  "cuerpo": {
+    "message": "Lista de usuarios obtenida exitosamente",
+    "users": [
+      {
+        "date_of_registration": "<hoy-rfc1123>",
+        "email": "jugador2@gmail.com",
+        "id_user": 2,
+        "last_name": "Apellido2",
+        "name": "Nombre2",
+        "nickname": "jugador_2",
+        "role": "user"
+      },
+      {
+        "date_of_registration": "<hoy-rfc1123>",
+        "email": "jugador3@gmail.com",
+        "id_user": 3,
+        "last_name": "Apellido3",
+        "name": "Nombre3",
+        "nickname": "jugador_3",
+        "role": "user"
+      }
+    ]
+  },
+  "status": 200
+}

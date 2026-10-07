@@ -1,0 +1,13 @@
+{
+  "cuerpo": [
+    {
+      "id": 102,
+      "imge_url": "https://media.example/102.jpg",
+      "metacritic": 75,
+      "name": "Beta Racer",
+      "rating": 3.9,
+      "release_date": "2019-11-12"
+    }
+  ],
+  "status": 200
+}

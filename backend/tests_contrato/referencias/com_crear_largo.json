@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "El comentario no puede superar los 255 caracteres"
+  },
+  "status": 400
+}

@@ -1,0 +1,17 @@
+{
+  "cuerpo": {
+    "comment": {
+      "date_of_comment": "<hoy-iso>",
+      "date_of_update": "<hoy-iso>",
+      "description": "Moderado",
+      "id_comment": 1,
+      "id_game_api": 101,
+      "id_user": 2,
+      "nickname": "jugador_2",
+      "rating": 3,
+      "username": "Nombre2"
+    },
+    "message": "Comentario actualizado"
+  },
+  "status": 200
+}

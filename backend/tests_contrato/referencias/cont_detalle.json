@@ -1,0 +1,75 @@
+{
+  "cuerpo": {
+    "description": "<p>Descripcion de Alpha Quest</p>",
+    "developers": [
+      {
+        "id": 9,
+        "image": "https://media.example/dev.jpg",
+        "name": "Estudio Falso"
+      }
+    ],
+    "genres": [
+      {
+        "id": 4,
+        "name": "Action"
+      },
+      {
+        "id": 5,
+        "name": "RPG"
+      }
+    ],
+    "id": 101,
+    "imge_url": "https://media.example/101.jpg",
+    "metacritic": 90,
+    "movies": [
+      {
+        "id": 7,
+        "name": "Trailer",
+        "preview": "https://media.example/p.jpg",
+        "trailer_url": "https://media.example/t.mp4"
+      }
+    ],
+    "name": "Alpha Quest",
+    "platforms": [
+      {
+        "id": 4,
+        "name": "PC"
+      },
+      {
+        "id": 187,
+        "name": "PlayStation 5"
+      }
+    ],
+    "rating": 4.5,
+    "release_date": "2020-05-01",
+    "screenshots": [
+      {
+        "id": 1,
+        "image": "https://media.example/s1.jpg"
+      },
+      {
+        "id": 2,
+        "image": "https://media.example/s2.jpg"
+      }
+    ],
+    "stores": [
+      {
+        "id": 55,
+        "name": "Steam",
+        "slug": "steam",
+        "url": "https://store.example/55"
+      }
+    ],
+    "team": [
+      {
+        "id": 3,
+        "image": null,
+        "name": "Ana Directora",
+        "roles": [
+          "Director"
+        ]
+      }
+    ]
+  },
+  "status": 200
+}

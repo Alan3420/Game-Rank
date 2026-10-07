@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "Acceso denegado. Se requieren permisos de administrador"
+  },
+  "status": 403
+}

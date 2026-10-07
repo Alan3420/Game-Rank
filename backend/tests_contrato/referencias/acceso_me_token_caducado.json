@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "Token expirado"
+  },
+  "status": 401
+}

@@ -8,10 +8,11 @@ def crear_comentario(id_usuario, id_juego, descripcion, rating) -> object | str:
     if not isinstance(rating, int) or rating < 1 or rating > 5:
         return "El rating debe ser un número entero entre 1 y 5"
 
-    # uun usuario solo puede tener un comentario por juego
+    # un usuario solo puede tener un comentario por juego. El id llega del
+    # token como texto y el de la base es entero: se comparan como texto
     comentarios_del_juego = comment_repo.obtener_comentarios_por_juego(id_juego=id_juego)
     for comentario in comentarios_del_juego:
-        if comentario.id_user == id_usuario:
+        if str(comentario.id_user) == str(id_usuario):
             return "Ya has comentado este juego"
 
     nuevo_comentario = comment_repo.crear_comentario(

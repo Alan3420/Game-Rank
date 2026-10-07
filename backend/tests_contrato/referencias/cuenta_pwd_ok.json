@@ -1,0 +1,15 @@
+{
+  "cuerpo": {
+    "message": "Contraseña actualizada exitosamente",
+    "user": {
+      "date_of_registration": "<hoy-rfc1123>",
+      "email": "jugador1@gmail.com",
+      "id_user": 1,
+      "last_name": "Apellido1",
+      "name": "Nombre1",
+      "nickname": "jugador_1",
+      "role": "user"
+    }
+  },
+  "status": 200
+}

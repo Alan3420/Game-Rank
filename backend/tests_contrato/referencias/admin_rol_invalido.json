@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "Rol no válido"
+  },
+  "status": 400
+}

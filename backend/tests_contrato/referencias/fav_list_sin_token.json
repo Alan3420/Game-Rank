@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "Token no válido"
+  },
+  "status": 401
+}

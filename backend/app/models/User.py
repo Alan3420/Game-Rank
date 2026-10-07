@@ -1,10 +1,10 @@
-from app.database.db import db
+from app.database.db import Base
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(db.Model):
+class User(Base):
     __tablename__ = 'users'
 
     id_user = Column(Integer, primary_key=True, autoincrement=True)

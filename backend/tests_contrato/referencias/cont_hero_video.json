@@ -1,0 +1,11 @@
+{
+  "cuerpo": {
+    "id": 101,
+    "imge_url": "https://media.example/101.jpg",
+    "metacritic": 90,
+    "name": "Alpha Quest",
+    "release_date": "2020-05-01",
+    "video_url": "https://media.example/t.mp4"
+  },
+  "status": 200
+}

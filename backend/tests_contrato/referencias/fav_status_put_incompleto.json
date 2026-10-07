@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "id_game y status son obligatorios"
+  },
+  "status": 400
+}

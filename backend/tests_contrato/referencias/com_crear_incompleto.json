@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "id_game, description y rating son obligatorios"
+  },
+  "status": 400
+}

@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "El rating debe ser un número entero entre 1 y 5"
+  },
+  "status": 409
+}

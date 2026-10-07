@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "Las contraseñas actual y nueva son obligatorias"
+  },
+  "status": 400
+}

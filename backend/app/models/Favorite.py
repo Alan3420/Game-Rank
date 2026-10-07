@@ -1,9 +1,9 @@
-from app.database.db import db
+from app.database.db import Base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 
-class Favorite(db.Model):
+class Favorite(Base):
     __tablename__ = 'favorites'
 
     fav_id      = Column(Integer, primary_key=True, autoincrement=True)

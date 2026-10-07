@@ -1,0 +1,11 @@
+{
+  "cuerpo": {
+    "favorite": {
+      "fav_id": 1,
+      "id_game_api": 101,
+      "status": null
+    },
+    "message": "Juego añadido a favoritos"
+  },
+  "status": 201
+}

@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "Usuario no encontrado"
+  },
+  "status": 404
+}

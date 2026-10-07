@@ -1,0 +1,34 @@
+{
+  "cuerpo": {
+    "count": 4,
+    "games": [
+      {
+        "id": 101,
+        "imge_url": "https://media.example/101.jpg",
+        "metacritic": 90,
+        "name": "Alpha Quest",
+        "rating": 4.5,
+        "release_date": "2020-05-01"
+      },
+      {
+        "id": 102,
+        "imge_url": "https://media.example/102.jpg",
+        "metacritic": 75,
+        "name": "Beta Racer",
+        "rating": 3.9,
+        "release_date": "2019-11-12"
+      },
+      {
+        "id": 103,
+        "imge_url": "https://media.example/103.jpg",
+        "metacritic": null,
+        "name": "Gamma Tactics",
+        "rating": 4.1,
+        "release_date": "2021-02-20"
+      }
+    ],
+    "next": "https://api.example/games?page=2",
+    "previous": null
+  },
+  "status": 200
+}

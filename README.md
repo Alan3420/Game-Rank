@@ -12,14 +12,14 @@ Pagina web: https://gamerk.netlify.app/
 | Tecnología | Versión |
 |---|---|
 | Python | 3.13 |
-| Flask | 3.1.3 |
-| Flask-SQLAlchemy | 3.1.1 |
+| FastAPI | 0.142.2 |
+| Uvicorn | 0.54.0 |
+| Pydantic | 2.13.5 |
 | SQLAlchemy | 2.0.48 |
-| Flask-JWT-Extended | 4.7.1 |
-| Flask-Migrate | 4.1.0 |
-| Flask-Limiter | 4.1.1 |
-| Flask-CORS | 6.0.2 |
-| Werkzeug | 3.1.6 |
+| Alembic | 1.18.4 |
+| PyJWT | 2.12.1 |
+| SlowAPI | 0.1.10 |
+| Werkzeug (hash de contraseñas) | 3.1.6 |
 | PyMySQL | 1.1.2 |
 | pytest | 9.0.3 |
 | python-dotenv | 1.2.2 |
@@ -51,38 +51,48 @@ Game-Rank/
 ├── docker-compose.yml
 ├── backend/
 │   ├── app/
-│   │   ├── autorizacion/
-│   │   ├── client/
-│   │   ├── database/
+│   │   ├── main.py            # aplicación FastAPI (middlewares, CORS, routers)
+│   │   ├── cli.py             # crear-tablas y seed
+│   │   ├── api/
+│   │   │   ├── routers/       # endpoints: acceso, contenido, cuenta, comentarios, favoritos, tendencias
+│   │   │   ├── esquemas.py    # cuerpos de las peticiones (Pydantic)
+│   │   │   ├── seguridad.py   # tokens JWT y permisos de admin
+│   │   │   ├── limites.py     # límite de peticiones (SlowAPI)
+│   │   │   └── respuestas.py  # formato JSON de las respuestas
+│   │   ├── client/            # cliente de RAWG con caché
+│   │   ├── database/          # motor, sesión y seed (SQLAlchemy)
 │   │   ├── models/
 │   │   ├── repositories/
-│   │   ├── routes/
 │   │   └── services/
-│   ├── migrations/
-│   └── tests/
+│   ├── migrations/            # Alembic
+│   ├── tests/                 # tests unitarios de servicios
+│   └── tests_contrato/        # tests de contrato de la API
 └── frontend/
     └── src/
-        ├── assets/
-        ├── base/
+        ├── assets/            # imágenes; brand/ con el logo y sus variantes
+        ├── base/              # App.vue: cabecera, menú y pie
         ├── components/
         │   ├── Admin/
-        │   ├── Cards/
-        │   ├── Content/
+        │   ├── CardWorld/     # MiniCard e iconos de estado (StatusIcon)
+        │   ├── Cards/         # menú de estado
+        │   ├── Confirm/
+        │   ├── Content/       # catálogo
         │   ├── Filters/
         │   ├── GameDetail/
         │   ├── Home/
         │   ├── Image/
         │   ├── Legal/
-        │   ├── Loader/
         │   ├── LoginRegister/
         │   ├── NotFound/
         │   ├── Notifications/
         │   ├── Pagination/
+        │   ├── Skeleton/
         │   ├── Tendencias/
-        │   └── User/
+        │   └── User/          # perfil
         ├── router/
         ├── services/
         ├── store/
+        ├── styles/            # card-world.css: tokens del sistema de diseño
         └── utils/
 ```
 
@@ -108,16 +118,19 @@ DB_URI=mysql+pymysql://usuario:contraseña@host:3306/game_rank
 SECRET_KEY=tu_clave_secreta
 RAWG_API_KEY=tu_api_key_de_rawg
 FRONTEND_ORIGIN=http://localhost:5173
-FLASK_DEBUG=true
+RECARGA=true
 ```
 
 | Variable | Descripción | Requerida |
 |---|---|---|
 | `DB_URI` | URI de conexión a MySQL. Formato: `mysql+pymysql://usuario:contraseña@host:puerto/nombre_bd` | Sí |
-| `SECRET_KEY` | Clave arbitraria para firmar JWT y sesiones Flask. Usa una cadena larga y aleatoria. | Sí |
+| `SECRET_KEY` | Clave para firmar los tokens JWT. Usa una cadena larga y aleatoria. | Sí |
 | `RAWG_API_KEY` | API key de RAWG. Obtenerla en [rawg.io/apidocs](https://rawg.io/apidocs) (registro gratuito). | Sí |
 | `FRONTEND_ORIGIN` | URL del frontend en producción. En local no es necesaria. | No |
-| `FLASK_DEBUG` | Activa el modo debug de Flask (`true`/`false`). Usar `false` en producción. | No |
+| `RECARGA` | Reinicia el servidor al guardar cambios al arrancar con `python -m app.main` (`true`/`false`). Solo para desarrollo. | No |
+| `MOSTRAR_DOCS` | Publica la documentación interactiva de la API en `/docs` y `/redoc` (`true` por defecto; `false` para ocultarla). | No |
+| `PORT` / `WEB_CONCURRENCY` | Puerto y número de workers de uvicorn en el contenedor (por defecto 5000 y 2). | No |
+| `DB_SSL` | Fuerza (`true`) o desactiva (`false`) el certificado `ca.pem` en la conexión a MySQL. Sin ella se usa solo con servidores remotos como Aiven. | No |
 
 El archivo `.env` está en `.gitignore` y nunca debe subirse al repositorio.
 
@@ -165,16 +178,25 @@ pip install -r requirements.txt
 
 **Paso 4 — Crear `backend/app/.env`** con las variables de entorno (ver sección anterior). Sin este archivo el servidor no arranca.
 
-**Paso 5 — Aplicar las migraciones** (crea las tablas en la BD):
+**Paso 5 — Crear las tablas.**
+
+En una base que ya existe (por ejemplo la de producción), aplica las migraciones pendientes:
 
 ```bash
-flask --app app.main db upgrade
+alembic -c migrations/alembic.ini upgrade head
+```
+
+En una base **nueva y vacía** crea el esquema desde los modelos y márcalo como actualizado. La cadena histórica de migraciones no se puede aplicar desde cero: la migración `2008b9a14636` falla en MySQL 8 con un error de columna autoincremental, y ya fallaba igual con Flask-Migrate.
+
+```bash
+python -m app.cli crear-tablas
+alembic -c migrations/alembic.ini stamp head
 ```
 
 **Paso 6 — Cargar datos de prueba** (opcional):
 
 ```bash
-flask --app app.main db-seed
+python -m app.cli seed
 ```
 
 **Paso 7 — Arrancar el servidor:**
@@ -183,9 +205,9 @@ flask --app app.main db-seed
 python -m app.main
 ```
 
-El backend queda disponible en `http://localhost:5000`.
+El backend queda disponible en `http://localhost:5000` y la documentación interactiva de la API en `http://localhost:5000/docs`.
 
-> Si no ejecutas `db upgrade` antes del primer arranque, las rutas devolverán error porque las tablas no existen.
+> Si no aplicas las migraciones antes del primer arranque, las rutas devolverán error porque las tablas no existen.
 
 ### Frontend
 
@@ -233,22 +255,53 @@ python -m coverage html
 
 Los tests cubren los servicios principales: comentarios, favoritos y usuarios (48 tests en total).
 
+### Tests de contrato de la API
+
+`backend/tests_contrato/` recorre las 35 rutas con una base SQLite temporal y RAWG simulado, y compara cada respuesta (código, cuerpo y formato de fechas) con las referencias de `tests_contrato/referencias/`, grabadas desde la versión Flask antes de migrar a FastAPI. Garantizan que el frontend recibe exactamente lo mismo.
+
+```bash
+# SQLite temporal (no toca ninguna base real)
+python -m pytest tests_contrato -q
+
+# Contra MySQL (por ejemplo, el contenedor de docker-compose)
+CONTRATO_DB_URI=mysql+pymysql://root:rootpassword@localhost:3307/game_rank python -m pytest tests_contrato -q
+```
+
+Si un cambio de la API es intencionado, las referencias se regraban con `CONTRATO_GRABAR=1`.
+
 ---
 
 ## Migraciones de base de datos
 
-El proyecto utiliza Flask-Migrate para gestionar cambios en la estructura de la base de datos.
+El proyecto utiliza Alembic para gestionar cambios en la estructura de la base de datos.
 
 ```bash
-# Inicializar el sistema de migraciones (solo la primera vez)
-flask --app app.main db init
-
-# Crear una nueva migración
-flask --app app.main db migrate -m "Descripción del cambio"
+# Crear una nueva migración a partir de los modelos
+alembic -c migrations/alembic.ini revision --autogenerate -m "Descripción del cambio"
 
 # Aplicar migraciones pendientes
-flask --app app.main db upgrade
+alembic -c migrations/alembic.ini upgrade head
+
+# Ver la versión aplicada
+alembic -c migrations/alembic.ini current
 ```
+
+---
+
+## Despliegue del backend
+
+El backend se publica como contenedor con el `Dockerfile` de `backend/`, que arranca uvicorn con 2 workers:
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2 --proxy-headers
+```
+
+- **Render (servicio Docker):** no necesita comando de arranque propio; el puerto llega en `PORT`. Si el servicio no usa Docker, pon ese comando como *Start Command*.
+- **Variables:** las mismas de `backend/app/.env` (`DB_URI`, `SECRET_KEY`, `RAWG_API_KEY`, `FRONTEND_ORIGIN`). Opcionales: `WEB_CONCURRENCY` (número de workers) y `MOSTRAR_DOCS=false` para ocultar `/docs`.
+- **Base de datos:** con Aiven se usa el certificado `backend/app/ca.pem` automáticamente; con una MySQL local (por ejemplo la del `docker-compose`) no. `DB_SSL=true|false` lo fuerza.
+- **Sesiones:** los tokens emitidos por la versión anterior (Flask) siguen siendo válidos, así que desplegar no cierra la sesión de nadie.
+
+Con `docker-compose up` se levantan juntos MySQL y el backend en `http://localhost:5000`.
 
 ---
 
@@ -256,7 +309,7 @@ flask --app app.main db upgrade
 
 | Ruta | Acceso | Descripción |
 |---|---|---|
-| `/` | Público | Home con video de fondo dinámico |
+| `/` | Público | Home. Invitado: tráiler de un juego y prueba de los estados. Con sesión: Discover (juegos que aún no tienes), resumen del álbum, listas del año y del mes, tendencias y próximos lanzamientos |
 | `/login` | Público | Inicio de sesión |
 | `/register` | Público | Registro de usuario |
 | `/terminos` | Público | Términos y condiciones |

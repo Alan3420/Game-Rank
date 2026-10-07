@@ -15,19 +15,29 @@ from app.client.clientRAWG import (
 )
 from app.services.adapter import formatear_detalle_juego, formatear_resumen_juego, formatear_logros
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 import random
 
 
 def obtener_detalle_del_videojuego(id_juego) -> dict:
-    detalle_juego = get_game_by_id_api(game_id=id_juego)
+    # Las seis llamadas a RAWG son independientes: van en paralelo y el
+    # detalle tarda lo que la mas lenta, no la suma de todas
+    with ThreadPoolExecutor(max_workers=6) as executor:
+        f_detalle = executor.submit(get_game_by_id_api, game_id=id_juego)
+        f_capturas = executor.submit(get_game_screenshots, game_id=id_juego)
+        f_videos = executor.submit(get_game_movies, game_id=id_juego)
+        f_tiendas = executor.submit(get_game_stores, game_id=id_juego)
+        f_catalogo = executor.submit(get_stores_catalog)
+        f_equipo = executor.submit(obtener_equipo_desarrollo, game_id=id_juego)
 
-    detalle_juego["short_screenshots"] = get_game_screenshots(game_id=id_juego)
-    detalle_juego["movies"] = get_game_movies(game_id=id_juego)[:2]
+    detalle_juego = f_detalle.result()
+    detalle_juego["short_screenshots"] = f_capturas.result()
+    detalle_juego["movies"] = f_videos.result()[:2]
 
     # Pedimos el catalogo entero de tiendas de RAWG una vez y lo cruzamos
     # con las tiendas del juego, asi nos ahorramos llamadas extra
-    tiendas = get_game_stores(game_id=id_juego)
-    catalogo_tiendas = get_stores_catalog()
+    tiendas = f_tiendas.result()
+    catalogo_tiendas = f_catalogo.result()
 
     for item in tiendas:
         id_tienda = item.get("store_id")
@@ -35,7 +45,7 @@ def obtener_detalle_del_videojuego(id_juego) -> dict:
             item["store"] = catalogo_tiendas[id_tienda]
 
     detalle_juego["stores"] = tiendas
-    detalle_juego["team"] = obtener_equipo_desarrollo(game_id=id_juego)
+    detalle_juego["team"] = f_equipo.result()
 
     return formatear_detalle_juego(detalle_juego)
 

@@ -1,9 +1,9 @@
-from app.database.db import db
+from app.database.db import Base
 from sqlalchemy import Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import date
 
-class Comment(db.Model):
+class Comment(Base):
     __tablename__ = 'comments'
 
     id_comment = Column(Integer, primary_key=True, autoincrement=True)

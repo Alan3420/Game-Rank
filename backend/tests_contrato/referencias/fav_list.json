@@ -1,0 +1,17 @@
+{
+  "cuerpo": {
+    "statuses": [
+      {
+        "fav_id": 1,
+        "id_game_api": 101,
+        "status": "completado"
+      },
+      {
+        "fav_id": 2,
+        "id_game_api": 102,
+        "status": "jugando"
+      }
+    ]
+  },
+  "status": 200
+}

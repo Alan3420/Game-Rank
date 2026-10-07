@@ -1,0 +1,6 @@
+{
+  "cuerpo": {
+    "message": "El juego ya está en favoritos"
+  },
+  "status": 409
+}

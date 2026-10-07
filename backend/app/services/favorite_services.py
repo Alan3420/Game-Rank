@@ -3,7 +3,8 @@ from app.client.clientRAWG import get_game_by_id_api
 from app.services.adapter import formatear_resumen_juego
 
 
-ESTADOS_VALIDOS = {"pendiente", "pausado", "jugando", "completado"}
+# tupla y no set: el orden del mensaje de error tiene que ser siempre el mismo
+ESTADOS_VALIDOS = ("pendiente", "jugando", "pausado", "completado")
 
 
 def agregar_favorito(id_usuario, id_juego, status=None) -> object | str:

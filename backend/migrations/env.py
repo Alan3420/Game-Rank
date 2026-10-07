@@ -1,88 +1,41 @@
 import logging
 from logging.config import fileConfig
 
-from flask import current_app
-
 from alembic import context
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
-config = context.config
+# Alembic sin Flask: toma el motor y los modelos de app/database/db.py.
+# Uso: alembic -c migrations/alembic.ini upgrade head
+from app.database.db import Base, engine
+import app.models.User  # noqa: F401  (registran sus tablas en Base.metadata)
+import app.models.Comment  # noqa: F401
+import app.models.Favorite  # noqa: F401
+import app.models.AddFavorite  # noqa: F401
 
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
+config = context.config
 fileConfig(config.config_file_name)
 logger = logging.getLogger('alembic.env')
 
-
-def get_engine():
-    try:
-        # this works with Flask-SQLAlchemy<3 and Alchemical
-        return current_app.extensions['migrate'].db.get_engine()
-    except (TypeError, AttributeError):
-        # this works with Flask-SQLAlchemy>=3
-        return current_app.extensions['migrate'].db.engine
+target_metadata = Base.metadata
 
 
-def get_engine_url():
-    try:
-        return get_engine().url.render_as_string(hide_password=False).replace(
-            '%', '%%')
-    except AttributeError:
-        return str(get_engine().url).replace('%', '%%')
-
-
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import mymodel
-# target_metadata = mymodel.Base.metadata
-config.set_main_option('sqlalchemy.url', get_engine_url())
-target_db = current_app.extensions['migrate'].db
-
-# other values from the config, defined by the needs of env.py,
-# can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
-# ... etc.
-
-
-def get_metadata():
-    if hasattr(target_db, 'metadatas'):
-        return target_db.metadatas[None]
-    return target_db.metadata
+def incluir_objeto(objeto, nombre, tipo, reflejado, comparado_con):
+    # La base de Aiven tiene tablas que no son de este backend (friendships,
+    # messages...): autogenerate no debe proponer borrarlas
+    if tipo == "table" and reflejado and comparado_con is None:
+        return False
+    return True
 
 
 def run_migrations_offline():
-    """Run migrations in 'offline' mode.
-
-    This configures the context with just a URL
-    and not an Engine, though an Engine is acceptable
-    here as well.  By skipping the Engine creation
-    we don't even need a DBAPI to be available.
-
-    Calls to context.execute() here emit the given string to the
-    script output.
-
-    """
-    url = config.get_main_option("sqlalchemy.url")
-    context.configure(
-        url=url, target_metadata=get_metadata(), literal_binds=True
-    )
-
+    url = engine.url.render_as_string(hide_password=False)
+    context.configure(url=url, target_metadata=target_metadata, literal_binds=True,
+                      include_object=incluir_objeto)
     with context.begin_transaction():
         context.run_migrations()
 
 
 def run_migrations_online():
-    """Run migrations in 'online' mode.
-
-    In this scenario we need to create an Engine
-    and associate a connection with the context.
-
-    """
-
-    # this callback is used to prevent an auto-migration from being generated
-    # when there are no changes to the schema
-    # reference: http://alembic.zzzcomputing.com/en/latest/cookbook.html
+    # si autogenerate no detecta cambios no se crea un fichero vacio
     def process_revision_directives(context, revision, directives):
         if getattr(config.cmd_opts, 'autogenerate', False):
             script = directives[0]
@@ -90,19 +43,13 @@ def run_migrations_online():
                 directives[:] = []
                 logger.info('No changes in schema detected.')
 
-    conf_args = current_app.extensions['migrate'].configure_args
-    if conf_args.get("process_revision_directives") is None:
-        conf_args["process_revision_directives"] = process_revision_directives
-
-    connectable = get_engine()
-
-    with connectable.connect() as connection:
+    with engine.connect() as connection:
         context.configure(
             connection=connection,
-            target_metadata=get_metadata(),
-            **conf_args
+            target_metadata=target_metadata,
+            include_object=incluir_objeto,
+            process_revision_directives=process_revision_directives,
         )
-
         with context.begin_transaction():
             context.run_migrations()
 
