@@ -70,9 +70,9 @@ async def sesion_y_cabeceras(request: Request, call_next):
     return respuesta
 
 
-# FRONTEND_ORIGIN admite varios origenes separados por comas
-# (p. ej. Cloudflare Pages y, mientras exista, Netlify)
-origenes_permitidos = ["https://gamerk.netlify.app"]
+# Origen del frontend en produccion (Cloudflare Pages). FRONTEND_ORIGIN
+# permite añadir otros, separados por comas
+origenes_permitidos = ["https://game-rank-2h1.pages.dev"]
 for origen in (os.getenv("FRONTEND_ORIGIN") or "").split(","):
     origen = origen.strip().rstrip("/")
     if origen and origen not in origenes_permitidos:

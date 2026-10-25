@@ -1,4 +1,5 @@
-ORIGEN_OK = "https://gamerk.netlify.app"
+ORIGEN_OK = "https://game-rank-2h1.pages.dev"
+ORIGEN_RETIRADO = "https://gamerk.netlify.app"
 
 
 def test_cabeceras_de_seguridad(api):
@@ -22,3 +23,12 @@ def test_cors_origen_permitido(api):
 def test_cors_origen_no_permitido(api):
     _, _, cabeceras = api.get("/content/hero-video", cabeceras={"Origin": "https://malicioso.example"})
     assert "access-control-allow-origin" not in cabeceras
+
+
+def test_cors_netlify_ya_no_permitido(api):
+    # el frontend dejo Netlify por Cloudflare Pages: ese origen ya no vale
+    _, _, cabeceras = api.options("/user/login", cabeceras={
+        "Origin": ORIGEN_RETIRADO,
+        "Access-Control-Request-Method": "POST",
+    })
+    assert cabeceras.get("access-control-allow-origin") != ORIGEN_RETIRADO
