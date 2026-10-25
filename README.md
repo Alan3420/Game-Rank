@@ -1,8 +1,23 @@
 # Game Rank
 
+[![Tests](https://github.com/Alan3420/Game-Rank/actions/workflows/tests.yml/badge.svg)](https://github.com/Alan3420/Game-Rank/actions/workflows/tests.yml)
+[![Demo](https://img.shields.io/badge/demo-game--rank--2h1.pages.dev-1a1a22?style=flat-square)](https://game-rank-2h1.pages.dev/)
+
 Plataforma web para descubrir, valorar y organizar videojuegos. Los usuarios pueden explorar un catálogo extenso de juegos obtenido desde la API de RAWG, añadir juegos a favoritos, escribir comentarios, asignar valoraciones y gestionar su colección personal mediante estados de juego. El proyecto incluye un panel de administración para la gestión de usuarios y moderación de comentarios.
 
-Pagina web: https://game-rank-2h1.pages.dev/
+**Página web:** https://game-rank-2h1.pages.dev/
+
+| Inicio | Catálogo | Detalle de juego |
+|---|---|---|
+| <img src="docs/capturas/inicio.jpg" width="260" alt="Inicio con sesión: resumen del álbum y sección Discover"> | <img src="docs/capturas/catalogo.jpg" width="260" alt="Catálogo de juegos en cuadrícula"> | <img src="docs/capturas/detalle.jpg" width="260" alt="Detalle de Grand Theft Auto VI"> |
+
+### Aspectos técnicos destacados
+
+- **Migración de Flask a FastAPI sin romper el frontend:** tests de contrato que comparan las respuestas de las 35 rutas con referencias grabadas desde la versión Flask.
+- **API REST con seguridad básica de producción:** autenticación JWT, roles de administrador, límite de peticiones con SlowAPI y saneado con DOMPurify del HTML que llega de RAWG antes de mostrarlo.
+- **Arquitectura por capas:** routers, servicios, repositorios y un cliente de RAWG con caché.
+- **Despliegue real:** backend en Google Cloud Run, base de datos en Aiven MySQL, frontend en Cloudflare Pages y migraciones con Alembic.
+- **Tests en CI:** 48 tests unitarios y 28 de contrato, ejecutados con GitHub Actions en cada push.
 
 ---
 
